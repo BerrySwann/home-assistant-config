@@ -1,0 +1,84 @@
+
+#========================================================================
+#
+# MÉTÉO — Vent (weather.vence)
+#
+#========================================================================
+
+#========================================================================
+# windrose-card - LABEL Direction du Vent Vence
+#========================================================================
+- sensor:
+  - name: "Direction du Vent Vence lable"
+    unique_id: vence_wind_direction_label
+    state: >
+      {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}
+      {% if bearing is not none %}
+        {% set bearing = bearing | int %}
+        {% if bearing >= 348.75 or bearing < 11.25 %}
+          Nord
+        {% elif bearing >= 11.25 and bearing < 33.75 %}
+          Nord-Nord-Est
+        {% elif bearing >= 33.75 and bearing < 56.25 %}
+          Nord-Est
+        {% elif bearing >= 56.25 and bearing < 78.75 %}
+          Est-Nord-Est
+        {% elif bearing >= 78.75 and bearing < 101.25 %}
+          Est
+        {% elif bearing >= 101.25 and bearing < 123.75 %}
+          Est-Sud-Est
+        {% elif bearing >= 123.75 and bearing < 146.25 %}
+          Sud-Est
+        {% elif bearing >= 146.25 and bearing < 168.75 %}
+          Sud-Sud-Est
+        {% elif bearing >= 168.75 and bearing < 191.25 %}
+          Sud
+        {% elif bearing >= 191.25 and bearing < 213.75 %}
+          Sud-Sud-Ouest
+        {% elif bearing >= 213.75 and bearing < 236.25 %}
+          Sud-Ouest
+        {% elif bearing >= 236.25 and bearing < 258.75 %}
+          Ouest-Sud-Ouest
+        {% elif bearing >= 258.75 and bearing < 281.25 %}
+          Ouest
+        {% elif bearing >= 281.25 and bearing < 303.75 %}
+          Ouest-Nord-Ouest
+        {% elif bearing >= 303.75 and bearing < 326.25 %}
+          Nord-Ouest
+        {% elif bearing >= 326.25 and bearing < 348.75 %}
+          Nord-Nord-Ouest
+        {% else %}
+          Inconnu
+        {% endif %}
+      {% else %}
+        Calme
+      {% endif %}
+
+#========================================================================
+# windrose-card - Direction du Vent Vence
+#========================================================================
+  - name: "Direction du Vent Vence"
+    unique_id: vence_wind_bearing
+    state: >
+      {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}
+      {% if bearing is not none %}
+        {% set bearing = bearing | float | round(0) %}
+        {% if bearing == 0 %}
+          1
+        {% else %}
+          {{ bearing }}
+        {% endif %}
+      {% else %}
+        Inconnu
+      {% endif %}
+
+#========================================================================
+# windrose-card - Vitesse du Vent Vence
+#========================================================================
+  - name: "Vitesse du Vent Vence"
+    unique_id: vence_wind_speed_kmh
+    state: >
+      {% set wind_speed_ms = states.weather.vence.attributes.wind_speed | float %}
+      {% set wind_speed_kmh = (wind_speed_ms * 3.6) | round(1) %}
+      {{ wind_speed_kmh }}
+    unit_of_measurement: "km/h"

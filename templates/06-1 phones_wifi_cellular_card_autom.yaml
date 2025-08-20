@@ -1,0 +1,57 @@
+
+#========================================================================
+#
+# Verifie si les portables sont en Wifi ou en Cellular
+#
+# TÉLÉPHONES — État Wi-Fi + Synthèse
+#
+#========================================================================
+
+- sensor:
+  - name: "Condition Mamour Wifi"
+    unique_id: condition_mamour_wifi
+    state: >-
+      {% if is_state('sensor.ne2213_mamour_network_type', 'wifi') %}
+        true
+      {% else %}
+        false
+      {% endif %}
+
+  - name: "Condition Eric Wifi"
+    unique_id: condition_eric_wifi
+    state: >-
+      {% if is_state('sensor.gm1901_network_type', 'wifi') %}
+        true
+      {% else %}
+        false
+      {% endif %}
+
+#========================================================================
+# Vignette si portable sont en Wifi ou Celullar
+#========================================================================
+- sensor:
+  - name: "Etat Wifi Maison"
+    unique_id: etat_wifi_maison
+    state: >-
+      {% set mamour = is_state('sensor.condition_mamour_wifi', 'true') %}
+      {% set eric = is_state('sensor.condition_eric_wifi', 'true') %}
+      {% if mamour and eric %}
+        2
+      {% elif mamour and not eric %}
+        Mamour
+      {% elif eric and not mamour %}
+        Eric
+      {% else %}
+        0
+      {% endif %}
+    attributes:
+      couleur: >-
+        {% if mamour and eric %}
+          green
+        {% elif mamour and not eric %}
+          orange
+        {% elif eric and not mamour %}
+          gold
+        {% else %}
+          red
+        {% endif %}

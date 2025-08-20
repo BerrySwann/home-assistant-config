@@ -1,0 +1,32 @@
+# OUVERTURES — Comptes fenêtres
+- sensor:
+  - name: "Nbre de fenêtres fermées"
+    unique_id: nbre_de_fenetres_fermees
+    state: >-
+      {{
+        [
+          states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'off',
+          states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'off',
+          states('binary_sensor.contact_fenetre_bureau_ikea_contact') == 'off',
+          states('binary_sensor.contact_fenetre_chambre_ikea_contact') == 'off',
+        ].count(true)
+      }}
+    attributes:
+      friendly_name: "Nombre de fenêtres fermées"
+      icon: mdi:window-shutter
+
+- sensor:
+  - name: "Nbre de fenêtres ouvertes"
+    unique_id: nbre_de_fenetres_ouvertes
+    state: >-
+      {{
+        [
+          states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'on',
+          states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'on',
+          states('binary_sensor.contact_fenetre_bureau_ikea_contact') == 'on',
+          states('binary_sensor.contact_fenetre_chambre_ikea_contact') == 'on',
+        ].count(true)
+      }}
+    attributes:
+      friendly_name: "Nombre de fenêtres ouvertes"
+      icon: mdi:window-shutter-open

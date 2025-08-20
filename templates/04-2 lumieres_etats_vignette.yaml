@@ -1,0 +1,112 @@
+# LUMIÈRES — États (par pièce)
+- sensor:
+  - name: "Lumière Appartement État"
+    unique_id: lumiere_appartement_etat
+    state: >
+      {% if is_state('light.entree', 'on') and is_state('light.couloir', 'on') %}
+        Allumé
+      {% elif is_state('light.entree', 'off') and is_state('light.couloir', 'off') %}
+        Éteint
+      {% elif is_state('light.entree', 'on') and is_state('light.couloir', 'off')%}
+        Entrée
+      {% elif is_state('light.couloir', 'on') and is_state('light.entree', 'off')%}
+        Couloir
+      {% else %}
+        erreur
+      {% endif %}
+
+- sensor:
+  - name: "Lumière Salon État"
+    unique_id: lumiere_salon_etat
+    state: >
+      {% if is_state('light.salon', 'on') and is_state('light.table', 'on') %}
+        Allumé
+      {% elif is_state('light.salon', 'off') and is_state('light.table', 'off') %}
+        Éteint
+      {% elif is_state('light.salon', 'on') and is_state('light.table', 'off') %}
+        Salon
+      {% elif is_state('light.salon', 'off') and is_state('light.table', 'on') %}
+        Table
+      {% else %}
+        erreur
+      {% endif %}
+
+- sensor:
+  - name: "Lumière Cuisine État"
+    unique_id: lumiere_cuisine_etat
+    state: >
+      {% if is_state('light.cuisine', 'on') %}
+        Allumé
+      {% else %}
+        Éteint
+      {% endif %}
+
+- sensor:
+  - name: "Lumière Bureau État"
+    unique_id: lumiere_bureau_etat
+    state: >
+      {% if is_state('switch.hue_smart_eco_pc_bureau', 'off') %}
+        {% if is_state('light.bureau_z2m', 'on') %}
+          Bureau
+        {% elif is_state('light.bureau', 'on') %}
+          Éco.
+        {% elif is_state('light.bureau', 'off') %}
+          Éco.
+        {% else %}
+          Éco.
+        {% endif %}
+      {% else %}
+        {% if is_state('light.bureau_z2m', 'on') and is_state('light.bureau', 'on') %}
+          Allumé
+        {% elif is_state('light.bureau_z2m', 'off') and is_state('light.bureau', 'off') %}
+          Éteint
+        {% elif is_state('light.bureau_z2m', 'on') and is_state('light.bureau', 'off') %}
+          Bureau
+        {% elif is_state('light.bureau_z2m', 'off') and is_state('light.bureau', 'on') %}
+          Écran
+        {% else %}
+          Éco.
+        {% endif %}
+      {% endif %}
+
+- sensor:
+  - name: "Lumière Salle de Bain État"
+    unique_id: lumiere_salle_de_bain_etat
+    state: >
+      {% if is_state('light.lampe_salle_de_bain_hue', 'on') and is_state('light.salle_de_bain', 'on') %}
+        Allumé
+      {% elif is_state('light.lampe_salle_de_bain_hue', 'off') and is_state('light.salle_de_bain', 'off') %}
+        Éteint
+      {% else %}
+        erreur
+      {% endif %}
+
+- sensor:
+  - name: "Lumière Chambre État"
+    unique_id: lumiere_chambre_etat
+    state: >
+      {% if is_state('switch.prise_tete_de_lit_chambre', 'off') %}
+        {% if is_state('light.chambre', 'on') %}
+          Chambre
+        {% else %}
+          Éco.
+        {% endif %}
+      {% else %}
+        {% if is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          Allumé
+        {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+          Ch.+zG
+        {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          Ch.+zÉ
+        {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+          Chambre
+        {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+          Éteint
+        {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+          Zone G.
+        {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          Zone É.
+        {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          Tête Lit
+        {% endif %}
+      {% endif %}

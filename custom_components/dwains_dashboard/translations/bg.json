@@ -1,0 +1,30 @@
+{
+  "title": "Главно табло",
+  "config": {
+    "step": {
+      "init": {
+        "title": "Настройки на таблото",
+        "description": "",
+        "data": {
+          "sidepanel_icon": "Икона в панела",
+          "sidepanel_title": "Заглавие в панела"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Само една конфигурациоя на таблото е разрешена."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Настройки на таблото",
+        "description": "",
+        "data": {
+          "sidepanel_icon": "Икона в панела",
+          "sidepanel_title": "Заглавие в панела"
+        }
+      }
+    }
+  }
+}

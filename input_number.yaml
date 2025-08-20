@@ -1,0 +1,31 @@
+  
+  ## Thermomètre exterier temp. et Humid. previous 
+  th_balcon_nord_temperature_previous:
+    name: "TH Balcon Nord Temperature Previous"
+    initial: 0
+    min: -50
+    max: 100
+    step: 0.01
+
+  th_balcon_nord_humidity_previous:
+    name: "TH Balcon Nord Humidity Previous"
+    initial: 0
+    min: 0    
+    max: 100
+    step: 0.01
+
+## nb 1 ou 0 fenêtres ouverte ou fermées
+  msg_4_fenetres_fermees_previous:
+    name: "msg (4) Fenetres Fermees Previous State"
+    initial: 1
+    min: 0
+    max: 1
+    step: 1
+
+  msg_4_fenetres_ouvertes_previous:
+    name: "msg (4) Fenetres Ouvertes Previous State"
+    initial: 1
+    min: 0
+    max: 1
+    step: 1
+

@@ -1,0 +1,72 @@
+# commande line ? meteo france
+- sensor:
+    name: Météo France alertes image today
+    unique_id: meteo_france_alertes_image_today
+    scan_interval: 14400
+    command_timeout: 10
+    command: |-
+      api_key="eyJ4NXQiOiJZV0kxTTJZNE1qWTNOemsyTkRZeU5XTTRPV014TXpjek1UVmhNbU14T1RSa09ETXlOVEE0Tnc9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJCZXJyeS5Td2FubkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6IkJlcnJ5LlN3YW5uIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MTY5MDUsInV1aWQiOiI2MTEyZThmNi1hNjhlLTQwMTYtYjk1My00MGViYWUyODJhZWIifSwiaXNzIjoiaHR0cHM6XC9cL3BvcnRhaWwtYXBpLm1ldGVvZnJhbmNlLmZyOjQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IjYwUmVxUGFyTWluIjp7InRpZXJRdW90YVR5cGUiOiJyZXF1ZXN0Q291bnQiLCJncmFwaFFMTWF4Q29tcGxleGl0eSI6MCwiZ3JhcGhRTE1heERlcHRoIjowLCJzdG9wT25RdW90YVJlYWNoIjp0cnVlLCJzcGlrZUFycmVzdExpbWl0IjowLCJzcGlrZUFycmVzdFVuaXQiOiJzZWMifX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiRG9ubmVlc1B1YmxpcXVlc1ZpZ2lsYW5jZSIsImNvbnRleHQiOiJcL3B1YmxpY1wvRFBWaWdpbGFuY2VcL3YxIiwicHVibGlzaGVyIjoiYWRtaW4iLCJ2ZXJzaW9uIjoidjEiLCJzdWJzY3JpcHRpb25UaWVyIjoiNjBSZXFQYXJNaW4ifV0sImV4cCI6MTgxOTM0NDAzNSwidG9rZW5fdHlwZSI6ImFwaUtleSIsImlhdCI6MTcyNDY3MTIzNSwianRpIjoiNmRkNWIyYmUtM2U3OS00N2ZlLWFkZDQtZmM5MGEzYTFiMDY4In0=.X8GXHD_RsrJ6Ysj7IRI_ElRO3V8vDUHbqBNIB0AvkQGRyL0oD-2xbRBWssNklI947zz9UZaOzooQEXH9hXaJpUBQVrWur-XBF0WtQCvh0WmshZVZuQfsCRuEIs0S_m8iVLzbszkvHlaXV8mVdg0zsA9w7ta5Qo7goW6ctddufK6haempJrytZwIuiQnchIbr9pXUH88MxvwmdsRZWHFtV3SWXA7XUSFZLtvfK-ukt8jGqStbXh7_8u8IEM71p6uT6P7OF2F3l-p4TzUJcCWe1n9NrjK3_tq1Ri8H63Q2BR84UdYJOPO4A1vR_YiJIYm3MuWDdkx55JrF6JgavvZCKA==";
+      i=0;
+      while true; do
+       today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
+        $((i++));
+        if [[ $(expr length "$today") -gt "10000" ]];
+        then
+          echo "$today" | base64 -d > ./www/weather/meteo_france_alerte_today.png;
+          echo on;
+          break;
+        elif [[ "$i" == '5' ]];
+        then
+          cp -f "./www/weather/meteo_france_alerte_nodata.png" "./www/weather/meteo_france_alerte_today.png";
+          echo unavailable;
+          break;
+        fi
+        sleep 1;
+      done
+    value_template: "{{value}}"
+
+- sensor:
+    name: Météo France alertes image tomorrow
+    unique_id: meteo_france_alertes_image_tomorrow
+    scan_interval: 14400
+    command_timeout: 10
+    command: |-
+      api_key="eyJ4NXQiOiJZV0kxTTJZNE1qWTNOemsyTkRZeU5XTTRPV014TXpjek1UVmhNbU14T1RSa09ETXlOVEE0Tnc9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJCZXJyeS5Td2FubkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6IkJlcnJ5LlN3YW5uIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MTY5MDUsInV1aWQiOiI2MTEyZThmNi1hNjhlLTQwMTYtYjk1My00MGViYWUyODJhZWIifSwiaXNzIjoiaHR0cHM6XC9cL3BvcnRhaWwtYXBpLm1ldGVvZnJhbmNlLmZyOjQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IjYwUmVxUGFyTWluIjp7InRpZXJRdW90YVR5cGUiOiJyZXF1ZXN0Q291bnQiLCJncmFwaFFMTWF4Q29tcGxleGl0eSI6MCwiZ3JhcGhRTE1heERlcHRoIjowLCJzdG9wT25RdW90YVJlYWNoIjp0cnVlLCJzcGlrZUFycmVzdExpbWl0IjowLCJzcGlrZUFycmVzdFVuaXQiOiJzZWMifX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiRG9ubmVlc1B1YmxpcXVlc1ZpZ2lsYW5jZSIsImNvbnRleHQiOiJcL3B1YmxpY1wvRFBWaWdpbGFuY2VcL3YxIiwicHVibGlzaGVyIjoiYWRtaW4iLCJ2ZXJzaW9uIjoidjEiLCJzdWJzY3JpcHRpb25UaWVyIjoiNjBSZXFQYXJNaW4ifV0sImV4cCI6MTgxOTM0NDAzNSwidG9rZW5fdHlwZSI6ImFwaUtleSIsImlhdCI6MTcyNDY3MTIzNSwianRpIjoiNmRkNWIyYmUtM2U3OS00N2ZlLWFkZDQtZmM5MGEzYTFiMDY4In0=.X8GXHD_RsrJ6Ysj7IRI_ElRO3V8vDUHbqBNIB0AvkQGRyL0oD-2xbRBWssNklI947zz9UZaOzooQEXH9hXaJpUBQVrWur-XBF0WtQCvh0WmshZVZuQfsCRuEIs0S_m8iVLzbszkvHlaXV8mVdg0zsA9w7ta5Qo7goW6ctddufK6haempJrytZwIuiQnchIbr9pXUH88MxvwmdsRZWHFtV3SWXA7XUSFZLtvfK-ukt8jGqStbXh7_8u8IEM71p6uT6P7OF2F3l-p4TzUJcCWe1n9NrjK3_tq1Ri8H63Q2BR84UdYJOPO4A1vR_YiJIYm3MuWDdkx55JrF6JgavvZCKA==";
+      i=0;
+      while true; do
+       today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J1/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
+        $((i++));
+        if [[ $(expr length "$today") -gt "10000" ]];
+        then
+          echo "$today" | base64 -d > ./www/weather/meteo_france_alerte_tomorrow.png;
+          echo on;
+          break;
+        elif [[ "$i" == '5' ]];
+        then
+          cp -f "./www/weather/meteo_france_alerte_nodata.png" "./www/weather/meteo_france_alerte_tomorrow.png";
+          echo unavailable;
+          break;
+        fi
+        sleep 1;
+      done
+    value_template: "{{value}}"
+
+    # SpeedTest
+
+
+- sensor:
+    name: "SpeedTest CLI Data"
+    unique_id: speedtest_cli_data
+    command: "/config/3rdparty/speedtest/speedtest --format=json --accept-license --accept-gdpr"
+    #Toutes les 4 heures, 60 * 60 * 4 = 14400  3600 = 1 heure
+    scan_interval: 1800
+    command_timeout: 60
+    value_template: >-
+      {{ 
+        { 
+          "ping": value_json.ping.latency, 
+          "download": value_json.download.bandwidth, 
+          "upload": value_json.upload.bandwidth 
+        }
+        | to_json 
+      }}

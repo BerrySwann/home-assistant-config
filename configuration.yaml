@@ -1,0 +1,129 @@
+homeassistant:
+  # Load packages
+  packages: !include_dir_named integrations
+  allowlist_external_dirs:
+    - "/config/"
+  
+
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  extra_module_url:
+    - /hacsfiles/lovelace-mushroom/mushroom.js
+    - /hacsfiles/tabbed-card/tabbed-card.js
+  themes: !include_dir_merge_named themes
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Pour powercalc
+
+powercalc:
+
+# Pour Cloudflared
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+#  ssl_certificate: /ssl/www.erodi-ha.com.pem
+# ssl_key: /ssl/www.erodi-ha.com.privkey.pem
+
+# Protege l'acssé a HA
+
+  ip_ban_enabled: true
+  login_attempts_threshold: 3
+
+
+
+
+# renvoi au fichier template.yaml
+#template: !include template.yaml
+template: !include_dir_merge_list templates/
+
+# renvoi au fichier commad_line.yaml
+command_line: !include command_line.yaml
+
+#renvoi au fichier camera.yaml -> carte meteo france alerte
+camera: !include camera.yaml
+
+#renvoi au fichier utility_meter.yaml
+utility_meter: !include utility_meter.yaml
+
+#renvoi au fichier groupe
+group: !include group.yaml
+
+#revoin au fuchier input_number.yaml
+input_number: !include input_number.yaml
+
+#revoin au fuchier input_boolean.yaml
+input_boolean: !include input_boolean.yaml
+
+
+
+#renvoi au fichier themes.yaml
+#themes: !include themes.yaml
+
+#renvie au fichier lovelave
+#lovelace: !include lovelace.yaml
+
+  # Amazon
+
+alexa_media:
+  accounts:
+    - email: !secret amazon_user
+      password: !secret amazon_password
+      url: amazon.fr
+
+  # Telegram
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_token
+    allowed_chat_ids: 
+    - !secret id_telegram_HA-Bot
+
+notify:
+  - platform: telegram
+    name: Telegram
+    chat_id: !secret id_telegram_HA-Bot 
+
+
+
+
+  # BASE DE DONNEE MariaDB
+recorder:
+  db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
+  # Historique
+  purge_keep_days: 90
+  # trie
+  exclude:
+    entity_globs:
+      - sensor.*linkquality
+      - sensor.*last_seen
+
+    # Notification FOUDRES
+sensor:
+  - platform: rest
+    name: blitzortung_lightning_localisation
+    scan_interval: 86400
+    resource_template: >-
+      {%- set lat = state_attr('sensor.blitzortung_lightning_distance', 'lat') -%} 
+      {%- set lon = state_attr('sensor.blitzortung_lightning_distance', 'lon') -%} 
+      https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat={{lat}}&lon={{lon}}
+    value_template: '{{value_json.features | length}}'
+    json_attributes:
+      - features
+
+
+
+
+
+openai_conversation:
+  api_key: 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
+  model: "gpt-4o-mini"
+
+

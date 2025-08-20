@@ -1,0 +1,234 @@
+# toto éclaire (foudres - Point d'impact)
+
+#utility_meter:
+eclair_yearly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: yearly
+
+eclair_monthly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: monthly
+
+eclair_weekly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: weekly
+
+eclair_daily:
+  source: sensor.blitzortung_lightning_counter
+  cycle: daily
+
+eclair_hourly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: hourly
+
+#============================================================
+#
+# TOTO Clim et radiateur salon / cuisine / bureau / Chambre
+#
+#============================================================
+
+#------------------------------------------------------------
+# RADIATEUR SALON
+#------------------------------------------------------------
+
+clim_salon_annuel_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: yearly
+
+clim_salon_mensuel_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: monthly
+
+clim_salon_hebdomadaire_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: weekly
+
+clim_salon_quotidien_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: daily
+
+#------------------------------------------------------------
+# RADIATEUR CUISINE
+#------------------------------------------------------------
+
+radiateur_elec_cuisine_annuel_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: yearly
+
+radiateur_elec_cuisine_mensuel_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: monthly
+
+radiateur_elec_cuisine_hebdomadaire_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: weekly
+
+radiateur_elec_cuisine_quotidien_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: daily
+
+#------------------------------------------------------------
+# CLIM BUREAU
+#------------------------------------------------------------
+
+clim_du_bureau_annuel_um:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: yearly
+
+clim_du_bureau_mensuel_um:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: monthly
+
+clim_du_bureau_hebdomadaire_um:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: weekly
+
+clim_du_bureau_quotidien_um:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: daily
+
+#------------------------------------------------------------
+# RADIATEUR SALLE DE BAIN
+#------------------------------------------------------------
+
+radiateur_sdb_annuel_um:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: yearly
+
+radiateur_sdb_mensuel_um:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: monthly
+
+radiateur_sdb_hebdomadaire_um:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: weekly
+
+radiateur_sdb_quotidien_um:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: daily
+
+#------------------------------------------------------------
+# CLIM CHAMBRE
+#------------------------------------------------------------
+
+clim_chambre_annuel_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: yearly
+
+clim_chambre_mensuel_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: monthly
+
+clim_chambre_hebdomadaire_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: weekly
+
+clim_chambre_quotidien_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: daily
+
+#============================================================================
+#
+# TOTO eclairage salon / entree-cuisine-couloir / bureau / Chambre
+#
+#============================================================================
+
+#------------------------------------------------------------
+# SALON
+#------------------------------------------------------------
+
+eclairage_salon_5_annuel_um:
+  source: sensor.eclairage_salon_5_energie
+  cycle: yearly
+
+eclairage_salon_5_mensuel_um:
+  source: sensor.eclairage_salon_5_energie
+  cycle: monthly
+
+eclairage_salon_5_hebdomadaire_um:
+  source: sensor.eclairage_salon_5_energie
+  cycle: weekly
+
+eclairage_salon_5_quotidien_um:
+  source: sensor.eclairage_salon_5_energie
+  cycle: daily
+
+#------------------------------------------------------------
+# APPARTEMENT (HOME)
+#------------------------------------------------------------
+
+eclairage_appart_3_annuel_um:
+  source: sensor.eclairage_appart_3_energie
+  cycle: yearly
+
+eclairage_appart_3_mensuel_um:
+  source: sensor.eclairage_appart_3_energie
+  cycle: monthly
+
+eclairage_appart_3_hebdomadaire_um:
+  source: sensor.eclairage_appart_3_energie
+  cycle: weekly
+
+eclairage_appart_3_quotidien_um:
+  source: sensor.eclairage_appart_3_energie
+  cycle: daily
+
+#------------------------------------------------------------
+# BUREAU
+#------------------------------------------------------------
+
+eclairage_bureau_5_annuel_um:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: yearly
+
+eclairage_bureau_5_mensuel_um:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: monthly
+
+eclairage_bureau_5_hebdomadaire_um:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: weekly
+
+eclairage_bureau_5_quotidien_um:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: daily
+
+#------------------------------------------------------------
+# SALLE DE BAIN
+#------------------------------------------------------------
+
+eclairage_sdb_2_annuel_um:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: yearly
+
+eclairage_sdb_2_mensuel_um:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: monthly
+
+eclairage_sdb_2_hebdomadaire_um:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: weekly
+
+eclairage_sdb_2_quotidien_um:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: daily
+
+#------------------------------------------------------------
+# CHAMBRE
+#------------------------------------------------------------
+
+eclairage_chambre_4_annuel_um:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: yearly
+
+eclairage_chambre_4_mensuel_um:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: monthly
+
+eclairage_chambre_4_hebdomadaire_um:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: weekly
+
+eclairage_chambre_4_quotidien_um:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: daily

@@ -1,0 +1,105 @@
+#========================================================================
+#
+# -=<( SYSTEM CLIM )>=-
+#  
+# Logique système (mode, consigne, deltas, cibles, moyennes, delta)
+#
+#========================================================================
+
+- sensor:
+  - name: "Mode Été/Hiver"
+    unique_id: mode_ete_hiver
+    state: >-
+      {% if states('sensor.th_balcon_nord_temperature') | float < 15 %}
+        heat
+      {% elif states('sensor.th_balcon_nord_temperature') | float >= 15 and states('sensor.th_balcon_nord_temperature') | float <= 25 %}
+        fan_only
+      {% else %}
+        cool
+      {% endif %}
+
+- sensor:
+  - name: "Consigne de Base"
+    unique_id: consigne_de_Base
+    unit_of_measurement: "°C"
+    state: "27"
+
+- sensor:
+  - name: "Temperature différentielle"
+    unique_id: temperature_différentielle
+    unit_of_measurement: "°C"
+    state: "26"
+
+- sensor:
+  - name: "Delta_5"
+    unique_id: delta_5
+    unit_of_measurement: "°C"
+    state: "5"
+
+- sensor:
+  - name: "Delta_7"
+    unique_id: delta_7
+    unit_of_measurement: "°C"
+    state: "7"
+
+#========================================================================
+# CALCUL - Temperature Cible
+#========================================================================
+
+- sensor:
+  - name: "Temperature Cible"
+    unique_id: temperature_cible
+    unit_of_measurement: "°C"
+    state: >
+      {% set temperature_exterieure = states('sensor.th_balcon_nord_temperature') | float | round(0) | int %}
+      {% set consigne_de_base = states('sensor.consigne_de_base') | int %}
+      {% set delta_5 = states('sensor.delta_5') | int %}
+      {% set delta_7 = states('sensor.delta_7') | int %}
+      {% if temperature_exterieure >= 40 %}
+        {{ temperature_exterieure - delta_7 }}
+      {% elif temperature_exterieure >= 32 %}
+        {{ temperature_exterieure - delta_5 }}
+      {% else %}
+        {{ consigne_de_base }}
+      {% endif %}
+
+#========================================================================
+# CALCUL - Température moyenne intérieure
+#========================================================================
+
+- sensor:
+  - name: "Température moyenne intérieure"
+    unique_id: température_moyenne_intérieure
+    unit_of_measurement: "°C"
+    icon: "mdi:home-thermometer" 
+    state: >
+      {{ (states('sensor.th_salon_temperature') | float +
+        states('sensor.th_cellier_temperature') | float +
+        states('sensor.th_cuisine_temperature') | float +
+        states('sensor.th_bureau_temperature') | float +
+        states('sensor.th_salle_de_bain_temperature') | float +
+        states('sensor.th_chambre_temperature') | float) / 6 | round(1) }}
+
+#========================================================================
+# Temperature DELTA
+#========================================================================
+
+- sensor:
+  - name: "Temperature Delta (valeur)"
+    unique_id: temperature_delta_value
+    unit_of_measurement: "°C"
+    state: >
+      {{ (states('sensor.th_balcon_nord_temperature') | float -
+          states('sensor.temperature_moyenne_interieure') | float) | round(1) }}
+
+#========================================================================
+# Temperature DELTA (pour affichage)    
+#========================================================================
+
+- sensor:
+  - name: "Température Delta"
+    unique_id: temperature_delta
+    state: >
+        Te {{ states('sensor.th_balcon_nord_temperature') | float | round(1) }}°C 
+        T̄i {{ states('sensor.temperature_moyenne_interieure') | float | round(1) }}°C 
+        ΔT = {{ (states('sensor.th_balcon_nord_temperature') | float - states('sensor.temperature_moyenne_interieure') | float) | round(1) }}°C

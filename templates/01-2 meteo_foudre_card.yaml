@@ -1,0 +1,113 @@
+
+#========================================================================
+#
+# windrose-card - LABEL Direction et distance de(s) (l')élaire(s)
+#
+# Foudre (direction / distance / azimut / timer)
+#
+#========================================================================
+
+#========================================================================
+# windrose-card - LABEL Lightning direction label
+#========================================================================
+- sensor:
+  - name: "Lightning direction label"
+    unique_id: lightning_direction_label
+    state: >
+      {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
+      {% if bearing in ['unknown', 'unavailable'] %}
+        Non disponible
+      {% else %}
+        {% set bearing = bearing | int %}
+        {% if bearing >= 348.75 or bearing < 11.25 %}
+          Nord
+        {% elif bearing >= 11.25 and bearing < 33.75 %}
+          Nord-Nord-Est
+        {% elif bearing >= 33.75 and bearing < 56.25 %}
+          Nord-Est
+        {% elif bearing >= 56.25 and bearing < 78.75 %}
+          Est-Nord-Est
+        {% elif bearing >= 78.75 and bearing < 101.25 %}
+          Est
+        {% elif bearing >= 101.25 and bearing < 123.75 %}
+          Est-Sud-Est
+        {% elif bearing >= 123.75 and bearing < 146.25 %}
+          Sud-Est
+        {% elif bearing >= 146.25 and bearing < 168.75 %}
+          Sud-Sud-Est
+        {% elif bearing >= 168.75 and bearing < 191.25 %}
+          Sud
+        {% elif bearing >= 191.25 and bearing < 213.75 %}
+          Sud-Sud-Ouest
+        {% elif bearing >= 213.75 and bearing < 236.25 %}
+          Sud-Ouest
+        {% elif bearing >= 236.25 and bearing < 258.75 %}
+          Ouest-Sud-Ouest
+        {% elif bearing >= 258.75 and bearing < 281.25 %}
+          Ouest
+        {% elif bearing >= 281.25 and bearing < 303.75 %}
+          Ouest-Nord-Ouest
+        {% elif bearing >= 303.75 and bearing < 326.25 %}
+          Nord-Ouest
+        {% elif bearing >= 326.25 and bearing < 348.75 %}
+          Nord-Nord-Ouest
+        {% else %}
+          Non disponible
+        {% endif %}
+      {% endif %}
+
+#========================================================================
+# windrose-card - LABEL Lightning distance km
+#========================================================================
+- sensor:
+  - name: "Lightning distance km"
+    unique_id: lightning_distance_km
+    state: >
+      {% set distance_km = states('sensor.blitzortung_lightning_distance') %}
+      {% if distance_km in ['unknown', 'unavailable'] %}
+        0
+      {% else %}
+        {{ (distance_km | float) | round(1) }}
+      {% endif %}
+    unit_of_measurement: "km"
+
+#========================================================================
+# windrose-card - LABEL Lightning bearing
+#========================================================================
+- sensor:
+  - name: "Lightning bearing"
+    unique_id: lightning_bearing
+    state: >
+      {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
+      {% if bearing in ['unknown', 'unavailable'] %}
+        0
+      {% else %}
+        {% set bearing = bearing | float | round(0) %}
+        {% if bearing == 0 %}
+          1
+        {% else %}
+          {{ bearing }}
+        {% endif %}
+      {% endif %}
+
+#========================================================================
+# Card - Temps depuis le dernier impact de foudre
+# Point d'impact TIMER "LAST CHANGE"
+#========================================================================
+- sensor:
+  - name: "Temps depuis le dernier impact de foudre"
+    unique_id: temps_depuis_le_dernier_impact_de_foudre
+    unit_of_measurement: "seconds"
+    state: >
+      {% set last_impact = as_timestamp(states('sensor.blitzortung_lightning_last_impact_time')) %}
+      {% set now = as_timestamp(now()) %}
+      {% if (now - last_impact) > 7200 %}
+        0
+      {% else %}
+        {% set time_diff = now - last_impact %}
+        {% set seconds = (time_diff % 60) | int %}
+        {% set minutes = ((time_diff % 3600) / 60) | int %}
+        {% set hours = ((time_diff % 86400) / 3600) | int %}
+        {% set days = (time_diff / 86400) | int %}
+        {{ days }} jours, {{ hours }} heures, {{ minutes }} minutes, {{ seconds }} secondes
+      {% endif %}

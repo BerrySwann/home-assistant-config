@@ -1,0 +1,254 @@
+
+#========================================================================
+#
+# ÉNERGIE 
+#
+# Utility meter 
+# Éclairage (Salon / Appart / Bureau / Sdb / Chambre)
+#
+#========================================================================
+
+#========================================================================
+# SALON (5) ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
+#========================================================================
+- sensor:
+  - name: "Eclairage Salon (5) ANNUEL"
+    unique_id: eclairage_salon_5_annuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_salon_5_annuel_um')) %} 
+        {{ states('sensor.eclairage_salon_5_annuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Salon (5) MENSUEL"
+    unique_id: eclairage_salon_5_mensuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_salon_5_mensuel_um')) %} 
+        {{ states('sensor.eclairage_salon_5_mensuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Salon (5) HEBDOMADAIRE"
+    unique_id: eclairage_salon_5_hebdomadaire
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_salon_5_hebdomadaire_um')) %} 
+        {{ states('sensor.eclairage_salon_5_hebdomadaire_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Salon (5) QUOTIDIEN"
+    unique_id: eclairage_salon_5_quotidien
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_salon_5_quotidien_um')) %} 
+        {{ states('sensor.eclairage_salon_5_quotidien_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+
+#========================================================================
+# APPARTEMENT (3) ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
+#========================================================================
+- sensor:
+  - name: "Eclairage Appart. (3) ANNUEL"
+    unique_id: eclairage_appart_3_annuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_appart_3_annuel_um')) %} 
+        {{ states('sensor.eclairage_appart_3_annuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Appart. (3) MENSUEL"
+    unique_id: eclairage_appart_3_mensuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_appart_3_mensuel_um')) %} 
+        {{ states('sensor.eclairage_appart_3_mensuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Appart. (3) HEBDOMADAIRE"
+    unique_id: eclairage_appart_3_hebdomadaire
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_appart_3_hebdomadaire_um')) %} 
+        {{ states('sensor.eclairage_appart_3_hebdomadaire_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Appart. (3) QUOTIDIEN"
+    unique_id: eclairage_appart_3_quotidien
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_appart_3_quotidien_um')) %} 
+        {{ states('sensor.eclairage_appart_3_quotidien_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+
+#========================================================================
+# BUREAU (5) ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
+#========================================================================
+- sensor:
+  - name: "Eclairage Bureau (5) ANNUEL"
+    unique_id: eclairage_bureau_5_annuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_bureau_5_annuel_um')) %} 
+        {{ states('sensor.eclairage_bureau_5_annuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Bureau (5) MENSUEL"
+    unique_id: eclairage_bureau_5_mensuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_bureau_5_mensuel_um')) %} 
+        {{ states('sensor.eclairage_bureau_5_mensuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Bureau (5) HEBDOMADAIRE"
+    unique_id: eclairage_bureau_5_hebdomadaire
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_bureau_5_hebdomadaire_um')) %} 
+        {{ states('sensor.eclairage_bureau_5_hebdomadaire_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Bureau (5) QUOTIDIEN"
+    unique_id: eclairage_bureau_5_quotidien
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_bureau_5_quotidien_um')) %} 
+        {{ states('sensor.eclairage_bureau_5_quotidien_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+
+#========================================================================
+# SALLE DE BAIN (2) ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
+#========================================================================
+- sensor:
+  - name: "Eclairage Salle de Bain (2) ANNUEL"
+    unique_id: eclairage_sdb_2_annuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_sdb_2_annuel_um')) %} 
+        {{ states('sensor.eclairage_sdb_2_annuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Eclairage Salle de Bain (2) MENSUEL"
+    unique_id: eclairage_sdb_2_mensuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_sdb_2_mensuel_um')) %} 
+        {{ states('sensor.eclairage_sdb_2_mensuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Eclairage Salle de Bain (2) HEBDOMADAIRE"
+    unique_id: eclairage_sdb_2_hebdomadaire
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_sdb_2_hebdomadaire_um')) %} 
+        {{ states('sensor.eclairage_sdb_2_hebdomadaire_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Eclairage Salle de Bain (2) QUOTIDIEN"
+    unique_id: eclairage_sdb_2_quotidien
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_sdb_2_quotidien_um')) %} 
+        {{ states('sensor.eclairage_sdb_2_quotidien_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+
+#========================================================================
+# CHAMBRE (4) ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
+#========================================================================
+- sensor:
+  - name: "Eclairage Chambre (4) ANNUEL"
+    unique_id: eclairage_chambre_4_annuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_chambre_4_annuel_um')) %} 
+        {{ states('sensor.eclairage_chambre_4_annuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Chambre (4) MENSUEL"
+    unique_id: eclairage_chambre_4_mensuel
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_chambre_4_mensuel_um')) %} 
+        {{ states('sensor.eclairage_chambre_4_mensuel_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Chambre (4) HEBDOMADAIRE"
+    unique_id: eclairage_chambre_4_hebdomadaire
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_chambre_4_hebdomadaire_um')) %} 
+        {{ states('sensor.eclairage_chambre_4_hebdomadaire_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}
+  - name: "Eclairage Chambre (4) QUOTIDIEN"
+    unique_id: eclairage_chambre_4_quotidien
+    device_class: energy
+    unit_of_measurement: kWh
+    icon: mdi:flash-outline
+    state: >
+      {% if is_number(states('sensor.eclairage_chambre_4_quotidien_um')) %} 
+        {{ states('sensor.eclairage_chambre_4_quotidien_um') | float | round(3) }}
+      {% else %} 
+        0.00 
+      {% endif %}

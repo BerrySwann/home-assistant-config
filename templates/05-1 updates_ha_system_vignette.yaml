@@ -1,0 +1,18 @@
+
+#========================================================================
+#
+# SYSTÈME — Mises à jour disponibles
+#
+#========================================================================
+
+- sensor:
+  - name: "Available Updates"
+    unique_id: available_updates
+    icon: mdi:update
+    state: >
+      {{ 
+        states.update
+        |selectattr('state', 'eq', 'on')
+        |list
+        |count
+      }}

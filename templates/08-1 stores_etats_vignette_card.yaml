@@ -1,0 +1,32 @@
+# STORES — États (Salon / Bureau)
+- sensor:
+  - name: "Store Salon Status"
+    unique_id: store_salon_status
+    state: >
+      {% if is_state('cover.store_salon', 'closed') and state_attr('cover.store_salon', 'current_position') == 0 %}
+        <span style="color: red;">Fermé</span>
+      {% elif is_state('cover.store_salon', 'open') and state_attr('cover.store_salon', 'current_position') == 100 %}
+        <span style="color: lightgreen;">Ouvert</span>
+      {% elif is_state('cover.store_salon', 'opening') %}
+        <span style="color: orange;">Up</span>
+      {% elif is_state('cover.store_salon', 'closing') %}
+        <span style="color: orange;">Down</span>
+      {% else %}
+        <span style="color: gold;">Ouvert</span>
+      {% endif %}
+
+- sensor:
+  - name: "Store Bureau Status"
+    unique_id: store_bureau_status
+    state: >
+      {% if is_state('cover.store_bureau', 'closed') and state_attr('cover.store_bureau', 'current_position') == 0 %}
+        <span style="color: red;">Fermé</span>
+      {% elif is_state('cover.store_bureau', 'open') and state_attr('cover.store_bureau', 'current_position') == 100 %}
+        <span style="color: lightgreen;">Ouvert</span>
+      {% elif is_state('cover.store_bureau', 'opening') %}
+        <span style="color: orange;">Up</span>
+      {% elif is_state('cover.store_bureau', 'closing') %}
+        <span style="color: orange;">Down</span>
+      {% else %}
+        <span style="color: gold;">Ouvert</span>
+      {% endif %}

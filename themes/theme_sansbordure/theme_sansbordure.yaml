@@ -1,0 +1,5 @@
+theme_sansbordure:
+  ha-card-border-width: 0
+  modes:
+    light: {}
+    dark: {}

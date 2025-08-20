@@ -1,0 +1,65 @@
+# CLIM — États (vignette)
+- sensor:
+  - name: "Clim Salon État"
+    unique_id: clim_salon_etat
+    state: >
+      {% if is_state('climate.clim', 'off') %}
+        Off
+      {% elif is_state('climate.clim', 'cool') %}
+        Cool
+      {% elif is_state('climate.clim', 'heat') %}
+        Heat
+      {% elif is_state('climate.clim', 'fan_only') %}
+        Fan
+      {% else %}
+        erreur
+      {% endif %}
+
+- sensor:
+  - name: "Radiateur Cuisine État"
+    unique_id: radiateur_cuisine_etat
+    state: >
+      {% if is_state('climate.radiateur_cuisine', 'off') %}
+        Off
+      {% elif is_state('climate.radiateur_cuisine', 'on') %}
+        On
+      {% else %}
+        erreur
+      {% endif %}
+
+- sensor:
+  - name: "Clim Bureau État"
+    unique_id: clim_bureau_etat
+    state: >
+      {% if is_state('climate.clim_du_bureau', 'off') %}
+        Off
+      {% elif is_state('climate.clim_du_bureau', 'cool') %}
+        Cool
+      {% elif is_state('climate.clim_du_bureau', 'heat') %}
+        Heat
+      {% elif is_state('climate.clim_du_bureau', 'fan_only') %}
+        Fan
+      {% else %}
+        erreur
+      {% endif %}
+
+- sensor:
+  - name: "Radiateur Sdb État"
+    unique_id: radiateur_sdb_etat
+    state: "XXX"
+
+- sensor:
+  - name: "Clim Chambre État"
+    unique_id: clim_chambre_etat
+    state: >
+      {% if is_state('climate.clim_de_la_chambre', 'off') %}
+        Off
+      {% elif is_state('climate.clim_de_la_chambre', 'cool') %}
+        Cool
+      {% elif is_state('climate.clim_de_la_chambre', 'heat') %}
+        Heat
+      {% elif is_state('climate.clim_de_la_chambre', 'fan_only') %}
+        Fan
+      {% else %}
+        erreur
+      {% endif %}

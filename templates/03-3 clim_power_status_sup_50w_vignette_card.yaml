@@ -1,0 +1,70 @@
+
+#========================================================================
+#
+# CLIM — Détection « power status » (>50W)
+#
+# ON / OFF basé sur la puissance des clim / Radiateur
+#
+#========================================================================
+
+#========================================================================
+# Clim Salon (ON) si (_power) superieur a 50 Watts
+#========================================================================
+- sensor:
+  - name: "Salon Power Status"
+    unique_id: salon_power_status
+    state: >
+      {% if states('sensor.clim_salon_nous_power') | float > 50 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+#========================================================================
+# Radiateur Cuisine (ON) si (_power) superieur a 50 Watts
+#========================================================================
+- sensor:
+  - name: "Cuisine Power Status"
+    unique_id: cuisine_power_status
+    state: >
+      {% if states('sensor.radiateur_elec_cuisine_power') | float > 50 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+#========================================================================
+# Clim Bureau (ON) si (_power) superieur a 50 Watts
+#========================================================================
+  - name: "Bureau Power Status"
+    unique_id: bureau_power_status
+    state: >
+      {% if states('sensor.clim_du_bureau_nous_power') | float > 50 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+#========================================================================
+# Radiateur Salle de Bain (ON) si (_power) superieur a 50 Watts
+#========================================================================
+  - name: "SdB Power Status"
+    unique_id: sdb_power_status
+    state: >
+      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 50 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+#========================================================================
+# Clim Chambre (ON) si (_power) superieur a 50 Watts
+#========================================================================
+  - name: "Chambre Power Status"
+    unique_id: chambre_power_status
+    state: >
+      {% if states('sensor.clim_chambre_nous_power') | float > 50 %}
+        on
+      {% else %}
+        off
+      {% endif %}

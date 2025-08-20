@@ -1,0 +1,40 @@
+
+  ikea_devices:
+    name: "IKEA Devices"
+    entities:
+        - sensor.contact_fenetre_bureau_ikea_battery
+        - sensor.contact_fenetre_chambre_ikea_battery
+        - sensor.contact_fenetre_cuisine_ikea_battery
+        - sensor.contact_fenetre_salon_ikea_battery
+        - sensor.detecteur_de_fuite_ikea_battery
+        - sensor.inter_salon_4_ikea_battery
+        - sensor.detecteur_vallhorn_battery
+        - sensor.poussoir_ikea_tradfri_battery
+        - sensor.inter_somrig_battery
+        - sensor.inter_bureau_rodret_battery
+
+  hue_devices:
+    name: "HUE Devices"
+    entities:
+        - sensor.hue_smart_button_entee_1_battery
+        - sensor.hue_smart_button_entee_2_battery
+        - sensor.hue_smart_button_eco_battery
+        - sensor.hue_smart_button_table_battery
+        - sensor.hue_smart_button_cuisine_battery
+        - sensor.hue_smart_button_couloir_battery
+        - sensor.boutton_bureau_hue_battery
+        - sensor.boutton_salle_de_bain_hue_battery
+        - sensor.hue_smart_button_chambre_battery
+        - sensor.eric_hue_smart_button_chambre_battery
+        - sensor.gege_hue_smart_button_chambre_battery
+
+  sonoff_devices:
+    name: "SONOFF Devices"
+    entities:
+        - sensor.th_balcon_nord_battery
+        - sensor.th_bureau_battery
+        - sensor.th_chambre_battery
+        - sensor.th_cuisine_battery
+        - sensor.th_salle_de_bain_battery
+        - sensor.th_salon_battery
+        - sensor.th_cellier_battery

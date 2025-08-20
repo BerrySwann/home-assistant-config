@@ -1,0 +1,24 @@
+---
+popup_button_airconditionner:
+  template: "widget_icon"
+  variables:
+    ulm_popup_button_airconditionner_state: "off"
+  styles:
+    card:
+      - background-color: "transparent"
+      - width: "42px"
+      - border-radius: "50%"
+  state:
+    - styles:
+        card:
+          - background-color: "var(--card-background-color)"
+          - box-shadow: "var( --ha-card-box-shadow)"
+          - transform: "scale(0.95)"
+      value: "[[[ return variables.ulm_popup_button_airconditionner_state ]]]"
+  tap_action:
+    action: "perform-action"
+    perform_action: "climate.set_hvac_mode"
+    target:
+      entity_id: "climate.hvac"
+    data:
+      hvac_mode: "[[[ return variables.ulm_popup_button_airconditionner_state ]]]"

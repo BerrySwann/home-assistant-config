@@ -1,0 +1,9 @@
+  # Carte Météo France ALERTES
+
+  - platform: local_file
+    name: MF_alerte_today
+    file_path: /config/www/weather/meteo_france_alerte_today.png
+    
+  - platform: local_file
+    name: MF_alerte_tomorrow
+    file_path: /config/www/weather/meteo_france_alerte_tomorrow.png

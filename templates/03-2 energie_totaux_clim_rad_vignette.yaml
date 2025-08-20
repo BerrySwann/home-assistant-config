@@ -1,0 +1,57 @@
+
+#========================================================================
+#
+# TOTAUX ENERGIE
+#
+# ÉNERGIE — Totaux (quotidien / mensuel / puissance instantanée)
+#
+#========================================================================
+
+#========================================================================
+# TOTAUX QUOTIDIEN
+#========================================================================
+
+- sensor:
+  - name: "Conso. Clim. Rad. Total QUOTIDIEN"
+    unique_id: conso_clim_rad_total_quotidien
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash-outline
+    state: >
+      {{ (states('sensor.clim_salon_quotidien') | float(0) +
+        states('sensor.radiateur_elec_cuisine_quotid1en') | float(0) +
+        states('sensor.clim_du_bureau_quotidien') | float(0) +
+        states('sensor.radiateur_sdb_quotidien') | float(0) +
+        states('sensor.clim_chambre_quotidien') | float(0)) | round(2) }}
+
+#========================================================================
+# TOTAUX MENSUEL 
+#========================================================================
+- sensor:
+  - name: "Conso. Clim. Rad. Total MENSUEL"
+    unique_id: conso_clim_rad_total_mensuel
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash-outline
+    state: >
+      {{ (states('sensor.clim_salon_mensuel') | float(0) +
+        states('sensor.radiateur_elec_cuisine_mensuel') | float(0) +
+        states('sensor.clim_du_bureau_mensuel') | float(0) +
+        states('sensor.radiateur_sdb_mensuel') | float(0) +
+        states('sensor.clim_chambre_mensuel') | float(0)) | round(2) }}
+
+#========================================================================
+# PUISSANCE INSTANTANEE
+#========================================================================
+- sensor:
+  - name: "Conso Clim Rad Total"
+    unique_id: conso_clim_rad_total
+    device_class: energy
+    unit_of_measurement: "W"
+    icon: mdi:flash-outline
+    state: >
+      {{ (states('sensor.clim_salon_nous_power') | float(0) +
+        states('sensor.radiateur_elec_cuisine_power') | float(0) +
+        states('sensor.clim_du_bureau_nous_power') | float(0) +
+        states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) +
+        states('sensor.clim_chambre_nous_power') | float(0)) | round(2) }}
