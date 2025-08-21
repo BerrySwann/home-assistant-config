@@ -1,0 +1,23 @@
+# .gitignore
+# Fichiers sensibles
+secrets.yaml
+*.db
+*.bak
+*.swp
+*.log
+
+# Bases de données Home Assistant
+home-assistant_v2.db
+home-assistant_v2.db-shm
+home-assistant_v2.db-wal
+home-assistant_v2_backup.db
+
+# Logs
+OZW_*.log
+home-assistant.log
+
+# Fichiers temporaires
+*.tmp
+.DS_Store
+.cloud/
+.storage/

@@ -1,0 +1,1931 @@
+  
+  
+# alert météo "sensor.06_weather_alert" V1 simple
+
+  - sensor:
+    - name: 'Alerte Vent violent'
+      unique_id: sensor.alerte_vent_violent
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Vent violent') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune vent-violent' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange vent-violent' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge vent-violent' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:weather-windy
+
+    - name: 'Alerte Inondation'
+      unique_id: sensor.alerte_inondation
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Inondation') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune inondation' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange inondation' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge inondation' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:home-flood
+
+    - name: 'Alerte Orages'
+      unique_id: sensor.alerte_orages
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Orages') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune orages' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange orages' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge orages' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:weather-lightning
+
+    - name: 'Alerte Pluie Inondation'
+      unique_id: sensor.alerte_pluie_inondation
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Pluie-inondation') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune pluie_inondation' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange pluie_inondation' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge pluie_inondation' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:weather-pouring
+
+    - name: 'Alerte Neige-verglas'
+      unique_id: sensor.alerte_neige_verglas
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Neige-verglas') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune neige-verglas' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange neige-verglas' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge neige-verglas' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:weather-snowy-heavy
+
+    - name: 'Alerte Grand-froid'
+      unique_id: sensor.alerte_grand_froid
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Grand-froid') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune grand-froid' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange grand-froid' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge grand-froid' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:snowflake
+
+    - name: 'Alerte Canicule'
+      unique_id: sensor.alerte_canicule
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Canicule') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune canicule' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange canicule' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge canicule' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:weather-sunny
+
+    - name: 'Alerte Avalanches'
+      unique_id: sensor.alerte_avalanches
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Avalanches') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune avalanches' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange avalanches' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge avalanches' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:terrain
+
+    - name: 'Alerte Vagues-submersion'
+      unique_id: sensor.alerte_vagues_submersion
+      state: >-
+        {% set wa = state_attr('sensor.06_weather_alert', 'Vagues-submersion') %}
+        {% set at = state_attr('binary_sensor.meteoalarm', 'awareness_type') %}
+        {% set ev = state_attr('binary_sensor.meteoalarm', 'event') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif 'jaune vagues-submersion' in ev %}
+          {% set al = 'Jaune' %}
+        {% elif 'orange vagues-submersion' in ev %}
+          {% set al = 'Orange' %}
+        {% elif 'rouge vagues-submersion' in ev %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'Vert' %}
+        {% endif %}
+        {{ al }}
+      icon: mdi:waves
+
+    - name: 'Alerte Météo'
+      unique_id: sensor.alerte_meteo
+      state: >-
+        {% set wa = states('sensor.06_weather_alert') %}
+        {% set al = state_attr('binary_sensor.meteoalarm', 'awareness_level') %}
+        {% if wa in ['Vert', 'Jaune', 'Orange', 'Rouge'] %}
+          {% set al = wa %}
+        {% elif '1' in al %}
+          {% set al = 'Vert' %}
+        {% elif '2' in al %}
+          {% set al = 'Jaune' %}
+        {% elif '3' in al %}
+          {% set al = 'Orange' %}
+        {% elif '4' in al %}
+          {% set al = 'Rouge' %}
+        {% else %}
+          {% set al = 'unknown' %}
+        {% endif %}
+        {{ al }}
+      attributes:
+        Date: >-
+          {% set dt = state_attr('binary_sensor.meteoalarm', 'urgency') %}
+          {% if dt == 'Future' %}
+            {% set val = 'Demain' %}
+          {% else %}
+            {% set val = dt %}
+          {% endif %}
+          {{ val }}
+        Vent Violent: >-
+          {% set val = states('sensor.alerte_vent_violent') %}
+          {{ val }}
+        Inondation: >-
+          {% set val = states('sensor.alerte_inondation') %}
+          {{ val }}
+        Orages: >-
+          {% set val = states('sensor.alerte_orages') %}
+          {{ val }}
+        Pluie Inondation: >-
+          {% set val = states('sensor.alerte_pluie_inondation') %}
+          {{ val }}
+        Neige Verglas: >-
+          {% set val = states('sensor.alerte_neige_verglas') %}
+          {{ val }}
+        Grand Froid: >-
+          {% set val = states('sensor.alerte_grand_froid') %}
+          {{ val }}
+        Canicule: >-
+          {% set val = states('sensor.alerte_canicule') %}
+          {{ val }}
+        Avalanches: >-
+          {% set val = states('sensor.alerte_avalanches') %}
+          {{ val }}
+        Vagues-submersion: >-
+          {% set val = states('sensor.alerte_vagues_submersion') %}
+          {{ val }}
+      icon: mdi:alert-outline
+
+
+        # SpeedTest
+
+  - sensor:
+      - name: 'SpeedTest CLI Ping'
+        unique_id: speedtest_cli_ping
+        icon: mdi:speedometer
+        unit_of_measurement: ms
+        state_class: measurement
+        state: "{{ (states('sensor.speedtest_cli_data') | from_json).ping | round(2) }}"
+      - name: 'SpeedTest CLI Download'
+        unique_id: speedtest_cli_download
+        icon: mdi:speedometer
+        unit_of_measurement: Mbit/s
+        state_class: measurement
+        state: "{{ ((states('sensor.speedtest_cli_data') | from_json).download * 8 / 1000 / 1000) | round(2) }}"
+      - name: 'SpeedTest CLI Upload'
+        unique_id: speedtest_cli_upload
+        icon: mdi:speedometer
+        unit_of_measurement: Mbit/s
+        state_class: measurement
+        state: "{{ ((states('sensor.speedtest_cli_data') | from_json).upload * 8 / 1000 / 1000) | round(2) }}"
+
+      #========================================================================
+      #
+      # utility meter 
+      #
+      # CLIM SALON
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Clim Salon ANNUEL"
+        unique_id: clim_salon_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_salon_annuel_um')) %} 
+            {{ states('sensor.clim_salon_annuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim Salon MENSUEL"
+        unique_id: clim_salon_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_salon_mensuel_um')) %} 
+            {{ states('sensor.clim_salon_mensuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim Salon HEBDOMADAIRE"
+        unique_id: clim_salon_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_salon_hebdomadaire_um')) %} 
+            {{ states('sensor.clim_salon_hebdomadaire_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim Salon QUOTIDIEN"
+        unique_id: clim_salon_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_salon_quotidien_um')) %} 
+            {{ states('sensor.clim_salon_quotidien_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}  
+
+      #========================================================================
+      # RADIATEUR CUISINE
+      #========================================================================
+
+  - sensor:
+      - name: "Radiateur Cuisine ANNUEL"
+        unique_id: radiateur_elec_cuisine_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_elec_cuisine_annuel_um')) %} 
+            {{ states('sensor.radiateur_elec_cuisine_annuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Radiateur Cuisine MENSUEL"
+        unique_id: radiateur_elec_cuisine_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_elec_cuisine_mensuel_um')) %} 
+            {{ states('sensor.radiateur_elec_cuisine_mensuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Radiateur Cuisine HEBDOMADAIRE"
+        unique_id: radiateur_cuisine_elec_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_elec_cuisine_hebdomadaire_um')) %} 
+            {{ states('sensor.radiateur_elec_cuisine_hebdomadaire_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Radiateur Cuisine QUOTIDIEN"
+        unique_id: radiateur_elec_cuisine_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_elec_cuisine_quotidien_um')) %} 
+            {{ states('sensor.radiateur_elec_cuisine_quotidien_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      # CLIM BUREAU
+      #========================================================================
+
+  - sensor:
+      - name: "Clim du Bureau ANNUEL"
+        unique_id: clim_du_bureau_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_du_bureau_annuel_um')) %} 
+            {{ states('sensor.clim_du_bureau_annuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim du Bureau MENSUEL"
+        unique_id: clim_du_bureau_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_du_bureau_mensuel_um')) %} 
+            {{ states('sensor.clim_du_bureau_mensuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim du Bureau HEBDOMADAIRE"
+        unique_id: clim_du_bureau_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_du_bureau_hebdomadaire_um')) %} 
+            {{ states('sensor.clim_du_bureau_hebdomadaire_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim du Bureau QUOTIDIEN"
+        unique_id: clim_du_bureau_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_du_bureau_quotidien_um')) %} 
+            {{ states('sensor.clim_du_bureau_quotidien_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      # RADIATEUR SALLE DE BAIN
+      #========================================================================
+
+  - sensor:
+      - name: "Radiateur SdB ANNUEL"
+        unique_id: radiateur_sdb_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_sdb_annuel_um')) %} 
+            {{ states('sensor.radiateur_sdb_annuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Radiateur SdB MENSUEL"
+        unique_id: radiateur_sdb_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_sdb_mensuel_um')) %} 
+            {{ states('sensor.radiateur_sdb_mensuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Radiateur SdB HEBDOMADAIRE"
+        unique_id: radiateur_sdb_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_sdb_hebdomadaire_um')) %} 
+            {{ states('sensor.radiateur_sdb_hebdomadaire_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Radiateur SdB QUOTIDIEN"
+        unique_id: radiateur_sdb_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.radiateur_sdb_quotidien_um')) %} 
+            {{ states('sensor.radiateur_sdb_quotidien_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      # CLIM CHAMBRE
+      #========================================================================
+
+  - sensor:
+      - name: "Clim Chambre ANNUEL"
+        unique_id: clim_chambre_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_chambre_annuel_um')) %} 
+            {{ states('sensor.clim_chambre_annuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim Chambre MENSUEL"
+        unique_id: clim_chambre_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_chambre_mensuel_um')) %} 
+            {{ states('sensor.clim_chambre_mensuel_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim Chambre HEBDOMADAIRE"
+        unique_id: clim_chambre_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_chambre_hebdomadaire_um')) %} 
+            {{ states('sensor.clim_chambre_hebdomadaire_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Clim Chambre QUOTIDIEN"
+        unique_id: clim_chambre_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.clim_chambre_quotidien_um')) %} 
+            {{ states('sensor.clim_chambre_quotidien_um') | float | round(2) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      #
+      # TOTAUX ENERGIE
+      #
+      #========================================================================
+
+      #========================================================================
+      # TOTAUX QUOTIDIEN
+      #========================================================================
+
+  - sensor:
+    - name: "Conso. Clim. Rad. Total QUOTIDIEN"
+      unique_id: conso_clim_rad_total_quotidien
+      device_class: energy
+      unit_of_measurement: "kWh"
+      icon: mdi:flash-outline
+      state: >
+        {{ (states('sensor.clim_salon_quotidien') | float(0) +
+          states('sensor.radiateur_elec_cuisine_quotid1en') | float(0) +
+          states('sensor.clim_du_bureau_quotidien') | float(0) +
+          states('sensor.radiateur_sdb_quotidien') | float(0) +
+          states('sensor.clim_chambre_quotidien') | float(0)) | round(2) }}
+
+      #========================================================================
+      # TOTAUX MENSUEL 
+      #========================================================================
+
+  - sensor:
+    - name: "Conso. Clim. Rad. Total MENSUEL"
+      unique_id: conso_clim_rad_total_mensuel
+      device_class: energy
+      unit_of_measurement: "kWh"
+      icon: mdi:flash-outline
+      state: >
+        {{ (states('sensor.clim_salon_mensuel') | float(0) +
+          states('sensor.radiateur_elec_cuisine_mensuel') | float(0) +
+          states('sensor.clim_du_bureau_mensuel') | float(0) +
+          states('sensor.radiateur_sdb_mensuel') | float(0) +
+          states('sensor.clim_chambre_mensuel') | float(0)) | round(2) }}
+
+  - sensor:
+    - name: "Conso Clim Rad Total"
+      unique_id: conso_clim_rad_total
+      device_class: energy
+      unit_of_measurement: "W"
+      icon: mdi:flash-outline
+      state: >
+        {{ (states('sensor.clim_salon_nous_power') | float(0) +
+          states('sensor.radiateur_elec_cuisine_power') | float(0) +
+          states('sensor.clim_du_bureau_nous_power') | float(0) +
+          states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) +
+          states('sensor.clim_chambre_nous_power') | float(0)) | round(2) }}
+
+      #========================================================================
+      #
+      # utility meter 
+      #
+      # *eclairage SALON
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Eclairage Salon (5) ANNUEL"
+        unique_id: eclairage_salon_5_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_salon_5_annuel_um')) %} 
+            {{ states('sensor.eclairage_salon_5_annuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Salon (5) MENSUEL"
+        unique_id: eclairage_salon_5_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_salon_5_mensuel_um')) %} 
+            {{ states('sensor.eclairage_salon_5_mensuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Salon (5) HEBDOMADAIRE"
+        unique_id: eclairage_salon_5_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_salon_5_hebdomadaire_um')) %} 
+            {{ states('sensor.eclairage_salon_5_hebdomadaire_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Salon (5) QUOTIDIEN"
+        unique_id: eclairage_salon_5_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_salon_5_quotidien_um')) %} 
+            {{ states('sensor.eclairage_salon_5_quotidien_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      #
+      # eclairage APPARTEMENT
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Eclairage Appart. (3) ANNUEL"
+        unique_id: eclairage_appart_3_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_appart_3_annuel_um')) %} 
+            {{ states('sensor.eclairage_appart_3_annuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Appart. (3) MENSUEL"
+        unique_id: eclairage_appart_3_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_appart_3_mensuel_um')) %} 
+            {{ states('sensor.eclairage_appart_3_mensuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Appart. (3) HEBDOMADAIRE"
+        unique_id: eclairage_appart_3_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_appart_3_hebdomadaire_um')) %} 
+            {{ states('sensor.eclairage_appart_3_hebdomadaire_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Appart. (3) QUOTIDIEN"
+        unique_id: eclairage_appart_3_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_appart_3_quotidien_um')) %} 
+            {{ states('sensor.eclairage_appart_3_quotidien_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      #
+      # eclairage BUREAU
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Eclairage Bureau (5) ANNUEL"
+        unique_id: eclairage_bureau_5_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_bureau_5_annuel_um')) %} 
+            {{ states('sensor.eclairage_bureau_5_annuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Bureau (5) MENSUEL"
+        unique_id: eclairage_bureau_5_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_bureau_5_mensuel_um')) %} 
+            {{ states('sensor.eclairage_bureau_5_mensuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Bureau (5) HEBDOMADAIRE"
+        unique_id: eclairage_bureau_5_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_bureau_5_hebdomadaire_um')) %} 
+            {{ states('sensor.eclairage_bureau_5_hebdomadaire_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Bureau (5) QUOTIDIEN"
+        unique_id: eclairage_bureau_5_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_bureau_5_quotidien_um')) %} 
+            {{ states('sensor.eclairage_bureau_5_quotidien_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      #
+      # eclairage Salle de Bain
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Eclairage Salle de Bain (2) ANNUEL"
+        unique_id: eclairage_sdb_2_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_sdb_2_annuel_um')) %} 
+            {{ states('sensor.eclairage_sdb_2_annuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Eclairage Salle de Bain (2) MENSUEL"
+        unique_id: eclairage_sdb_2_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_sdb_2_mensuel_um')) %} 
+            {{ states('sensor.eclairage_sdb_2_mensuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Eclairage Salle de Bain (2) HEBDOMADAIRE"
+        unique_id: eclairage_sdb_2_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_sdb_2_hebdomadaire_um')) %} 
+            {{ states('sensor.eclairage_sdb_2_hebdomadaire_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Eclairage Salle de Bain (2) QUOTIDIEN"
+        unique_id: eclairage_sdb_2_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_sdb_2_quotidien_um')) %} 
+            {{ states('sensor.eclairage_sdb_2_quotidien_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      #
+      # eclairage CHAMBRE
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Eclairage Chambre (4) ANNUEL"
+        unique_id: eclairage_chambre_4_annuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_chambre_4_annuel_um')) %} 
+            {{ states('sensor.eclairage_chambre_4_annuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Chambre (4) MENSUEL"
+        unique_id: eclairage_chambre_4_mensuel
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_chambre_4_mensuel_um')) %} 
+            {{ states('sensor.eclairage_chambre_4_mensuel_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Chambre (4) HEBDOMADAIRE"
+        unique_id: eclairage_chambre_4_hebdomadaire
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_chambre_4_hebdomadaire_um')) %} 
+            {{ states('sensor.eclairage_chambre_4_hebdomadaire_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      - name: "Eclairage Chambre (4) QUOTIDIEN"
+        unique_id: eclairage_chambre_4_quotidien
+        device_class: energy
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        state: >
+          {% if is_number(states('sensor.eclairage_chambre_4_quotidien_um')) %} 
+            {{ states('sensor.eclairage_chambre_4_quotidien_um') | float | round(3) }}
+          {% else %} 
+            0.00 
+          {% endif %}
+
+      #========================================================================
+      #
+      # Updates availables / disponibles
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Available Updates"
+        unique_id: available_updates
+        icon: mdi:update
+        state: >
+          {{ 
+            states.update
+            |selectattr('state', 'eq', 'on')
+            |list
+            |count
+          }}
+
+      #========================================================================
+      #
+      # windrose-card - LABEL Direction du Vent Vence
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Direction du Vent Vence lable"
+        unique_id: vence_wind_direction_label
+        state: >
+          {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}
+          {% if bearing is not none %}
+            {% set bearing = bearing | int %}
+            {% if bearing >= 348.75 or bearing < 11.25 %}
+              Nord
+            {% elif bearing >= 11.25 and bearing < 33.75 %}
+              Nord-Nord-Est
+            {% elif bearing >= 33.75 and bearing < 56.25 %}
+              Nord-Est
+            {% elif bearing >= 56.25 and bearing < 78.75 %}
+              Est-Nord-Est
+            {% elif bearing >= 78.75 and bearing < 101.25 %}
+              Est
+            {% elif bearing >= 101.25 and bearing < 123.75 %}
+              Est-Sud-Est
+            {% elif bearing >= 123.75 and bearing < 146.25 %}
+              Sud-Est
+            {% elif bearing >= 146.25 and bearing < 168.75 %}
+              Sud-Sud-Est
+            {% elif bearing >= 168.75 and bearing < 191.25 %}
+              Sud
+            {% elif bearing >= 191.25 and bearing < 213.75 %}
+              Sud-Sud-Ouest
+            {% elif bearing >= 213.75 and bearing < 236.25 %}
+              Sud-Ouest
+            {% elif bearing >= 236.25 and bearing < 258.75 %}
+              Ouest-Sud-Ouest
+            {% elif bearing >= 258.75 and bearing < 281.25 %}
+              Ouest
+            {% elif bearing >= 281.25 and bearing < 303.75 %}
+              Ouest-Nord-Ouest
+            {% elif bearing >= 303.75 and bearing < 326.25 %}
+              Nord-Ouest
+            {% elif bearing >= 326.25 and bearing < 348.75 %}
+              Nord-Nord-Ouest
+            {% else %}
+              Inconnu
+            {% endif %}
+          {% else %}
+            Calme
+          {% endif %}
+
+      - name: "Direction du Vent Vence"
+        unique_id: vence_wind_bearing
+        state: >
+          {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}
+          {% if bearing is not none %}
+            {% set bearing = bearing | float | round(0) %}
+            {% if bearing == 0 %}
+              1
+            {% else %}
+              {{ bearing }}
+            {% endif %}
+          {% else %}
+            Inconnu
+          {% endif %}
+  
+      - name: "Vitesse du Vent Vence"
+        unique_id: vence_wind_speed_kmh
+        state: >
+          {% set wind_speed_ms = states.weather.vence.attributes.wind_speed | float %}
+          {% set wind_speed_kmh = (wind_speed_ms * 3.6) | round(1) %}
+          {{ wind_speed_kmh }}
+        unit_of_measurement: "km/h"
+
+      #========================================================================
+      #
+      # windrose-card - LABEL Direction et distance de(s) (l')élaire(s)
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Lightning direction label"
+        unique_id: lightning_direction_label
+        state: >
+          {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
+          {% if bearing in ['unknown', 'unavailable'] %}
+            Non disponible
+          {% else %}
+            {% set bearing = bearing | int %}
+            {% if bearing >= 348.75 or bearing < 11.25 %}
+              Nord
+            {% elif bearing >= 11.25 and bearing < 33.75 %}
+              Nord-Nord-Est
+            {% elif bearing >= 33.75 and bearing < 56.25 %}
+              Nord-Est
+            {% elif bearing >= 56.25 and bearing < 78.75 %}
+              Est-Nord-Est
+            {% elif bearing >= 78.75 and bearing < 101.25 %}
+              Est
+            {% elif bearing >= 101.25 and bearing < 123.75 %}
+              Est-Sud-Est
+            {% elif bearing >= 123.75 and bearing < 146.25 %}
+              Sud-Est
+            {% elif bearing >= 146.25 and bearing < 168.75 %}
+              Sud-Sud-Est
+            {% elif bearing >= 168.75 and bearing < 191.25 %}
+              Sud
+            {% elif bearing >= 191.25 and bearing < 213.75 %}
+              Sud-Sud-Ouest
+            {% elif bearing >= 213.75 and bearing < 236.25 %}
+              Sud-Ouest
+            {% elif bearing >= 236.25 and bearing < 258.75 %}
+              Ouest-Sud-Ouest
+            {% elif bearing >= 258.75 and bearing < 281.25 %}
+              Ouest
+            {% elif bearing >= 281.25 and bearing < 303.75 %}
+              Ouest-Nord-Ouest
+            {% elif bearing >= 303.75 and bearing < 326.25 %}
+              Nord-Ouest
+            {% elif bearing >= 326.25 and bearing < 348.75 %}
+              Nord-Nord-Ouest
+            {% else %}
+              Non disponible
+            {% endif %}
+          {% endif %}
+
+  - sensor:
+      - name: "Lightning distance km"
+        unique_id: lightning_distance_km
+        state: >
+          {% set distance_km = states('sensor.blitzortung_lightning_distance') %}
+          {% if distance_km in ['unknown', 'unavailable'] %}
+            0
+          {% else %}
+            {{ (distance_km | float) | round(1) }}
+          {% endif %}
+        unit_of_measurement: "km"
+
+
+  - sensor:
+      - name: "Lightning bearing"
+        unique_id: lightning_bearing
+        state: >
+          {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
+          {% if bearing in ['unknown', 'unavailable'] %}
+            0
+          {% else %}
+            {% set bearing = bearing | float | round(0) %}
+            {% if bearing == 0 %}
+              1
+            {% else %}
+              {{ bearing }}
+            {% endif %}
+          {% endif %}
+
+      #========================================================================
+      #
+      # point d'impact TIMER "LAST CHANGE"
+      #
+      #========================================================================
+
+  - sensor:
+      - name: "Temps depuis le dernier impact de foudre"
+        unique_id: temps_depuis_le_dernier_impact_de_foudre
+        unit_of_measurement: "seconds"
+        state: >
+          {% set last_impact = as_timestamp(states('sensor.blitzortung_lightning_last_impact_time')) %}
+          {% set now = as_timestamp(now()) %}
+          {% if (now - last_impact) > 7200 %}
+            0
+          {% else %}
+            {% set time_diff = now - last_impact %}
+            {% set seconds = (time_diff % 60) | int %}
+            {% set minutes = ((time_diff % 3600) / 60) | int %}
+            {% set hours = ((time_diff % 86400) / 3600) | int %}
+            {% set days = (time_diff / 86400) | int %}
+            {{ days }} jours, {{ hours }} heures, {{ minutes }} minutes, {{ seconds }} secondes
+          {% endif %}
+
+    #========================================================================
+    #
+    # Tendance temperature / humiditée
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "th balcon nord humidity trend"
+        unique_id: th_balcon_nord_humidity_trend
+        state: >
+          {% set current = states('sensor.th_balcon_nord_humidity') | float | round(2) %}
+          {% set previous = states('input_number.th_balcon_nord_humidity_previous') | float | round(2) %}
+          {% if current > previous %}
+            increasing
+          {% elif current < previous %}
+            decreasing
+          {% else %}
+            stable
+          {% endif %}
+
+  - sensor:
+      - name: "th balcon nord temperature trend"
+        unique_id: th_balcon_nord_temperature_trend
+        state: >
+          {% set current = states('sensor.th_balcon_nord_temperature') | float | round(2) %}
+          {% set previous = states('input_number.th_balcon_nord_temperature_previous') | float | round(2) %}
+          {% if current > previous %}
+            increasing
+          {% elif current < previous %}
+            decreasing
+          {% else %}
+            stable
+          {% endif %}
+
+    #========================================================================
+    #
+    # Verifie si portable sont en Wifi ou Celullar
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "Condition Mamour Wifi"
+        unique_id: condition_mamour_wifi
+        state: >-
+          {% if is_state('sensor.ne2213_mamour_network_type', 'wifi') %}
+            true
+          {% else %}
+            false
+          {% endif %}
+
+    #========================================================================
+    # Vignette si portable sont en Wifi ou Celullar
+    #========================================================================
+
+      - name: "Condition Eric Wifi"
+        unique_id: condition_eric_wifi
+        state: >-
+          {% if is_state('sensor.gm1901_network_type', 'wifi') %}
+            true
+          {% else %}
+            false
+          {% endif %}
+
+  - sensor:
+      - name: "Etat Wifi Maison"
+        unique_id: etat_wifi_maison
+        state: >-
+          {% set mamour = is_state('sensor.condition_mamour_wifi', 'true') %}
+          {% set eric = is_state('sensor.condition_eric_wifi', 'true') %}
+          {% if mamour and eric %}
+            2
+          {% elif mamour and not eric %}
+            M
+          {% elif eric and not mamour %}
+            E
+          {% else %}
+            0
+          {% endif %}
+        attributes:
+          couleur: >-
+            {% if mamour and eric %}
+              green
+            {% elif mamour and not eric %}
+              orange
+            {% elif eric and not mamour %}
+              gold
+            {% else %}
+              red
+            {% endif %}
+
+    #========================================================================
+    #
+    # Pour vignette CLIM
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "Salon Power Status"
+        unique_id: salon_power_status
+        state: >
+          {% if states('sensor.clim_salon_nous_power') | float > 50 %}
+            on
+          {% else %}
+            off
+          {% endif %}
+
+      - name: "Cuisine Power Status"
+        unique_id: cuisine_power_status
+        state: >
+          {% if states('sensor.radiateur_elec_cuisine_power') | float > 50 %}
+            on
+          {% else %}
+            off
+          {% endif %}
+
+      - name: "Bureau Power Status"
+        unique_id: bureau_power_status
+        state: >
+          {% if states('sensor.clim_du_bureau_nous_power') | float > 50 %}
+            on
+          {% else %}
+            off
+          {% endif %}
+
+      - name: "SdB Power Status"
+        unique_id: sdb_power_status
+        state: >
+          {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 50 %}
+            on
+          {% else %}
+            off
+          {% endif %}
+
+      - name: "Chambre Power Status"
+        unique_id: chambre_power_status
+        state: >
+          {% if states('sensor.clim_chambre_nous_power') | float > 50 %}
+            on
+          {% else %}
+            off
+          {% endif %}
+
+    #========================================================================
+    #
+    # gere les étas des CLIM '(VIGNETTE N°3 CLIM)'
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "Clim Salon État"
+        unique_id: clim_salon_etat
+        state: >
+          {% if is_state('climate.clim', 'off') %}
+            Off
+          {% elif is_state('climate.clim', 'cool') %}
+            Cool
+          {% elif is_state('climate.clim', 'heat') %}
+            Heat
+          {% elif is_state('climate.clim', 'fan_only') %}
+            Fan
+          {% else %}
+            erreur
+          {% endif %}
+
+  - sensor:
+      - name: "Radiateur Cuisine État"
+        unique_id: radiateur_cuisine_etat
+        state: >
+          {% if is_state('climate.radiateur_cuisine', 'off') %}
+            Off
+          {% elif is_state('climate.radiateur_cuisine', 'on') %}
+            On
+          {% else %}
+            erreur
+          {% endif %}
+
+  - sensor:
+      - name: "Clim Bureau État"
+        unique_id: clim_bureau_etat
+        state: >
+          {% if is_state('climate.clim_du_bureau', 'off') %}
+            Off
+          {% elif is_state('climate.clim_du_bureau', 'cool') %}
+            Cool
+          {% elif is_state('climate.clim_du_bureau', 'heat') %}
+            Heat
+          {% elif is_state('climate.clim_du_bureau', 'fan_only') %}
+            Fan
+          {% else %}
+            erreur
+          {% endif %}
+
+  - sensor:
+      - name: "Radiateur Sdb État"
+        unique_id: radiateur_sdb_etat
+        state: "XXX"
+
+  - sensor:
+      - name: "Clim Chambre État"
+        unique_id: clim_chambre_etat
+        state: >
+          {% if is_state('climate.clim_de_la_chambre', 'off') %}
+            Off
+          {% elif is_state('climate.clim_de_la_chambre', 'cool') %}
+            Cool
+          {% elif is_state('climate.clim_de_la_chambre', 'heat') %}
+            Heat
+          {% elif is_state('climate.clim_de_la_chambre', 'fan_only') %}
+            Fan
+          {% else %}
+            erreur
+          {% endif %}
+
+    #========================================================================
+    #
+    # Compte le nombre de fenêtre ouverte
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "Nbre de fenêtres fermées"
+        unique_id: nbre_de_fenetres_fermees
+        state: >-
+          {{
+            [
+              states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'off',
+              states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'off',
+              states('binary_sensor.contact_fenetre_bureau_ikea_contact') == 'off',
+              states('binary_sensor.contact_fenetre_chambre_ikea_contact') == 'off',
+            ].count(true)
+          }}
+        attributes:
+          friendly_name: "Nombre de fenêtres fermées"
+          icon: mdi:window-shutter
+
+  - sensor:
+      - name: "Nbre de fenêtres ouvertes"
+        unique_id: nbre_de_fenetres_ouvertes
+        state: >-
+          {{
+            [
+              states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'on',
+              states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'on',
+              states('binary_sensor.contact_fenetre_bureau_ikea_contact') == 'on',
+              states('binary_sensor.contact_fenetre_chambre_ikea_contact') == 'on',
+            ].count(true)
+          }}
+        attributes:
+          friendly_name: "Nombre de fenêtres ouvertes"
+          icon: mdi:window-shutter-open
+
+    #========================================================================
+    #
+    # gere les étas des lampes '(VIGNETTE LUMIERES)'
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "Lumière Appartement État"
+        unique_id: lumiere_appartement_etat
+        state: >
+          {% if is_state('light.entree', 'on') and is_state('light.couloir', 'on') %}
+            Allumé
+          {% elif is_state('light.entree', 'off') and is_state('light.couloir', 'off') %}
+            Éteint
+          {% elif is_state('light.entree', 'on') and is_state('light.couloir', 'off')%}
+            Entrée
+          {% elif is_state('light.couloir', 'on') and is_state('light.entree', 'off')%}
+            Couloir
+          {% else %}
+            erreur
+          {% endif %}
+
+      - name: "Lumière Salon État"
+        unique_id: lumiere_salon_etat
+        state: >
+          {% if is_state('light.salon', 'on') and is_state('light.table', 'on') %}
+            Allumé
+          {% elif is_state('light.salon', 'off') and is_state('light.table', 'off') %}
+            Éteint
+          {% elif is_state('light.salon', 'on') and is_state('light.table', 'off') %}
+            Salon
+          {% elif is_state('light.salon', 'off') and is_state('light.table', 'on') %}
+            Table
+          {% else %}
+            erreur
+          {% endif %}
+
+      - name: "Lumière Cuisine État"
+        unique_id: lumiere_cuisine_etat
+        state: >
+          {% if is_state('light.cuisine', 'on') %}
+            Allumé
+          {% else %}
+            Éteint
+          {% endif %}
+
+      - name: "Lumière Bureau État"
+        unique_id: lumiere_bureau_etat
+        state: >
+          {% if is_state('switch.hue_smart_eco_pc_bureau', 'off') %}
+            {% if is_state('light.bureau_z2m', 'on') %}
+              Bureau
+            {% elif is_state('light.bureau', 'on') %}
+              Éco.
+            {% elif is_state('light.bureau', 'off') %}
+              Éco.
+            {% else %}
+              Éco.
+            {% endif %}
+          {% else %}
+            {% if is_state('light.bureau_z2m', 'on') and is_state('light.bureau', 'on') %}
+              Allumé
+            {% elif is_state('light.bureau_z2m', 'off') and is_state('light.bureau', 'off') %}
+              Éteint
+            {% elif is_state('light.bureau_z2m', 'on') and is_state('light.bureau', 'off') %}
+              Bureau
+            {% elif is_state('light.bureau_z2m', 'off') and is_state('light.bureau', 'on') %}
+              Écran
+            {% else %}
+              Éco.
+            {% endif %}
+          {% endif %}
+
+      - name: "Lumière Salle de Bain État"
+        unique_id: lumiere_salle_de_bain_etat
+        state: >
+          {% if is_state('light.lampe_salle_de_bain_hue', 'on') and is_state('light.salle_de_bain', 'on') %}
+            Allumé
+          {% elif is_state('light.lampe_salle_de_bain_hue', 'off') and is_state('light.salle_de_bain', 'off') %}
+            Éteint
+          {% else %}
+            erreur
+          {% endif %}
+
+      - name: "Lumière Chambre État"
+        unique_id: lumiere_chambre_etat
+        state: >
+          {% if is_state('switch.prise_tete_de_lit_chambre', 'off') %}
+            {% if is_state('light.chambre', 'on') %}
+              Chambre
+            {% else %}
+              Éco.
+            {% endif %}
+          {% else %}
+            {% if is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+              Allumé
+            {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+              Ch.+zG
+            {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+              Ch.+zÉ
+            {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+              Chambre
+            {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+              Éteint
+            {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+              Zone G.
+            {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+              Zone É.
+            {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+              Tête Lit
+            {% endif %}
+          {% endif %}
+
+    #========================================================================
+    #
+    # gere les étas des Stores (VIGNETTE STORES) "Pièces / Fenêtre / Stores" (STORES)
+    #
+    #========================================================================
+
+  - sensor:
+    - name: "Store Salon Status"
+      unique_id: store_salon_status
+      state: >
+        {% if is_state('cover.store_salon', 'closed') and state_attr('cover.store_salon', 'current_position') == 0 %}
+          <span style="color: red;">Fermé</span>
+        {% elif is_state('cover.store_salon', 'open') and state_attr('cover.store_salon', 'current_position') == 100 %}
+          <span style="color: lightgreen;">Ouvert</span>
+        {% elif is_state('cover.store_salon', 'opening') %}
+          <span style="color: orange;">Up</span>
+        {% elif is_state('cover.store_salon', 'closing') %}
+          <span style="color: orange;">Down</span>
+        {% else %}
+          <span style="color: gold;">Ouvert</span>
+        {% endif %}
+
+  - sensor:
+    - name: "Store Bureau Status"
+      unique_id: store_bureau_status
+      state: >
+        {% if is_state('cover.store_bureau', 'closed') and state_attr('cover.store_bureau', 'current_position') == 0 %}
+          <span style="color: red;">Fermé</span>
+        {% elif is_state('cover.store_bureau', 'open') and state_attr('cover.store_bureau', 'current_position') == 100 %}
+          <span style="color: lightgreen;">Ouvert</span>
+        {% elif is_state('cover.store_bureau', 'opening') %}
+          <span style="color: orange;">Up</span>
+        {% elif is_state('cover.store_bureau', 'closing') %}
+          <span style="color: orange;">Down</span>
+        {% else %}
+          <span style="color: gold;">Ouvert</span>
+        {% endif %}
+
+
+    #========================================================================
+    #
+    # -=<( SYSTEM CLIM )>=-
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "Mode Été/Hiver"
+        unique_id: mode_ete_hiver
+        state: >-
+          {% if states('sensor.th_balcon_nord_temperature') | float < 15 %}
+            heat
+          {% elif states('sensor.th_balcon_nord_temperature') | float >= 15 and states('sensor.th_balcon_nord_temperature') | float <= 25 %}
+            fan_only
+          {% else %}
+            cool
+          {% endif %}
+
+  - sensor:
+      - name: "Consigne de Base"
+        unique_id: consigne_de_Base
+        unit_of_measurement: "°C"
+        state: "27"
+
+  - sensor:
+      - name: "Temperature différentielle"
+        unique_id: temperature_différentielle
+        unit_of_measurement: "°C"
+        state: "26"
+
+  - sensor:
+      - name: "Delta_5"
+        unique_id: delta_5
+        unit_of_measurement: "°C"
+        state: "5"
+
+  - sensor:
+      - name: "Delta_7"
+        unique_id: delta_7
+        unit_of_measurement: "°C"
+        state: "7"
+
+    #========================================================================
+    # CALCUL - Temperature Cible
+    #========================================================================
+
+  - sensor:
+      - name: "Temperature Cible"
+        unique_id: temperature_cible
+        unit_of_measurement: "°C"
+        state: >
+          {% set temperature_exterieure = states('sensor.th_balcon_nord_temperature') | float | round(0) | int %}
+          {% set consigne_de_base = states('sensor.consigne_de_base') | int %}
+          {% set delta_5 = states('sensor.delta_5') | int %}
+          {% set delta_7 = states('sensor.delta_7') | int %}
+          {% if temperature_exterieure >= 40 %}
+            {{ temperature_exterieure - delta_7 }}
+          {% elif temperature_exterieure >= 32 %}
+            {{ temperature_exterieure - delta_5 }}
+          {% else %}
+            {{ consigne_de_base }}
+          {% endif %}
+
+    #========================================================================
+    # CALCUL - Température moyenne intérieure
+    #========================================================================
+
+  - sensor:
+      - name: "Température moyenne intérieure"
+        unique_id: température_moyenne_intérieure
+        unit_of_measurement: "°C"
+        icon: "mdi:home-thermometer" 
+        state: >
+          {{ (states('sensor.th_salon_temperature') | float +
+            states('sensor.th_cellier_temperature') | float +
+            states('sensor.th_cuisine_temperature') | float +
+            states('sensor.th_bureau_temperature') | float +
+            states('sensor.th_salle_de_bain_temperature') | float +
+            states('sensor.th_chambre_temperature') | float) / 5 | round(1) }}
+
+    #========================================================================
+    # Temperature DELTA (pour affichage)    
+    #========================================================================
+
+  - sensor:
+      - name: "Température Delta"
+        unique_id: temperature_delta
+        state: >
+            Te {{ states('sensor.th_balcon_nord_temperature') | float | round(1) }}°C 
+            T̄i {{ states('sensor.temperature_moyenne_interieure') | float | round(1) }}°C 
+            ΔT = {{ (states('sensor.th_balcon_nord_temperature') | float - states('sensor.temperature_moyenne_interieure') | float) | round(1) }}°C
+
+    #========================================================================
+    #
+    # Calcul consommation EDF j-1 + Ecojoko Temp réel
+    #
+    #========================================================================
+
+  - sensor:
+      - name: "Linky Jour 0"
+        unique_id: linky_jour_0
+        state: >-
+          {{ ((states('sensor.ecojoko_consommation_hp_reseau') | float(0)) +
+              (states('sensor.ecojoko_consommation_hc_reseau') | float(0))) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: "Aujourd'hui"
+          hp_kwh: >-
+            {{ states('sensor.ecojoko_consommation_hp_reseau') | float(0) | round(1) }}
+          hc_kwh: >-
+            {{ states('sensor.ecojoko_consommation_hc_reseau') | float(0) | round(1) }}
+          total_kwh: >-
+            {{ ((states('sensor.ecojoko_consommation_hp_reseau') | float(0)) +
+                (states('sensor.ecojoko_consommation_hc_reseau') | float(0))) | round(1) }}
+          cout: >-
+            {{ ((states('sensor.ecojoko_consommation_hp_reseau') | float(0) *
+                states('sensor.tarif_heures_pleines_ttc') | float(0)) +
+                (states('sensor.ecojoko_consommation_hc_reseau') | float(0) *
+                states('sensor.tarif_heures_creuses_ttc') | float(0))) | round(2) }}
+
+      - name: "Linky Jour 1"
+        unique_id: linky_jour_1
+        state: >-
+          {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_1_HP') | float(0) / 1000) +
+              (state_attr('sensor.linky_25481620821301_consumption', 'day_1_HC') | float(0) / 1000)) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: >-
+            {% set jours = {
+              'Monday': 'Lundi',
+              'Tuesday': 'Mardi',
+              'Wednesday': 'Mercredi',
+              'Thursday': 'Jeudi',
+              'Friday': 'Vendredi',
+              'Saturday': 'Samedi',
+              'Sunday': 'Dimanche'
+            } %}
+            {% set dailyweek = state_attr('sensor.linky_25481620821301_consumption', 'dailyweek') %}
+            {% set date_str = dailyweek[0] if dailyweek else None %}
+            {% if date_str %}
+              {% if '-' in date_str %}
+                {% set eng = as_timestamp(date_str) | timestamp_custom('%A', true) %}
+              {% elif '/' in date_str %}
+                {% set p = date_str.split('/') %}
+                {% set annee = now().year %}
+                {% set eng = as_timestamp(annee ~ '-' ~ p[1] ~ '-' ~ p[0]) | timestamp_custom('%A', true) %}
+              {% endif %}
+              {{ jours[eng] if eng in jours else eng }}
+            {% else %}
+              Inconnu
+            {% endif %}
+          hp_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_1_HP') | float(0) / 1000) | round(1) }}
+          hc_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_1_HC') | float(0) / 1000) | round(1) }}
+          total_kwh: >-
+            {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_1_HP') | float(0) / 1000) +
+                (state_attr('sensor.linky_25481620821301_consumption', 'day_1_HC') | float(0) / 1000)) | round(1) }}
+          cout: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'dailyweek_cost')[0] | float(0)) | round(1) }}
+
+      - name: "Linky Jour 2"
+        unique_id: linky_jour_2
+        state: >-
+          {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_2_HP') | float(0) / 1000) +
+              (state_attr('sensor.linky_25481620821301_consumption', 'day_2_HC') | float(0) / 1000)) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: >-
+            {% set jours = {
+              'Monday': 'Lundi',
+              'Tuesday': 'Mardi',
+              'Wednesday': 'Mercredi',
+              'Thursday': 'Jeudi',
+              'Friday': 'Vendredi',
+              'Saturday': 'Samedi',
+              'Sunday': 'Dimanche'
+            } %}
+            {% set dailyweek = state_attr('sensor.linky_25481620821301_consumption', 'dailyweek') %}
+            {% set date_str = dailyweek[1] if dailyweek else None %}
+            {% if date_str %}
+              {% if '-' in date_str %}
+                {% set eng = as_timestamp(date_str) | timestamp_custom('%A', true) %}
+              {% elif '/' in date_str %}
+                {% set p = date_str.split('/') %}
+                {% set annee = now().year %}
+                {% set eng = as_timestamp(annee ~ '-' ~ p[1] ~ '-' ~ p[0]) | timestamp_custom('%A', true) %}
+              {% endif %}
+              {{ jours[eng] if eng in jours else eng }}
+            {% else %}
+              Inconnu
+            {% endif %}
+          hp_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_2_HP') | float(0) / 1000) | round(1) }}
+          hc_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_2_HC') | float(0) / 1000) | round(1) }}
+          total_kwh: >-
+            {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_2_HP') | float(0) / 1000) +
+                (state_attr('sensor.linky_25481620821301_consumption', 'day_2_HC') | float(0) / 1000)) | round(1) }}
+          cout: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'dailyweek_cost')[1] | float(0)) | round(1) }}
+
+      - name: "Linky Jour 3"
+        unique_id: linky_jour_3
+        state: >-
+          {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_3_HP') | float(0) / 1000) +
+              (state_attr('sensor.linky_25481620821301_consumption', 'day_3_HC') | float(0) / 1000)) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: >-
+            {% set jours = {
+              'Monday': 'Lundi',
+              'Tuesday': 'Mardi',
+              'Wednesday': 'Mercredi',
+              'Thursday': 'Jeudi',
+              'Friday': 'Vendredi',
+              'Saturday': 'Samedi',
+              'Sunday': 'Dimanche'
+            } %}
+            {% set dailyweek = state_attr('sensor.linky_25481620821301_consumption', 'dailyweek') %}
+            {% set date_str = dailyweek[2] if dailyweek else None %}
+            {% if date_str %}
+              {% if '-' in date_str %}
+                {% set eng = as_timestamp(date_str) | timestamp_custom('%A', true) %}
+              {% elif '/' in date_str %}
+                {% set p = date_str.split('/') %}
+                {% set annee = now().year %}
+                {% set eng = as_timestamp(annee ~ '-' ~ p[1] ~ '-' ~ p[0]) | timestamp_custom('%A', true) %}
+              {% endif %}
+              {{ jours[eng] if eng in jours else eng }}
+            {% else %}
+              Inconnu
+            {% endif %}
+          hp_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_3_HP') | float(0) / 1000) | round(1) }}
+          hc_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_3_HC') | float(0) / 1000) | round(1) }}
+          total_kwh: >-
+            {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_3_HP') | float(0) / 1000) +
+                (state_attr('sensor.linky_25481620821301_consumption', 'day_3_HC') | float(0) / 1000)) | round(1) }}
+          cout: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'dailyweek_cost')[2] | float(0)) | round(1) }}
+
+      - name: "Linky Jour 4"
+        unique_id: linky_jour_4
+        state: >-
+          {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_4_HP') | float(0) / 1000) +
+              (state_attr('sensor.linky_25481620821301_consumption', 'day_4_HC') | float(0) / 1000)) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: >-
+            {% set jours = {
+              'Monday': 'Lundi',
+              'Tuesday': 'Mardi',
+              'Wednesday': 'Mercredi',
+              'Thursday': 'Jeudi',
+              'Friday': 'Vendredi',
+              'Saturday': 'Samedi',
+              'Sunday': 'Dimanche'
+            } %}
+            {% set dailyweek = state_attr('sensor.linky_25481620821301_consumption', 'dailyweek') %}
+            {% set date_str = dailyweek[3] if dailyweek else None %}
+            {% if date_str %}
+              {% if '-' in date_str %}
+                {% set eng = as_timestamp(date_str) | timestamp_custom('%A', true) %}
+              {% elif '/' in date_str %}
+                {% set p = date_str.split('/') %}
+                {% set annee = now().year %}
+                {% set eng = as_timestamp(annee ~ '-' ~ p[1] ~ '-' ~ p[0]) | timestamp_custom('%A', true) %}
+              {% endif %}
+              {{ jours[eng] if eng in jours else eng }}
+            {% else %}
+              Inconnu
+            {% endif %}
+          hp_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_4_HP') | float(0) / 1000) | round(1) }}
+          hc_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_4_HC') | float(0) / 1000) | round(1) }}
+          total_kwh: >-
+            {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_4_HP') | float(0) / 1000) +
+                (state_attr('sensor.linky_25481620821301_consumption', 'day_4_HC') | float(0) / 1000)) | round(1) }}
+          cout: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'dailyweek_cost')[3] | float(0)) | round(1) }}
+
+      - name: "Linky Jour 5"
+        unique_id: linky_jour_5
+        state: >-
+          {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_5_HP') | float(0) / 1000) +
+              (state_attr('sensor.linky_25481620821301_consumption', 'day_5_HC') | float(0) / 1000)) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: >-
+            {% set jours = {
+              'Monday': 'Lundi',
+              'Tuesday': 'Mardi',
+              'Wednesday': 'Mercredi',
+              'Thursday': 'Jeudi',
+              'Friday': 'Vendredi',
+              'Saturday': 'Samedi',
+              'Sunday': 'Dimanche'
+            } %}
+            {% set dailyweek = state_attr('sensor.linky_25481620821301_consumption', 'dailyweek') %}
+            {% set date_str = dailyweek[4] if dailyweek else None %}
+            {% if date_str %}
+              {% if '-' in date_str %}
+                {% set eng = as_timestamp(date_str) | timestamp_custom('%A', true) %}
+              {% elif '/' in date_str %}
+                {% set p = date_str.split('/') %}
+                {% set annee = now().year %}
+                {% set eng = as_timestamp(annee ~ '-' ~ p[1] ~ '-' ~ p[0]) | timestamp_custom('%A', true) %}
+              {% endif %}
+              {{ jours[eng] if eng in jours else eng }}
+            {% else %}
+              Inconnu
+            {% endif %}
+          hp_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_5_HP') | float(0) / 1000) | round(1) }}
+          hc_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_5_HC') | float(0) / 1000) | round(1) }}
+          total_kwh: >-
+            {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_5_HP') | float(0) / 1000) +
+                (state_attr('sensor.linky_25481620821301_consumption', 'day_5_HC') | float(0) / 1000)) | round(1) }}
+          cout: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'dailyweek_cost')[4] | float(0)) | round(1) }}
+
+      - name: "Linky Jour 6"
+        unique_id: linky_jour_6
+        state: >-
+          {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_6_HP') | float(0) / 1000) +
+              (state_attr('sensor.linky_25481620821301_consumption', 'day_6_HC') | float(0) / 1000)) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: >-
+            {% set jours = {
+              'Monday': 'Lundi',
+              'Tuesday': 'Mardi',
+              'Wednesday': 'Mercredi',
+              'Thursday': 'Jeudi',
+              'Friday': 'Vendredi',
+              'Saturday': 'Samedi',
+              'Sunday': 'Dimanche'
+            } %}
+            {% set dailyweek = state_attr('sensor.linky_25481620821301_consumption', 'dailyweek') %}
+            {% set date_str = dailyweek[5] if dailyweek else None %}
+            {% if date_str %}
+              {% if '-' in date_str %}
+                {% set eng = as_timestamp(date_str) | timestamp_custom('%A', true) %}
+              {% elif '/' in date_str %}
+                {% set p = date_str.split('/') %}
+                {% set annee = now().year %}
+                {% set eng = as_timestamp(annee ~ '-' ~ p[1] ~ '-' ~ p[0]) | timestamp_custom('%A', true) %}
+              {% endif %}
+              {{ jours[eng] if eng in jours else eng }}
+            {% else %}
+              Inconnu
+            {% endif %}
+          hp_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_6_HP') | float(0) / 1000) | round(1) }}
+          hc_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_6_HC') | float(0) / 1000) | round(1) }}
+          total_kwh: >-
+            {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_6_HP') | float(0) / 1000) +
+                (state_attr('sensor.linky_25481620821301_consumption', 'day_6_HC') | float(0) / 1000)) | round(1) }}
+          cout: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'dailyweek_cost')[5] | float(0)) | round(1) }}
+
+      - name: "Linky Jour 7"
+        unique_id: linky_jour_7
+        state: >-
+          {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_7_HP') | float(0) / 1000) +
+              (state_attr('sensor.linky_25481620821301_consumption', 'day_7_HC') | float(0) / 1000)) | round(1) }}
+        unit_of_measurement: kWh
+        icon: mdi:flash-outline
+        attributes:
+          jour: >-
+            {% set jours = {
+              'Monday': 'Lundi',
+              'Tuesday': 'Mardi',
+              'Wednesday': 'Mercredi',
+              'Thursday': 'Jeudi',
+              'Friday': 'Vendredi',
+              'Saturday': 'Samedi',
+              'Sunday': 'Dimanche'
+            } %}
+            {% set dailyweek = state_attr('sensor.linky_25481620821301_consumption', 'dailyweek') %}
+            {% set date_str = dailyweek[6] if dailyweek else None %}
+            {% if date_str %}
+              {% if '-' in date_str %}
+                {% set eng = as_timestamp(date_str) | timestamp_custom('%A', true) %}
+              {% elif '/' in date_str %}
+                {% set p = date_str.split('/') %}
+                {% set annee = now().year %}
+                {% set eng = as_timestamp(annee ~ '-' ~ p[1] ~ '-' ~ p[0]) | timestamp_custom('%A', true) %}
+              {% endif %}
+              {{ jours[eng] if eng in jours else eng }}
+            {% else %}
+              Inconnu
+            {% endif %}
+          hp_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_7_HP') | float(0) / 1000) | round(1) }}
+          hc_kwh: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'day_7_HC') | float(0) / 1000) | round(1) }}
+          total_kwh: >-
+            {{ ((state_attr('sensor.linky_25481620821301_consumption', 'day_7_HP') | float(0) / 1000) +
+                (state_attr('sensor.linky_25481620821301_consumption', 'day_7_HC') | float(0) / 1000)) | round(1) }}
+          cout: >-
+            {{ (state_attr('sensor.linky_25481620821301_consumption', 'dailyweek_cost')[6] | float(0)) | round(1) }}
+
+    #========================================================================
+    #
+    # Batterie Faibles
+    #
+    #========================================================================
+
+  - sensor:
+      # --- Nombre de batteries < 15 % ---
+      - name: batteries_low_count
+        unique_id: batteries_low_count
+        unit_of_measurement: "batt."
+        state: >
+          {% set low = 15 %}
+          {% set ns = namespace(vals=[]) %}
+          {% for s in states.sensor if s.entity_id.endswith('_battery') %}
+            {% set e = s.entity_id %}
+            {% if e not in [
+                  'sensor.gm1901_battery_level',
+                  'sensor.sm_a530f_battery_level',
+                  'sensor.tablette_battery_level'
+                ]
+                and not e.startswith('sensor.ne2213_') %}
+              {% set v = s.state | float('nan') %}
+              {% if v == v and 0 <= v <= 100 %}
+                {% set ns.vals = ns.vals + [v] %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {{ (ns.vals | select('lt', low) | list | length) }}
+
+      # --- Pourcentage minimum global ---
+      - name: batteries_min_percent
+        unique_id: batteries_min_percent
+        unit_of_measurement: "%"
+        state: >
+          {% set ns = namespace(vals=[]) %}
+          {% for s in states.sensor if s.entity_id.endswith('_battery') %}
+            {% set e = s.entity_id %}
+            {% if e not in [
+                  'sensor.gm1901_battery_level',
+                  'sensor.sm_a530f_battery_level',
+                  'sensor.tablette_battery_level'
+                ]
+                and not e.startswith('sensor.ne2213_') %}
+              {% set v = s.state | float('nan') %}
+              {% if v == v and 0 <= v <= 100 %}
+                {% set ns.vals = ns.vals + [v] %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {{ (ns.vals|min) | round(0) if (ns.vals|length > 0) else 0 }}
