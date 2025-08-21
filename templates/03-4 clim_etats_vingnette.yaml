@@ -1,5 +1,19 @@
 # CLIM — États (vignette)
 - sensor:
+  - name: "Mode été Hiver État"
+    unique_id: mode_ete_hiver_etat
+    state: >
+      {% if is_state('sensor.mode_ete_hiver', 'cool') %}
+        Cool
+      {% elif is_state('sensor.mode_ete_hiver', 'heat') %}
+        Heat
+      {% elif is_state('sensor.mode_ete_hiver', 'fan_only') %}
+        Fan
+      {% else %}
+        erreur
+      {% endif %}
+
+- sensor:
   - name: "Clim Salon État"
     unique_id: clim_salon_etat
     state: >

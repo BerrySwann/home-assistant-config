@@ -5,6 +5,7 @@ secrets.yaml
 *.bak
 *.swp
 *.log
+*.log.1
 
 # Bases de données Home Assistant
 home-assistant_v2.db
