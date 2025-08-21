@@ -13,6 +13,7 @@ home-assistant_v2.db-shm
 home-assistant_v2.db-wal
 home-assistant_v2_backup.db
 zigbee2mqtt/configuration_backup_v*.yaml
+zigbee2mqtt/configuration.yaml.broken
 
 # Logs
 OZW_*.log
