@@ -12,7 +12,8 @@ home-assistant_v2.db
 home-assistant_v2.db-shm
 home-assistant_v2.db-wal
 home-assistant_v2_backup.db
-configuration_backup_v*.yaml
+zigbee2mqtt/configuration_backup_v*.yaml
+
 # Logs
 OZW_*.log
 home-assistant.log
