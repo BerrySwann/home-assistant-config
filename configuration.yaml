@@ -59,8 +59,6 @@ input_number: !include input_number.yaml
 #revoin au fuchier input_boolean.yaml
 input_boolean: !include input_boolean.yaml
 
-
-
 #renvoi au fichier themes.yaml
 #themes: !include themes.yaml
 
@@ -120,7 +118,7 @@ sensor:
 
 
 openai_conversation:
-  api_key: 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
+  api_key: !secret chat_gpt_api_key
   model: "gpt-4o-mini"
 
 
