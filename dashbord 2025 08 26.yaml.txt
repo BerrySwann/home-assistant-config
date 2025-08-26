@@ -23,7 +23,7 @@ streamline_templates:
         colorize_states: true
       yaxis:
         - id: pm25
-          min: ~0
+          min: 0
           max: auto
           opposite: false
           decimals: 0
@@ -56,7 +56,7 @@ streamline_templates:
             - value: 120
               color: red
         - entity: '[[entity_sensor]]'
-          yaxis_id: pm2.5
+          yaxis_id: pm25
           type: line
           stroke_dash: 8
           color: red
@@ -106,7 +106,7 @@ streamline_templates:
         colorize_states: true
       yaxis:
         - id: y_id
-          min: ~0
+          min: 0
           max: auto
           opposite: false
           decimals: 0
@@ -140,7 +140,7 @@ streamline_templates:
             - value: 750
               color: red
         - entity: '[[entity_sensor]]'
-          yaxis_id: cov
+          yaxis_id: y_id
           unit: '  PPB'
           type: line
           stroke_dash: 8
@@ -348,12 +348,12 @@ streamline_templates:
         colorize_states: true
       yaxis:
         - id: Watts
-          min: ~0
+          min: 0
           max: auto
           opposite: false
           decimals: 0
         - id: A
-          min: ~0
+          min: 0
           max: auto
           opposite: true
           decimals: 2
@@ -432,12 +432,12 @@ streamline_templates:
         colorize_states: true
       yaxis:
         - id: Watts
-          min: ~0
+          min: 0
           max: auto
           opposite: false
           decimals: 0
         - id: Avg
-          min: ~0
+          min: 0
           max: auto
           opposite: true
           decimals: 0
@@ -492,14 +492,14 @@ streamline_templates:
         colorize_states: true
       yaxis:
         - id: Watts
-          min: ~0
+          min: 0
           max: auto
           opposite: false
           decimals: 0
           apex_config:
             tickAmount: 10
         - id: Avg
-          min: ~0
+          min: 0
           max: auto
           opposite: true
           decimals: 1
@@ -573,14 +573,14 @@ streamline_templates:
         colorize_states: true
       yaxis:
         - id: Watts
-          min: ~0
+          min: 0
           max: auto
           opposite: false
           decimals: 0
           apex_config:
             tickAmount: 10
         - id: A
-          min: ~0
+          min: 0
           max: auto
           opposite: true
           decimals: 2
@@ -692,13 +692,13 @@ views:
                   name: |
                     [[[
                       // Récupère la distance de l'impact de foudre
-                      let distance = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance'].state) : 0;
+                      let distance = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance']?.state ?? 'NaN') : 0;
 
                       // Récupère la localisation de l'impact, si disponible
                       let localisation = states['sensor.blitzortung_lightning_localisation'] ? states['sensor.blitzortung_lightning_localisation'].state : 0;
 
                       // Récupère l'azimut (direction) de l'impact, si disponible
-                      let azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth'].state) : null;
+                      let azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth']?.state ?? 'NaN') : null;
 
                       // Récupère le nombre total d'impacts détectés
                       let impactCount = states['sensor.blitzortung_lightning_counter'] ? parseInt(states['sensor.blitzortung_lightning_counter'].state) : 0;
@@ -828,10 +828,10 @@ views:
                     ? 'darkgreen'
                     : (hass.states['sensor.etat_wifi_maison'].state === 'Eric' ||
                        hass.states['sensor.etat_wifi_maison'].state === 'Mamour')
-                      ? 'rgb(255, 103, 0)'  /* orange */
-                      : 'grey'               /* '0' ou autre */
+                      ? 'darkorange'
+                      : 'grey'
                 } !important;
-                color: ginsboro !important;
+                color: gainsboro !important;
               }
 
               ha-card {
@@ -899,7 +899,6 @@ views:
                       : 'grey'
                 } !important;
               }
-              ${subButtonIcon[0].setAttribute("icon",
                 hass.states['person.eric'].state === 'home'
                   ? 'mdi:home'
                   : hass.states['person.eric'].state === 'not_home'
@@ -960,7 +959,6 @@ views:
                       : 'grey'
                 } !important;
               }
-              ${subButtonIcon[0].setAttribute("icon",
                 hass.states['person.mamour'].state === 'home'
                   ? 'mdi:home'
                   : hass.states['person.mamour'].state === 'not_home'
@@ -1094,13 +1092,13 @@ views:
                     ]]]
                   temp: |
                     [[[
-                      var tempBalconN = parseFloat(states['sensor.th_balcon_nord_temperature'].state).toFixed(1);
-                      var tempSalon = parseFloat(states['sensor.th_salon_temperature'].state).toFixed(1);
-                      var tempCellier = parseFloat(states['sensor.th_cellier_temperature'].state).toFixed(1);
-                      var tempCuisine = parseFloat(states['sensor.th_cuisine_temperature'].state).toFixed(1);
-                      var tempBureau = parseFloat(states['sensor.th_bureau_temperature'].state).toFixed(1);
-                      var tempSalleDeBain = parseFloat(states['sensor.th_salle_de_bain_temperature'].state).toFixed(1);
-                      var tempChambre = parseFloat(states['sensor.th_chambre_temperature'].state).toFixed(1);
+                      var tempBalconN = parseFloat(states['sensor.th_balcon_nord_temperature']?.state ?? 'NaN').toFixed(1);
+                      var tempSalon = parseFloat(states['sensor.th_salon_temperature']?.state ?? 'NaN').toFixed(1);
+                      var tempCellier = parseFloat(states['sensor.th_cellier_temperature']?.state ?? 'NaN').toFixed(1);
+                      var tempCuisine = parseFloat(states['sensor.th_cuisine_temperature']?.state ?? 'NaN').toFixed(1);
+                      var tempBureau = parseFloat(states['sensor.th_bureau_temperature']?.state ?? 'NaN').toFixed(1);
+                      var tempSalleDeBain = parseFloat(states['sensor.th_salle_de_bain_temperature']?.state ?? 'NaN').toFixed(1);
+                      var tempChambre = parseFloat(states['sensor.th_chambre_temperature']?.state ?? 'NaN').toFixed(1);
 
                       function getTemperatureColor(temp) {
                         if (temp > 40) return '#FF0000'; // Rouge
@@ -1132,13 +1130,13 @@ views:
                     ]]]
                   humidite: |
                     [[[
-                      var humiditeBalconN = parseFloat(states['sensor.th_balcon_nord_humidity'].state).toFixed(1);
-                      var humiditeSalon = parseFloat(states['sensor.th_salon_humidity'].state).toFixed(1);
-                      var humiditeCellier = parseFloat(states['sensor.th_cellier_humidity'].state).toFixed(1);
-                      var humiditeCuisine = parseFloat(states['sensor.th_cuisine_humidity'].state).toFixed(1);
-                      var humiditeBureau = parseFloat(states['sensor.th_bureau_humidity'].state).toFixed(1);
-                      var humiditeSalleDeBain = parseFloat(states['sensor.th_salle_de_bain_humidity'].state).toFixed(1);
-                      var humiditeChambre = parseFloat(states['sensor.th_chambre_humidity'].state).toFixed(1);
+                      var humiditeBalconN = parseFloat(states['sensor.th_balcon_nord_humidity']?.state ?? 'NaN').toFixed(1);
+                      var humiditeSalon = parseFloat(states['sensor.th_salon_humidity']?.state ?? 'NaN').toFixed(1);
+                      var humiditeCellier = parseFloat(states['sensor.th_cellier_humidity']?.state ?? 'NaN').toFixed(1);
+                      var humiditeCuisine = parseFloat(states['sensor.th_cuisine_humidity']?.state ?? 'NaN').toFixed(1);
+                      var humiditeBureau = parseFloat(states['sensor.th_bureau_humidity']?.state ?? 'NaN').toFixed(1);
+                      var humiditeSalleDeBain = parseFloat(states['sensor.th_salle_de_bain_humidity']?.state ?? 'NaN').toFixed(1);
+                      var humiditeChambre = parseFloat(states['sensor.th_chambre_humidity']?.state ?? 'NaN').toFixed(1);
 
                       function getHumidityColor(humidity) {
                         if (humidity > 75) return '#FF0000'; // Rouge
@@ -1258,7 +1256,7 @@ views:
                     ]]]
                   consigne: |
                     [[[
-                      var tempMoyenne = states['sensor.temperature_moyenne_interieure'] ? parseFloat(states['sensor.temperature_moyenne_interieure'].state).toFixed(1) : 'N/A';
+                      var tempMoyenne = states['sensor.temperature_moyenne_interieure'] ? parseFloat(states['sensor.temperature_moyenne_interieure']?.state ?? 'NaN').toFixed(1) : 'N/A';
                       var consigneSalon = states['climate.clim'] ? states['climate.clim'].attributes.temperature : 'N/A';
                       var consigneCuisine = states['climate.radiateur_cuisine'] ? states['climate.radiateur_cuisine'].attributes.temperature : 'N/A';
                       var consigneBureau = states['climate.clim_du_bureau'] ? states['climate.clim_du_bureau'].attributes.temperature : 'N/A';
@@ -1397,7 +1395,7 @@ views:
               - type: custom:button-card
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/energie clim
+                  navigation_path: /dashboard-tablette/energie-clim
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -1516,7 +1514,7 @@ views:
               - type: custom:button-card
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/energie lampes
+                  navigation_path: /dashboard-tablette/energie-lampes
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -1979,7 +1977,7 @@ views:
                 icon: mdi:cog-outline
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/systeme freebox
+                  navigation_path: /dashboard-tablette/systeme-freebox
                 name: FreeBox Pop
                 size: 60%
                 styles:
@@ -2013,7 +2011,7 @@ views:
                 name: _____ Mini - P.C. _____
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/systeme rpi
+                  navigation_path: /dashboard-tablette/systeme-mini-pc
                 styles:
                   card:
                     - border-radius: 10px
@@ -2193,7 +2191,7 @@ views:
               - type: custom:button-card
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/battery bp
+                  navigation_path: /dashboard-tablette/battery-bp
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2583,7 +2581,7 @@ views:
               - type: custom:button-card
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/air quality
+                  navigation_path: /dashboard-tablette/air-quality
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2826,7 +2824,7 @@ views:
                 icon: mdi:face-mask-outline
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/pollen pollution
+                  navigation_path: /dashboard-tablette/pollen-pollution
                 name: |-
                   [[[
                     var airQuality = states['sensor.qualite_globale_vence'].state;
@@ -3591,13 +3589,13 @@ views:
                       name: |
                         [[[
                           // Récupère la distance de l'impact de foudre
-                          let distance = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance'].state) : 0;
+                          let distance = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance']?.state ?? 'NaN') : 0;
 
                           // Récupère la localisation de l'impact, si disponible
                           let localisation = states['sensor.blitzortung_lightning_localisation'] ? states['sensor.blitzortung_lightning_localisation'].state : 0;
 
                           // Récupère l'azimut (direction) de l'impact, si disponible
-                          let azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth'].state) : null;
+                          let azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth']?.state ?? 'NaN') : null;
 
                           // Récupère le nombre total d'impacts détectés
                           let impactCount = states['sensor.blitzortung_lightning_counter'] ? parseInt(states['sensor.blitzortung_lightning_counter'].state) : 0;
@@ -4350,7 +4348,7 @@ views:
                   colorize_states: true
                 yaxis:
                   - id: Eclaires
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: true
                     decimals: 0
@@ -4409,7 +4407,7 @@ views:
                   colorize_states: true
                 yaxis:
                   - id: Eclaires
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: true
                     decimals: 0
@@ -6838,6 +6836,9 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: 'Tendances '
+            tap_action:
+              action: navigate
+              navigation_path: '#exterieur'
           - type: horizontal-stack
             cards:
               - type: custom:vertical-stack-in-card
@@ -7172,13 +7173,13 @@ views:
               colorize_states: true
             yaxis:
               - id: first
-                min: ~0
+                min: 0
                 max: auto
                 decimals: 0
                 apex_config:
                   tickAmount: 10
               - id: second
-                min: ~0
+                min: 0
                 max: auto
                 opposite: true
                 decimals: 0
@@ -7406,6 +7407,9 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: SALON
+            tap_action:
+              action: navigate
+              navigation_path: '#salon'
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim
@@ -7456,6 +7460,9 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: CELLIER
+            tap_action:
+              action: navigate
+              navigation_path: '#cellier'
           - type: custom:streamline-card
             template: temperature_humidite
             variables:
@@ -7493,6 +7500,9 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: CUISINE  (RADIATEUR)
+            tap_action:
+              action: navigate
+              navigation_path: '#cuisine'
           - type: custom:bubble-card
             card_type: climate
             entity: climate.radiateur_cuisine
@@ -7554,6 +7564,9 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: BUREAU
+            tap_action:
+              action: navigate
+              navigation_path: '#bureau'
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim_du_bureau
@@ -7607,6 +7620,9 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: SALLE DE BAIN
+            tap_action:
+              action: navigate
+              navigation_path: '#salle_de_bain'
           - type: custom:streamline-card
             template: temperature_humidite
             variables:
@@ -7648,6 +7664,9 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: CHAMBRE
+            tap_action:
+              action: navigate
+              navigation_path: '#chambre'
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim_de_la_chambre
@@ -7707,11 +7726,11 @@ views:
                 bg_opacity: '0'
               - type: markdown
                 content: >
-                  **Calcul de la Température Cible** 
+                  **<<< CALCUL DE LA TEMPERATURE CIBLE >>>** 
 
-                  - Température Extérieure : {{
+                   **Température Extérieure : {{
                   states('sensor.th_balcon_nord_temperature') | float | round(2)
-                  }}°C
+                  }}°C**
 
                   {% set temperature_exterieure =
                   states('sensor.th_balcon_nord_temperature') | float %} {% set
@@ -7719,41 +7738,49 @@ views:
                   {% set delta_7 = states('sensor.delta_7') | int %} {% set
                   delta_5 = states('sensor.delta_5') | int %}
 
-                  {% if temperature_exterieure >= 40 %}
-                    {% set temperature_cible = temperature_exterieure - delta_7 %}
-                    - [1] Calcul T°Ext. > 40°C [ {{ temperature_exterieure | round(0) }} - {{ delta_7 }} = {{ temperature_cible | round(0) }} ]
-
-                  {% elif temperature_exterieure > 32 %}  
+                  {% if temperature_exterieure >= 99 %}
+                     {% set temperature_cible = consigne_de_base %}
+                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
+                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
+                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
                     {% set temperature_cible = temperature_exterieure - delta_5 %}
-                    - [2] Calcul si T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]
+                    **- Calcul T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]**
+
+                  {% elif temperature_exterieure > 99 %}
+                    {% set temperature_cible = consigne_de_base %}
+                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
+                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
+                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
+                    {% set temperature_cible = temperature_exterieure - delta_7 %}
+                    **- Calcul si T°Ext. > 40°C [ {{ temperature_exterieure | round(0) }} - {{ delta_7 }} = {{ temperature_cible | round(0) }} ]**
 
                   {% else %}
                     {% set temperature_cible = consigne_de_base %}
-                    - [3] Consigne de Base : {{ consigne_de_base | round(0) }}°C
+                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
                     
                     {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - [4] Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
+                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
                   {% endif %}
 
-                  {% if temperature_exterieure >= 40 %}        
-                    - [5] Température Cible si T°Ext. > 40°C = {{ temperature_cible | round(0) }}°C            
-                    - [6] Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+                  {% if temperature_exterieure > 99 %}        
+                    - Température Cible = {{ temperature_cible | round(0) }}°C            
+                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
 
-                  {% elif temperature_exterieure > 32 %}        
-                    - [7] Température Cible = {{ temperature_cible | round(0) }}°C            
-                    - [8] Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+                  {% elif temperature_exterieure > 99 %}        
+                    - Température Cible Cible = {{ temperature_cible | round(0) }}°C            
+                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
 
                   {% else %}        
-                    - [ 9] Température Cible si T°Ext. < 32°C = {{ temperature_cible | round(0) }}°C
-                    - [10] Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+                    - Température Cible = {{ temperature_cible | round(0) }}°C
+                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
                   {% endif %}
 
-                  {% if temperature_exterieure > 40 %}
-                    - [11] DELTA: {{ states('sensor.temperature_delta') }}
-                  {% elif temperature_exterieure > 32 %}        
-                    - [12] DELTA: {{ states('sensor.temperature_delta') }}
+                  {% if temperature_exterieure > 26 %}
+                    **DELTA: {{ states('sensor.temperature_delta') }}**
+                  {% elif temperature_exterieure > 40 %}        
+                    **DELTA: {{ states('sensor.temperature_delta') }}**
                   {% else %}     
-                    - [13] DELTA: {{ states('sensor.temperature_delta') }}
+                    **DELTA: {{ states('sensor.temperature_delta') }}**
                   {% endif %}
                 card_mod:
                   style: |
@@ -7842,6 +7869,272 @@ views:
                         box-shadow: none !important;
                         background: transparent;
                       }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#exterieur'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: SUIVI DES T° EXTÉRIEUR
+                icon: mdi:sun-thermometer-outline
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:temperature-heatmap-card
+                entity: sensor.th_balcon_nord_temperature
+                title: Carte des T° EXTÉRIEUR
+                month_label: true
+                day_label: true
+                footer: true
+                day_trend: true
+                day_forecast: true
+                forecast_entity: weather.vence
+                force_fahrenheit: false
+                temp_adj: 0
+                decimal_point: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#salon'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: SUIVI DES T° DU SALON
+                icon: mdi:sofa
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:temperature-heatmap-card
+                entity: sensor.th_salon_temperature
+                title: Carte des T° du SALON
+                month_label: true
+                day_label: true
+                footer: true
+                day_trend: true
+                day_forecast: false
+                forecast_entity: weather.vence
+                force_fahrenheit: false
+                temp_adj: 0
+                decimal_point: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#cellier'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: SUIVI DES T° DU CELLIER
+                icon: mdi:food-variant
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:temperature-heatmap-card
+                entity: sensor.th_cellier_temperature
+                title: Carte des T° du Cellier
+                month_label: true
+                day_label: true
+                footer: true
+                day_trend: true
+                day_forecast: false
+                forecast_entity: weather.vence
+                force_fahrenheit: false
+                temp_adj: 0
+                decimal_point: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#cuisine'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: SUIVI DES T° DE LA CUISINE
+                icon: mdi:fridge
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:temperature-heatmap-card
+                entity: sensor.th_cuisine_temperature
+                title: Carte des T° de la CUISINE
+                month_label: true
+                day_label: true
+                footer: true
+                day_trend: true
+                day_forecast: false
+                forecast_entity: weather.vence
+                force_fahrenheit: false
+                temp_adj: 0
+                decimal_point: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#bureau'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: SUIVI DES T° DU BUREAU
+                icon: mdi:desktop-tower-monitor
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:temperature-heatmap-card
+                entity: sensor.th_bureau_temperature
+                title: Carte des T° du BUREAU
+                month_label: true
+                day_label: true
+                footer: true
+                day_trend: true
+                day_forecast: false
+                forecast_entity: weather.vence
+                force_fahrenheit: false
+                temp_adj: 0
+                decimal_point: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#salle_de_bain'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: SUIVI DES T° DE LA SALLE DE BAIN
+                icon: mdi:bathtub
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:temperature-heatmap-card
+                entity: sensor.th_salle_de_bain_temperature
+                title: Carte des T° de la SALLE DE BAIN
+                month_label: true
+                day_label: true
+                footer: true
+                day_trend: true
+                day_forecast: false
+                forecast_entity: weather.vence
+                force_fahrenheit: false
+                temp_adj: 0
+                decimal_point: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#chambre'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: SUIVI DES T° DE LA CHAMBRE
+                icon: mdi:bed
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:temperature-heatmap-card
+                entity: sensor.th_chambre_temperature
+                title: Carte des T° de la CHAMBRE
+                month_label: true
+                day_label: true
+                footer: true
+                day_trend: true
+                day_forecast: false
+                forecast_entity: weather.vence
+                force_fahrenheit: false
+                temp_adj: 0
+                decimal_point: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
     cards: []
   - type: sections
     path: clim
@@ -8154,7 +8447,7 @@ views:
               grid_rows: 1
             tap_action:
               action: navigate
-              navigation_path: /dashboard-tablette/prog clim salon
+              navigation_path: /dashboard-tablette/prog-clim-salon
           - type: thermostat
             entity: climate.clim
             features:
@@ -8323,7 +8616,7 @@ views:
               grid_rows: 1
             tap_action:
               action: navigate
-              navigation_path: /dashboard-tablette/prog radiateur cuisine
+              navigation_path: /dashboard-tablette/prog-radiateur-cuisine
           - type: thermostat
             entity: climate.radiateur_cuisine
             features:
@@ -8483,7 +8776,7 @@ views:
               grid_rows: 1
             tap_action:
               action: navigate
-              navigation_path: /dashboard-tablette/prog clim bureau
+              navigation_path: /dashboard-tablette/prog-clim-bureau
           - type: thermostat
             entity: climate.clim_du_bureau
             features:
@@ -8654,7 +8947,7 @@ views:
               grid_rows: 1
             tap_action:
               action: navigate
-              navigation_path: /dashboard-tablette/prog clim chambre
+              navigation_path: /dashboard-tablette/prog-clim-chambre
           - type: thermostat
             entity: climate.clim_de_la_chambre
             features:
@@ -8775,11 +9068,11 @@ views:
                 bg_opacity: '0'
               - type: markdown
                 content: >
-                  **Calcul de la Température Cible** 
+                  **<<< CALCUL DE LA TEMPERATURE CIBLE >>>** 
 
-                  - Température Extérieure : {{
+                   **Température Extérieure : {{
                   states('sensor.th_balcon_nord_temperature') | float | round(2)
-                  }}°C
+                  }}°C**
 
                   {% set temperature_exterieure =
                   states('sensor.th_balcon_nord_temperature') | float %} {% set
@@ -8787,41 +9080,49 @@ views:
                   {% set delta_7 = states('sensor.delta_7') | int %} {% set
                   delta_5 = states('sensor.delta_5') | int %}
 
-                  {% if temperature_exterieure >= 40 %}
-                    {% set temperature_cible = temperature_exterieure - delta_7 %}
-                    - [1] Calcul T°Ext. > 40°C [ {{ temperature_exterieure | round(0) }} - {{ delta_7 }} = {{ temperature_cible | round(0) }} ]
-
-                  {% elif temperature_exterieure > 32 %}  
+                  {% if temperature_exterieure >= 99 %}
+                     {% set temperature_cible = consigne_de_base %}
+                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
+                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
+                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
                     {% set temperature_cible = temperature_exterieure - delta_5 %}
-                    - [2] Calcul si T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]
+                    **- Calcul T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]**
+
+                  {% elif temperature_exterieure > 99 %}
+                    {% set temperature_cible = consigne_de_base %}
+                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
+                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
+                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
+                    {% set temperature_cible = temperature_exterieure - delta_7 %}
+                    **- Calcul si T°Ext. > 40°C [ {{ temperature_exterieure | round(0) }} - {{ delta_7 }} = {{ temperature_cible | round(0) }} ]**
 
                   {% else %}
                     {% set temperature_cible = consigne_de_base %}
-                    - [3] Consigne de Base : {{ consigne_de_base | round(0) }}°C
+                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
                     
                     {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - [4] Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
+                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
                   {% endif %}
 
-                  {% if temperature_exterieure >= 40 %}        
-                    - [5] Température Cible si T°Ext. > 40°C = {{ temperature_cible | round(0) }}°C            
-                    - [6] Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+                  {% if temperature_exterieure > 99 %}        
+                    - Température Cible = {{ temperature_cible | round(0) }}°C            
+                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
 
-                  {% elif temperature_exterieure > 32 %}        
-                    - [7] Température Cible = {{ temperature_cible | round(0) }}°C            
-                    - [8] Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+                  {% elif temperature_exterieure > 99 %}        
+                    - Température Cible Cible = {{ temperature_cible | round(0) }}°C            
+                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
 
                   {% else %}        
-                    - [ 9] Température Cible si T°Ext. < 32°C = {{ temperature_cible | round(0) }}°C
-                    - [10] Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+                    - Température Cible = {{ temperature_cible | round(0) }}°C
+                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
                   {% endif %}
 
-                  {% if temperature_exterieure > 40 %}
-                    - [11] DELTA: {{ states('sensor.temperature_delta') }}
-                  {% elif temperature_exterieure > 32 %}        
-                    - [12] DELTA: {{ states('sensor.temperature_delta') }}
+                  {% if temperature_exterieure > 26 %}
+                    **DELTA: {{ states('sensor.temperature_delta') }}**
+                  {% elif temperature_exterieure > 40 %}        
+                    **DELTA: {{ states('sensor.temperature_delta') }}**
                   {% else %}     
-                    - [13] DELTA: {{ states('sensor.temperature_delta') }}
+                    **DELTA: {{ states('sensor.temperature_delta') }}**
                   {% endif %}
                 card_mod:
                   style: |
@@ -8910,12 +9211,120 @@ views:
                         box-shadow: none !important;
                         background: transparent;
                       }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#cccalcul'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: CALCUL DU DELTA Intérieur <-> Extérieur
+                icon: mdi:delta
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:button-card
+                name: Calcul de la Température Cible
+                show_state: false
+                show_label: true
+                tap_action:
+                  action: none
+                styles:
+                  card:
+                    - background: transparent
+                    - border: none
+                    - box-shadow: none
+                  name:
+                    - justify-self: start
+                    - font-weight: bold
+                    - font-size: 24px
+                  label:
+                    - white-space: normal
+                    - text-align: left
+                    - line-height: 1.35
+                label: |-
+                  [[[
+                    const s = (e) => (hass.states[e]?.state ?? "0");
+                    const n = (e) => Number(s(e)) || 0;
+
+                    const Te   = Number.parseFloat(s('sensor.th_balcon_nord_temperature')) || 0;  // T° Ext
+                    const base = Math.round(n('sensor.consigne_de_base'));
+                    const d7   = Math.round(n('sensor.delta_7'));
+                    const d5   = Math.round(n('sensor.delta_5'));
+                    const Tdiff_base = Math.round(n('sensor.temperature_differentielle'));
+                    const deltaText  = s('sensor.temperature_delta');
+
+                    let Tcible = base;
+
+                    // Calcul logique identique à ton Jinja
+                    if (Te >= 40)      Tcible = Te - d7;
+                    else if (Te > 32)  Tcible = Te - d5;
+                    else               Tcible = base;
+
+                    // Couleur dynamique pour la valeur de Te (libellé en blanc)
+                    const extColor = Te > 25 ? 'gold' : 'lightblue';
+
+                    const L = [];
+
+                    // Ligne Température Extérieure (gras 16, libellé blanc, valeur colorée)
+                    L.push(
+                      `<div style="margin:8px 0 8px 0; padding-left:8px; font-size:16px; font-weight:700;">`
+                      + `<span style="color:white;">Température Extérieure :</span> `
+                      + `<span style="color:${extColor};">${Te.toFixed(1)}°C</span>`
+                      + `</div>`
+                    );
+
+                    // Bloc amont (1/2/3 + 4) en 12 gras avec indentation
+                    if (Te >= 40) {
+                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[1] Calcul T°Ext. > 40°C [ ${Math.round(Te)} - ${d7} = ${Math.round(Tcible)} ]</div>`);
+                    } else if (Te > 32) {
+                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[2] Calcul si T°Ext. > 32°C [ ${Math.round(Te)} - ${d5} = ${Math.round(Tcible)} ]</div>`);
+                    } else {
+                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[3] Consigne de Base : ${base}°C</div>`);
+                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[4] Consigne différentielle : ${Tdiff_base}°C</div>`);
+                    }
+
+                    // Bloc cible/diff (9/10 ou 5/6 ou 7/8) en 12 gras avec un espace avant "diff"
+                    if (Te >= 40) {
+                      L.push(`<div style="padding-left:24px; margin-top:8px; font-size:12px; font-weight:700;">[5] Température Cible si T°Ext. > 40°C = ${Math.round(Tcible)}°C</div>`);
+                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[6] Température différentielle = ${Tdiff_base + Math.round(Tcible - base)}°C</div>`);
+                    } else if (Te > 32) {
+                      L.push(`<div style="padding-left:24px; margin-top:8px; font-size:12px; font-weight:700;">[7] Température Cible = ${Math.round(Tcible)}°C</div>`);
+                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[8] Température différentielle = ${Tdiff_base + Math.round(Tcible - base)}°C</div>`);
+                    } else {
+                      L.push(`<div style="padding-left:24px; margin-top:8px; font-size:12px; font-weight:700;">[9] Température Cible si T°Ext. < 32°C = ${Math.round(Tcible)}°C</div>`);
+                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[10] Température différentielle = ${Tdiff_base + Math.round(Tcible - base)}°C</div>`);
+                    }
+
+                    // DELTA en bas (gras 16), un peu moins indenté
+                    L.push(
+                      `<div style="margin-top:12px; padding-left:8px; font-size:16px; font-weight:700;">`
+                      + `[13] DELTA: ${deltaText}`
+                      + `</div>`
+                    );
+
+                    return L.join('');
+                  ]]]
+                x-annot:
+                  - '[L8] name.font-weight: bold'
+                  - '[L9] name.font-size: 18px'
+                  - '[L20] T°Ext: label blanc + valeur colorée, 16px, gras'
+                  - '[L36] Blocs 12px gras + indentation 24px'
+                  - '[L49] Espace visuel avant ''différentielle'''
+                  - '[L61] DELTA 16px gras, padding-left 8px'
     title: Clim
     cards: []
   - type: sections
     max_columns: 2
     title: prog clim salon
-    path: prog clim salon
+    path: prog-clim-salon
     sections:
       - type: grid
         cards:
@@ -9149,7 +9558,7 @@ views:
   - type: sections
     max_columns: 2
     title: PROG RADIATEUR CUISINE
-    path: prog radiateur cuisine
+    path: prog-radiateur-cuisine
     sections:
       - type: grid
         cards:
@@ -9405,7 +9814,7 @@ views:
   - type: sections
     max_columns: 2
     title: prog clim bureau
-    path: prog clim bureau
+    path: prog-clim-bureau
     sections:
       - type: grid
         cards:
@@ -9641,7 +10050,7 @@ views:
   - type: sections
     max_columns: 2
     title: prog clim chambre
-    path: prog clim chambre
+    path: prog-clim-chambre
     sections:
       - type: grid
         cards:
@@ -10467,7 +10876,7 @@ views:
                 name: Réel
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/energie temps reel
+                  navigation_path: /dashboard-tablette/energie-temps-reel
               - type: entity
                 show_state: true
                 show_icon: true
@@ -10478,7 +10887,7 @@ views:
                   - state
                 tap_action:
                   action: navigate
-                  navigation_path: /dashboard-tablette/energie mensuel
+                  navigation_path: /dashboard-tablette/energie-mensuel
                 name: Cumul Jrs
             tap_action:
               action: navigate
@@ -10875,69 +11284,6 @@ views:
                      
           - type: custom:bubble-card
             card_type: separator
-            name: Conso. Mensuel par Jours
-            icon: mdi:lightning-bolt-outline
-            rows: 2
-            styles: |-
-              .bubble-line {
-                background: var(--primary-text-color);
-                opacity: 1;
-              }
-            card_layout: normal
-          - type: custom:apexcharts-card
-            graph_span: 730h
-            cache: false
-            span:
-              end: day
-            apex_config:
-              chart:
-                height: 400px
-              legend:
-                show: false
-            header:
-              show: true
-              title: ' '
-              show_states: true
-              colorize_states: true
-            yaxis:
-              - id: first
-                min: ~0
-                max: auto
-                opposite: true
-                decimals: 0
-                apex_config:
-                  tickAmount: 20
-            all_series_config:
-              group_by:
-                func: max
-                duration: 24h
-              show:
-                legend_value: true
-                extremas: true
-            series:
-              - entity: sensor.ecojoko_consommation_reseau
-                name: conso. jour en cours
-                yaxis_id: first
-                color: rgb(19, 160, 255)
-                type: column
-              - entity: sensor.ecojoko_consommation_reseau
-                type: line
-                stroke_dash: 8
-                color: red
-                stroke_width: 1
-                name: Avg(730h)
-                group_by:
-                  func: avg
-                  duration: 730h
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: custom:bubble-card
-            card_type: separator
             name: Conso. réel sur 24 Heures
             icon: mdi:lightning-bolt
             rows: 2
@@ -10962,7 +11308,7 @@ views:
               colorize_states: true
             yaxis:
               - id: first
-                min: ~0
+                min: 0
                 max: auto
                 opposite: false
                 decimals: 0
@@ -11203,6 +11549,69 @@ views:
               - name: HC (kWh)
                 data: hc_kwh
                 align: center
+          - type: custom:bubble-card
+            card_type: separator
+            name: Conso. Mensuel par Jours
+            icon: mdi:lightning-bolt-outline
+            rows: 2
+            styles: |-
+              .bubble-line {
+                background: var(--primary-text-color);
+                opacity: 1;
+              }
+            card_layout: normal
+          - type: custom:apexcharts-card
+            graph_span: 730h
+            cache: false
+            span:
+              end: day
+            apex_config:
+              chart:
+                height: 400px
+              legend:
+                show: false
+            header:
+              show: true
+              title: ' '
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: first
+                min: 0
+                max: auto
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 20
+            all_series_config:
+              group_by:
+                func: max
+                duration: 24h
+              show:
+                legend_value: true
+                extremas: true
+            series:
+              - entity: sensor.ecojoko_consommation_reseau
+                name: conso. jour en cours
+                yaxis_id: first
+                color: rgb(19, 160, 255)
+                type: column
+              - entity: sensor.ecojoko_consommation_reseau
+                type: line
+                stroke_dash: 8
+                color: red
+                stroke_width: 1
+                name: Avg(730h)
+                group_by:
+                  func: avg
+                  duration: 730h
+            card_mod:
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
         column_span: 1
     title: Energie HOME
     cards: []
@@ -11210,7 +11619,7 @@ views:
   - type: sections
     max_columns: 1
     title: Energie HOME Temps Réel
-    path: energie temps reel
+    path: energie-temps-reel
     sections:
       - type: grid
         cards:
@@ -11538,7 +11947,7 @@ views:
                   colorize_states: true
                 yaxis:
                   - id: Watts
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: true
                     decimals: 0
@@ -12102,9 +12511,9 @@ views:
               - color: grey
     title: Energie HOME Mensuel
     cards: []
-    path: energie mensuel
+    path: energie-mensuel
   - type: sections
-    path: energie clim
+    path: energie-clim
     max_columns: 1
     sections:
       - type: grid
@@ -13170,7 +13579,7 @@ views:
         cards:
           - type: heading
             icon: phu:pet-water-fountian
-            heading: XIAOMI - Pet Fountain
+            heading: vide
             heading_style: title
             badges: []
             tap_action:
@@ -13179,47 +13588,6 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
-          - type: entities
-            title: Fontaine - On/Off
-            state_color: true
-            entities:
-              - entity: light.mmgg_wi11_8b36_indicator_light
-                icon: mdi:lightning-bolt-circle
-                name: Indicator Light
-                secondary_info: none
-              - entity: switch.mmgg_wi11_8b36_pet_drinking_fountain
-                name: Fontaine On / Off
-              - entity: binary_sensor.mmgg_wi11_8b36_pump_block_flag
-                name: No Water
-                icon: mdi:water-circle
-              - entity: sensor.message_fontaine_a_eau_de_minouche
-                secondary_info: none
-                name: 'Info:'
-              - entity: select.mmgg_wi11_8b36_mode
-                name: Common (Normal) / Smart (Intelligent)
-              - entity: button.mmgg_wi11_8b36_reset_filter_life
-                name: Reset Filtre
-                icon: mdi:button-cursor
-              - entity: sensor.mmgg_wi11_8b36_filter_left_time_2
-                name: Jours restant avant remplacement
-                icon: phu:pool-filter
-              - entity: button.mmgg_wi11_8b36_reset_clean_time
-                name: Nettoyage
-                icon: mdi:button-cursor
-              - entity: sensor.mmgg_wi11_8b36_remain_clean_time
-                name: Jours Restant Avant le Nettoyage
-                icon: mdi:spray-bottle
-              - entity: update.xiaomi_miot_auto_update
-                icon: phu:xiaomi-logo
-            card_mod:
-              style: |
-                ha-card {
-                  border: none !important;
-                  box-shadow: none !important;
-                  background: none !important;
-                  margin: 0;
-                  padding: 0;
-                }
           - type: heading
             icon: mdi:robot-vacuum
             heading: IROBOT - ROUMBA
@@ -13231,18 +13599,25 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
-          - type: custom:vacuum-card
-            entity: vacuum.roomba_home
-            style: |
-              ha-card {
-                --vc-background: #17A8F4;
-                --vc-spacing: 5px;
-              }
+          - type: entities
+            title: Outils Zigbee2MQTT
+            entities:
+              - entity: select.zigbee2mqtt_bridge_log_level
+                name: Niveau de log (menu)
+              - type: button
+                name: 'Log Z2M : suivant'
+                icon: mdi:swap-horizontal
+                action_name: Suivant
+                tap_action:
+                  action: call-service
+                  service: select.select_next
+                  target:
+                    entity_id: select.zigbee2mqtt_bridge_log_level
     title: IRobot
     cards: []
   - type: sections
     max_columns: 3
-    path: energie lampes
+    path: energie-lampes
     title: Lampes
     sections:
       - type: grid
@@ -13411,14 +13786,14 @@ views:
               colorize_states: true
             yaxis:
               - id: Watts
-                min: ~0
+                min: 0
                 max: auto
                 opposite: false
                 decimals: 0
                 apex_config:
                   tickAmount: 4
               - id: Avg
-                min: ~0
+                min: 0
                 max: auto
                 opposite: true
                 decimals: 1
@@ -13636,14 +14011,14 @@ views:
               colorize_states: true
             yaxis:
               - id: Watts
-                min: ~0
+                min: 0
                 max: auto
                 opposite: false
                 decimals: 0
                 apex_config:
                   tickAmount: 4
               - id: Avg
-                min: ~0
+                min: 0
                 max: auto
                 opposite: true
                 decimals: 1
@@ -13878,14 +14253,14 @@ views:
               colorize_states: true
             yaxis:
               - id: Watts
-                min: ~0
+                min: 0
                 max: auto
                 opposite: false
                 decimals: 0
                 apex_config:
                   tickAmount: 4
               - id: Avg
-                min: ~0
+                min: 0
                 max: auto
                 opposite: true
                 decimals: 1
@@ -14085,14 +14460,14 @@ views:
               colorize_states: true
             yaxis:
               - id: Watts
-                min: ~0
+                min: 0
                 max: auto
                 opposite: false
                 decimals: 0
                 apex_config:
                   tickAmount: 4
               - id: Avg
-                min: ~0
+                min: 0
                 max: auto
                 opposite: true
                 decimals: 1
@@ -14313,14 +14688,14 @@ views:
               colorize_states: true
             yaxis:
               - id: Watts
-                min: ~0
+                min: 0
                 max: auto
                 opposite: false
                 decimals: 0
                 apex_config:
                   tickAmount: 4
               - id: Avg
-                min: ~0
+                min: 0
                 max: auto
                 opposite: true
                 decimals: 1
@@ -14414,6 +14789,76 @@ views:
         cards:
           - type: heading
             icon: mdi:cellphone-nfc
+            heading: Oneplus 7 GM1901
+            heading_style: title
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-tablette/0
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+              brush: true
+            graph_span: 24h
+            brush:
+              selection_span: 30m
+              apex_config: null
+            header:
+              show: true
+              title: Niveau de la batterie
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: Niveau
+                min: 0
+                max: ~100
+                decimals: 0
+            series:
+              - entity: sensor.gm1901_battery_level
+                yaxis_id: Niveau
+                name: Batterie
+                color: green
+                type: area
+                stroke_width: 1
+                color_threshold:
+                  - value: 80
+                    color: green
+                  - value: 50
+                    color: orange
+                  - value: 20
+                    color: red
+            card_mod:
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
+          - type: entities
+            entities:
+              - entity: sensor.gm1901_battery_level
+              - entity: sensor.gm1901_battery_state
+                name: Battery state
+              - entity: sensor.gm1901_charger_type
+                name: Charger type
+                secondary_info: none
+              - entity: sensor.gm1901_battery_health
+              - entity: sensor.gm1901_battery_temperature
+              - entity: sensor.gm1901_network_type
+            state_color: true
+            show_header_toggle: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
+          - type: heading
+            icon: mdi:cellphone-nfc
             heading: Oneplus 10Pro NE2213 (E)
             heading_style: title
             badges: []
@@ -14438,7 +14883,7 @@ views:
               colorize_states: true
             yaxis:
               - id: Niveau
-                min: ~0
+                min: 0
                 max: ~100
                 decimals: 0
             series:
@@ -14486,76 +14931,6 @@ views:
                 }
           - type: heading
             icon: mdi:cellphone-nfc
-            heading: Oneplus 7 GM1901
-            heading_style: title
-            badges: []
-            tap_action:
-              action: navigate
-              navigation_path: /dashboard-tablette/0
-            layout_options:
-              grid_columns: full
-              grid_rows: 1
-          - type: custom:apexcharts-card
-            experimental:
-              color_threshold: true
-              brush: true
-            graph_span: 24h
-            brush:
-              selection_span: 30m
-              apex_config: null
-            header:
-              show: true
-              title: Niveau de la batterie
-              show_states: true
-              colorize_states: true
-            yaxis:
-              - id: Niveau
-                min: ~0
-                max: ~100
-                decimals: 0
-            series:
-              - entity: sensor.gm1901_battery_level
-                yaxis_id: Niveau
-                name: Batterie
-                color: green
-                type: area
-                stroke_width: 1
-                color_threshold:
-                  - value: 80
-                    color: green
-                  - value: 50
-                    color: orange
-                  - value: 20
-                    color: red
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: entities
-            entities:
-              - entity: sensor.gm1901_battery_level
-              - entity: sensor.gm1901_battery_state
-                name: Battery state
-              - entity: sensor.gm1901_charger_type
-                name: Charger type
-                secondary_info: none
-              - entity: sensor.gm1901_battery_health
-              - entity: sensor.gm1901_battery_temperature
-              - entity: sensor.gm1901_network_type
-            state_color: true
-            show_header_toggle: true
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: heading
-            icon: mdi:cellphone-nfc
             heading: Samsung A8 SM-A530F
             heading_style: title
             badges: []
@@ -14580,7 +14955,7 @@ views:
               colorize_states: true
             yaxis:
               - id: Niveau
-                min: ~0
+                min: 0
                 max: ~100
                 decimals: 0
             series:
@@ -14651,7 +15026,7 @@ views:
               colorize_states: true
             yaxis:
               - id: Niveau
-                min: ~0
+                min: 0
                 max: ~100
                 decimals: 0
             series:
@@ -14723,7 +15098,7 @@ views:
               colorize_states: true
             yaxis:
               - id: Niveau
-                min: ~0
+                min: 0
                 max: ~100
                 decimals: 0
             series:
@@ -15217,7 +15592,7 @@ views:
                     background-color: {% if is_state('switch.prise_tete_de_lit_chambre', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                   }  
   - title: BATTERY (BP)
-    path: battery bp
+    path: battery-bp
     cards: []
     type: sections
     max_columns: 1
@@ -15469,8 +15844,8 @@ views:
                   box-shadow: none !important;
                   border: none !important;
                 }
-  - title: Système Rpi
-    path: systeme rpi
+  - title: Système Mini PC
+    path: systeme-mini-pc
     type: sections
     max_columns: 1
     sections:
@@ -15653,7 +16028,7 @@ views:
                     cards:
                       - type: custom:bar-card
                         entities:
-                          - entity: sensor.system_monitor_utilisation_du_processeur
+                          - entity: sensor.127_0_0_1_utilisation_cpu
                             name: CPU USED
                             icon: mdi:cpu-64-bit
                             color: rgb(68, 115, 158)
@@ -16183,7 +16558,7 @@ views:
               - type: horizontal-stack
                 cards:
                   - type: gauge
-                    entity: sensor.system_monitor_utilisation_du_processeur
+                    entity: sensor.127_0_0_1_utilisation_cpu
                     min: 0
                     max: 100
                     needle: true
@@ -16210,7 +16585,7 @@ views:
                       action: navigate
                       navigation_path: '#speed'
                     entities:
-                      - entity: sensor.system_monitor_utilisation_du_processeur
+                      - entity: sensor.127_0_0_1_utilisation_cpu
                         color: turquoise
                         name: CPU Use
                     show:
@@ -16584,7 +16959,7 @@ views:
                   colorize_states: true
                 yaxis:
                   - id: Watts
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: true
                     decimals: 0
@@ -16656,14 +17031,14 @@ views:
                   colorize_states: true
                 yaxis:
                   - id: Watts
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: false
                     decimals: 0
                     apex_config:
                       tickAmount: 10
                   - id: Avg
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: true
                     decimals: 1
@@ -16882,7 +17257,7 @@ views:
                   colorize_states: true
                 yaxis:
                   - id: Temp
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: true
                     decimals: 0
@@ -16979,7 +17354,7 @@ views:
                   colorize_states: true
                 yaxis:
                   - id: Temp
-                    min: ~0
+                    min: 0
                     max: auto
                     opposite: true
                     decimals: 0
@@ -17037,7 +17412,7 @@ views:
                     }
     badges: []
     cards: []
-  - path: systeme freebox
+  - path: systeme-freebox
     type: sections
     max_columns: 1
     sections:
@@ -18730,7 +19105,7 @@ views:
     cards: []
   - type: sections
     max_columns: 1
-    path: air quality
+    path: air-quality
     title: Air Quality
     sections:
       - type: grid
@@ -19591,7 +19966,7 @@ views:
   - type: sections
     max_columns: 1
     title: POLLEN - POLLUTION
-    path: pollen pollution
+    path: pollen-pollution
     sections:
       - type: grid
         cards:
@@ -20646,7 +21021,7 @@ views:
                               - color: rgb(255, 237, 160)
                         - value: alerte
                           operator: '=='
-                          color: rgb(254, 178, 76)
+                          color: rgb(254, 178, 7 un6)
                           icon: mdi:water-alert
                           styles:
                             state:
@@ -20783,8 +21158,8 @@ views:
                                     [[[ return entity.attributes.friendly_name;
                                     ]]]
                                   style: |
-                                    --popup-min-width: 500px;
-                                    --popup-max-width: 500px; 
+                                    --popup-min-width: 300px;
+                                    --popup-max-width: 300px; 
                                   content:
                                     type: custom:button-card
                                     entity: |
