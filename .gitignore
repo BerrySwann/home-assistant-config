@@ -40,3 +40,6 @@ zigbee2mqtt/state.json
 # --- IDE ---
 .vscode/
 .idea/
+
+# Logs internes
+.logs/
