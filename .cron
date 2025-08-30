@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Toutes les heures à H+10 → commit/push s'il y a des changements
+10 * * * * /bin/bash /config/.scripts/ha_git_backup.sh >> /config/.logs/ha_git_backup.log 2>&1
