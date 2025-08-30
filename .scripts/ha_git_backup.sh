@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd /config
-
-# Identité (au cas où)
 git config user.name  "Eric Rodi (HAOS)"
 git config user.email "erodi@users.noreply.github.com"
 
-# Rien à faire s'il n'y a pas de changement
-CHANGES="$(git status --porcelain || true)"
-[ -z "$CHANGES" ] && exit 0
+# Fichiers pris en compte : .yaml/.yml/.md (modifiés ou non suivis)
+CHANGED="$( { git diff --name-only; git ls-files -o --exclude-standard; } \
+  | grep -E '\.(ya?ml|md)$' | sort -u || true )"
+[ -z "$CHANGED" ] && exit 0
 
-# Commit + push
+MSG="HAOS auto-backup: $(date '+%Y-%m-%d %H:%M:%S %Z')"
+[ "${1:-}" = "weekly" ] && MSG="HAOS weekly backup: $(date '+%Y-%m-%d %H:%M:%S %Z')"
+
 git add -A
-git commit -m "HAOS auto-backup: $(date '+%Y-%m-%d %H:%M:%S %Z')"
+git commit -m "$MSG"
 git push origin HEAD

@@ -1,4 +1,6 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-# Toutes les heures à H+10 → commit/push s'il y a des changements
+# Horaire : toutes les heures à H+10
 10 * * * * /bin/bash /config/.scripts/ha_git_backup.sh >> /config/.logs/ha_git_backup.log 2>&1
+# Hebdo : dimanche 03:40 avec tag "weekly"
+40 3 * * 0 /bin/bash /config/.scripts/ha_git_backup.sh weekly >> /config/.logs/ha_git_backup.log 2>&1
