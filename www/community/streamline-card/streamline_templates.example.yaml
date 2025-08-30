@@ -1,6 +1,0 @@
-example_tile:
-  card:
-    type: tile
-    entity: "[[entity]]"
-    features_position: bottom
-    vertical: false

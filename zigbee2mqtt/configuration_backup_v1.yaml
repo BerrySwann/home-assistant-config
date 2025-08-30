@@ -1,5 +1,4 @@
-homeassistant:
-  enabled: true
+homeassistant: true
 advanced:
   network_key:
     - 178
@@ -28,11 +27,14 @@ advanced:
     - 165
     - 152
     - 116
-  channel: 20
+  homeassistant_legacy_entity_attributes: false
+  legacy_api: false
+  legacy_availability_payload: false
+  channel: 15
   last_seen: ISO_8601
   log_level: info
 mqtt:
-  server: mqtt://192.168.1.96:1883
+  server: mqtt://192.168.1.106:1883
   user: mqtt
   password: mqtt
   keepalive: 60
@@ -42,25 +44,48 @@ serial:
   port: >-
     /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20231121194208-if00
   adapter: ember
-  baudrate: 115200
-  rtscts: false
 frontend:
-  enabled: true
   port: 8099
-device_options: {}
+device_options:
+  legacy: false
+permit_join: false
 availability:
-  enabled: true
   active:
-    timeout: 10
+    timeout: 20
   passive:
-    timeout: 480
+    timeout: 240
 devices:
   '0x28dba7fffe6c5be2':
     friendly_name: Th Bureau
-    temperature_calibration: 0
-    humidity_calibration: 0
-    temperature_precision: 2
-    humidity_precision: 2
+  '0x28dba7fffe1b9e55':
+    friendly_name: Th Balcon Nord
+  '0xd44867fffe136724':
+    friendly_name: Inter Bureau (RODRET)
+    homeassistant: {}
+    optimistic: true
+    identify_timeout: 1
+    simulated_brightness:
+      delta: 0
+      interval: 0
+  '0x287681fffe3d3405':
+    friendly_name: Inter (SOMRIG)
+    identify_timeout: 1
+  '0x705464fffe816424':
+    friendly_name: Detecteur (VALLHORN)
+    illuminance_lux_calibration: 0
+    illuminance_calibration: 0
+    identify_timeout: 3
+    no_occupancy_since: []
+  '0x287681fffe728125':
+    friendly_name: Télécommande (STYRBAR)
+    identify_timeout: 3
+    legacy: true
+  '0x70ac08fffe7c23f5':
+    friendly_name: Poussoir (TRADFRI)
+    identify_timeout: 3
+    simulated_brightness:
+      delta: 0
+      interval: 0
   '0x00178801080381e0':
     friendly_name: Boutton Bureau (HUE)
     legacy: true
@@ -120,6 +145,12 @@ devices:
     current_calibration: 0
     voltage_calibration: 0
     energy_calibration: 0
+  '0x881a14fffeebb6ad':
+    friendly_name: lampe bureau 1 (IKEA)
+    identify_timeout: 3
+    state_action: false
+    color_sync: true
+    transition: 1
   '0xa4c138d015dca54b':
     friendly_name: Clim Salon (NOUS)
     power_calibration: 0
@@ -131,6 +162,14 @@ devices:
     voltage_precision: 2
     energy_precision: 2
     state_action: true
+  '0x881a14fffea7b00f':
+    friendly_name: lampe bureau 2 (IKEA)
+    transition: 1
+    color_sync: true
+    state_action: false
+    identify_timeout: 3
+  '0x6cfd22fffe5f3511':
+    friendly_name: Inter Salon (4) (IKEA)
   '0xa4c138c742b1b280':
     friendly_name: Clim Chambre (NOUS)
     power_precision: 2
@@ -230,17 +269,27 @@ devices:
     state_action: false
     identify_timeout: 3
     energy_precision: 2
-    current_precision: 3
+    current_precision: 2
     voltage_precision: 2
     power_precision: 2
   '0xb0c7defffe634f2f':
     friendly_name: détecteur de fuite (IKEA)
+  '0xd44867fffefc3d9a':
+    friendly_name: contact fenetre bureau (IKEA)
   '0x08ddebfffeee7e56':
     friendly_name: Th Salon
-    temperature_calibration: 0
-    humidity_calibration: 0
+  '0x08ddebfffeef219f':
+    friendly_name: Th Chambre
     temperature_precision: 2
     humidity_precision: 2
+    humidity_calibration: ''
+    temperature_calibration: -0.02
+  '0xd44867fffe29c736':
+    friendly_name: 'Th Salle de Bain '
+    temperature_precision: 2
+    humidity_precision: 2
+    temperature_calibration: 0
+    humidity_calibration: 0
   '0xd44867fffe29fba9':
     friendly_name: Th Cuisine
     temperature_calibration: 0
@@ -259,6 +308,17 @@ devices:
     current_precision: 2
     voltage_precision: 2
     power_precision: 2
+  '0xa4c138bb5636f0b8':
+    friendly_name: radiateur cuisine
+    power_calibration: 0
+    power_precision: 2
+    state_action: false
+    current_calibration: 0
+    voltage_calibration: 0
+    energy_calibration: 0
+    current_precision: 2
+    voltage_precision: 2
+    energy_precision: 2
   '0x28dba7fffe85fd68':
     friendly_name: qualite air bureau (IKEA)
     temperature_calibration: 0
@@ -267,93 +327,15 @@ devices:
     temperature_precision: 2
     humidity_precision: 2
     identify_timeout: 3
-  '0xd44867fffefc3d9a':
-    friendly_name: contact fenetre bureau (IKEA)
-  '0x705464fffe816424':
-    friendly_name: Detecteur (VALLHORN)
-  '0x08ddebfffeef219f':
-    friendly_name: Th Chambre
-    temperature_calibration: 0
-  '0xd44867fffe29c736':
-    friendly_name: Th Salle de Bain
-    temperature_calibration: 0
-  '0x28dba7fffe1b9e55':
-    friendly_name: Th Balcon Nord
-    temperature_calibration: 0
-    temperature_precision: 2
-    humidity_calibration: 0
-    humidity_precision: 2
-  '0xd44867fffe136724':
-    friendly_name: Inter Bureau (RODRET)
-  '0x287681fffe728125':
-    friendly_name: Télécommande (STYRBAR)
-  '0x287681fffe3d3405':
-    friendly_name: Inter (SOMRIG)
-  '0x6cfd22fffe5f3511':
-    friendly_name: Inter Salon (4) (IKEA)
-  '0x8c65a3fffefe4a22':
-    friendly_name: qualite air salon (IKEA)
-  '0x0c2a6ffffe2bb7b2':
-    friendly_name: contact fenetre salon (IKEA)
-    identify_timeout: 3
-  '0x8c65a3fffefe4c1d':
-    friendly_name: qualite air chambre (IKEA)
-  '0x30fb10fffecd4e74':
-    friendly_name: Four et Plaque de Cuisson
-    voltage_calibration: 0
-    voltage_precision: 0
-    power_calibration: 0
-    current_calibration: 0
-    energy_calibration: 0
-    ac_frequency_calibration: 0
-    ac_frequency_precision: 2
-    energy_precision: 2
-    current_precision: 2
-    power_precision: 2
-  '0xa4c138bb5636f0b8':
-    friendly_name: 'Radiateur élec cuisine '
-    power_calibration: 0
-    current_calibration: 0
-    voltage_calibration: 0
-    energy_calibration: 0
-    state_action: false
-    energy_precision: 2
-    voltage_precision: 2
-    current_precision: 2
-    power_precision: 2
-  '0x1cc089fffe843978':
-    friendly_name: 'Relais Lumière SDB (SONOFF) '
-    state_action: true
-  '0x001788010e67586e':
-    friendly_name: Lampe Salle de Bain (HUE)
-  '0x001788010ba0e601':
-    friendly_name: Boutton Salle de Bain (HUE)
-  '0xa4c138ca365a1624':
-    friendly_name: Prise Radiateur Salle de Bain (NOUS)
-  '0xa4c13854c76b66e0':
-    friendly_name: Prise Bureau Fer à Repasser (NOUS)
-  '0x0c2a6ffffe2ca35d':
-    friendly_name: contact fenetre chambre (IKEA)
-  '0xd44867fffefe401e':
-    friendly_name: contact fenetre cuisine (IKEA)
-  '0x001788010b58bd16':
-    friendly_name: Hue smart éco. PC Bureau
-  '0x94a081fffe5d83fe':
-    friendly_name: prise mini pc (IKEA)
-  '0xb43522fffed5eb04':
-    friendly_name: Th Cellier
-  '0x001788010d08f22c':
-    friendly_name: Lampe Bureau 1 (HUE)
-  '0x001788010d090321':
-    friendly_name: Lampe Bureau 2 (HUE)
-  '0x8c8b48fffed267f4':
-    friendly_name: Inter TV Chambre (IKEA RODRET)
-  '0x70ac08fffe7c23f5':
-    friendly_name: '0x70ac08fffe7c23f5'
 groups:
   '1':
     friendly_name: Bureau z2m
-  '3':
-    friendly_name: Salle de Bain Z2M
-ota: {}
-version: 4
+    devices:
+      - 0x881a14fffeebb6ad/1
+      - 0x881a14fffea7b00f/1
+  '2':
+    friendly_name: Lumières Salon (4)
+    devices:
+      - 0x6cfd22fffe5f3511/1
+ota:
+  ikea_ota_use_test_url: true

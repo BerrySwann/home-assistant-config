@@ -84,8 +84,12 @@ telegram_bot:
 notify:
   - platform: telegram
     name: Telegram
-    chat_id: !secret id_telegram_HA-Bot 
-
+    chat_id: !secret id_telegram_HA-Bot
+  - name: z2m_error_file
+    platform: file
+    filename: /config/zigbee2mqtt/log/error.log
+    timestamp: false
+    
 
 
 
@@ -122,3 +126,12 @@ openai_conversation:
   model: "gpt-4o-mini"
 
 
+shell_command:
+  z2m_error_append: >
+    sh -c 'mkdir -p /config/zigbee2mqtt/log &&
+    printf "%s - %s\n" "{{ now().isoformat() }}" "{{ line }}" >> /config/zigbee2mqtt/log/error.log'
+
+bluetooth:
+
+  device_tracker:
+  - platform: bluetooth_le_tracker

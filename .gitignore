@@ -1,28 +1,42 @@
-# .gitignore
-# Fichiers sensibles
+# --- YAML & docs à versionner ---
+!*.yaml
+!*.yml
+!*.md
+!.gitignore
+
+# --- Secrets & jetons (NE PAS PUBLISH) ---
 secrets.yaml
-*.db
-*.bak
-*.swp
-*.log
-*.log.1
+.google.token
+.cloud
+.git-credentials
 
-# Bases de données Home Assistant
-home-assistant_v2.db
-home-assistant_v2.db-shm
-home-assistant_v2.db-wal
-home-assistant_v2_backup.db
-zigbee2mqtt/configuration_backup_v*.yaml
-zigbee2mqtt/configuration.yaml.broken
-
-# Logs
-OZW_*.log
-home-assistant.log
-home-assistant.log.1
-home-assistant.log.fault
-
-# Fichiers temporaires
-*.tmp
-.DS_Store
-.cloud/
+# --- HA runtime ---
 .storage/
+.homeassistant/
+home-assistant.log
+home-assistant.log.*
+*.db
+*.db-shm
+*.db-wal
+.HA_VERSION
+.uuid
+
+# --- Python caches ---
+__pycache__/
+*.pyc
+
+# --- HACS (re-générés, bruit énorme) ---
+www/community/
+
+# --- Images volatiles / météo ---
+www/weather/
+www/*.png
+www/*.jpg
+
+# --- Zigbee2MQTT (états/backup volatiles) ---
+zigbee2mqtt/coordinator_backup.json
+zigbee2mqtt/state.json
+
+# --- IDE ---
+.vscode/
+.idea/

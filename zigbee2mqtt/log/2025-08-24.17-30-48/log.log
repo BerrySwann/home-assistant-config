@@ -1,0 +1,217 @@
+[2025-08-24 17:30:48] info: 	z2m: Logging to console, file (filename: log.log)
+[2025-08-24 17:30:48] info: 	z2m: Starting Zigbee2MQTT version 2.6.0 (commit #unknown)
+[2025-08-24 17:30:48] info: 	z2m: Starting zigbee-herdsman (5.0.4)
+[2025-08-24 17:30:48] info: 	zh:ember: Using default stack config.
+[2025-08-24 17:30:48] info: 	zh:ember: ======== Ember Adapter Starting ========
+[2025-08-24 17:30:48] info: 	zh:ember:ezsp: ======== EZSP starting ========
+[2025-08-24 17:30:48] info: 	zh:ember:uart:ash: ======== ASH Adapter reset ========
+[2025-08-24 17:30:48] info: 	zh:ember:uart:ash: RTS/CTS config is off, enabling software flow control.
+[2025-08-24 17:30:48] info: 	zh:ember:uart:ash: Serial port opened
+[2025-08-24 17:30:48] info: 	zh:ember:uart:ash: ======== ASH starting ========
+[2025-08-24 17:30:48] error: 	zh:ember:uart:ash: Received frame with CRC error
+[2025-08-24 17:30:50] info: 	zh:ember:uart:ash: ======== ASH connected ========
+[2025-08-24 17:30:50] info: 	zh:ember:uart:ash: ======== ASH started ========
+[2025-08-24 17:30:50] info: 	zh:ember:ezsp: ======== EZSP started ========
+[2025-08-24 17:30:50] info: 	zh:ember: Adapter EZSP protocol version (13) lower than Host. Switched.
+[2025-08-24 17:30:50] info: 	zh:ember: Adapter version info: {"ezsp":13,"revision":"7.4.5 [GA]","build":0,"major":7,"minor":4,"patch":5,"special":0,"type":170}
+[2025-08-24 17:30:50] info: 	zh:ember: [STACK STATUS] Network up.
+[2025-08-24 17:30:50] info: 	zh:ember: [INIT TC] Adapter network matches config.
+[2025-08-24 17:30:50] info: 	zh:ember: [CONCENTRATOR] Started source route discovery. 1249ms until next broadcast.
+[2025-08-24 17:30:50] info: 	z2m: zigbee-herdsman started (resumed)
+[2025-08-24 17:30:50] info: 	z2m: Coordinator firmware version: '{"meta":{"build":0,"ezsp":13,"major":7,"minor":4,"patch":5,"revision":"7.4.5 [GA]","special":0,"type":170},"type":"EmberZNet"}'
+[2025-08-24 17:30:50] info: 	z2m: Th Bureau (0x28dba7fffe6c5be2): SNZB-02D - SONOFF Temperature and humidity sensor with screen (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Th Balcon Nord (0x28dba7fffe1b9e55): SNZB-02D - SONOFF Temperature and humidity sensor with screen (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Inter Bureau (RODRET) (0xd44867fffe136724): E2201 - IKEA RODRET wireless dimmer/power switch (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Inter (SOMRIG) (0x287681fffe3d3405): E2213 - IKEA SOMRIG shortcut button (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Poussoir (IKEA TRADFRI) (0x70ac08fffe7c23f5): E1812 - IKEA TRADFRI shortcut button (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Boutton Bureau (HUE) (0x00178801080381e0): 8718699693985 - Philips Hue smart button (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: prise bureau pc (IKEA) (0xd44867fffe148732): E2206 - IKEA INSPELNING smart plug (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise tv chambre (NOUS) (0xa4c138cc2ec0a611): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise salon chargeur (NOUS) (0xa4c13862732d4d37): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise frigo cuisine (NOUS) (0xa4c13819c020cf4a): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise congelateur cuisine (NOUS) (0xa4c138bf157dac0e): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: lampe bureau 1 (IKEA) (0x881a14fffeebb6ad): LED2201G8 - IKEA TRADFRI bulb E26/27, white spectrum, globe, opal, 1055/1100/1160 lm (Router)
+[2025-08-24 17:30:50] info: 	z2m: Clim Salon (NOUS) (0xa4c138d015dca54b): A6Z - Nous Outdoor smart socket (Router)
+[2025-08-24 17:30:50] info: 	z2m: lampe bureau 2 (IKEA) (0x881a14fffea7b00f): LED2201G8 - IKEA TRADFRI bulb E26/27, white spectrum, globe, opal, 1055/1100/1160 lm (Router)
+[2025-08-24 17:30:50] info: 	z2m: Inter Salon (4) (IKEA) (0x6cfd22fffe5f3511): E2201 - IKEA RODRET wireless dimmer/power switch (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Clim Chambre (NOUS) (0xa4c138c742b1b280): A6Z - Nous Outdoor smart socket (Router)
+[2025-08-24 17:30:50] info: 	z2m: Clim du Bureau (NOUS) (0xa4c1385900eabff5): A6Z - Nous Outdoor smart socket (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise box internet (IKEA) (0x8c65a3fffe1035b2): E2206 - IKEA INSPELNING smart plug (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise pc's gege (IKEA) (0x8c65a3fffe282786): E2206 - IKEA INSPELNING smart plug (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise lave vaisselle (NOUS) (0xa4c138a9441298b7): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise lave linge (NOUS) (0xa4c138d18475f3ab): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise airfryer ninja (NOUS) (0xa4c1388b6f4ffaf5): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise four micro ondes (NOUS) (0xa4c138fc07adca74): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise horloge (IKEA) (0x8c65a3fffe105949): E2206 - IKEA INSPELNING smart plug (Router)
+[2025-08-24 17:30:50] info: 	z2m: détecteur de fuite (IKEA) (0xb0c7defffe634f2f): E2202 - IKEA BADRING water leakage sensor (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: contact fenetre bureau (IKEA) (0xd44867fffefc3d9a): E2013 - IKEA PARASOLL door/window sensor (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Th Salon (0x08ddebfffeee7e56): SNZB-02D - SONOFF Temperature and humidity sensor with screen (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Th Chambre (0x08ddebfffeef219f): SNZB-02D - SONOFF Temperature and humidity sensor with screen (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Th Cuisine (0xd44867fffe29fba9): SNZB-02D - SONOFF Temperature and humidity sensor with screen (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: prise tete de lit chambre (0x8c65a3fffe104f42): E2206 - IKEA INSPELNING smart plug (Router)
+[2025-08-24 17:30:50] info: 	z2m: Radiateur élec cuisine  (0xa4c138bb5636f0b8): TS0001_power - Tuya Switch with power monitoring (Router)
+[2025-08-24 17:30:50] info: 	z2m: qualite air bureau (IKEA) (0x28dba7fffe85fd68): E2112 - IKEA VINDSTYRKA air quality and humidity sensor (Router)
+[2025-08-24 17:30:50] info: 	z2m: Four et Plaque de Cuisson (0x30fb10fffecd4e74): SPM01V2 - Tuya Smart energy monitor for 1P+N system (Router)
+[2025-08-24 17:30:50] info: 	z2m: Detecteur (VALLHORN) (0x705464fffe816424): E2134 - IKEA VALLHORN wireless motion sensor (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Th Salle de Bain (0xd44867fffe29c736): SNZB-02D - SONOFF Temperature and humidity sensor with screen (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: qualite air salon (IKEA) (0x8c65a3fffefe4a22): E2112 - IKEA VINDSTYRKA air quality and humidity sensor (Router)
+[2025-08-24 17:30:50] info: 	z2m: contact fenetre salon (IKEA) (0x0c2a6ffffe2bb7b2): E2013 - IKEA PARASOLL door/window sensor (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: qualite air chambre (IKEA) (0x8c65a3fffefe4c1d): E2112 - IKEA VINDSTYRKA air quality and humidity sensor (Router)
+[2025-08-24 17:30:50] info: 	z2m: Relais Lumière SDB (SONOFF)  (0x1cc089fffe843978): ZBMINIR2 - SONOFF Zigbee smart switch (Router)
+[2025-08-24 17:30:50] info: 	z2m: Lampe Salle de Bain (HUE) (0x001788010e67586e): 8719514343320 - Philips Hue white A67 bulb E26 with Bluetooth (1600 Lumen) (Router)
+[2025-08-24 17:30:50] info: 	z2m: Boutton Salle de Bain (HUE) (0x001788010ba0e601): 8718699693985 - Philips Hue smart button (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Prise Radiateur Salle de Bain (NOUS) (0xa4c138ca365a1624): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: Prise Bureau Fer à Repasser (NOUS) (0xa4c13854c76b66e0): A1Z - Nous Smart plug (with power monitoring) (Router)
+[2025-08-24 17:30:50] info: 	z2m: contact fenetre chambre (IKEA) (0x0c2a6ffffe2ca35d): E2013 - IKEA PARASOLL door/window sensor (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: contact fenetre cuisine (IKEA) (0xd44867fffefe401e): E2013 - IKEA PARASOLL door/window sensor (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Hue smart éco. PC Bureau (0x001788010b58bd16): 9290030509 - Philips Hue smart plug - EU (Router)
+[2025-08-24 17:30:50] info: 	z2m: prise mini pc (IKEA) (0x94a081fffe5d83fe): E2206 - IKEA INSPELNING smart plug (Router)
+[2025-08-24 17:30:50] info: 	z2m: Th Cellier (0xb43522fffed5eb04): SNZB-02D - SONOFF Temperature and humidity sensor with screen (EndDevice)
+[2025-08-24 17:30:50] info: 	z2m: Currently 48 devices are joined.
+[2025-08-24 17:30:50] info: 	z2m: Connecting to MQTT server at mqtt://192.168.1.96:1883
+[2025-08-24 17:30:50] info: 	z2m: Connected to MQTT server
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/bridge/state', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Bureau/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Balcon Nord/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Inter Bureau (RODRET)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Inter (SOMRIG)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Poussoir (IKEA TRADFRI)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Boutton Bureau (HUE)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise bureau pc (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise tv chambre (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise salon chargeur (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise frigo cuisine (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:50] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise congelateur cuisine (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/lampe bureau 1 (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Clim Salon (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/lampe bureau 2 (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Inter Salon (4) (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Clim Chambre (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Clim du Bureau (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise box internet (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise congelateur cuisine (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":186.71,"indicator_mode":"on","last_seen":"2025-08-24T15:30:51.311Z","linkquality":252,"power":39,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":228}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise pc's gege (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise lave vaisselle (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise lave linge (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise airfryer ninja (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise four micro ondes (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise horloge (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/détecteur de fuite (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise bureau pc (IKEA)', payload '{"current":1.1,"energy":614.86,"last_seen":"2025-08-24T15:30:51.589Z","linkquality":255,"power":234.5,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":228.5}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre bureau (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	zh:ember:ezsp: Received network/route error ROUTE_ERROR_SOURCE_ROUTE_FAILURE for "11216".
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Salon/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Chambre/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Cuisine/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise tete de lit chambre/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Radiateur élec cuisine /availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air bureau (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Four et Plaque de Cuisson/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Detecteur (VALLHORN)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Salle de Bain/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise pc's gege (IKEA)', payload '{"current":0.9,"energy":309.5,"last_seen":"2025-08-24T15:30:51.971Z","linkquality":172,"power":179.1,"power_on_behavior":"on","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":228.3}'
+[2025-08-24 17:30:51] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air salon (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre salon (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air chambre (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Relais Lumière SDB (SONOFF) /availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Lampe Salle de Bain (HUE)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Boutton Salle de Bain (HUE)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Prise Radiateur Salle de Bain (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Prise Bureau Fer à Repasser (NOUS)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre chambre (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre cuisine (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Hue smart éco. PC Bureau/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise mini pc (IKEA)/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Cellier/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Bureau z2m/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Salle de Bain Z2M/availability', payload '{"state":"online"}'
+[2025-08-24 17:30:52] info: 	z2m: Started frontend on port 8099
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Coordinator', payload '{"last_seen":"2025-08-21T09:30:53.808Z"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Bureau', payload '{"battery":25,"comfort_humidity_max":55,"comfort_humidity_min":40,"comfort_temperature_max":25,"comfort_temperature_min":21,"humidity":55.6,"humidity_calibration":0,"last_seen":"2025-08-24T15:01:14.723Z","linkquality":255,"temperature":27.2,"temperature_calibration":0,"temperature_units":"celsius","update":{"installed_version":8960,"latest_version":8960,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Balcon Nord', payload '{"battery":100,"comfort_humidity_max":55,"comfort_humidity_min":40,"comfort_temperature_max":25,"comfort_temperature_min":21,"humidity":52.6,"humidity_calibration":0,"last_seen":"2025-08-24T15:29:24.811Z","linkquality":232,"temperature":28.1,"temperature_calibration":0,"temperature_units":"celsius","update":{"installed_version":8960,"latest_version":8960,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Inter Bureau (RODRET)', payload '{"battery":100,"identify":null,"last_seen":"2025-08-24T14:30:28.329Z","linkquality":255,"update":{"installed_version":16777303,"latest_version":16777303,"state":"idle"},"voltage":1400}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Inter (SOMRIG)', payload '{"battery":100,"identify":null,"last_seen":"2025-08-24T14:59:35.179Z","linkquality":160,"update":{"installed_version":16777249,"latest_version":16777249,"state":"idle"},"voltage":1400}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Poussoir (IKEA TRADFRI)', payload '{"battery":90,"identify":null,"last_seen":"2025-08-24T10:37:28.163Z","linkquality":232,"update":{"installed_version":604241926,"latest_version":604241926,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Boutton Bureau (HUE)', payload '{"battery":87,"last_seen":"2025-08-24T14:31:07.809Z","linkquality":255,"update":{"installed_version":33574183,"latest_version":33574183,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise bureau pc (IKEA)', payload '{"current":1.1,"energy":614.86,"identify":null,"last_seen":"2025-08-24T15:30:51.589Z","linkquality":255,"power":234.5,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":228.5}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise tv chambre (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":164.71,"indicator_mode":"off","last_seen":"2025-08-24T15:29:47.471Z","linkquality":148,"power":0,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":227}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise salon chargeur (NOUS)', payload '{"child_lock":"UNLOCK","countdown":0,"current":0.05,"energy":37.1,"indicator_mode":"off","last_seen":"2025-08-24T15:30:44.482Z","linkquality":168,"power":5,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":228}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise frigo cuisine (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":106.02,"indicator_mode":"on/off","last_seen":"2025-08-24T15:29:40.363Z","linkquality":84,"power":0,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":227}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise congelateur cuisine (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":186.71,"indicator_mode":"on","last_seen":"2025-08-24T15:30:51.311Z","linkquality":252,"power":39,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":228}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/lampe bureau 1 (IKEA)', payload '{"brightness":254,"color_mode":"color_temp","color_options":{"execute_if_off":true},"color_temp":250,"color_temp_startup":250,"effect":null,"identify":null,"last_seen":"2025-08-24T15:29:09.633Z","level_config":{"current_level_startup":250,"execute_if_off":true,"on_level":"previous","on_off_transition_time":5},"linkquality":232,"power_on_behavior":"previous","state":"OFF","update":{"installed_version":50331683,"latest_version":50331683,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Clim Salon (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":414.52,"indicator_mode":"on","last_seen":"2025-08-24T15:30:39.973Z","linkquality":128,"power":0,"power_outage_memory":"restore","state":"OFF","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/lampe bureau 2 (IKEA)', payload '{"brightness":254,"color_mode":"color_temp","color_options":{"execute_if_off":true},"color_temp":250,"color_temp_startup":250,"effect":null,"identify":null,"last_seen":"2025-08-24T15:29:16.262Z","level_config":{"current_level_startup":250,"execute_if_off":true,"on_level":"previous","on_off_transition_time":5},"linkquality":212,"power_on_behavior":"previous","state":"OFF","update":{"installed_version":50331683,"latest_version":50331683,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Inter Salon (4) (IKEA)', payload '{"battery":100,"identify":null,"last_seen":"2025-08-24T14:33:22.906Z","linkquality":172,"update":{"installed_version":16777303,"latest_version":16777303,"state":"idle"},"voltage":1400}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Clim Chambre (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":392.86,"indicator_mode":"on","last_seen":"2025-08-24T15:30:39.066Z","linkquality":160,"power":0,"power_outage_memory":"restore","state":"OFF","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":228}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Clim du Bureau (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":332.61,"indicator_mode":"off/on","last_seen":"2025-08-24T15:29:53.847Z","linkquality":176,"power":0,"power_outage_memory":"restore","state":"OFF","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":226}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise box internet (IKEA)', payload '{"current":0.12,"energy":86.59,"identify":null,"last_seen":"2025-08-24T15:30:39.558Z","linkquality":176,"power":13.1,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise pc's gege (IKEA)', payload '{"current":0.9,"energy":309.5,"identify":null,"last_seen":"2025-08-24T15:30:51.971Z","linkquality":172,"power":179.1,"power_on_behavior":"on","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":228.3}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise lave vaisselle (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":115.82,"indicator_mode":"on","last_seen":"2025-08-24T15:29:14.162Z","linkquality":152,"power":0,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise lave linge (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":100.64,"indicator_mode":"on","last_seen":"2025-08-24T15:30:33.578Z","linkquality":188,"power":0,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise airfryer ninja (NOUS)', payload '{"child_lock":"UNLOCK","countdown":0,"current":0,"energy":71.66,"indicator_mode":"on","last_seen":"2025-08-24T15:30:37.988Z","linkquality":220,"power":0,"power_outage_memory":"restore","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise four micro ondes (NOUS)', payload '{"child_lock":"UNLOCK","countdown":0,"current":0.03,"energy":57.37,"indicator_mode":"off/on","last_seen":"2025-08-24T15:28:35.508Z","linkquality":255,"power":0,"power_outage_memory":"restore","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise horloge (IKEA)', payload '{"current":0.004,"energy":1.24,"identify":null,"last_seen":"2025-08-24T15:29:40.914Z","linkquality":255,"power":0.2,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":234.5}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/détecteur de fuite (IKEA)', payload '{"battery":100,"identify":null,"last_seen":"2025-08-24T15:17:12.887Z","linkquality":164,"update":{"installed_version":16777223,"latest_version":16777223,"state":"idle"},"voltage":1500,"water_leak":false}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre bureau (IKEA)', payload '{"battery":100,"contact":false,"identify":null,"last_seen":"2025-08-24T12:29:05.513Z","linkquality":232,"update":{"installed_version":16777241,"latest_version":16777241,"state":"idle"},"voltage":1500}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Salon', payload '{"battery":40,"comfort_humidity_max":55,"comfort_humidity_min":40,"comfort_temperature_max":25,"comfort_temperature_min":21,"humidity":55.6,"humidity_calibration":0,"last_seen":"2025-08-24T15:25:47.101Z","linkquality":168,"temperature":26.7,"temperature_calibration":0,"temperature_units":"celsius","update":{"installed_version":8960,"latest_version":8960,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Chambre', payload '{"battery":24,"comfort_humidity_max":55,"comfort_humidity_min":40,"comfort_temperature_max":25,"comfort_temperature_min":21,"humidity":58.1,"humidity_calibration":0,"last_seen":"2025-08-24T15:09:17.222Z","linkquality":160,"temperature":26.1,"temperature_calibration":0,"temperature_units":"celsius","update":{"installed_version":8960,"latest_version":8960,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Cuisine', payload '{"battery":22,"comfort_humidity_max":55,"comfort_humidity_min":40,"comfort_temperature_max":25,"comfort_temperature_min":21,"humidity":57.8,"humidity_calibration":0,"last_seen":"2025-08-24T15:25:44.701Z","linkquality":228,"temperature":26.2,"temperature_calibration":0,"temperature_units":"celsius","update":{"installed_version":8960,"latest_version":8960,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise tete de lit chambre', payload '{"current":0.05,"energy":25.57,"identify":null,"last_seen":"2025-08-24T15:30:06.961Z","linkquality":192,"power":3.8,"power_on_behavior":"on","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":235.6}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Radiateur élec cuisine ', payload '{"current":0,"energy":98.99,"last_seen":"2025-08-24T15:30:38.524Z","linkquality":192,"power":0,"power_outage_memory":"restore","state":"OFF","switch_type":"state","update":{"installed_version":72,"latest_version":72,"state":"idle"},"voltage":230}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air bureau (IKEA)', payload '{"humidity":60,"identify":null,"last_seen":"2025-08-24T15:29:24.031Z","linkquality":224,"pm25":5,"temperature":27,"update":{"installed_version":16777233,"latest_version":16777233,"state":"idle"},"voc_index":38}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Four et Plaque de Cuisson', payload '{"ac_frequency":49.92,"current":0,"data_report_duration":60,"energy":60,"last_seen":"2025-08-24T15:30:40.285Z","linkquality":216,"power":0,"power_factor":100,"produced_energy":0,"voltage":230}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Detecteur (VALLHORN)', payload '{"battery":100,"identify":null,"illuminance":2,"last_seen":"2025-08-24T15:16:18.736Z","linkquality":176,"occupancy":false,"update":{"installed_version":16777316,"latest_version":16777316,"state":"idle"},"voltage":2800}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Salle de Bain', payload '{"battery":20,"comfort_humidity_max":55,"comfort_humidity_min":40,"comfort_temperature_max":25,"comfort_temperature_min":21,"humidity":58.5,"humidity_calibration":0,"last_seen":"2025-08-24T14:54:56.963Z","linkquality":176,"temperature":26,"temperature_calibration":0,"temperature_units":"celsius","update":{"installed_version":8960,"latest_version":8960,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air salon (IKEA)', payload '{"humidity":59,"identify":null,"last_seen":"2025-08-24T15:29:23.894Z","linkquality":164,"pm25":4,"temperature":27,"update":{"installed_version":16777233,"latest_version":16777233,"state":"idle"},"voc_index":38}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre salon (IKEA)', payload '{"battery":100,"contact":false,"identify":null,"last_seen":"2025-08-24T12:21:05.158Z","linkquality":172,"update":{"installed_version":16777241,"latest_version":16777241,"state":"idle"},"voltage":1400}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air chambre (IKEA)', payload '{"humidity":60,"identify":null,"last_seen":"2025-08-24T15:28:49.290Z","linkquality":200,"pm25":5,"temperature":27,"update":{"installed_version":16777233,"latest_version":16777233,"state":"idle"},"voc_index":77}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Relais Lumière SDB (SONOFF) ', payload '{"delayed_power_on_state":false,"delayed_power_on_time":29.5,"detach_relay_mode":false,"external_trigger_mode":"edge","inching_control_set":{"inching_control":"DISABLE","inching_mode":"OFF","inching_time":1882.5},"last_seen":"2025-08-24T15:30:26.273Z","linkquality":252,"network_indicator":true,"power_on_behavior":"previous","state":"OFF","turbo_mode":true,"update":{"installed_version":4100,"latest_version":4100,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Lampe Salle de Bain (HUE)', payload '{"brightness":254,"effect":null,"last_seen":"2025-08-24T15:21:16.197Z","linkquality":172,"power_on_behavior":null,"state":"OFF","update":{"installed_version":16787202,"latest_version":16787202,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Boutton Salle de Bain (HUE)', payload '{"battery":100,"last_seen":"2025-08-24T14:58:51.259Z","linkquality":248,"update":{"installed_version":33574183,"latest_version":33574183,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Prise Radiateur Salle de Bain (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0,"energy":0.27,"indicator_mode":"off/on","last_seen":"2025-08-24T15:29:07.882Z","linkquality":156,"power":0,"power_outage_memory":"restore","state":"OFF","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Prise Bureau Fer à Repasser (NOUS)', payload '{"child_lock":"UNLOCK","countdown":0,"current":0,"energy":1.99,"indicator_mode":"off/on","last_seen":"2025-08-24T15:29:41.881Z","linkquality":136,"power":0,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":229}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre chambre (IKEA)', payload '{"battery":100,"contact":false,"identify":null,"last_seen":"2025-08-24T12:26:43.999Z","linkquality":172,"update":{"installed_version":16777241,"latest_version":16777241,"state":"idle"},"voltage":1500}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/contact fenetre cuisine (IKEA)', payload '{"battery":100,"contact":false,"identify":null,"last_seen":"2025-08-24T12:17:48.311Z","linkquality":224,"update":{"installed_version":16777241,"latest_version":16777241,"state":"idle"},"voltage":1500}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Hue smart éco. PC Bureau', payload '{"last_seen":"2025-08-24T15:27:48.788Z","linkquality":255,"state":"ON","update":{"installed_version":16781314,"latest_version":16781314,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise mini pc (IKEA)', payload '{"current":0.09,"energy":5.86,"identify":null,"last_seen":"2025-08-24T15:30:39.131Z","linkquality":255,"power":20.1,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":230.9}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Th Cellier', payload '{"battery":100,"comfort_humidity_max":60,"comfort_humidity_min":40,"comfort_temperature_max":27,"comfort_temperature_min":19,"humidity":58.2,"humidity_calibration":0,"last_seen":"2025-08-24T15:27:41.116Z","linkquality":255,"temperature":26.4,"temperature_calibration":0,"temperature_units":"celsius","update":{"installed_version":8960,"latest_version":8960,"state":"idle"}}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Bureau z2m', payload '{"brightness":254,"color_mode":"color_temp","color_temp":250,"state":"OFF"}'
+[2025-08-24 17:30:52] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/Salle de Bain Z2M', payload '{"brightness":254,"state":"OFF"}'
+[2025-08-24 17:30:52] info: 	z2m: Zigbee2MQTT started!
+[2025-08-24 17:30:53] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise mini pc (IKEA)', payload '{"current":0.09,"energy":5.86,"identify":null,"last_seen":"2025-08-24T15:30:53.138Z","linkquality":204,"power":12.9,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":230.9}'
+[2025-08-24 17:30:54] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise bureau pc (IKEA)', payload '{"current":1.08,"energy":614.86,"identify":null,"last_seen":"2025-08-24T15:30:54.515Z","linkquality":255,"power":234.5,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":228.5}'
+[2025-08-24 17:30:55] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air bureau (IKEA)', payload '{"humidity":60,"identify":null,"last_seen":"2025-08-24T15:30:55.784Z","linkquality":224,"pm25":5,"temperature":27,"update":{"installed_version":16777233,"latest_version":16777233,"state":"idle"},"voc_index":38}'
+[2025-08-24 17:30:55] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/qualite air bureau (IKEA)', payload '{"humidity":60,"identify":null,"last_seen":"2025-08-24T15:30:55.876Z","linkquality":228,"pm25":5,"temperature":27,"update":{"installed_version":16777233,"latest_version":16777233,"state":"idle"},"voc_index":38}'
+[2025-08-24 17:30:57] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise congelateur cuisine (NOUS)', payload '{"child_lock":"LOCK","countdown":0,"current":0.23,"energy":186.71,"indicator_mode":"on","last_seen":"2025-08-24T15:30:57.286Z","linkquality":124,"power":39,"power_outage_memory":"on","state":"ON","update":{"installed_version":192,"latest_version":192,"state":"idle"},"voltage":228}'
+[2025-08-24 17:30:57] info: 	z2m:mqtt: MQTT publish: topic 'homeassistant/binary_sensor/1221051039810110150109113116116_0x4c5bb3fffe932c2d/connection_state/config', payload '{"device":{"hw_version":"EmberZNet 7.4.5 [GA]","identifiers":["zigbee2mqtt_bridge_0x4c5bb3fffe932c2d"],"manufacturer":"Zigbee2MQTT","model":"Bridge","name":"Zigbee2MQTT Bridge","sw_version":"2.6.0"},"device_class":"connectivity","entity_category":"diagnostic","name":"Connection state","object_id":"zigbee2mqtt_bridge_connection_state","origin":{"name":"Zigbee2MQTT","sw":"2.6.0","url":"https://www.zigbee2mqtt.io"},"payload_off":"offline","payload_on":"online","state_topic":"zigbee2mqtt/bridge/state","unique_id":"bridge_0x4c5bb3fffe932c2d_connection_state_zigbee2mqtt","value_template":"{{ value_json.state }}"}'
+[2025-08-24 17:30:59] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/prise mini pc (IKEA)', payload '{"current":0.09,"energy":5.86,"identify":null,"last_seen":"2025-08-24T15:30:59.024Z","linkquality":255,"power":12.9,"power_on_behavior":"previous","state":"ON","update":{"installed_version":33816645,"latest_version":33816645,"state":"idle"},"voltage":230.9}'
+[2025-08-24 17:31:00] info: 	z2m:mqtt: MQTT publish: topic 'zigbee2mqtt/bridge/state', payload '{"state":"offline"}'
+[2025-08-24 17:31:00] info: 	z2m: Disconnecting from MQTT server
+[2025-08-24 17:31:00] info: 	z2m: Stopping zigbee-herdsman...
+[2025-08-24 17:31:01] info: 	zh:controller: Wrote coordinator backup to '/config/zigbee2mqtt/coordinator_backup.json'
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash: ASH COUNTERS since last clear:
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Total frames: RX=74, TX=117
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Cancelled   : RX=0, TX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   DATA frames : RX=70, TX=46
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   DATA bytes  : RX=991, TX=527
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Retry frames: RX=3, TX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   ACK frames  : RX=0, TX=70
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   NAK frames  : RX=0, TX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   nRdy frames : RX=0, TX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   CRC errors      : RX=1
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Comm errors     : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Length < minimum: RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Length > maximum: RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Bad controls    : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Bad lengths     : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Bad ACK numbers : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Out of buffers  : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Retry dupes     : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   Out of sequence : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash:   ACK timeouts    : RX=0
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash: Port closed.
+[2025-08-24 17:31:01] info: 	zh:ember:uart:ash: ======== ASH stopped ========
+[2025-08-24 17:31:01] info: 	zh:ember:ezsp: ======== EZSP stopped ========
+[2025-08-24 17:31:01] info: 	zh:ember: ======== Ember Adapter Stopped ========
+[2025-08-24 17:31:01] info: 	z2m: Stopped zigbee-herdsman
+[2025-08-24 17:31:01] info: 	z2m: Stopped Zigbee2MQTT

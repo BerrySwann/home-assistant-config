@@ -9,7 +9,7 @@
         - sensor.detecteur_de_fuite_ikea_battery
         - sensor.inter_salon_4_ikea_battery
         - sensor.detecteur_vallhorn_battery
-        - sensor.poussoir_ikea_tradfri_battery
+        - sensor.inter_tv_chambre_ikea_rodret_battery
         - sensor.inter_somrig_battery
         - sensor.inter_bureau_rodret_battery
 
