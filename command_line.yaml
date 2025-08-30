@@ -70,3 +70,10 @@
         }
         | to_json 
       }}
+
+- sensor:
+    name: z2m_errorlog_last10
+    command: "tail -n 10 /config/zigbee2mqtt/log/error.log || echo 'Aucun fichier /config/zigbee2mqtt/log/error.log'"
+    scan_interval: 30
+    command_timeout: 10
+  
