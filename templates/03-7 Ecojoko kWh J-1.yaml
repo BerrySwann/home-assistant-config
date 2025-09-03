@@ -1,0 +1,15 @@
+# template.yaml
+
+  - sensor:
+      - name: "Ecojoko kWh J-1"
+        unique_id: ecojoko_kwh_j_1
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: measurement
+        state: >
+          {{ (state_attr('sensor.ecojoko_energy_daily', 'last_period') | float(0)) | round(1) }}
+        # "[T1] Cast en float + défaut 0 pour éviter unknown/None"
+        # "[T2] Arrondi à 1 décimale pour cohérence d’affichage"
+        availability: >
+          {{ state_attr('sensor.ecojoko_energy_daily', 'last_period') is not none }}
+        # "[T3] Evite les états indisponibles (au boot)"

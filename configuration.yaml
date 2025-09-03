@@ -59,6 +59,8 @@ input_number: !include input_number.yaml
 #revoin au fuchier input_boolean.yaml
 input_boolean: !include input_boolean.yaml
 
+sensor: !include sensors.yaml
+
 #renvoi au fichier themes.yaml
 #themes: !include themes.yaml
 
@@ -93,30 +95,59 @@ notify:
 
 
 
-  # BASE DE DONNEE MariaDB
+
+# BASE DE DONNEE MariaDB
 recorder:
   db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
-  # Historique
-  purge_keep_days: 90
-  # trie
+  purge_keep_days: 32
+  auto_purge: true
+  auto_repack: true
   exclude:
+    domains:
+      - update
+      - persistent_notification
+      - sun
+      - input_text
+
+    event_types:
+      - call_service
+
     entity_globs:
       - sensor.*linkquality
       - sensor.*last_seen
+      - sensor.date*
+      - sensor.time*
+
+
+
 
     # Notification FOUDRES
-sensor:
-  - platform: rest
-    name: blitzortung_lightning_localisation
-    scan_interval: 86400
-    resource_template: >-
-      {%- set lat = state_attr('sensor.blitzortung_lightning_distance', 'lat') -%} 
-      {%- set lon = state_attr('sensor.blitzortung_lightning_distance', 'lon') -%} 
-      https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat={{lat}}&lon={{lon}}
-    value_template: '{{value_json.features | length}}'
-    json_attributes:
-      - features
+#sensor:
+# - platform: rest
+#   name: blitzortung_lightning_localisation
+#   scan_interval: 86400
+#   resource_template: >-
+#     {%- set lat = state_attr('sensor.blitzortung_lightning_distance', 'lat') -%} 
+#     {%- set lon = state_attr('sensor.blitzortung_lightning_distance', 'lon') -%} 
+#     https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat={{lat}}&lon={{lon}}
+#   value_template: '{{value_json.features | length}}'
+#   json_attributes:
+#     - features
 
+sql:
+  - name: Taille DB Home Assistant
+    # "[L4] Crée sensor.taille_db_home_assistant"
+    db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
+    # "[L5] core-mariadb : URL de la DB de l’add-on MariaDB"
+    query: >
+      SELECT Round(Sum(data_length + index_length) / POWER(1024,2), 1) AS value
+      FROM information_schema.tables
+      WHERE table_schema = "homeassistant";
+    # "[L8-L10] Requête 'Database size' (doc officielle MariaDB/MySQL)"
+    column: value
+    unit_of_measurement: MiB
+    device_class: data_size
+    unique_id: taille_db_home_assistant
 
 
 
