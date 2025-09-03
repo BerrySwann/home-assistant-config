@@ -26,7 +26,7 @@ __pycache__/
 *.pyc
 
 # --- HACS (re-générés, bruit énorme) ---
-www/community/
+#www/community/
 
 # --- Images volatiles / météo ---
 www/weather/
