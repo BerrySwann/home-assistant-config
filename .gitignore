@@ -39,6 +39,7 @@ zigbee2mqtt/coordinator_backup.json
 zigbee2mqtt/state.json
 configuration_backup_v*.yaml
 configuration.yaml.broken
+migration-*-to-*.log
 
 # --- IDE ---
 .vscode/
