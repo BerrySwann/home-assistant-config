@@ -34,8 +34,11 @@ www/*.png
 www/*.jpg
 
 # --- Zigbee2MQTT (états/backup volatiles) ---
+zigbee2mqtt/log
 zigbee2mqtt/coordinator_backup.json
 zigbee2mqtt/state.json
+configuration_backup_v*.yaml
+configuration.yaml.broken
 
 # --- IDE ---
 .vscode/

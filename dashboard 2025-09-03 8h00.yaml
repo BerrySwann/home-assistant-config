@@ -815,7 +815,8 @@ views:
                 conditions:
                   - condition: numeric_state
                     entity: sensor.blitzortung_lightning_counter
-                    above: 0.99
+                    above: 1
+                    below: 0
                 card:
                   type: custom:button-card
                   entity: sensor.blitzortung_lightning_counter
@@ -941,6 +942,7 @@ views:
               - condition: numeric_state
                 entity: sensor.blitzortung_lightning_counter
                 above: 1
+                below: 0
           - type: custom:bubble-card
             card_type: separator
             name: Personne(s)
