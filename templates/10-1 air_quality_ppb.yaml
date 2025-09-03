@@ -1,0 +1,32 @@
+# templates/air_quality_ppb.yaml
+# tCOV en ppb -> expose unit_of_measurement pour l'affichage (Bubble, charts, etc.)
+- sensor:
+    - name: "tCOV Salon (ppb)"
+      unique_id: tcov_salon_ppb
+      state: "{{ states('sensor.qualite_air_salon_ikea_voc_index') }}"
+      unit_of_measurement: "ppb"       # "[T1] unité forcée"
+      device_class: volatile_organic_compounds
+      state_class: measurement
+      icon: mdi:chemical-weapon
+
+    - name: "tCOV Bureau (ppb)"
+      unique_id: tcov_bureau_ppb
+      state: "{{ states('sensor.qualite_air_bureau_ikea_voc_index') }}"
+      unit_of_measurement: "ppb"       # "[T2]"
+      device_class: volatile_organic_compounds
+      state_class: measurement
+      icon: mdi:chemical-weapon
+
+    - name: "tCOV Chambre (ppb)"
+      unique_id: tcov_chambre_ppb
+      state: "{{ states('sensor.qualite_air_chambre_ikea_voc_index') }}"
+      unit_of_measurement: "ppb"       # "[T3]"
+      device_class: volatile_organic_compounds
+      state_class: measurement
+      icon: mdi:chemical-weapon
+
+# ---------------------------------------------------------------------------------
+# annotations_log:
+# - "[T1] Salon: unit_of_measurement='ppb'"
+# - "[T2] Bureau: unit_of_measurement='ppb'"
+# - "[T3] Chambre: unit_of_measurement='ppb'"

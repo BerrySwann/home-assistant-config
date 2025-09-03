@@ -1630,8 +1630,17 @@
           Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n  {% elif
           states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n    T°Ext
           Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Les 3 Clim {{
-          states('sensor.temperature_cible') | float }}°.\n  {% endif %}\n{% endif
-          %}"
+          states('sensor.temperature_cible') | float }}°.\n  {% endif %}\n   {% if
+          states('sensor.th_balcon_nord_temperature_trend') == 'increasing' %}\n      T°Ext
+          Up >>> {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend')
+          == 'decreasing' %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n  {% endif
+          %}\n{% endif %}"
       action: notify.mobile_app_gm1901
   - alias: SI MAMOUR EN WIFI
     if:
@@ -1659,7 +1668,16 @@
           }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
           & Chambre {{ states('sensor.temperature_cible') | float }}°\n  {% endif
-          %}\n    \"[Checked]\"\n{% endif %}"
+          %}\n    {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
+          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
+          Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
+          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
+          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_gm1901
   - alias: SI ERIC EN WIFI
     if:
@@ -1690,7 +1708,16 @@
           }}° Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Chambre {{ states('sensor.temperature_cible') | float }}°\n  {% endif
-          %}\n    \"[Checked]\"\n{% endif %}"
+          %}\n     {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
+          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
+          Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
+          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
+          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_gm1901
   - alias: SI 2 PORTABLES EN WIFI
     if:
@@ -1722,7 +1749,16 @@
           }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
           + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n  {% endif %}\n    \"[Checked]\"\n{% endif %}"
+          | float }}°\n  {% endif %}\n     {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
+          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
+          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_gm1901
   mode: queued
 - id: '1754231821638'

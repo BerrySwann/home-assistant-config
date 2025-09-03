@@ -1,0 +1,183 @@
+#==========================================================================
+#
+# Notification FOUDRES Blitzortung
+#
+#==========================================================================
+
+- platform: rest
+  # "[L008] Déclaration sensor REST pour géocodage inverse (Blitzortung)"
+  name: Blitzortung Lightning Localisation
+  # "[L009] Nom lisible pour la localisation des impacts (Nominatim)"
+  unique_id: blitzortung_lightning_localisation
+  # "[L010] ID unique stable pour ce capteur"
+  #entity_id: sensor.blitzortung_lightning_localisation
+  scan_interval: 86400
+  # "[L012] Fréquence de rafraîchissement (1/jour) – Nominatim tolérant mais à ne pas sur-solliciter"
+  resource_template: >-
+    {%- set lat = state_attr('sensor.blitzortung_lightning_distance', 'lat') -%} 
+    {%- set lon = state_attr('sensor.blitzortung_lightning_distance', 'lon') -%} 
+    https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat={{lat}}&lon={{lon}}
+  # "[L015] URL Nominatim construite à partir des attributs lat/lon du capteur de distance"
+  value_template: '{{value_json.features | length}}'
+  # "[L016] État = nb de features retournées (diagnostic simple de réponse)"
+  json_attributes:
+    - features
+  # "[L017] On expose l'objet 'features' complet en attributs pour exploitation UI/templates"
+
+#==========================================================================
+#
+# Calcul moyen 
+#
+#==========================================================================
+
+- platform: statistics
+  name: Ecojoko mean 730h kWh
+  # "[L026] Moyenne glissante ~30 jours (730h) sur la conso réseau Ecojoko"
+  unique_id: ecojoko_mean_730h_kwh
+  # "[L027] ID unique pour la moyenne 730h"
+  entity_id: sensor.ecojoko_consommation_reseau
+  state_characteristic: mean 
+  max_age:
+    hours: 730
+  precision: 1
+  keep_last_sample: true
+
+- platform: statistics
+  name: Ecojoko mean 730h (UM_Daily) kWh
+  # "[L036] Moyenne glissante 730h sur valeurs journalières (UM_Daily)"
+  unique_id: ecojoko_mean_730h_um_daily_kwh
+  # "[L037] ID unique pour la moyenne 730h UM_Daily"
+  entity_id: sensor.ecojoko_kwh_j_1
+  state_characteristic: mean 
+  max_age:
+    hours: 730
+  precision: 1
+  keep_last_sample: true
+
+- platform: statistics
+  name: Ecojoko sum 30d (UM_Daily) kWh
+  unique_id: ecojoko_sum_730h_um_daily_kwh
+  # "[L047] Somme glissante des ~30 derniers jours (730h) basée sur UM_Daily"
+  entity_id: sensor.ecojoko_kwh_j_1
+  state_characteristic: sum
+  max_age:
+    hours: 730
+  precision: 1
+  keep_last_sample: true
+# "[S3] Total des 30 derniers jours (glissant), utile pour comparer au mois en cours"
+
+- platform: statistics
+  name: Ecojoko median 30d (UM_Daily) kWh
+  unique_id: ecojoko_median_730h_um_daily_kwh
+  # "[L058] Médiane glissante ~30 jours (730h) – plus robuste aux valeurs extrêmes"
+  entity_id: sensor.ecojoko_kwh_j_1
+  state_characteristic: median
+  max_age:
+    hours: 730
+  precision: 1
+  keep_last_sample: true
+# "[S4] Médiane 30j : moins sensible aux jours extrêmes que la moyenne"
+
+
+#========================================================================
+#
+# CALCUL MOYENS SUR 24h POUR PM25 & tCOV
+#
+#========================================================================
+
+#==========================================================================
+#-------- PM2.5 --------
+#==========================================================================
+
+# - "[L076] création sensor PM2.5 Salon (moy 24h)"
+- platform: statistics
+  name: PM2.5 Salon (moy 24h)
+  unique_id: pm25_salon_mean_24h
+  entity_id: sensor.qualite_air_salon_ikea_pm25
+  state_characteristic: mean
+  max_age:
+    hours: 24
+  precision: 1
+  keep_last_sample: true
+
+# - "[L088] création sensor PM2.5 Bureau (moy 24h)"
+- platform: statistics
+  name: PM2.5 Bureau (moy 24h)
+  unique_id: pm25_bureau_mean_24h
+  entity_id: sensor.qualite_air_bureau_ikea_pm25
+  state_characteristic: mean
+  max_age:
+    hours: 24
+  precision: 1
+  keep_last_sample: true
+
+# - "[L100] création sensor PM2.5 Chambre (moy 24h)"
+- platform: statistics
+  name: PM2.5 Chambre (moy 24h)
+  unique_id: pm25_chambre_mean_24h
+  entity_id: sensor.qualite_air_chambre_ikea_pm25
+  state_characteristic: mean
+  max_age:
+    hours: 24
+  precision: 1
+  keep_last_sample: true
+
+#==========================================================================
+# -------- tCOV (ppb) --------
+#==========================================================================
+
+# - "[L114] création sensor tCOV Salon (moy 24h)"
+- platform: statistics
+  name: tCOV Salon (moy 24h)
+  unique_id: tcov_salon_mean_24h
+  entity_id: sensor.qualite_air_salon_ikea_voc_index
+  state_characteristic: mean
+  max_age:
+    hours: 24
+  precision: 1
+  keep_last_sample: true
+
+# - "[L126] création sensor tCOV Bureau (moy 24h)"
+- platform: statistics
+  name: tCOV Bureau (moy 24h)
+  unique_id: tcov_bureau_mean_24h
+  entity_id: sensor.qualite_air_bureau_ikea_voc_index
+  state_characteristic: mean
+  max_age:
+    hours: 24
+  precision: 1
+  keep_last_sample: true
+
+
+# - "[L138] création sensor tCOV Chambre (moy 24h)"
+- platform: statistics
+  name: tCOV Chambre (moy 24h)
+  unique_id: tcov_chambre_mean_24h
+  entity_id: sensor.qualite_air_chambre_ikea_voc_index
+  state_characteristic: mean
+  max_age:
+    hours: 24
+  precision: 1
+  keep_last_sample: true
+
+# ---------------------------------------------------------------------------------
+# annotations_log:
+# - "[L008] Déclaration sensor REST pour géocodage inverse (Blitzortung)"
+# - "[L009] Nom lisible pour la localisation des impacts (Nominatim)"
+# - "[L010] ID unique stable pour ce capteur"
+# - "[L012] Fréquence de rafraîchissement (1/jour) – Nominatim tolérant mais à ne pas sur-solliciter"
+# - "[L015] URL Nominatim construite à partir des attributs lat/lon du capteur de distance"
+# - "[L016] État = nb de features retournées (diagnostic simple de réponse)"
+# - "[L017] Expose 'features' comme attributs"
+# - "[L026] Moyenne glissante ~30 jours (730h) sur la conso réseau Ecojoko"
+# - "[L027] ID unique pour la moyenne 730h"
+# - "[L036] Moyenne glissante 730h sur UM_Daily"
+# - "[L037] ID unique pour la moyenne 730h UM_Daily"
+# - "[L047] Somme glissante ~30 jours (730h) sur UM_Daily"
+# - "[L058] Médiane glissante ~30 jours (730h) – robuste aux outliers"
+# - "[L076] création sensor PM2.5 Salon (moy 24h)"
+# - "[L088] création sensor PM2.5 Bureau (moy 24h)"
+# - "[L100] création sensor PM2.5 Chambre (moy 24h)"
+# - "[L114] création sensor tCOV Salon (moy 24h)"
+# - "[L126] création sensor tCOV Bureau (moy 24h)"
+# - "[L138] création sensor tCOV Chambre (moy 24h)"

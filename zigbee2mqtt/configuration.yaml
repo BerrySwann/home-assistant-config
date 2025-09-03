@@ -349,7 +349,7 @@ devices:
   '0x8c8b48fffed267f4':
     friendly_name: Inter TV Chambre (IKEA RODRET)
   '0x70ac08fffe7c23f5':
-    friendly_name: '0x70ac08fffe7c23f5'
+    friendly_name: Poussoir (IKEA TRADFRI)
 groups:
   '1':
     friendly_name: Bureau z2m
