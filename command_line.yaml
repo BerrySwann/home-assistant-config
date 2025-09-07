@@ -71,9 +71,15 @@
         | to_json 
       }}
 
-- sensor:
-    name: z2m_errorlog_last10
-    command: "tail -n 10 /config/zigbee2mqtt/log/error.log || echo 'Aucun fichier /config/zigbee2mqtt/log/error.log'"
-    scan_interval: 30
-    command_timeout: 10
-  
+  git_backup_push: >-
+    bash -lc '/config/.scripts/ha_git_backup.sh >> /config/.logs/ha_git_backup.log 2>&1'
+# "[L101] Ajout shell_command git_backup_push"
+
+  git_backup_push_weekly: >-
+    bash -lc '/config/.scripts/ha_git_backup.sh weekly >> /config/.logs/ha_git_backup.log 2>&1'
+# "[L105] Ajout shell_command git_backup_push_weekly"
+
+# ---------------------------------------------------------------------------------
+# annotations_log:
+# - "[L101] Ajout shell_command git_backup_push"
+# - "[L105] Ajout shell_command git_backup_push_weekly]"
