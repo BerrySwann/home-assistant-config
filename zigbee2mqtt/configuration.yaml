@@ -61,9 +61,11 @@ devices:
     humidity_calibration: 0
     temperature_precision: 2
     humidity_precision: 2
+    icon: device_icons/d5cf7e365fed2168925ab63b5dfd83e6.png
   '0x00178801080381e0':
     friendly_name: Boutton Bureau (HUE)
     legacy: true
+    icon: device_icons/931c0d8a8c66943e5c1a66c8c108bf64.png
   '0xd44867fffe148732':
     friendly_name: prise bureau pc (IKEA)
     power_precision: 2
@@ -76,6 +78,7 @@ devices:
     energy_calibration: 0
     state_action: true
     power_calibration: 0
+    icon: device_icons/0b39bffc869e7c3c844e3f5d380e1d04.png
   '0xa4c138cc2ec0a611':
     friendly_name: prise tv chambre (NOUS)
     power_precision: 2
@@ -87,6 +90,7 @@ devices:
     energy_calibration: 0
     state_action: true
     energy_precision: 2
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c13862732d4d37':
     friendly_name: prise salon chargeur (NOUS)
     power_calibration: 0
@@ -98,6 +102,7 @@ devices:
     energy_precision: 2
     energy_calibration: 0
     state_action: true
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c13819c020cf4a':
     friendly_name: prise frigo cuisine (NOUS)
     power_calibration: 0
@@ -109,6 +114,7 @@ devices:
     voltage_precision: 2
     current_precision: 2
     power_precision: 2
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c138bf157dac0e':
     friendly_name: prise congelateur cuisine (NOUS)
     power_precision: 2
@@ -120,6 +126,7 @@ devices:
     current_calibration: 0
     voltage_calibration: 0
     energy_calibration: 0
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c138d015dca54b':
     friendly_name: Clim Salon (NOUS)
     power_calibration: 0
@@ -131,6 +138,7 @@ devices:
     voltage_precision: 2
     energy_precision: 2
     state_action: true
+    icon: device_icons/da25714004d30be5a2e50f736db32be5.png
   '0xa4c138c742b1b280':
     friendly_name: Clim Chambre (NOUS)
     power_precision: 2
@@ -142,6 +150,7 @@ devices:
     current_calibration: 0
     power_calibration: 0
     state_action: true
+    icon: device_icons/da25714004d30be5a2e50f736db32be5.png
   '0xa4c1385900eabff5':
     friendly_name: Clim du Bureau (NOUS)
     power_precision: 2
@@ -153,6 +162,7 @@ devices:
     current_calibration: 0
     voltage_calibration: 0
     energy_calibration: 0
+    icon: device_icons/da25714004d30be5a2e50f736db32be5.png
   '0x8c65a3fffe1035b2':
     friendly_name: prise box internet (IKEA)
     power_calibration: 0
@@ -165,6 +175,7 @@ devices:
     current_precision: 2
     voltage_precision: 2
     power_precision: 2
+    icon: device_icons/0b39bffc869e7c3c844e3f5d380e1d04.png
   '0x8c65a3fffe282786':
     friendly_name: prise pc's gege (IKEA)
     voltage_calibration: 0
@@ -177,6 +188,7 @@ devices:
     state_action: false
     energy_calibration: 0
     current_calibration: 0
+    icon: device_icons/0b39bffc869e7c3c844e3f5d380e1d04.png
   '0xa4c138a9441298b7':
     friendly_name: prise lave vaisselle (NOUS)
     energy_calibration: 0
@@ -188,6 +200,7 @@ devices:
     voltage_precision: 2
     current_precision: 2
     power_precision: 2
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c138d18475f3ab':
     friendly_name: prise lave linge (NOUS)
     power_calibration: 0
@@ -199,6 +212,7 @@ devices:
     energy_precision: 2
     voltage_precision: 2
     current_precision: 2
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c1388b6f4ffaf5':
     friendly_name: prise airfryer ninja (NOUS)
     power_calibration: 0
@@ -210,6 +224,7 @@ devices:
     voltage_calibration: 0
     energy_calibration: 0
     state_action: false
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c138fc07adca74':
     friendly_name: prise four micro ondes (NOUS)
     power_calibration: 0
@@ -221,6 +236,7 @@ devices:
     energy_calibration: 0
     energy_precision: 2
     state_action: false
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0x8c65a3fffe105949':
     friendly_name: prise horloge (IKEA)
     power_calibration: 0
@@ -233,20 +249,24 @@ devices:
     current_precision: 3
     voltage_precision: 2
     power_precision: 2
+    icon: device_icons/0b39bffc869e7c3c844e3f5d380e1d04.png
   '0xb0c7defffe634f2f':
     friendly_name: détecteur de fuite (IKEA)
+    icon: device_icons/533eb80d02e2190b53bfad1bdbdda78a.png
   '0x08ddebfffeee7e56':
     friendly_name: Th Salon
     temperature_calibration: 0
     humidity_calibration: 0
     temperature_precision: 2
     humidity_precision: 2
+    icon: device_icons/d5cf7e365fed2168925ab63b5dfd83e6.png
   '0xd44867fffe29fba9':
     friendly_name: Th Cuisine
     temperature_calibration: 0
     humidity_calibration: 0
     temperature_precision: 2
     humidity_precision: 2
+    icon: device_icons/d5cf7e365fed2168925ab63b5dfd83e6.png
   '0x8c65a3fffe104f42':
     friendly_name: prise tete de lit chambre
     power_calibration: 0
@@ -259,6 +279,7 @@ devices:
     current_precision: 2
     voltage_precision: 2
     power_precision: 2
+    icon: device_icons/0b39bffc869e7c3c844e3f5d380e1d04.png
   '0x28dba7fffe85fd68':
     friendly_name: qualite air bureau (IKEA)
     temperature_calibration: 0
@@ -267,37 +288,49 @@ devices:
     temperature_precision: 2
     humidity_precision: 2
     identify_timeout: 3
+    icon: device_icons/294e3494233342633d14479f42e076af.png
   '0xd44867fffefc3d9a':
     friendly_name: contact fenetre bureau (IKEA)
+    icon: device_icons/25e2fecb1c072822172bb0d30e24911a.png
   '0x705464fffe816424':
     friendly_name: Detecteur (VALLHORN)
+    icon: device_icons/27dc30501ab148ff5b7c68982359344c.png
   '0x08ddebfffeef219f':
     friendly_name: Th Chambre
     temperature_calibration: 0
+    icon: device_icons/d5cf7e365fed2168925ab63b5dfd83e6.png
   '0xd44867fffe29c736':
     friendly_name: Th Salle de Bain
     temperature_calibration: 0
+    icon: device_icons/d5cf7e365fed2168925ab63b5dfd83e6.png
   '0x28dba7fffe1b9e55':
     friendly_name: Th Balcon Nord
     temperature_calibration: 0
     temperature_precision: 2
     humidity_calibration: 0
     humidity_precision: 2
+    icon: device_icons/d5cf7e365fed2168925ab63b5dfd83e6.png
   '0xd44867fffe136724':
     friendly_name: Inter Bureau (RODRET)
+    icon: device_icons/36c972f318c6801ebb07c8b1dde874df.png
   '0x287681fffe728125':
     friendly_name: Télécommande (STYRBAR)
   '0x287681fffe3d3405':
     friendly_name: Inter (SOMRIG)
+    icon: device_icons/d9fcc07e9f849b56f4e579308132373f.png
   '0x6cfd22fffe5f3511':
     friendly_name: Inter Salon (4) (IKEA)
+    icon: device_icons/36c972f318c6801ebb07c8b1dde874df.png
   '0x8c65a3fffefe4a22':
     friendly_name: qualite air salon (IKEA)
+    icon: device_icons/294e3494233342633d14479f42e076af.png
   '0x0c2a6ffffe2bb7b2':
     friendly_name: contact fenetre salon (IKEA)
     identify_timeout: 3
+    icon: device_icons/25e2fecb1c072822172bb0d30e24911a.png
   '0x8c65a3fffefe4c1d':
     friendly_name: qualite air chambre (IKEA)
+    icon: device_icons/294e3494233342633d14479f42e076af.png
   '0x30fb10fffecd4e74':
     friendly_name: Four et Plaque de Cuisson
     voltage_calibration: 0
@@ -310,6 +343,7 @@ devices:
     energy_precision: 2
     current_precision: 2
     power_precision: 2
+    icon: device_icons/82b44aa542aadd6348ce6d2a4796cbbc.png
   '0xa4c138bb5636f0b8':
     friendly_name: 'Radiateur élec cuisine '
     power_calibration: 0
@@ -321,35 +355,50 @@ devices:
     voltage_precision: 2
     current_precision: 2
     power_precision: 2
+    icon: device_icons/7f6be149e188b9d7b0fda29fb638249d.png
   '0x1cc089fffe843978':
     friendly_name: 'Relais Lumière SDB (SONOFF) '
     state_action: true
+    icon: device_icons/c480d23a17c59eeccd516b7d1d3ba5cb.png
   '0x001788010e67586e':
     friendly_name: Lampe Salle de Bain (HUE)
+    icon: device_icons/e28b67787df4f0a04420ae4982efb123.png
   '0x001788010ba0e601':
     friendly_name: Boutton Salle de Bain (HUE)
+    icon: device_icons/931c0d8a8c66943e5c1a66c8c108bf64.png
   '0xa4c138ca365a1624':
     friendly_name: Prise Radiateur Salle de Bain (NOUS)
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0xa4c13854c76b66e0':
     friendly_name: Prise Bureau Fer à Repasser (NOUS)
+    icon: device_icons/2141502a56370e2461e53497da77a667.png
   '0x0c2a6ffffe2ca35d':
     friendly_name: contact fenetre chambre (IKEA)
+    icon: device_icons/25e2fecb1c072822172bb0d30e24911a.png
   '0xd44867fffefe401e':
     friendly_name: contact fenetre cuisine (IKEA)
+    icon: device_icons/25e2fecb1c072822172bb0d30e24911a.png
   '0x001788010b58bd16':
     friendly_name: Hue smart éco. PC Bureau
+    icon: device_icons/9b66ae5f0b2e337c78ee34b8fdeb669b.png
   '0x94a081fffe5d83fe':
     friendly_name: prise mini pc (IKEA)
+    icon: device_icons/0b39bffc869e7c3c844e3f5d380e1d04.png
   '0xb43522fffed5eb04':
     friendly_name: Th Cellier
+    icon: device_icons/d5cf7e365fed2168925ab63b5dfd83e6.png
   '0x001788010d08f22c':
     friendly_name: Lampe Bureau 1 (HUE)
+    icon: device_icons/e48b933122e68b6191a94569381dec98.png
   '0x001788010d090321':
     friendly_name: Lampe Bureau 2 (HUE)
+    icon: device_icons/e48b933122e68b6191a94569381dec98.png
   '0x8c8b48fffed267f4':
     friendly_name: Inter TV Chambre (IKEA RODRET)
+    icon: device_icons/36c972f318c6801ebb07c8b1dde874df.png
   '0x70ac08fffe7c23f5':
     friendly_name: Poussoir (IKEA TRADFRI)
+    icon: device_icons/0e5620d0686df0cf2acef54f6efff171.png
 groups:
   '1':
     friendly_name: Bureau z2m

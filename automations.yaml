@@ -186,7 +186,7 @@
         de foudre détecté.' %}\n{% endif %} {{ message }}<br>{{ timeSinceLastLightning
         }}. {% if impactCount > 0 %}\n  <strong>{{ impactCount }}</strong> impact(s)
         détecté(s)\n{% endif %}"
-    action: notify.mobile_app_gm1901
+    action: notify.mobile_app_poco_x7_pro
   - delay:
       hours: 0
       minutes: 1
@@ -388,7 +388,7 @@
         metadata: {}
         data:
           message: Le chauffage de la Cuisine est en fonctionnement
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
           message: /!\ Chauffage Cuisine "ON" /!\
@@ -421,7 +421,7 @@
         metadata: {}
         data:
           message: Le chauffage de la Cuisine est à l'arrêt
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
           message: /!\ Chauffage Cuisine "OFF" /!\
@@ -566,8 +566,8 @@
         domain: switch
       - data:
           message: /!\ RADIATEUR est "OFF"  FORCE /!\
-        action: notify.mobile_app_gm1901
-      - action: notify.mobile_app_gm1901
+        action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro
         data:
           message: /!\ RADIATEUR est "OFF" FORCE  /!\
       - data:
@@ -588,8 +588,8 @@
         domain: switch
       - data:
           message: /!\ RADIATEUR est "OFF" FORCE /!\
-        action: notify.mobile_app_gm1901
-      - action: notify.mobile_app_gm1901
+        action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro
         data:
           message: /!\ RADIATEUR est "OFF" FORCE  /!\
       - data:
@@ -608,8 +608,8 @@
           entity_id: climate.radiateur_cuisine
       - data:
           message: /!\ RADIATEUR est "ON" /!\
-        action: notify.mobile_app_gm1901
-      - action: notify.mobile_app_gm1901
+        action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro
         data:
           message: /!\ RADIATEUR est "ON" /!\
       - data:
@@ -628,8 +628,8 @@
           entity_id: climate.radiateur_cuisine
       - data:
           message: /!\ RADIATEUR est "OFF" /!\
-        action: notify.mobile_app_gm1901
-      - action: notify.mobile_app_gm1901
+        action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro
         data:
           message: /!\ RADIATEUR est "OFF" /!\
       - data:
@@ -802,7 +802,7 @@
   actions:
   - choose: []
     default:
-    - action: notify.mobile_app_gm1901
+    - action: notify.mobile_app_poco_x7_pro
       metadata: {}
       data:
         message: 'Des capteurs Zigbee ne sont plus joignables : {% set result = namespace(sensors=[])
@@ -863,7 +863,7 @@
           entity_id: sensor.gm1901_network_type
           state: cellular
       sequence:
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
           message: '[4] prises [OFF]'
@@ -895,7 +895,7 @@
           entity_id: sensor.gm1901_network_type
           state: cellular
       sequence:
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
           message: '[4] prises [ON]'
@@ -927,7 +927,7 @@
           entity_id: sensor.gm1901_network_type
           state: wifi
       sequence:
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
           message: '[1] prises [ON]'
@@ -959,7 +959,7 @@
           entity_id: sensor.gm1901_network_type
           state: wifi
       sequence:
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
           message: '[4] prises [ON]'
@@ -993,7 +993,7 @@
     trigger: device
   conditions: []
   actions:
-  - action: notify.mobile_app_gm1901
+  - action: notify.mobile_app_poco_x7_pro
     metadata: {}
     data:
       title: Eau Fontaine VIDE
@@ -1040,7 +1040,7 @@
   - data:
       title: DEBUG CLIM
       message: Force -> {{ states('sensor.mode_ete_hiver') }}
-    action: notify.mobile_app_gm1901
+    action: notify.mobile_app_poco_x7_pro
 - id: '1751912898399'
   alias: (A) (6h00 -> 20h00) [ TEST 2025-08-03 ] Automatisation pour contrôler de
     [06h00 <-> 20h00] les climatiseurs en fonction de la température intérieure/extérieure
@@ -1144,21 +1144,8 @@
         data:
           hvac_mode: 'off'
         action: climate.set_hvac_mode
-      - data:
-          title: Clim. désactivées
-          message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
-            and states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'on'
-            %}\n  La fenêtre du Salon a été ouverte.\n{% elif trigger.entity_id ==
-            'binary_sensor.contact_fenetre_cuisine_ikea_contact' and states('binary_sensor.contact_fenetre_cuisine_ikea_contact')
-            == 'on' %}\n  La fenêtre de la Cuisine a été ouverte.\n{% elif trigger.entity_id
-            == 'binary_sensor.contact_fenetre_bureau_ikea_contact' and states('binary_sensor.contact_fenetre_bureau_ikea_contact')
-            == 'on' %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
-            == 'binary_sensor.contact_fenetre_chambre_ikea_contact' and states('binary_sensor.contact_fenetre_chambre_ikea_contact')
-            == 'on' %}\n  La fenêtre de la Chambre a été ouverte.\n{% endif %}  {%
-            if states('sensor.nbre_de_fenetres_ouvertes') == '4' and states('input_number.msg_4_fenetres_ouvertes_previous')
-            | float | round == 0 %}\n  Toutes les fenêtres sont ouvertes.\n{% endif
-            %}\n"
-        action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
+        data: {}
       - data:
           entity_id: input_number.msg_4_fenetres_ouvertes_previous
           value: 1
@@ -1264,7 +1251,7 @@
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
           trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Les 3 Clim {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
     - condition: and
@@ -1336,7 +1323,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
     - condition: and
@@ -1408,7 +1395,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
     - condition: and
@@ -1485,7 +1472,7 @@
           (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre
           {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1752138633943'
   alias: (G) [CLIM ] Notification de changement de mode Été/Fan/Hiver
@@ -1499,7 +1486,7 @@
   - data:
       message: 'Le mode a changé pour: {{ states(''sensor.mode_ete_hiver'') }}'
       title: CHANGEMENT DE MODE
-    action: notify.mobile_app_gm1901
+    action: notify.mobile_app_poco_x7_pro
   mode: single
 - id: '1754214931347'
   alias: (E) [ CLIM ] Automatisation pour l'envoie de notification de la fermeture
@@ -1529,7 +1516,7 @@
         states('sensor.nbre_de_fenetres_fermees') == '4' and states('input_number.msg_4_fenetres_fermees_previous')
         | float | round == 1 %} Toutes les fenêtres sont maintenant fermées.\n{% endif
         %}\n"
-    action: notify.mobile_app_gm1901
+    action: notify.mobile_app_poco_x7_pro
   - data:
       entity_id: input_number.msg_4_fenetres_ouvertes_previous
       value: 0
@@ -1556,7 +1543,7 @@
         value_template: '{{ trigger.entity_id == ''climate.clim'' and trigger.to_state.state
           == ''off'' }}'
       sequence:
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         data:
           title: ARRÊT CLIM
           message: La clim. du Salon a été coupée.
@@ -1565,7 +1552,7 @@
         value_template: '{{ trigger.entity_id == ''climate.clim_du_bureau'' and trigger.to_state.state
           == ''off'' }}'
       sequence:
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         data:
           title: ARRÊT CLIM
           message: La clim. du Bureau a été coupée.
@@ -1574,7 +1561,7 @@
         value_template: '{{ trigger.entity_id == ''climate.clim_de_la_chambre'' and
           trigger.to_state.state == ''off'' }}'
       sequence:
-      - action: notify.mobile_app_gm1901
+      - action: notify.mobile_app_poco_x7_pro
         data:
           title: ARRÊT CLIM
           message: La clim. de la Chambre a été coupée.
@@ -1641,7 +1628,7 @@
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
           & Chambre {{ states('sensor.temperature_cible') | float }}°\n  {% endif
           %}\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
     - condition: and
@@ -1678,7 +1665,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
     - condition: and
@@ -1718,7 +1705,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
     - condition: and
@@ -1759,7 +1746,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754231821638'
   alias: (B) (20h00 -> 6h00) [ TEST 2025-08-03 ] Automatisation pour contrôler de
@@ -1881,7 +1868,7 @@
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
           trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Les 3 Clim à {{
           states('sensor.temperature_cible') | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
     - condition: and
@@ -1950,7 +1937,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Bureau à {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
     - condition: and
@@ -2022,7 +2009,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Bureau à {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
     - condition: and
@@ -2094,7 +2081,7 @@
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Bureau à {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754236302209'
   alias: (D) [ Notification température Up ou Down de 20h00 -> 06h00]
@@ -2163,7 +2150,7 @@
           Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Les 3 Clim {{
           states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{% endif
           %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
     - condition: and
@@ -2203,7 +2190,7 @@
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{%
           endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
     - condition: and
@@ -2246,7 +2233,7 @@
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{%
           endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
     - condition: and
@@ -2289,7 +2276,7 @@
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{%
           endif %}"
-      action: notify.mobile_app_gm1901
+      action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754491576463'
   alias: (I) [ CLIM 'off' si delta = -1 ] Coupe les clim si le delta intérieur et
@@ -2332,7 +2319,7 @@
       message: La température extérieure est inferieur a 26 degrés, les clim ont été
         éteinte. Vous pouvez ouvrir les fenêtres.
       title: T°Ext < à 26°C
-  - action: notify.mobile_app_gm1901
+  - action: notify.mobile_app_poco_x7_pro
     metadata: {}
     data:
       title: T°Ext < à 26°C

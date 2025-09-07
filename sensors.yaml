@@ -26,7 +26,37 @@
 
 #==========================================================================
 #
-# Calcul moyen 
+# Calcul moyen Prise Mini-PC
+#
+#==========================================================================
+
+- platform: statistics
+  name: Mini PC mean 24h Wh
+  # "[L026] Moyenne glissante ~30 jours (730h) sur la conso réseau Ecojoko"
+  unique_id: mini_pc_mean_24h_wh
+  # "[L027] ID unique pour la moyenne 730h"
+  entity_id: sensor.prise_mini_pc_ikea_power
+  state_characteristic: mean 
+  max_age:
+    hours: 24
+  precision: 1
+  keep_last_sample: true
+
+- platform: statistics
+  name: Mini PC mean 730h Wh
+  # "[L026] Moyenne glissante ~30 jours (730h) sur la conso réseau Ecojoko"
+  unique_id: mini_pc_mean_730h_wh
+  # "[L027] ID unique pour la moyenne 730h"
+  entity_id: sensor.prise_mini_pc_ikea_energy
+  state_characteristic: mean 
+  max_age:
+    hours: 730
+  precision: 1
+  keep_last_sample: true
+
+#==========================================================================
+#
+# Calcul moyen ECOJOKO
 #
 #==========================================================================
 
@@ -41,43 +71,6 @@
     hours: 730
   precision: 1
   keep_last_sample: true
-
-- platform: statistics
-  name: Ecojoko mean 730h (UM_Daily) kWh
-  # "[L036] Moyenne glissante 730h sur valeurs journalières (UM_Daily)"
-  unique_id: ecojoko_mean_730h_um_daily_kwh
-  # "[L037] ID unique pour la moyenne 730h UM_Daily"
-  entity_id: sensor.ecojoko_kwh_j_1
-  state_characteristic: mean 
-  max_age:
-    hours: 730
-  precision: 1
-  keep_last_sample: true
-
-- platform: statistics
-  name: Ecojoko sum 30d (UM_Daily) kWh
-  unique_id: ecojoko_sum_730h_um_daily_kwh
-  # "[L047] Somme glissante des ~30 derniers jours (730h) basée sur UM_Daily"
-  entity_id: sensor.ecojoko_kwh_j_1
-  state_characteristic: sum
-  max_age:
-    hours: 730
-  precision: 1
-  keep_last_sample: true
-# "[S3] Total des 30 derniers jours (glissant), utile pour comparer au mois en cours"
-
-- platform: statistics
-  name: Ecojoko median 30d (UM_Daily) kWh
-  unique_id: ecojoko_median_730h_um_daily_kwh
-  # "[L058] Médiane glissante ~30 jours (730h) – plus robuste aux valeurs extrêmes"
-  entity_id: sensor.ecojoko_kwh_j_1
-  state_characteristic: median
-  max_age:
-    hours: 730
-  precision: 1
-  keep_last_sample: true
-# "[S4] Médiane 30j : moins sensible aux jours extrêmes que la moyenne"
-
 
 #========================================================================
 #
@@ -160,24 +153,447 @@
   precision: 1
   keep_last_sample: true
 
-# ---------------------------------------------------------------------------------
-# annotations_log:
-# - "[L008] Déclaration sensor REST pour géocodage inverse (Blitzortung)"
-# - "[L009] Nom lisible pour la localisation des impacts (Nominatim)"
-# - "[L010] ID unique stable pour ce capteur"
-# - "[L012] Fréquence de rafraîchissement (1/jour) – Nominatim tolérant mais à ne pas sur-solliciter"
-# - "[L015] URL Nominatim construite à partir des attributs lat/lon du capteur de distance"
-# - "[L016] État = nb de features retournées (diagnostic simple de réponse)"
-# - "[L017] Expose 'features' comme attributs"
-# - "[L026] Moyenne glissante ~30 jours (730h) sur la conso réseau Ecojoko"
-# - "[L027] ID unique pour la moyenne 730h"
-# - "[L036] Moyenne glissante 730h sur UM_Daily"
-# - "[L037] ID unique pour la moyenne 730h UM_Daily"
-# - "[L047] Somme glissante ~30 jours (730h) sur UM_Daily"
-# - "[L058] Médiane glissante ~30 jours (730h) – robuste aux outliers"
-# - "[L076] création sensor PM2.5 Salon (moy 24h)"
-# - "[L088] création sensor PM2.5 Bureau (moy 24h)"
-# - "[L100] création sensor PM2.5 Chambre (moy 24h)"
-# - "[L114] création sensor tCOV Salon (moy 24h)"
-# - "[L126] création sensor tCOV Bureau (moy 24h)"
-# - "[L138] création sensor tCOV Chambre (moy 24h)"
+#========================================================================
+#
+# INTEGRATION (énergie kWh à partir de la puissance W)
+#
+#========================================================================
+
+## =====================================================================
+# INTEGRATION — chaque source power -> sensor.<base>_kwh
+# =====================================================================
+
+- platform: integration
+  source: sensor.prise_box_internet_ikea_power
+  name: prise_box_internet_ikea kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L101] ➜ sensor.prise_box_internet_ikea_kwh"
+
+- platform: integration
+  source: sensor.prise_horloge_ikea_power
+  name: prise_horloge_ikea kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L102] ➜ sensor.prise_horloge_ikea_kwh"
+
+# --- Salon ---
+- platform: integration
+  source: sensor.prise_pc_s_gege_ikea_power
+  name: prise_pc_s_gege_ikea kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L103] ➜ sensor.prise_pc_s_gege_ikea_kwh"
+
+- platform: integration
+  source: sensor.prise_salon_chargeur_nous_power
+  name: prise_salon_chargeur_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L104] ➜ sensor.prise_salon_chargeur_nous_kwh"
+
+# --- Cuisine ---
+- platform: integration
+  source: sensor.prise_four_micro_ondes_nous_power
+  name: prise_four_micro_ondes_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L105] ➜ sensor.prise_four_micro_ondes_nous_kwh"
+
+- platform: integration
+  source: sensor.prise_lave_linge_nous_power
+  name: prise_lave_linge_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L106] ➜ sensor.prise_lave_linge_nous_kwh"
+
+- platform: integration
+  source: sensor.prise_lave_vaisselle_nous_power
+  name: prise_lave_vaisselle_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L107] ➜ sensor.prise_lave_vaisselle_nous_kwh"
+
+- platform: integration
+  source: sensor.prise_airfryer_ninja_nous_power
+  name: prise_airfryer_ninja_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L108] ➜ sensor.prise_airfryer_ninja_nous_kwh"
+
+- platform: integration
+  source: sensor.four_et_plaque_de_cuisson_power
+  name: four_et_plaque_de_cuisson kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L109] ➜ sensor.four_et_plaque_de_cuisson_kwh"
+
+- platform: integration
+  source: sensor.prise_frigo_cuisine_nous_power
+  name: prise_frigo_cuisine_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L110] ➜ sensor.prise_frigo_cuisine_nous_kwh"
+
+- platform: integration
+  source: sensor.prise_congelateur_cuisine_nous_power
+  name: prise_congelateur_cuisine_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L111] ➜ sensor.prise_congelateur_cuisine_nous_kwh"
+
+# --- Bureau ---
+- platform: integration
+  source: sensor.prise_bureau_pc_ikea_power
+  name: prise_bureau_pc_ikea kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L112] ➜ sensor.prise_bureau_pc_ikea_kwh"
+
+- platform: integration
+  source: sensor.prise_bureau_fer_a_repasser_nous_power
+  name: prise_bureau_fer_a_repasser_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L113] ➜ sensor.prise_bureau_fer_a_repasser_nous_kwh"
+
+# --- Chambre ---
+- platform: integration
+  source: sensor.prise_tete_de_lit_chambre_power
+  name: prise_tete_de_lit_chambre kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L114] ➜ sensor.prise_tete_de_lit_chambre_kwh"
+
+- platform: integration
+  source: sensor.prise_tv_chambre_nous_power
+  name: prise_tv_chambre_nous kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L115] ➜ sensor.prise_tv_chambre_nous_kwh"
+
+# --- All Standby ---
+- platform: integration
+  source: sensor.all_standby_power
+  name: all_standby kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+  # "[L120] ➜ sensor.all_standby_kwh"
+
+# ==========================================================================
+# STATISTICS — moyennes glissantes sur 24h & 730h à partir des *daily*
+# ==========================================================================
+
+# =====================================================================
+# STATISTICS — sensor.<base>_mean_24h_kwh & sensor.<base>_mean_730h_kwh
+# =====================================================================
+
+# --- Entrée ---
+- platform: statistics
+  name: prise_box_internet_ikea mean 24h (kWh)
+  unique_id: prise_box_internet_ikea_mean_24h_kwh
+  entity_id: sensor.prise_box_internet_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S101] ➜ sensor.prise_box_internet_ikea_mean_24h_kwh"
+
+- platform: statistics
+  name: prise_box_internet_ikea mean 730h (kWh)
+  unique_id: prise_box_internet_ikea_mean_730h_kwh
+  entity_id: sensor.prise_box_internet_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S102] ➜ sensor.prise_box_internet_ikea_mean_730h_kwh"
+
+- platform: statistics
+  name: prise_horloge_ikea mean 24h (kWh)
+  unique_id: prise_horloge_ikea_mean_24h_kwh
+  entity_id: sensor.prise_horloge_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S103]"
+
+- platform: statistics
+  name: prise_horloge_ikea mean 730h (kWh)
+  unique_id: prise_horloge_ikea_mean_730h_kwh
+  entity_id: sensor.prise_horloge_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S104]"
+
+# --- Salon ---
+- platform: statistics
+  name: prise_pc_s_gege_ikea mean 24h (kWh)
+  unique_id: prise_pc_s_gege_ikea_mean_24h_kwh
+  entity_id: sensor.prise_pc_s_gege_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S105]"
+
+- platform: statistics
+  name: prise_pc_s_gege_ikea mean 730h (kWh)
+  unique_id: prise_pc_s_gege_ikea_mean_730h_kwh
+  entity_id: sensor.prise_pc_s_gege_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S106]"
+
+- platform: statistics
+  name: prise_salon_chargeur_nous mean 24h (kWh)
+  unique_id: prise_salon_chargeur_nous_mean_24h_kwh
+  entity_id: sensor.prise_salon_chargeur_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S107]"
+
+- platform: statistics
+  name: prise_salon_chargeur_nous mean 730h (kWh)
+  unique_id: prise_salon_chargeur_nous_mean_730h_kwh
+  entity_id: sensor.prise_salon_chargeur_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S108]"
+
+# --- Cuisine ---
+- platform: statistics
+  name: prise_four_micro_ondes_nous mean 24h (kWh)
+  unique_id: prise_four_micro_ondes_nous_mean_24h_kwh
+  entity_id: sensor.prise_four_micro_ondes_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S109]"
+
+- platform: statistics
+  name: prise_four_micro_ondes_nous mean 730h (kWh)
+  unique_id: prise_four_micro_ondes_nous_mean_730h_kwh
+  entity_id: sensor.prise_four_micro_ondes_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S110]"
+
+- platform: statistics
+  name: prise_lave_linge_nous mean 24h (kWh)
+  unique_id: prise_lave_linge_nous_mean_24h_kwh
+  entity_id: sensor.prise_lave_linge_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S111]"
+
+- platform: statistics
+  name: prise_lave_linge_nous mean 730h (kWh)
+  unique_id: prise_lave_linge_nous_mean_730h_kwh
+  entity_id: sensor.prise_lave_linge_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S112]"
+
+- platform: statistics
+  name: prise_lave_vaisselle_nous mean 24h (kWh)
+  unique_id: prise_lave_vaisselle_nous_mean_24h_kwh
+  entity_id: sensor.prise_lave_vaisselle_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S113]"
+
+- platform: statistics
+  name: prise_lave_vaisselle_nous mean 730h (kWh)
+  unique_id: prise_lave_vaisselle_nous_mean_730h_kwh
+  entity_id: sensor.prise_lave_vaisselle_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S114]"
+
+- platform: statistics
+  name: prise_airfryer_ninja_nous mean 24h (kWh)
+  unique_id: prise_airfryer_ninja_nous_mean_24h_kwh
+  entity_id: sensor.prise_airfryer_ninja_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S115]"
+
+- platform: statistics
+  name: prise_airfryer_ninja_nous mean 730h (kWh)
+  unique_id: prise_airfryer_ninja_nous_mean_730h_kwh
+  entity_id: sensor.prise_airfryer_ninja_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S116]"
+
+- platform: statistics
+  name: four_et_plaque_de_cuisson mean 24h (kWh)
+  unique_id: four_et_plaque_de_cuisson_mean_24h_kwh
+  entity_id: sensor.four_et_plaque_de_cuisson_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S117]"
+
+- platform: statistics
+  name: four_et_plaque_de_cuisson mean 730h (kWh)
+  unique_id: four_et_plaque_de_cuisson_mean_730h_kwh
+  entity_id: sensor.four_et_plaque_de_cuisson_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S118]"
+
+- platform: statistics
+  name: prise_frigo_cuisine_nous mean 24h (kWh)
+  unique_id: prise_frigo_cuisine_nous_mean_24h_kwh
+  entity_id: sensor.prise_frigo_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S119]"
+
+- platform: statistics
+  name: prise_frigo_cuisine_nous mean 730h (kWh)
+  unique_id: prise_frigo_cuisine_nous_mean_730h_kwh
+  entity_id: sensor.prise_frigo_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S120]"
+
+- platform: statistics
+  name: prise_congelateur_cuisine_nous mean 24h (kWh)
+  unique_id: prise_congelateur_cuisine_nous_mean_24h_kwh
+  entity_id: sensor.prise_congelateur_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S121]"
+
+- platform: statistics
+  name: prise_congelateur_cuisine_nous mean 730h (kWh)
+  unique_id: prise_congelateur_cuisine_nous_mean_730h_kwh
+  entity_id: sensor.prise_congelateur_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S122]"
+
+# --- Bureau ---
+- platform: statistics
+  name: prise_bureau_pc_ikea mean 24h (kWh)
+  unique_id: prise_bureau_pc_ikea_mean_24h_kwh
+  entity_id: sensor.prise_bureau_pc_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S123]"
+
+- platform: statistics
+  name: prise_bureau_pc_ikea mean 730h (kWh)
+  unique_id: prise_bureau_pc_ikea_mean_730h_kwh
+  entity_id: sensor.prise_bureau_pc_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S124]"
+
+- platform: statistics
+  name: prise_bureau_fer_a_repasser_nous mean 24h (kWh)
+  unique_id: prise_bureau_fer_a_repasser_nous_mean_24h_kwh
+  entity_id: sensor.prise_bureau_fer_a_repasser_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S125]"
+
+- platform: statistics
+  name: prise_bureau_fer_a_repasser_nous mean 730h (kWh)
+  unique_id: prise_bureau_fer_a_repasser_nous_mean_730h_kwh
+  entity_id: sensor.prise_bureau_fer_a_repasser_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S126]"
+
+# --- Chambre ---
+- platform: statistics
+  name: prise_tete_de_lit_chambre mean 24h (kWh)
+  unique_id: prise_tete_de_lit_chambre_mean_24h_kwh
+  entity_id: sensor.prise_tete_de_lit_chambre_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S127]"
+
+- platform: statistics
+  name: prise_tete_de_lit_chambre mean 730h (kWh)
+  unique_id: prise_tete_de_lit_chambre_mean_730h_kwh
+  entity_id: sensor.prise_tete_de_lit_chambre_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S128]"
+
+- platform: statistics
+  name: prise_tv_chambre_nous mean 24h (kWh)
+  unique_id: prise_tv_chambre_nous_mean_24h_kwh
+  entity_id: sensor.prise_tv_chambre_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S129]"
+
+- platform: statistics
+  name: prise_tv_chambre_nous mean 730h (kWh)
+  unique_id: prise_tv_chambre_nous_mean_730h_kwh
+  entity_id: sensor.prise_tv_chambre_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S130]"
+
+# --- All Standby ---
+- platform: statistics
+  name: all_standby mean 24h (kWh)
+  unique_id: all_standby_mean_24h_kwh
+  entity_id: sensor.all_standby_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+  # "[S131]"
+
+- platform: statistics
+  name: all_standby mean 730h (kWh)
+  unique_id: all_standby_mean_730h_kwh
+  entity_id: sensor.all_standby_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+  # "[S132]"
