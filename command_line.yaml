@@ -70,3 +70,19 @@
         }
         | to_json 
       }}
+
+# --- Status GitHub backup (OK/KO + horodatage) ---
+- sensor:
+    name: "Backup GitHub Status"
+    unique_id: backup_github_status
+    command: >-
+      bash -lc 'if grep -F "Backup GitHub OK:" /config/.logs/ha_git_backup.log >/dev/null 2>&1;
+      then TS=$(grep -F "Backup GitHub OK:" /config/.logs/ha_git_backup.log | tail -n1 | sed -E "s/^.*OK: (.*)$/\1/");
+      echo "{\"ok\":true,\"ts\":\"$TS\"}";
+      else echo "{\"ok\":false,\"ts\":\"\"}"; fi'
+    scan_interval: 60
+    value_template: '{{ "OK" if value_json.ok else "KO" }}'
+    json_attributes:
+      - ts
+    # "[L310] sensor Backup GitHub Status (command_line)"
+

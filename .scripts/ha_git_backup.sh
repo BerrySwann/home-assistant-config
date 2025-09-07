@@ -44,10 +44,13 @@ if [[ -z "$CHANGED" ]]; then
 fi
 # "[L36] fallback status"
 
-# Message (weekly si demandé)
+# Message (weekly si demandé) + version HA si dispo
 MSG="HAOS auto-backup: $(date '+%Y-%m-%d %H:%M:%S %Z')"
 [[ "${1:-}" == "weekly" ]] && MSG="HAOS weekly backup: $(date '+%Y-%m-%d %H:%M:%S %Z')"
-# "[L41] message commit"
+HA_VER=""
+[[ -f /config/.HA_VERSION ]] && HA_VER="$(cat /config/.HA_VERSION 2>/dev/null)"
+MSG="${MSG}${HA_VER:+ (HA ${HA_VER})}"
+# "[L430] commit message + version HA"
 
 git add -A
 git commit -m "$MSG" || { echo "ℹ️  Rien à committer" >> "$LOG_DIR/ha_git_backup.log"; exit 0; }
@@ -57,15 +60,18 @@ git commit -m "$MSG" || { echo "ℹ️  Rien à committer" >> "$LOG_DIR/ha_git_b
 git push origin "$BRANCH" || git push origin main || git push origin master
 # "[L48] push"
 
-# Tag hebdo si weekly
+# Tag hebdo (amélioré) si weekly : ISO week + anti-collision + version HA dans le message
 if [[ "${1:-}" == "weekly" ]]; then
-  TAG="weekly-$(date +'%Y-%m-%d')"
-  if ! git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
-    git tag -a "$TAG" -m "Weekly backup"
-    git push origin --tags
+  TAG_BASE="weekly-$(date +'%G-W%V')"   # ex: weekly-2025-W36 (ISO week)
+  TAG="$TAG_BASE"
+  if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+    TAG="${TAG_BASE}-$(date +'%H%M')"   # évite collision si plusieurs weekly le même jour
   fi
+  git tag -a "$TAG" -m "Weekly backup $(date +'%F')${HA_VER:+ (HA ${HA_VER})}"
+  git push origin --tags
+  echo "🏷️  Tag créé: $TAG" >> "$LOG_DIR/ha_git_backup.log"
 fi
-# "[L55] tag weekly"
+# "[L520] weekly tag ISO week + HA version (collision-safe)"
 
 echo "✅ Backup GitHub OK: $MSG" >> "$LOG_DIR/ha_git_backup.log"
 # "[L59] log succès"
