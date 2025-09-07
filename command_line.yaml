@@ -104,3 +104,25 @@
       bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
     scan_interval: 1800
     # "[L330] sensor Git Last Weekly Tag"
+
+- sensor:
+    name: "Backup GitHub Journal"
+    unique_id: backup_github_journal
+    command: >-
+      bash -lc 'LOG=/config/.logs/ha_git_backup.log;
+      if [ -s "$LOG" ]; then
+        OUT=$(egrep -a "Backup GitHub OK:|❌|error:|push declined|Permission denied|Host key verification failed" "$LOG" \
+          | tail -n 5 | sed -e "s/\"/\\"/g");
+        printf "{\"text\":\"%s\"}\n" "$OUT";
+      else
+        echo "{\"text\":\"(log vide)\"}";
+      fi'
+    value_template: "ready"
+    json_attributes:
+      - text
+    scan_interval: 60
+    # "[L600] sensor Backup GitHub Journal (5 dernières lignes)"
+
+# ---------------------------------------------------------------------------------
+# annotations_log:
+# - "[L600] sensor Backup GitHub Journal (5 dernières lignes)"
