@@ -97,3 +97,10 @@
       bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
     scan_interval: 1800
     # "[L330] sensor Git Last Weekly Tag"
+- sensor:
+    name: "Git Last Weekly Tag"
+    unique_id: git_last_weekly_tag
+    command: >-
+      bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
+    scan_interval: 1800
+    # "[L330] sensor Git Last Weekly Tag"
