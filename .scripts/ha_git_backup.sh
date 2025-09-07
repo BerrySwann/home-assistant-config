@@ -4,6 +4,9 @@ set -euo pipefail
 
 LOG_DIR="/config/.logs"
 mkdir -p "$LOG_DIR"  # "[L5] création dossier logs"
+LOG_FILE="/ha_git_backup.log"
+[ -f "" ] && tail -n 1000 "" > ".tmp" && mv ".tmp" ""
+# [L7] rotation simple du log (1000 lignes)
 
 cd /config
 git config user.name  "Eric Rodi (HAOS)"     # "[L8] user.name"
