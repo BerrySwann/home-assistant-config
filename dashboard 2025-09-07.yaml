@@ -1,4 +1,216 @@
 streamline_templates:
+  nav_bar:
+    card:
+      type: vertical-stack
+      cards:
+        - type: custom:navbar-card
+          routes:
+            - url: /dashboard-tablette/home
+              icon: mdi:home
+              label: Home
+            - url: /dashboard-tablette/lumieres
+              icon: mdi:lightbulb
+              label: lum.
+            - url: /dashboard-tablette/clim
+              icon: mdi:air-conditioner
+              label: Cilm
+            - url: /dashboard-tablette/stores
+              icon: mdi:window-shutter
+              label: Stores
+            - url: /dashboard-tablette/prises
+              icon: mdi:power-plug-off
+              label: Prises
+            - icon: mdi:dots-horizontal
+              label: More
+              tap_action:
+                action: open-popup
+              popup:
+                - icon: mdi:cog
+                  url: /config/dashboard
+                - icon: mdi:hammer
+                  url: /developer-tools/yaml
+                - icon: mdi:power
+                  tap_action:
+                    action: call-service
+                    service: homeassistant.restart
+                    service_data: {}
+                    confirmation:
+                      text: Are you sure you want to restart Home Assistant?
+          card_mod:
+            style: |
+              ha-card {
+                background: black !important;
+                box-shadow: none !important;
+                border: none !important;
+              }
+  calcule_temperature_cible:
+    card:
+      type: vertical-stack
+      cards:
+        - type: markdown
+          content: >
+            **<<< CALCUL DE LA TEMPERATURE CIBLE >>>** 
+
+             **Température Extérieure : {{
+            states('sensor.th_balcon_nord_temperature') | float | round(2)
+            }}°C**
+
+            {% set temperature_exterieure =
+            states('sensor.th_balcon_nord_temperature') | float %} {% set
+            consigne_de_base = states('sensor.consigne_de_base') | int %} {% set
+            delta_7 = states('sensor.delta_7') | int %} {% set delta_5 =
+            states('sensor.delta_5') | int %}
+
+            {% if temperature_exterieure >= 99 %}
+               {% set temperature_cible = consigne_de_base %}
+              - Consigne de Base : {{ consigne_de_base | round(0) }}°C
+              {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
+              - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
+              {% set temperature_cible = temperature_exterieure - delta_5 %}
+              **- Calcul T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]**
+
+            {% elif temperature_exterieure > 99 %}
+              {% set temperature_cible = consigne_de_base %}
+              - Consigne de Base : {{ consigne_de_base | round(0) }}°C
+              {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
+              - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
+              {% set temperature_cible = temperature_exterieure - delta_7 %}
+              **- Calcul si T°Ext. > 40°C [ {{ temperature_exterieure | round(0) }} - {{ delta_7 }} = {{ temperature_cible | round(0) }} ]**
+
+            {% else %}
+              {% set temperature_cible = consigne_de_base %}
+              - Consigne de Base : {{ consigne_de_base | round(0) }}°C
+              
+              {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
+              - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
+            {% endif %}
+
+            {% if temperature_exterieure > 99 %}        
+              - Température Cible = {{ temperature_cible | round(0) }}°C            
+              - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+
+            {% elif temperature_exterieure > 99 %}        
+              - Température Cible Cible = {{ temperature_cible | round(0) }}°C            
+              - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+
+            {% else %}        
+              - Température Cible = {{ temperature_cible | round(0) }}°C
+              - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
+            {% endif %}
+
+            {% if temperature_exterieure > 26 %}
+              **DELTA: {{ states('sensor.temperature_delta') }}**
+            {% elif temperature_exterieure > 40 %}        
+              **DELTA: {{ states('sensor.temperature_delta') }}**
+            {% else %}     
+              **DELTA: {{ states('sensor.temperature_delta') }}**
+              
+              **MODE: {{ states('sensor.mode_ete_hiver') | upper }}**
+            {% endif %}
+          card_mod:
+            style: |
+              ha-card {
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent;
+              }
+        - type: conditional
+          conditions:
+            - entity: sensor.condition_mamour_wifi
+              state: 'false'
+            - entity: sensor.condition_eric_wifi
+              state: 'false'
+          card:
+            type: markdown
+            content: |
+              **Les deux en mode Cellular**
+               - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C
+               - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C
+               - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: transparent;
+                }
+        - type: conditional
+          conditions:
+            - entity: sensor.condition_mamour_wifi
+              state: 'true'
+            - entity: sensor.condition_eric_wifi
+              state: 'true'
+          card:
+            type: markdown
+            content: |
+              **Les deux en mode Wifi**
+               - Climatiseur Salon : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
+               - Climatiseur Bureau : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
+               - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: transparent;
+                }
+        - type: conditional
+          conditions:
+            - entity: sensor.condition_mamour_wifi
+              state: 'true'
+            - entity: sensor.condition_eric_wifi
+              state: 'false'
+          card:
+            type: markdown
+            content: |
+              **Mamour en mode Wifi**
+               - Climatiseur Salon : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
+               - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C
+               - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: transparent;
+                }
+        - type: conditional
+          conditions:
+            - entity: sensor.condition_mamour_wifi
+              state: 'false'
+            - entity: sensor.condition_eric_wifi
+              state: 'true'
+          card:
+            type: markdown
+            content: |
+              **Eric en mode Wifi**
+               - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C
+               - Climatiseur Bureau : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
+               - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: transparent;
+                }
+  carte_des_temperatures:
+    card:
+      type: custom:temperature-heatmap-card
+      entity: '[[entity]]'
+      title: '[[card_title]]'
+      month_label: true
+      day_label: true
+      footer: true
+      day_trend: true
+      decimal_point: true
+      card_mod:
+        style: |
+          ha-card {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+          }
   pm25_ring-tile:
     card:
       type: vertical-stack
@@ -31,7 +243,7 @@ streamline_templates:
           card_mod:
             style: |
               ha-card {
-                background: transparent !important;
+                background: none !important;
                 border: none !important;
                 box-shadow: none !important;
               }
@@ -216,16 +428,13 @@ streamline_templates:
               color: orange
             - value: 120
               color: red
-        - entity: '[[entity_sensor]]'
-          name: Avg(24hrs)
+        - entity: '[[mean_24h_entity]]'
+          name: Mean(24hrs)
           yaxis_id: pm25
           type: line
           color: red
           stroke_width: 2
           stroke_dash: 8
-          group_by:
-            func: avg
-            duration: 24h
         - entity: '[[entity_sensor]]'
           yaxis_id: pm25
           type: area
@@ -299,8 +508,8 @@ streamline_templates:
               color: orange
             - value: 750
               color: red
-        - entity: '[[entity_sensor]]'
-          name: Avg(24hrs)
+        - entity: '[[mean_24h_entity]]'
+          name: Mean(24hrs)
           yaxis_id: cov
           unit: PPB
           type: line
@@ -347,13 +556,13 @@ streamline_templates:
                 color: '#ff9800'
             apex_config:
               chart:
-                height: 270
+                height: 200
               legend:
                 show: false
               plotOptions:
                 radialBar:
                   hollow:
-                    size: 40%
+                    size: 70%
                   dataLabels:
                     name:
                       show: false
@@ -386,7 +595,7 @@ streamline_templates:
                 style="font-size:12px;font-weight:bold;">${h}%</span>`; ]]]
             card_mod:
               style: >
-                ha-card { margin-top: -210px; background: none; border: none;
+                ha-card { margin-top: -170px; background: none; border: none;
                 box-shadow: none; }
           - type: custom:apexcharts-card
             graph_span: 24h
@@ -524,6 +733,15 @@ streamline_templates:
           group_by:
             func: avg
             duration: 24h
+        - entity: '[[mean_24h_kwh_entity]]'
+          name: Mean(24h)
+          color: '#F44336'
+          unit: kWh
+          show:
+            in_header: true
+            in_brush: false
+            in_chart: false
+          opacity: 0
         - entity: '[[energy_entity]]'
           yaxis_id: Watts
           type: area
@@ -584,7 +802,7 @@ streamline_templates:
           yaxis_id: W_day
           type: column
           color: '[[color]]'
-          unit: W
+          unit: Wh
           transform: return x * 1000;
           group_by:
             func: diff
@@ -595,12 +813,20 @@ streamline_templates:
           yaxis_id: Avg
           type: line
           color: red
-          unit: W
+          unit: Wh
           stroke_width: 2
           stroke_dash: 8
           group_by:
             func: avg
             duration: 730h
+        - entity: '[[mean_730h_kwh_entity]]'
+          name: Mean(730h)
+          color: '#F44336'
+          unit: kWh
+          show:
+            in_header: true
+            in_brush: false
+            in_chart: false
       card_mod:
         style: >
           ha-card { background: none !important; border: none !important;
@@ -1546,7 +1772,7 @@ views:
                       - text-align: left
                     quotidien:
                       - justify-self: start
-                      - margin-left: 12px
+                      - margin-left: 26px
                       - text-align: left
                     mensuel:
                       - justify-self: end
@@ -2569,7 +2795,7 @@ views:
                     - margin-top: 4.5px
                   custom_fields:
                     titre:
-                      - grid-area: title
+                      - grid-area: titre
                       - justify-self: center
                       - text-align: center
                       - font-weight: bold
@@ -2581,8 +2807,8 @@ views:
                       - text-align: left
                     batterie:
                       - grid-area: batterie
-                      - justify-self: null
-                      - text-align: end
+                      - justify-self: center
+                      - text-align: right
                     reserve:
                       - grid-area: reserve
                       - justify-self: end
@@ -2598,6 +2824,7 @@ views:
                     [[[
                       return `
                       <div>
+                        <div>POCOX7</div>
                         <div>GM1901</div>
                         <div>Mamour</div>
                         <div>NE2213</div>
@@ -2609,30 +2836,37 @@ views:
                   batterie: |
                     [[[
                       function getColorForBatteryLevel(batteryLevel) {
-                        if (batteryLevel >= 80) return 'lightgreen';
-                        if (batteryLevel >= 50) return 'orange';
-                        if (batteryLevel >= 20) return 'rgb(244,67,54)';
-                        return 'purple';
+                        // Sécurisation des valeurs
+                        const lvl = Number(batteryLevel);
+                        if (Number.isNaN(lvl)) return 'gray';
+                        if (lvl >= 80) return 'lightgreen';
+                        if (lvl >= 50) return 'orange';
+                        if (lvl >= 20) return 'rgb(255,152,0)';
+                        return 'rgb(244,67,54)'; 
                       }
 
                       function getDeviceStatus(entityId) {
-                        var state = states[entityId];
-                        if (state === undefined || state.state === 'unavailable') {
+                        const st = states[entityId];
+                        if (!st || st.state === 'unavailable' || st.state === 'unknown') {
                           return '<span style="color: gray;">Éteint</span>';
                         }
-                        var batteryLevel = parseInt(state.state);
-                        var color = getColorForBatteryLevel(batteryLevel);
-                        return '<span style="color: ' + color + ';">' + state.state + '%</span>';
-                      }
+                        const lvl = Number(st.state);
+                        const color = getColorForBatteryLevel(lvl);
+                        const safe = Number.isNaN(lvl) ? '—' : `${lvl}%`;
+                        return `<span style="color: ${color};">${safe}</span>`;
+                        }
+                      
 
-                      var gm1901Status = getDeviceStatus('sensor.gm1901_battery_level');
-                      var ne2213MamourStatus = getDeviceStatus('sensor.ne2213_mamour_battery_level');
-                      var ne2213Status = getDeviceStatus('sensor.ne2213_battery_level');
-                      var smA530FStatus = getDeviceStatus('sensor.sm_a530f_battery_level');
-                      var tabletteStatus = getDeviceStatus('sensor.tablette_battery_level');
+                      const pocox7proStatus   = getDeviceStatus('sensor.poco_x7_pro_battery_level');
+                      const gm1901Status      = getDeviceStatus('sensor.gm1901_battery_level');
+                      const ne2213MamourStatus= getDeviceStatus('sensor.ne2213_mamour_battery_level');
+                      const ne2213Status      = getDeviceStatus('sensor.ne2213_battery_level');
+                      const smA530FStatus     = getDeviceStatus('sensor.sm_a530f_battery_level');
+                      const tabletteStatus    = getDeviceStatus('sensor.tablette_battery_level');
 
                       return `
                       <div>
+                        <div>${pocox7proStatus}</div>
                         <div>${gm1901Status}</div>
                         <div>${ne2213MamourStatus}</div>
                         <div>${ne2213Status}</div>
@@ -2644,24 +2878,25 @@ views:
                   reserve: |
                     [[[
                       function getBatteryStateIcon(entityId) {
-                        var state = states[entityId]?.state;
-                        if (state === undefined) return '⚫';
-                        if (state === 'unknown') return '⚫';
-                        if (state === 'discharging') return '🔴';
-                        if (state === 'charging_wireless') return '🟡';
-                        if (state === 'charging') return '🟠';
-                        if (state === 'full') return ' 🟢 ';
+                        const state = states[entityId]?.state;
+                        if (!state || state === 'unknown' || state === 'unavailable') return '⚫';
+                        if (state === 'discharging')        return '🟢';
+                        if (state === 'charging_wireless')  return '🟡';
+                        if (state === 'wireless')           return '🟡';
+                        if (state === 'charging')           return '🟠';
+                        if (state === 'full')               return 'Full';
                         return state;
                       }
-
-                      var gm1901BatteryState = getBatteryStateIcon('sensor.gm1901_battery_state');
-                      var ne2213MamourBatteryState = getBatteryStateIcon('sensor.ne2213_mamour_battery_state');
-                      var ne2213BatteryState = getBatteryStateIcon('sensor.ne2213_battery_state');
-                      var smA530FBatteryState = getBatteryStateIcon('sensor.sm_a530f_battery_state');
-                      var tabletteBatteryState = getBatteryStateIcon('sensor.tablette_battery_state');
+                      const pocox7proBatteryState    = getBatteryStateIcon('sensor.poco_x7_pro_battery_state');
+                      const gm1901BatteryState       = getBatteryStateIcon('sensor.gm1901_battery_state');
+                      const ne2213MamourBatteryState = getBatteryStateIcon('sensor.ne2213_mamour_battery_state');
+                      const ne2213BatteryState       = getBatteryStateIcon('sensor.ne2213_battery_state');
+                      const smA530FBatteryState      = getBatteryStateIcon('sensor.sm_a530f_battery_state');
+                      const tabletteBatteryState     = getBatteryStateIcon('sensor.tablette_battery_state');
 
                       return `
                       <div>
+                        <div>${pocox7proBatteryState}</div>
                         <div>${gm1901BatteryState}</div>
                         <div>${ne2213MamourBatteryState}</div>
                         <div>${ne2213BatteryState}</div>
@@ -2671,9 +2906,6 @@ views:
                       `;
                     ]]]
               - type: custom:button-card
-                tap_action:
-                  action: navigate
-                  navigation_path: /dashboard-tablette/reserve
                 show_icon: false
                 show_name: false
                 styles:
@@ -2707,11 +2939,12 @@ views:
                       type: custom:flex-horseshoe-card
                       entities:
                         - entity: sensor.taille_db_home_assistant
+                          tap_action:
+                            action: navigate
+                            navigation_path: /dashboard-tablette/reserve
                           decimals: 1
                           name: MARIADB
                           icon: mdi:database
-                          tap_action:
-                            action: more-info
                       show:
                         horseshoe_style: colorstopgradient
                       layout:
@@ -3126,43 +3359,8 @@ views:
                     - font-weight: bold
                     - position: absolute
             columns: 3
-          - type: custom:navbar-card
-            routes:
-              - url: /dashboard-tablette/home
-                icon: mdi:home
-                label: Home
-              - url: /dashboard-tablette/lumieres
-                icon: mdi:lightbulb
-                label: lumières
-              - url: /dashboard-tablette/clim
-                icon: mdi:air-conditioner
-                label: Cilm / Rad.
-              - url: /dashboard-tablette/stores
-                icon: mdi:window-shutter
-                label: Stores
-              - icon: mdi:dots-horizontal
-                label: More
-                tap_action:
-                  action: open-popup
-                popup:
-                  - icon: mdi:cog
-                    url: /config/dashboard
-                  - icon: mdi:hammer
-                    url: /developer-tools/yaml
-                  - icon: mdi:power
-                    tap_action:
-                      action: call-service
-                      service: homeassistant.restart
-                      service_data: {}
-                      confirmation:
-                        text: Are you sure you want to restart Home Assistant?
-            card_mod:
-              style: |
-                ha-card {
-                  background: black !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
+          - type: custom:streamline-card
+            template: nav_bar
     cards: []
     badges: []
   - title: Météo
@@ -3559,23 +3757,23 @@ views:
                         angle: 270
                         unit: hpa
                         show_border: true
-                        stroke_width: 20
+                        stroke_width: 10
                         size: 300
                         needle_color: gainsboro
                         tick_color: lightgrey
                         segments:
                           - from: 950
                             to: 980
-                            color: '#3399ff'
+                            color: '#FF4500'
                           - from: 980
                             to: 1000
-                            color: '#4CAF50'
+                            color: '#FFD700'
                           - from: 1000
                             to: 1020
-                            color: '#FFD700'
+                            color: '#3399ff'
                           - from: 1020
                             to: 1050
-                            color: '#FF4500'
+                            color: '#4CAF50'
                       - type: markdown
                         content: |
                           <div style="text-align: center;">
@@ -4265,7 +4463,7 @@ views:
                         width: 70px
                         columns: 1
                         min: 0
-                        max: 100000
+                        max: 150000
                         stack: horizontal
                         positions:
                           indicator: 'off'
@@ -4273,25 +4471,25 @@ views:
                         severity:
                           - color: Green
                             from: 0
-                            to: 14285
+                            to: 22000
                           - color: gold
-                            from: 14286
-                            to: 28571
+                            from: 22001
+                            to: 44000
                           - color: orange
-                            from: 28572
-                            to: 42857
+                            from: 44001
+                            to: 66000
                           - color: darkorange
-                            from: 42858
-                            to: 57142
+                            from: 66001
+                            to: 88000
                           - color: red
-                            from: 57143
-                            to: 71428
+                            from: 88001
+                            to: 110000
                           - color: darkred
-                            from: 71429
-                            to: 85714
+                            from: 110001
+                            to: 132000
                           - color: purple
-                            from: 85715
-                            to: 100000
+                            from: 132001
+                            to: 154000
                         card_mod:
                           style: >
                             bar-card-currentbar, bar-card-backgroundbar {
@@ -7349,43 +7547,8 @@ views:
             grid_options:
               columns: 12
               rows: auto
-          - type: custom:navbar-card
-            routes:
-              - url: /dashboard-tablette/home
-                icon: mdi:home
-                label: Home
-              - url: /dashboard-tablette/lumieres
-                icon: mdi:lightbulb
-                label: lumières
-              - url: /dashboard-tablette/clim
-                icon: mdi:air-conditioner
-                label: Cilm / Rad.
-              - url: /dashboard-tablette/stores
-                icon: mdi:window-shutter
-                label: Stores
-              - icon: mdi:dots-horizontal
-                label: More
-                tap_action:
-                  action: open-popup
-                popup:
-                  - icon: mdi:cog
-                    url: /config/dashboard
-                  - icon: mdi:hammer
-                    url: /developer-tools/yaml
-                  - icon: mdi:power
-                    tap_action:
-                      action: call-service
-                      service: homeassistant.restart
-                      service_data: {}
-                      confirmation:
-                        text: Are you sure you want to restart Home Assistant?
-            card_mod:
-              style: |
-                ha-card {
-                  background: black !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
+          - type: custom:streamline-card
+            template: nav_bar
     cards: []
   - title: Temperatures
     path: temperatures
@@ -8057,6 +8220,13 @@ views:
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim
+            state_color: true
+            icon: mdi:air-conditioner
+            show_icon: true
+            show_name: true
+            show_state: true
+            show_attribute: true
+            attribute: fan_mode
             sub_button:
               - name: HVAC modes menu
                 select_attribute: hvac_modes
@@ -8064,25 +8234,17 @@ views:
                 show_arrow: true
                 show_background: true
                 show_attribute: false
-                entity: climate.clim
               - entity: climate.clim
                 select_attribute: fan_modes
                 show_background: true
                 state_background: false
                 show_icon: true
                 icon: mdi:fan
-                show_name: false
-                name: Ventil.
-            icon: mdi:air-conditioner
-            scrolling_effect: false
-            show_icon: true
-            force_icon: false
-            show_name: true
-            show_state: true
-            show_attribute: true
-            attribute: fan_mode
-            name: Clim du Salon
-            state_color: false
+            styles: |
+              ha-card {
+                --bubble-state-climate-fan-only-color: #008B8B;
+                --bubble-state-climate-heat-color: #DC143C;
+              }
           - type: custom:streamline-card
             template: temperature_humidite
             variables:
@@ -8214,6 +8376,13 @@ views:
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim_du_bureau
+            state_color: true
+            icon: mdi:air-conditioner
+            show_icon: true
+            show_name: true
+            show_state: true
+            show_attribute: true
+            attribute: fan_mode
             sub_button:
               - name: HVAC modes menu
                 select_attribute: hvac_modes
@@ -8227,14 +8396,11 @@ views:
                 state_background: false
                 show_icon: true
                 icon: mdi:fan
-            icon: mdi:air-conditioner
-            scrolling_effect: false
-            show_icon: true
-            force_icon: false
-            show_name: true
-            show_state: true
-            show_attribute: true
-            attribute: fan_mode
+            styles: |
+              ha-card {
+                --bubble-state-climate-fan-only-color: #008B8B;
+                --bubble-state-climate-heat-color: #DC143C;
+              }
           - type: custom:streamline-card
             template: temperature_humidite
             variables:
@@ -8314,6 +8480,13 @@ views:
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim_de_la_chambre
+            state_color: true
+            icon: mdi:air-conditioner
+            show_icon: true
+            show_name: true
+            show_state: true
+            show_attribute: true
+            attribute: fan_mode
             sub_button:
               - name: HVAC modes menu
                 select_attribute: hvac_modes
@@ -8321,27 +8494,17 @@ views:
                 show_arrow: true
                 show_background: true
                 show_attribute: false
-                entity: climate.clim_de_la_chambre
               - entity: climate.clim_de_la_chambre
                 select_attribute: fan_modes
                 show_background: true
                 state_background: false
                 show_icon: true
                 icon: mdi:fan
-                name: Ventil.
-                show_state: false
-                show_name: false
-                show_attribute: false
-                show_last_changed: false
-                show_arrow: true
-            icon: mdi:air-conditioner
-            scrolling_effect: false
-            show_icon: true
-            force_icon: false
-            show_name: true
-            show_state: true
-            show_attribute: true
-            attribute: fan_mode
+            styles: |
+              ha-card {
+                --bubble-state-climate-fan-only-color: #008B8B;
+                --bubble-state-climate-heat-color: #DC143C;
+              }
           - type: custom:streamline-card
             template: temperature_humidite
             variables:
@@ -8368,151 +8531,8 @@ views:
                 hide_backdrop: false
                 close_on_click: false
                 bg_opacity: '0'
-              - type: markdown
-                content: >
-                  **<<< CALCUL DE LA TEMPERATURE CIBLE >>>** 
-
-                   **Température Extérieure : {{
-                  states('sensor.th_balcon_nord_temperature') | float | round(2)
-                  }}°C**
-
-                  {% set temperature_exterieure =
-                  states('sensor.th_balcon_nord_temperature') | float %} {% set
-                  consigne_de_base = states('sensor.consigne_de_base') | int %}
-                  {% set delta_7 = states('sensor.delta_7') | int %} {% set
-                  delta_5 = states('sensor.delta_5') | int %}
-
-                  {% if temperature_exterieure >= 99 %}
-                     {% set temperature_cible = consigne_de_base %}
-                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
-                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
-                    {% set temperature_cible = temperature_exterieure - delta_5 %}
-                    **- Calcul T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]**
-
-                  {% elif temperature_exterieure > 99 %}
-                    {% set temperature_cible = consigne_de_base %}
-                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
-                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
-                    {% set temperature_cible = temperature_exterieure - delta_7 %}
-                    **- Calcul si T°Ext. > 40°C [ {{ temperature_exterieure | round(0) }} - {{ delta_7 }} = {{ temperature_cible | round(0) }} ]**
-
-                  {% else %}
-                    {% set temperature_cible = consigne_de_base %}
-                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
-                    
-                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
-                  {% endif %}
-
-                  {% if temperature_exterieure > 99 %}        
-                    - Température Cible = {{ temperature_cible | round(0) }}°C            
-                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
-
-                  {% elif temperature_exterieure > 99 %}        
-                    - Température Cible Cible = {{ temperature_cible | round(0) }}°C            
-                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
-
-                  {% else %}        
-                    - Température Cible = {{ temperature_cible | round(0) }}°C
-                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
-                  {% endif %}
-
-                  {% if temperature_exterieure > 26 %}
-                    **DELTA: {{ states('sensor.temperature_delta') }}**
-                  {% elif temperature_exterieure > 40 %}        
-                    **DELTA: {{ states('sensor.temperature_delta') }}**
-                  {% else %}     
-                    **DELTA: {{ states('sensor.temperature_delta') }}**
-                  {% endif %}
-                card_mod:
-                  style: |
-                    ha-card {
-                      border: none !important;
-                      box-shadow: none !important;
-                      background: transparent;
-                    }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'false'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'false'
-                card:
-                  type: markdown
-                  content: |
-                    **Les deux en mode Cellular**
-                     - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                card:
-                  type: markdown
-                  content: |
-                    **Les deux en mode Wifi**
-                     - Climatiseur Salon : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Bureau : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'false'
-                card:
-                  type: markdown
-                  content: |
-                    **Mamour en mode Wifi**
-                     - Climatiseur Salon : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'false'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                card:
-                  type: markdown
-                  content: |
-                    **Eric en mode Wifi**
-                     - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Bureau : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
+              - type: custom:streamline-card
+                template: calcule_temperature_cible
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -8621,7 +8641,7 @@ views:
               - type: custom:streamline-card
                 template: carte_des_temperatures
                 variables:
-                  entity: sensor.th_cuisine_temperatures
+                  entity: sensor.th_cuisine_temperature
                   card_title: Carte des T° de la CUISINE
           - type: vertical-stack
             cards:
@@ -8693,7 +8713,7 @@ views:
               - type: custom:streamline-card
                 template: carte_des_temperatures
                 variables:
-                  entity: sensor.th_salle_de_bain_temperature
+                  entity: sensor.th_chambre_temperature
                   card_title: Carte des T° de la CHAMBRE
     cards: []
   - type: sections
@@ -8725,16 +8745,19 @@ views:
               - condition: or
                 conditions:
                   - condition: state
-                    entity: sensor.salon_power_status
+                    entity: sensor.salon_power_status_affichage
                     state_not: 'off'
                   - condition: state
-                    entity: sensor.cuisine_power_status
+                    entity: sensor.cuisine_power_status_affichage
                     state_not: 'off'
                   - condition: state
-                    entity: sensor.bureau_power_status
+                    entity: sensor.bureau_power_status_affichage
                     state_not: 'off'
                   - condition: state
-                    entity: sensor.chambre_power_status
+                    entity: sensor.sdb_power_status_affichage
+                    state_not: 'off'
+                  - condition: state
+                    entity: sensor.chambre_power_status_affichage
                     state_not: 'off'
             card:
               type: custom:stack-in-card
@@ -9637,296 +9660,12 @@ views:
                 hide_backdrop: false
                 close_on_click: false
                 bg_opacity: '0'
-              - type: markdown
-                content: >
-                  **<<< CALCUL DE LA TEMPERATURE CIBLE >>>** 
-
-                   **Température Extérieure : {{
-                  states('sensor.th_balcon_nord_temperature') | float | round(2)
-                  }}°C**
-
-                  {% set temperature_exterieure =
-                  states('sensor.th_balcon_nord_temperature') | float %} {% set
-                  consigne_de_base = states('sensor.consigne_de_base') | int %}
-                  {% set delta_7 = states('sensor.delta_7') | int %} {% set
-                  delta_5 = states('sensor.delta_5') | int %}
-
-                  {% if temperature_exterieure >= 99 %}
-                     {% set temperature_cible = consigne_de_base %}
-                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
-                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
-                    {% set temperature_cible = temperature_exterieure - delta_5 %}
-                    **- Calcul T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]**
-
-                  {% elif temperature_exterieure > 99 %}
-                    {% set temperature_cible = consigne_de_base %}
-                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
-                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
-                    {% set temperature_cible = temperature_exterieure - delta_7 %}
-                    **- Calcul si T°Ext. > 40°C [ {{ temperature_exterieure | round(0) }} - {{ delta_7 }} = {{ temperature_cible | round(0) }} ]**
-
-                  {% else %}
-                    {% set temperature_cible = consigne_de_base %}
-                    - Consigne de Base : {{ consigne_de_base | round(0) }}°C
-                    
-                    {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
-                    - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
-                  {% endif %}
-
-                  {% if temperature_exterieure > 99 %}        
-                    - Température Cible = {{ temperature_cible | round(0) }}°C            
-                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
-
-                  {% elif temperature_exterieure > 99 %}        
-                    - Température Cible Cible = {{ temperature_cible | round(0) }}°C            
-                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
-
-                  {% else %}        
-                    - Température Cible = {{ temperature_cible | round(0) }}°C
-                    - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
-                  {% endif %}
-
-                  {% if temperature_exterieure > 26 %}
-                    **DELTA: {{ states('sensor.temperature_delta') }}**
-                  {% elif temperature_exterieure > 40 %}        
-                    **DELTA: {{ states('sensor.temperature_delta') }}**
-                  {% else %}     
-                    **DELTA: {{ states('sensor.temperature_delta') }}**
-                  {% endif %}
-                card_mod:
-                  style: |
-                    ha-card {
-                      border: none !important;
-                      box-shadow: none !important;
-                      background: transparent;
-                    }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'false'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'false'
-                card:
-                  type: markdown
-                  content: |
-                    **Les deux en mode Cellular**
-                     - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                card:
-                  type: markdown
-                  content: |
-                    **Les deux en mode Wifi**
-                     - Climatiseur Salon : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Bureau : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'false'
-                card:
-                  type: markdown
-                  content: |
-                    **Mamour en mode Wifi**
-                     - Climatiseur Salon : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'false'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                card:
-                  type: markdown
-                  content: |
-                    **Eric en mode Wifi**
-                     - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C
-                     - Climatiseur Bureau : {{ (states('sensor.temperature_differentielle') | int) + (states('sensor.temperature_cible') | int - states('sensor.consigne_de_base') | int) }}°C
-                     - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-          - type: vertical-stack
-            cards:
-              - type: custom:bubble-card
-                card_type: pop-up
-                hash: '#cccalcul'
-                show_header: true
-                force_icon: false
-                show_state: false
-                show_last_changed: false
-                show_attribute: false
-                button_type: name
-                name: CALCUL DU DELTA Intérieur <-> Extérieur
-                icon: mdi:delta
-                show_icon: true
-                show_name: true
-                card_layout: normal
-                hide_backdrop: false
-                close_on_click: false
-                bg_opacity: '0'
-              - type: custom:button-card
-                name: Calcul de la Température Cible
-                show_state: false
-                show_label: true
-                tap_action:
-                  action: none
-                styles:
-                  card:
-                    - background: transparent
-                    - border: none
-                    - box-shadow: none
-                  name:
-                    - justify-self: start
-                    - font-weight: bold
-                    - font-size: 24px
-                  label:
-                    - white-space: normal
-                    - text-align: left
-                    - line-height: 1.35
-                label: |-
-                  [[[
-                    const s = (e) => (hass.states[e]?.state ?? "0");
-                    const n = (e) => Number(s(e)) || 0;
-
-                    const Te   = Number.parseFloat(s('sensor.th_balcon_nord_temperature')) || 0;  // T° Ext
-                    const base = Math.round(n('sensor.consigne_de_base'));
-                    const d7   = Math.round(n('sensor.delta_7'));
-                    const d5   = Math.round(n('sensor.delta_5'));
-                    const Tdiff_base = Math.round(n('sensor.temperature_differentielle'));
-                    const deltaText  = s('sensor.temperature_delta');
-
-                    let Tcible = base;
-
-                    // Calcul logique identique à ton Jinja
-                    if (Te >= 40)      Tcible = Te - d7;
-                    else if (Te > 32)  Tcible = Te - d5;
-                    else               Tcible = base;
-
-                    // Couleur dynamique pour la valeur de Te (libellé en blanc)
-                    const extColor = Te > 25 ? 'gold' : 'lightblue';
-
-                    const L = [];
-
-                    // Ligne Température Extérieure (gras 16, libellé blanc, valeur colorée)
-                    L.push(
-                      `<div style="margin:8px 0 8px 0; padding-left:8px; font-size:16px; font-weight:700;">`
-                      + `<span style="color:white;">Température Extérieure :</span> `
-                      + `<span style="color:${extColor};">${Te.toFixed(1)}°C</span>`
-                      + `</div>`
-                    );
-
-                    // Bloc amont (1/2/3 + 4) en 12 gras avec indentation
-                    if (Te >= 40) {
-                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[1] Calcul T°Ext. > 40°C [ ${Math.round(Te)} - ${d7} = ${Math.round(Tcible)} ]</div>`);
-                    } else if (Te > 32) {
-                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[2] Calcul si T°Ext. > 32°C [ ${Math.round(Te)} - ${d5} = ${Math.round(Tcible)} ]</div>`);
-                    } else {
-                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[3] Consigne de Base : ${base}°C</div>`);
-                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[4] Consigne différentielle : ${Tdiff_base}°C</div>`);
-                    }
-
-                    // Bloc cible/diff (9/10 ou 5/6 ou 7/8) en 12 gras avec un espace avant "diff"
-                    if (Te >= 40) {
-                      L.push(`<div style="padding-left:24px; margin-top:8px; font-size:12px; font-weight:700;">[5] Température Cible si T°Ext. > 40°C = ${Math.round(Tcible)}°C</div>`);
-                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[6] Température différentielle = ${Tdiff_base + Math.round(Tcible - base)}°C</div>`);
-                    } else if (Te > 32) {
-                      L.push(`<div style="padding-left:24px; margin-top:8px; font-size:12px; font-weight:700;">[7] Température Cible = ${Math.round(Tcible)}°C</div>`);
-                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[8] Température différentielle = ${Tdiff_base + Math.round(Tcible - base)}°C</div>`);
-                    } else {
-                      L.push(`<div style="padding-left:24px; margin-top:8px; font-size:12px; font-weight:700;">[9] Température Cible si T°Ext. < 32°C = ${Math.round(Tcible)}°C</div>`);
-                      L.push(`<div style="padding-left:24px; font-size:12px; font-weight:700;">[10] Température différentielle = ${Tdiff_base + Math.round(Tcible - base)}°C</div>`);
-                    }
-
-                    // DELTA en bas (gras 16), un peu moins indenté
-                    L.push(
-                      `<div style="margin-top:12px; padding-left:8px; font-size:16px; font-weight:700;">`
-                      + `[13] DELTA: ${deltaText}`
-                      + `</div>`
-                    );
-
-                    return L.join('');
-                  ]]]
-                x-annot:
-                  - '[L8] name.font-weight: bold'
-                  - '[L9] name.font-size: 18px'
-                  - '[L20] T°Ext: label blanc + valeur colorée, 16px, gras'
-                  - '[L36] Blocs 12px gras + indentation 24px'
-                  - '[L49] Espace visuel avant ''différentielle'''
-                  - '[L61] DELTA 16px gras, padding-left 8px'
-          - type: custom:navbar-card
-            routes:
-              - url: /dashboard-tablette/home
-                icon: mdi:home
-                label: Home
-              - url: /dashboard-tablette/lumieres
-                icon: mdi:lightbulb
-                label: lumières
-              - url: /dashboard-tablette/clim
-                icon: mdi:air-conditioner
-                label: Cilm / Rad.
-              - url: /dashboard-tablette/stores
-                icon: mdi:window-shutter
-                label: Stores
-              - icon: mdi:dots-horizontal
-                label: More
-                tap_action:
-                  action: open-popup
-                popup:
-                  - icon: mdi:cog
-                    url: /config/dashboard
-                  - icon: mdi:hammer
-                    url: /developer-tools/yaml
-                  - icon: mdi:power
-                    tap_action:
-                      action: call-service
-                      service: homeassistant.restart
-                      service_data: {}
-                      confirmation:
-                        text: Are you sure you want to restart Home Assistant?
-            card_mod:
-              style: |
-                ha-card {
-                  background: black !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
+              - type: custom:streamline-card
+                template: calcule_temperature_cible
+          - type: custom:streamline-card
+            template: nav_bar
+          - type: custom:streamline-card
+            template: nav_bar
     title: Clim
     cards: []
   - type: sections
@@ -11462,43 +11201,8 @@ views:
                   box-shadow: none !important;
                   background: none !important;
                 }
-          - type: custom:navbar-card
-            routes:
-              - url: /dashboard-tablette/home
-                icon: mdi:home
-                label: Home
-              - url: /dashboard-tablette/lumieres
-                icon: mdi:lightbulb
-                label: lumières
-              - url: /dashboard-tablette/clim
-                icon: mdi:air-conditioner
-                label: Cilm / Rad.
-              - url: /dashboard-tablette/stores
-                icon: mdi:window-shutter
-                label: Stores
-              - icon: mdi:dots-horizontal
-                label: More
-                tap_action:
-                  action: open-popup
-                popup:
-                  - icon: mdi:cog
-                    url: /config/dashboard
-                  - icon: mdi:hammer
-                    url: /developer-tools/yaml
-                  - icon: mdi:power
-                    tap_action:
-                      action: call-service
-                      service: homeassistant.restart
-                      service_data: {}
-                      confirmation:
-                        text: Are you sure you want to restart Home Assistant?
-            card_mod:
-              style: |
-                ha-card {
-                  background: black !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
+          - type: custom:streamline-card
+            template: nav_bar
     cards: []
   - type: sections
     max_columns: 1
@@ -11551,72 +11255,103 @@ views:
                 opacity: 1;
               }
             card_layout: normal
-          - type: gauge
-            entity: sensor.conso_mini
-            severity:
-              green: 0
-              yellow: 50
-              red: 75
-            needle: true
-            name: Conso. Mini
-            min: 0
-            max: 100
-            tap_action:
-              action: none
-            grid_options:
-              columns: 4
-              rows: 3
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: gauge
-            entity: sensor.ecojoko_consommation_temps_reel
-            severity:
-              green: 0
-              yellow: 2000
-              red: 4000
-            needle: true
-            name: Conso. Temps Réel
-            min: 0
-            max: 6000
-            tap_action:
-              action: none
-            grid_options:
-              rows: 3
-              columns: 4
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: gauge
-            entity: sensor.conso_maxi
-            severity:
-              green: 0
-              yellow: 2000
-              red: 4000
-            needle: true
-            name: Conso. Maxi
-            min: 0
-            max: 6000
-            tap_action:
-              action: none
-            grid_options:
-              columns: 4
-              rows: 3
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
+          - square: false
+            type: grid
+            columns: 3
+            cards:
+              - type: custom:ring-tile
+                entity: sensor.conso_mini
+                name: Conso. Mini.
+                ring_entity: sensor.conso_mini
+                ring_type: open
+                ring_size: 3
+                scale: ticks_with_labels
+                middle_element: value_with_unit
+                bottom_element: name
+                colorize_icon: true
+                indicator: dot
+                min: 0
+                max: 100
+                max_decimals: 0
+                colour:
+                  '0': green
+                  '40': green
+                  '50': orange
+                  '65': orange
+                  '75': red
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      align-items: center;
+                      justify-content: center;      
+                      transform: scale(0.90);
+                      margin: 0px 0px 0px 0px;
+                    }        
+              - type: custom:ring-tile
+                entity: sensor.ecojoko_consommation_temps_reel
+                name: Conso. Temps Réel
+                ring_entity: sensor.ecojoko_consommation_temps_reel
+                ring_type: open
+                ring_size: 3
+                scale: ticks_with_labels
+                middle_element: value_with_unit
+                bottom_element: name
+                colorize_icon: true
+                indicator: dot
+                min: 0
+                max: 6000
+                max_decimals: 0
+                colour:
+                  '0': green
+                  '1700': green
+                  '2000': orange
+                  '3700': orange
+                  '4000': red
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      align-items: center;
+                      justify-content: center;      
+                      transform: scale(0.90);
+                      margin: 0px 0px 0px 0px;
+                    }
+              - type: custom:ring-tile
+                entity: sensor.conso_maxi
+                name: Conso. Maxi.
+                ring_entity: sensor.conso_maxi
+                ring_type: open
+                ring_size: 3
+                scale: ticks_with_labels
+                middle_element: value_with_unit
+                bottom_element: name
+                colorize_icon: true
+                indicator: dot
+                min: 0
+                max: 6000
+                max_decimals: 0
+                colour:
+                  '0': green
+                  '1700': green
+                  '2000': orange
+                  '3700': orange
+                  '4000': red
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      align-items: center;
+                      justify-content: center;      
+                      transform: scale(0.90);
+                      margin: 0px 0px 0px 0px;
+                    }  
           - type: vertical-stack
             cards:
               - type: custom:vertical-stack-in-card
@@ -11973,9 +11708,9 @@ views:
                 type: area
                 stroke_width: 1
               - entity: sensor.ecojoko_consommation_temps_reel
-                unit: Wh
+                unit: W
                 type: line
-                stroke_dash: 8
+                stroke_dash: 4
                 color: red
                 stroke_width: 1
                 name: Moy.(en cours)
@@ -12066,7 +11801,7 @@ views:
                 name: (Aujourd'hui)
                 unit: kWh
                 stroke_width: 3
-                float_precision: 1
+                float_precision: 2
                 show:
                   legend_value: false
                   extremas: max
@@ -12236,38 +11971,49 @@ views:
               - id: daily
                 min: 0
                 max: auto
-                opposite: true
-                decimals: 1
-                apex_config:
-                  tickAmount: 12
             all_series_config:
               group_by:
                 func: last
                 duration: 24h
               show:
-                legend_value: true
+                legend_value: false
                 extremas: true
             series:
               - entity: sensor.ecojoko_energy_daily
-                name: conso. jour en cours
                 yaxis_id: daily
+                name: Conso./jour
                 color: rgb(68,115,158)
                 type: column
-                unit: kWh
-              - entity: sensor.ecojoko_energy_monthly
-                name: Mois en cours (kWh)
-                color: '#F44336'
+                unit: kWh/j
+                show:
+                  in_chart: true
+              - entity: sensor.ecojoko_consommation_reseau
+                yaxis_id: daily
+                type: line
+                color: red
+                stroke_width: 0.5
+                name: Avg(730h)
+                group_by:
+                  func: avg
+                  duration: 730h
+              - entity: sensor.ecojoko_mean_730h_kwh
+                yaxis_id: daily
+                type: line
+                color: '#FF5252'
+                stroke_dash: 4
+                stroke_width: 1
+                name: Mean(730h)
                 unit: kWh
                 show:
-                  in_brush: false
-                  in_chart: false
-              - entity: sensor.ecojoko_mean_730h_kwh
-                type: line
-                stroke_dash: 8
-                color: '#FF5252'
-                stroke_width: 1
-                name: Avg(730h)
+                  in_chart: true
+              - entity: sensor.ecojoko_energy_monthly
+                name: Mois en cours
                 unit: kWh
+                show:
+                  in_chart: false
+                  in_header: true
+                opacity: 0
+                yaxis_id: daily
             card_mod:
               style: |
                 ha-card {
@@ -12757,6 +12503,7 @@ views:
                                 - energy_entity: sensor.prise_box_internet_ikea_power
                                 - energy_color: gainsboro
                                 - current_entity: sensor.prise_box_internet_ikea_current
+                                - mean_24h_kwh_entity: sensor.prise_box_internet_ikea_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12764,6 +12511,7 @@ views:
                                 - energy_entity: sensor.prise_horloge_ikea_power
                                 - energy_color: rgb(183, 183, 183)
                                 - current_entity: sensor.prise_horloge_ikea_current
+                                - mean_24h_kwh_entity: sensor.prise_horloge_ikea_mean_24h_kwh
                         attributes:
                           label: Entrée
                           icon: mdi:door
@@ -12777,6 +12525,7 @@ views:
                                 - energy_entity: sensor.prise_pc_s_gege_ikea_power
                                 - energy_color: rgb(202, 135, 135)
                                 - current_entity: sensor.prise_pc_s_gege_ikea_current
+                                - mean_24h_kwh_entity: sensor.prise_pc_s_gege_ikea_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12786,6 +12535,8 @@ views:
                                 - energy_entity: sensor.prise_salon_chargeur_nous_power
                                 - energy_color: rgb(174, 68, 90)
                                 - current_entity: sensor.prise_salon_chargeur_nous_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.prise_salon_chargeur_nous_mean_24h_kwh
                         attributes:
                           label: Salon
                           icon: mdi:sofa
@@ -12799,6 +12550,8 @@ views:
                                 - energy_entity: sensor.prise_four_micro_ondes_nous_power
                                 - energy_color: rgb(98, 78, 136)
                                 - current_entity: sensor.prise_four_micro_ondes_nous_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.prise_four_micro_ondes_nous_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12808,6 +12561,7 @@ views:
                                 - energy_entity: sensor.prise_lave_linge_nous_power
                                 - energy_color: rgb(137, 103, 179)
                                 - current_entity: sensor.prise_lave_linge_nous_current
+                                - mean_24h_kwh_entity: sensor.prise_lave_linge_nous_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12815,6 +12569,8 @@ views:
                                 - energy_entity: sensor.prise_lave_vaisselle_nous_power
                                 - energy_color: rgb(129, 116, 180)
                                 - current_entity: sensor.prise_lave_vaisselle_nous_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.prise_lave_vaisselle_nous_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12822,6 +12578,8 @@ views:
                                 - energy_entity: sensor.prise_airfryer_ninja_nous_power
                                 - energy_color: rgb(142, 122, 181)
                                 - current_entity: sensor.prise_airfryer_ninja_nous_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.prise_airfryer_ninja_nous_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12829,6 +12587,8 @@ views:
                                 - energy_entity: sensor.four_et_plaque_de_cuisson_power
                                 - energy_color: rgb(162, 148, 249)
                                 - current_entity: sensor.four_et_plaque_de_cuisson_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.four_et_plaque_de_cuisson_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12836,6 +12596,7 @@ views:
                                 - energy_entity: sensor.prise_frigo_cuisine_nous_power
                                 - energy_color: cyan
                                 - current_entity: sensor.prise_frigo_cuisine_current
+                                - mean_24h_kwh_entity: sensor.prise_frigo_cuisine_nous_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12843,6 +12604,8 @@ views:
                                 - energy_entity: sensor.prise_congelateur_cuisine_nous_power
                                 - energy_color: rgb(19, 160, 255)
                                 - current_entity: sensor.prise_congelateur_cuisine_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.prise_congelateur_cuisine_nous_mean_24h_kwh
                         attributes:
                           label: Cuisine
                           icon: mdi:fridge
@@ -12852,19 +12615,22 @@ views:
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: PCe Buraeu
+                                - card_title: PCe Bureau
                                 - energy_entity: sensor.prise_bureau_pc_ikea_power
                                 - energy_color: orange
                                 - current_entity: sensor.prise_bureau_pc_ikea_current
+                                - mean_24h_kwh_entity: sensor.prise_bureau_pc_ikea_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: Fer à Repasser Buraeu (FàR)
+                                - card_title: Fer à Repasser Bureau (FàR)
                                 - energy_entity: >-
                                     sensor.prise_bureau_fer_a_repasser_nous_power
                                 - energy_color: gold
                                 - current_entity: >-
                                     sensor.prise_bureau_fer_a_repasser_nous_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.prise_bureau_fer_a_repasser_nous_mean_24h_kwh
                         attributes:
                           label: BUREAU
                           icon: mdi:desktop-tower-monitor
@@ -12878,6 +12644,8 @@ views:
                                 - energy_entity: sensor.prise_tete_de_lit_chambre_power
                                 - energy_color: rgb(177, 194, 158)
                                 - current_entity: sensor.prise_tete_de_lit_chambre_current
+                                - mean_24h_kwh_entity: >-
+                                    sensor.prise_tete_de_lit_chambre_mean_24h_kwh
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -12885,6 +12653,7 @@ views:
                                 - energy_entity: sensor.prise_tv_chambre_nous_power
                                 - energy_color: rgb(30, 81, 40)
                                 - current_entity: sensor.prise_tv_chambre_nous_current
+                                - mean_24h_kwh_entity: sensor.prise_tv_chambre_nous_mean_24h_kwh
                         attributes:
                           label: Chambre
                           icon: mdi:bed
@@ -12894,10 +12663,11 @@ views:
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: Veilles
+                                - card_title: Vieilles
                                 - energy_entity: sensor.all_standby_power
                                 - energy_color: grey
                                 - current_entity: sensor.all_standby_power
+                                - mean_24h_kwh_entity: sensor.all_standby_mean_24h_kwh
                         attributes:
                           label: Vieilles
                           icon: mdi:sleep
@@ -12944,7 +12714,7 @@ views:
               last_updated: false
             series:
               - entity: sensor.prise_box_internet_ikea_energy
-                name: Box
+                name: Box (+)
                 color: gainsboro
               - entity: sensor.prise_horloge_ikea_energy
                 name: Horloge
@@ -12953,7 +12723,7 @@ views:
                 name: PCg
                 color: rgb(202, 135, 135)
               - entity: sensor.prise_salon_chargeur_nous_energy
-                name: Chargeurs
+                name: Chargeurs (+)
                 color: rgb(174,68,90)
               - entity: sensor.prise_lave_linge_nous_energy
                 name: Four M-O (+)
@@ -13006,15 +12776,17 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Box Internet
-              - energy_entity: sensor.prise_box_internet_ikea_energy
-              - color: gainsboro
+              title: Conso. mensuel Box Internet
+              energy_entity: sensor.prise_box_internet_ikea_energy
+              color: gainsboro
+              mean_730h_kwh_entity: sensor.prise_box_internet_ikea_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel Horloge Entrée
               - energy_entity: sensor.prise_horloge_ikea_energy
               - color: rgb(183, 183, 183)
+              - mean_730h_kwh_entity: sensor.prise_horloge_ikea_mean_730h_kwh
           - type: heading
             icon: mdi:sofa
             heading_style: title
@@ -13026,12 +12798,14 @@ views:
               - title: Conso. mensuel Pc's(g) Salon
               - energy_entity: sensor.prise_pc_s_gege_ikea_energy
               - color: rgb(202, 135, 135)
+              - mean_730h_kwh_entity: sensor.prise_pc_s_gege_ikea_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel PC‑S (Charg, Vap, Aspi, iRobot & Fontaine)
+              - title: Conso. mensuel PC-S (Charg, Vap, Aspi, iRobot & Fontaine)
               - energy_entity: sensor.prise_salon_chargeur_nous_energy
               - color: rgb(174,68,90)
+              - mean_730h_kwh_entity: sensor.prise_salon_chargeur_nous_mean_730h_kwh
           - type: heading
             icon: mdi:fridge
             heading: Cuisine
@@ -13043,42 +12817,49 @@ views:
               - title: Conso. mensuel Four Micro-Ondes (Alexa)
               - energy_entity: sensor.prise_four_micro_ondes_nous_energy
               - color: rgb(98, 78, 136)
+              - mean_730h_kwh_entity: sensor.prise_four_micro_ondes_nous_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Lave-Linge (Grille-pain, Théière, M‑café)
+              - title: Conso. mensuel Lave-Linge (Grille-pain, Théière, M-café)
               - energy_entity: sensor.prise_lave_linge_nous_energy
               - color: rgb(137, 103, 179)
+              - mean_730h_kwh_entity: sensor.prise_lave_linge_nous_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel Lave-Vaisselle
               - energy_entity: sensor.prise_lave_vaisselle_nous_energy
               - color: rgb(129, 116, 180)
+              - mean_730h_kwh_entity: sensor.prise_lave_vaisselle_nous_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel NINJA Airfryer (Cookéo, Etc...)
               - energy_entity: sensor.prise_airfryer_ninja_nous_energy
               - color: rgb(142, 122, 181)
+              - mean_730h_kwh_entity: sensor.prise_airfryer_ninja_nous_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel Four & plaque de Cuisson
               - energy_entity: sensor.four_et_plaque_de_cuisson_energy
               - color: rgb(142, 122, 181)
+              - mean_730h_kwh_entity: sensor.four_et_plaque_de_cuisson_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel Frigo
               - energy_entity: sensor.prise_frigo_cuisine_nous_energy
               - color: cyan
+              - mean_730h_kwh_entity: sensor.prise_frigo_cuisine_nous_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel Congélateur
               - energy_entity: sensor.prise_congelateur_cuisine_nous_energy
               - color: rgb(19, 160, 255)
+              - mean_730h_kwh_entity: sensor.prise_congelateur_cuisine_nous_mean_730h_kwh
           - type: heading
             icon: mdi:desktop-tower-monitor
             heading_style: title
@@ -13090,12 +12871,14 @@ views:
               - title: Conso. mensuel Bureau PC(e)
               - energy_entity: sensor.prise_bureau_pc_ikea_energy
               - color: orange
+              - mean_730h_kwh_entity: sensor.prise_bureau_pc_ikea_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel Fer à Repasser (FàR) & Store
               - energy_entity: sensor.prise_bureau_fer_a_repasser_nous_energy
               - color: gold
+              - mean_730h_kwh_entity: sensor.prise_bureau_fer_a_repasser_nous_mean_730h_kwh
           - type: heading
             icon: mdi:bed
             heading: Chambre
@@ -13107,23 +12890,26 @@ views:
               - title: Conso. mensuel Têtes de Lit chambre
               - energy_entity: sensor.prise_tete_de_lit_chambre_energy
               - color: rgb(177, 194, 158)
+              - mean_730h_kwh_entity: sensor.prise_tete_de_lit_chambre_mean_730h_kwh
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
               - title: Conso. mensuel TV Chambre
               - energy_entity: sensor.prise_tv_chambre_nous_energy
               - color: rgb(30,81,40)
+              - mean_730h_kwh_entity: sensor.prise_tv_chambre_nous_mean_730h_kwh
           - type: heading
             icon: mdi:sleep
-            heading: Veilles
+            heading: All Standby
             heading_style: title
             badges: []
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Veilles
+              - title: Conso. mensuel All Standby
               - energy_entity: sensor.all_standby_energy
               - color: grey
+              - mean_730h_kwh_entity: sensor.all_standby_mean_730h_kwh
     title: Energie HOME Mensuel
     cards: []
     path: energie-mensuel
@@ -13262,10 +13048,15 @@ views:
                 show_state: true
                 show_icon: false
                 entity: sensor.temperature_delta
+                tap_action:
+                  action: navigate
+                  navigation_path: '#energie'
             layout_options:
               grid_columns: full
               grid_rows: 1
             heading: 'Tendances '
+            tap_action:
+              action: none
           - type: horizontal-stack
             cards:
               - type: custom:vertical-stack-in-card
@@ -13412,6 +13203,13 @@ views:
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim
+            state_color: true
+            icon: mdi:air-conditioner
+            show_icon: true
+            show_name: true
+            show_state: true
+            show_attribute: true
+            attribute: fan_mode
             sub_button:
               - name: HVAC modes menu
                 select_attribute: hvac_modes
@@ -13419,24 +13217,17 @@ views:
                 show_arrow: true
                 show_background: true
                 show_attribute: false
-                entity: climate.clim
               - entity: climate.clim
                 select_attribute: fan_modes
                 show_background: true
                 state_background: false
                 show_icon: true
                 icon: mdi:fan
-                show_name: false
-                name: Ventil.
-            icon: mdi:air-conditioner
-            scrolling_effect: false
-            show_icon: true
-            force_icon: false
-            show_name: true
-            show_state: true
-            show_attribute: true
-            attribute: fan_mode
-            name: Clim du Salon
+            styles: |
+              ha-card {
+                --bubble-state-climate-fan-only-color: #008B8B;
+                --bubble-state-climate-heat-color: #DC143C;
+              }
           - type: gauge
             entity: sensor.clim_salon_nous_current
             name: Clim. Salon (A)
@@ -13748,6 +13539,13 @@ views:
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim_du_bureau
+            state_color: true
+            icon: mdi:air-conditioner
+            show_icon: true
+            show_name: true
+            show_state: true
+            show_attribute: true
+            attribute: fan_mode
             sub_button:
               - name: HVAC modes menu
                 select_attribute: hvac_modes
@@ -13761,14 +13559,11 @@ views:
                 state_background: false
                 show_icon: true
                 icon: mdi:fan
-            icon: mdi:air-conditioner
-            scrolling_effect: false
-            show_icon: true
-            force_icon: false
-            show_name: true
-            show_state: true
-            show_attribute: true
-            attribute: fan_mode
+            styles: |
+              ha-card {
+                --bubble-state-climate-fan-only-color: #008B8B;
+                --bubble-state-climate-heat-color: #DC143C;
+              }
           - type: gauge
             entity: sensor.clim_bureau_current
             name: Clim. Bureau (A)
@@ -14041,6 +13836,13 @@ views:
           - type: custom:bubble-card
             card_type: climate
             entity: climate.clim_de_la_chambre
+            state_color: true
+            icon: mdi:air-conditioner
+            show_icon: true
+            show_name: true
+            show_state: true
+            show_attribute: true
+            attribute: fan_mode
             sub_button:
               - name: HVAC modes menu
                 select_attribute: hvac_modes
@@ -14048,27 +13850,17 @@ views:
                 show_arrow: true
                 show_background: true
                 show_attribute: false
-                entity: climate.clim_de_la_chambre
               - entity: climate.clim_de_la_chambre
                 select_attribute: fan_modes
                 show_background: true
                 state_background: false
                 show_icon: true
                 icon: mdi:fan
-                name: Ventil.
-                show_state: false
-                show_name: false
-                show_attribute: false
-                show_last_changed: false
-                show_arrow: true
-            icon: mdi:air-conditioner
-            scrolling_effect: false
-            show_icon: true
-            force_icon: false
-            show_name: true
-            show_state: true
-            show_attribute: true
-            attribute: fan_mode
+            styles: |
+              ha-card {
+                --bubble-state-climate-fan-only-color: #008B8B;
+                --bubble-state-climate-heat-color: #DC143C;
+              }
           - type: gauge
             entity: sensor.clim_chambre_nous_current
             name: Clim. chambre (A)
@@ -14184,6 +13976,27 @@ views:
               - temp_color: rgb(126, 24, 145)
               - temp_unit: °C
               - temp_name: T.Min.(24h)
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#energie'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: CALCUL DU DELTA Intérieur <-> Extérieur
+                icon: mdi:delta
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: custom:streamline-card
+                template: calcule_temperature_cible
     title: Energie Clim
     cards: []
   - type: sections
@@ -14193,8 +14006,8 @@ views:
       - type: grid
         cards:
           - type: heading
-            icon: phu:pet-water-fountian
-            heading: vide
+            icon: mdi:cog
+            heading: Système
             heading_style: title
             badges: []
             tap_action:
@@ -14203,31 +14016,103 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
-          - type: heading
-            icon: mdi:robot-vacuum
-            heading: IROBOT - ROUMBA
-            heading_style: title
-            badges: []
-            tap_action:
-              action: navigate
-              navigation_path: /dashboard-tablette/0
-            layout_options:
-              grid_columns: full
-              grid_rows: 1
-          - type: entities
-            title: Outils Zigbee2MQTT
-            entities:
-              - entity: select.zigbee2mqtt_bridge_log_level
-                name: Niveau de log (menu)
-              - type: button
-                name: 'Log Z2M : suivant'
-                icon: mdi:swap-horizontal
-                action_name: Suivant
-                tap_action:
-                  action: call-service
-                  service: select.select_next
-                  target:
-                    entity_id: select.zigbee2mqtt_bridge_log_level
+          - type: vertical-stack
+            cards:
+              - type: custom:mushroom-chips-card
+                alignment: center
+                chips:
+                  - type: template
+                    entity: sensor.backup_github_status
+                    icon: mdi:github
+                    content: >-
+                      {{ iif(states('sensor.backup_github_status')=='OK','Backup
+                      OK','Backup KO') }} · {{
+                      state_attr('sensor.backup_github_status','ts') or 'jamais'
+                      }}
+                    icon_color: >-
+                      {{
+                      iif(states('sensor.backup_github_status')=='OK','green','red')
+                      }}
+                    tap_action:
+                      action: call-service
+                      service: shell_command.git_backup_push
+                    hold_action:
+                      action: url
+                      url_path: https://github.com/BerrySwann/home-assistant-config/tags
+                      new_tab: true
+                card_mod:
+                  style: >
+                    ha-card { background: none !important; box-shadow: none
+                    !important; border: none !important; }
+              - type: custom:mushroom-chips-card
+                alignment: center
+                chips:
+                  - type: template
+                    entity: sensor.git_last_weekly_tag
+                    icon: mdi:tag
+                    content: '{{ states(''sensor.git_last_weekly_tag'') or ''no tag'' }}'
+                    icon_color: >-
+                      {% set tag = states('sensor.git_last_weekly_tag') %} {%
+                      set iso = now().isocalendar() %} {% set current =
+                      "weekly-%04d-W%02d" | format(iso[0], iso[1]) %} {{ 'green'
+                      if tag == current else 'amber' }}
+                    tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                card_mod:
+                  style: >
+                    ha-card { background: none !important; box-shadow: none
+                    !important; border: none !important; }
+              - type: custom:mushroom-title-card
+                title: Journal Backup (5 derniers)
+                alignment: center
+                card_mod:
+                  style: >
+                    ha-card { background: none !important; box-shadow: none
+                    !important; border: none !important; }
+              - type: markdown
+                content: |-
+                  ```
+                  {{ state_attr('sensor.backup_github_journal','text') or '—' }}
+                  ```
+                card_mod:
+                  style: >
+                    ha-card { background: none !important; box-shadow: none
+                    !important; border: none !important; }
+              - type: custom:apexcharts-card
+                header:
+                  title: Backup GitHub — OK/KO
+                graph_span: 7d
+                span:
+                  end: day
+                yaxis:
+                  - min: 0
+                    max: 1
+                    decimals: 0
+                series:
+                  - entity: sensor.backup_github_status
+                    name: Statut
+                    type: column
+                    transform: 'EVAL: return x === ''OK'' ? 1 : 0;'
+                    group_by:
+                      duration: 6h
+                      func: last
+                apex_config:
+                  yaxis:
+                    tickAmount: 2
+                    labels:
+                      formatter: >
+                        EVAL: function (value) { return value === 1 ? 'OK' :
+                        'KO'; }
+                card_mod:
+                  style: >
+                    ha-card { background: none !important; box-shadow: none
+                    !important; border: none !important; }
+
+                    # "[L430] card_mod"
     title: reserve
     cards: []
   - type: sections
@@ -15404,7 +15289,6 @@ views:
         cards:
           - type: heading
             icon: mdi:cellphone-nfc
-            heading: Oneplus 7 GM1901
             heading_style: title
             badges: []
             tap_action:
@@ -15413,23 +15297,25 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
+            heading: Xiaomi POCO X7 Pro
           - type: vertical-stack
             cards:
               - type: custom:streamline-card
                 template: portable
                 variables:
-                  entity: sensor.gm1901_battery_level
+                  entity: sensor.poco_x7_pro_battery_level
           - type: entities
             entities:
-              - entity: sensor.gm1901_battery_level
-              - entity: sensor.gm1901_battery_state
+              - entity: sensor.poco_x7_pro_battery_level
+              - entity: sensor.poco_x7_pro_battery_state
                 name: Battery state
-              - entity: sensor.gm1901_charger_type
+              - entity: sensor.poco_x7_pro_charger_type
                 name: Charger type
                 secondary_info: none
-              - entity: sensor.gm1901_battery_health
-              - entity: sensor.gm1901_battery_temperature
-              - entity: sensor.gm1901_network_type
+              - entity: sensor.poco_x7_pro_battery_health
+              - entity: sensor.poco_x7_pro_battery_health
+              - entity: sensor.poco_x7_pro_network_type
+              - entity: sensor.poco_x7_pro_wi_fi_connection
             state_color: true
             show_header_toggle: true
             card_mod:
@@ -15475,8 +15361,57 @@ views:
                   box-shadow: none !important;
                   border: none !important;
                 }
+          - type: heading
+            icon: mdi:cellphone-nfc
+            heading: Oneplus 10Pro NE2213 (E)
+            heading_style: title
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-tablette/0
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
       - type: grid
         cards:
+          - type: heading
+            icon: mdi:cellphone-nfc
+            heading: Oneplus 7 GM1901
+            heading_style: title
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-tablette/0
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+          - type: vertical-stack
+            cards:
+              - type: custom:streamline-card
+                template: portable
+                variables:
+                  entity: sensor.gm1901_battery_level
+          - type: entities
+            entities:
+              - entity: sensor.gm1901_battery_level
+              - entity: sensor.gm1901_battery_state
+                name: Battery state
+              - entity: sensor.gm1901_charger_type
+                name: Charger type
+                secondary_info: none
+              - entity: sensor.gm1901_battery_health
+              - entity: sensor.gm1901_battery_temperature
+              - entity: sensor.gm1901_network_type
+              - entity: sensor.gm1901_wi_fi_connection
+            state_color: true
+            show_header_toggle: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: heading
             icon: mdi:cellphone-nfc
             heading: Oneplus 10Pro NE2213 (M)
@@ -15507,6 +15442,7 @@ views:
                 secondary_info: none
               - entity: sensor.ne2213_mamour_battery_temperature
               - entity: sensor.ne2213_mamour_network_type
+              - entity: sensor.ne2213_mamour_wi_fi_connection
             state_color: true
             show_header_toggle: true
             card_mod:
@@ -15552,17 +15488,6 @@ views:
                   box-shadow: none !important;
                   border: none !important;
                 }
-          - type: heading
-            icon: mdi:cellphone-nfc
-            heading: Oneplus 10Pro NE2213 (E)
-            heading_style: title
-            badges: []
-            tap_action:
-              action: navigate
-              navigation_path: /dashboard-tablette/0
-            layout_options:
-              grid_columns: full
-              grid_rows: 1
   - type: sections
     path: prises
     max_columns: 1
@@ -16013,6 +15938,8 @@ views:
                     border: 1px solid {% if is_state('switch.prise_tete_de_lit_chambre', 'on') %} green {% else %} grey {% endif %};
                     background-color: {% if is_state('switch.prise_tete_de_lit_chambre', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                   }  
+          - type: custom:streamline-card
+            template: nav_bar
   - title: BATTERY (BP)
     path: battery-bp
     cards: []
@@ -17613,19 +17540,166 @@ views:
                 hide_backdrop: false
                 close_on_click: false
                 bg_opacity: '0'
-              - type: custom:streamline-card
-                template: conso_temps_reel_appareil
-                variables:
-                  card_title: ' '
-                  energy_entity: sensor.prise_mini_pc_ikea_power
-                  energy_color: gainsboro
-                  current_entity: sensor.prise_mini_pc_ikea_current
-              - type: custom:streamline-card
-                template: conso_mensuelle_appareil
-                variables:
-                  - title: ' '
-                  - energy_entity: sensor.prise_mini_pc_ikea_energy
-                  - color: gainsboro
+              - type: custom:apexcharts-card
+                experimental:
+                  color_threshold: true
+                  brush: true
+                graph_span: 24h
+                cache: true
+                span:
+                  offset: +2m
+                apex_config:
+                  chart:
+                    height: 340px
+                now:
+                  show: true
+                  color: darkred
+                  label: Now
+                header:
+                  show: true
+                  title: Mini PC
+                  show_states: true
+                  colorize_states: true
+                yaxis:
+                  - id: Watts
+                    min: 0
+                    max: auto
+                    decimals: 0
+                    opposite: false
+                    apex_config:
+                      tickAmount: 10
+                  - id: A
+                    min: 0
+                    max: auto
+                    decimals: 2
+                    opposite: true
+                    apex_config:
+                      tickAmount: 10
+                all_series_config:
+                  show:
+                    legend_value: false
+                    extremas: true
+                  curve: stepline
+                brush:
+                  selection_span: 1h
+                series:
+                  - entity: sensor.prise_mini_pc_ikea_power
+                    name: Instantané
+                    yaxis_id: Watts
+                    type: area
+                    color: gainsboro
+                    stroke_width: 2
+                    opacity: 0.4
+                    fill_raw: last
+                    group_by:
+                      func: last
+                      duration: 1m
+                  - entity: sensor.prise_mini_pc_ikea_current
+                    name: Intensité
+                    yaxis_id: A
+                    type: line
+                    color: '#F44336'
+                    unit: A
+                    stroke_width: 1
+                    group_by:
+                      func: last
+                      duration: 1m
+                  - entity: sensor.mini_pc_mean_24h_wh
+                    name: Avg(24h)
+                    yaxis_id: Watts
+                    type: line
+                    color: '#F44336'
+                    unit: W
+                    stroke_width: 2
+                    stroke_dash: 8
+                  - entity: sensor.prise_mini_pc_ikea_power
+                    yaxis_id: Watts
+                    type: area
+                    color: gainsboro
+                    stroke_width: 1
+                    opacity: 0.4
+                    show:
+                      in_brush: true
+                      in_chart: false
+                    group_by:
+                      func: last
+                      duration: 10m
+                card_mod:
+                  style: >
+                    ha-card { background: none !important; border: none
+                    !important; box-shadow: none !important; }
+              - type: custom:apexcharts-card
+                graph_span: 730h
+                cache: true
+                span:
+                  end: day
+                apex_config:
+                  chart:
+                    height: 250px
+                now:
+                  show: false
+                header:
+                  show: true
+                  title: Mini PC
+                  show_states: true
+                  colorize_states: true
+                yaxis:
+                  - id: W_day
+                    min: 0
+                    max: auto
+                    decimals: 0
+                    opposite: false
+                    apex_config:
+                      tickAmount: 10
+                  - id: Avg
+                    min: 0
+                    max: auto
+                    decimals: 0
+                    opposite: true
+                    apex_config:
+                      tickAmount: 10
+                all_series_config:
+                  show:
+                    legend_value: true
+                    extremas: true
+                brush:
+                  selection_span: 24h
+                series:
+                  - entity: sensor.prise_mini_pc_ikea_energy
+                    name: Conso. par jour
+                    yaxis_id: W_day
+                    type: column
+                    color: gainsboro
+                    unit: W
+                    transform: return x * 1000;
+                    group_by:
+                      func: diff
+                      duration: 24h
+                      start_with_last: true
+                  - entity: sensor.prise_mini_pc_ikea_energy
+                    name: Avg(730h)
+                    yaxis_id: Avg
+                    type: line
+                    color: '#F44336'
+                    unit: W
+                    stroke_width: 2
+                    stroke_dash: 8
+                    group_by:
+                      func: avg
+                      duration: 730h
+                  - entity: sensor.mini_pc_mean_730h_wh
+                    name: Mean(730h)
+                    color: '#FF5252'
+                    unit: W
+                    stroke_width: 2
+                    stroke_dash: 8
+                    show:
+                      in_brush: false
+                      in_chart: false
+                card_mod:
+                  style: >
+                    ha-card { background: none !important; border: none
+                    !important; box-shadow: none !important; }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -19576,6 +19650,7 @@ views:
                 template: pm25
                 variables:
                   entity_sensor: sensor.qualite_air_salon_ikea_pm25
+                  mean_24h_entity: sensor.pm2_5_salon_moy_24h
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -19599,6 +19674,7 @@ views:
                 template: cov
                 variables:
                   entity_sensor: sensor.qualite_air_salon_ikea_voc_index
+                  mean_24h_entity: sensor.tcov_salon_moy_24h
           - type: custom:bubble-card
             card_type: separator
             name: BUREAU
@@ -19699,6 +19775,7 @@ views:
                 template: pm25
                 variables:
                   entity_sensor: sensor.qualite_air_bureau_ikea_pm25
+                  mean_24h_entity: sensor.tcov_bureau_moy_24h
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -19722,6 +19799,7 @@ views:
                 template: cov
                 variables:
                   entity_sensor: sensor.qualite_air_bureau_ikea_voc_index
+                  mean_24h_entity: sensor.tcov_bureau_moy_24h
           - type: custom:bubble-card
             card_type: separator
             name: CHAMBRE
@@ -19822,6 +19900,7 @@ views:
                 template: pm25
                 variables:
                   entity_sensor: sensor.qualite_air_chambre_ikea_pm25
+                  mean_24h_entity: sensor.pm2_5_chambre_moy_24h
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -19845,6 +19924,7 @@ views:
                 template: cov
                 variables:
                   entity_sensor: sensor.qualite_air_chambre_ikea_voc_index
+                  mean_24h_entity: sensor.tcov_chambre_moy_24h
     cards: []
   - type: sections
     max_columns: 1
@@ -19927,6 +20007,39 @@ views:
                         type: grid
                         columns: 3
                         cards:
+                          - type: custom:ring-tile
+                            entity: sensor.concentration_gramine_vence
+                            name: Graminées
+                            ring_entity: sensor.niveau_gramine_vence
+                            ring_type: open
+                            ring_size: 3
+                            scale: ticks_with_labels
+                            middle_element: value_with_unit
+                            bottom_element: name
+                            colorize_icon: true
+                            indicator: dot
+                            min: 0
+                            max: 7
+                            colour:
+                              '0': '#ddd'
+                              '1': '#50f0e6'
+                              '2': '#50ccaa'
+                              '3': '#f0e641'
+                              '4': '#ff5050'
+                              '5': '#960032'
+                              '6': '#872181'
+                              '7': '#888'
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  border: none !important;
+                                  box-shadow: none !important;
+                                  background: none !important;
+                                  align-items: center;
+                                  justify-content: center;      
+                                  transform: scale(0.96);
+                                  margin: 0px 0px 0px 0px;
+                                }
                           - type: custom:ring-tile
                             entity: sensor.concentration_ambroisie_vence
                             name: Ambroisie
@@ -20030,39 +20143,6 @@ views:
                             entity: sensor.concentration_bouleau_vence
                             name: Bouleau
                             ring_entity: sensor.niveau_bouleau_vence
-                            ring_type: open
-                            ring_size: 3
-                            scale: ticks_with_labels
-                            middle_element: value_with_unit
-                            bottom_element: name
-                            colorize_icon: true
-                            indicator: dot
-                            min: 0
-                            max: 7
-                            colour:
-                              '0': '#ddd'
-                              '1': '#50f0e6'
-                              '2': '#50ccaa'
-                              '3': '#f0e641'
-                              '4': '#ff5050'
-                              '5': '#960032'
-                              '6': '#872181'
-                              '7': '#888'
-                            card_mod:
-                              style: |
-                                ha-card {
-                                  border: none !important;
-                                  box-shadow: none !important;
-                                  background: none !important;
-                                  align-items: center;
-                                  justify-content: center;      
-                                  transform: scale(0.96);
-                                  margin: 0px 0px 0px 0px;
-                                }
-                          - type: custom:ring-tile
-                            entity: sensor.concentration_gramine_vence
-                            name: Graminées
-                            ring_entity: sensor.niveau_gramine_vence
                             ring_type: open
                             ring_size: 3
                             scale: ticks_with_labels
@@ -20197,8 +20277,41 @@ views:
                         columns: 5
                         cards:
                           - type: custom:ring-tile
+                            entity: sensor.ozone_vence
+                            name: O₃ (Ozone)
+                            ring_entity: sensor.ozone_vence
+                            ring_type: opn
+                            ring_size: 3
+                            scale: ticks_with_labels
+                            middle_element: value_with_unit
+                            bottom_element: name
+                            colorize_icon: true
+                            indicator: dot
+                            min: 0
+                            max: 7
+                            colour:
+                              '0': '#ddd'
+                              '1': '#50f0e6'
+                              '2': '#50ccaa'
+                              '3': '#f0e641'
+                              '4': '#ff5050'
+                              '5': '#960032'
+                              '6': '#872181'
+                              '7': '#888'
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  border: none !important;
+                                  box-shadow: none !important;
+                                  background: none !important;
+                                  align-items: center;
+                                  justify-content: center;      
+                                  transform: scale(0.57);
+                                  margin: 0px 0px 0px -2px;
+                                }        
+                          - type: custom:ring-tile
                             entity: sensor.dioxyde_d_azote_vence
-                            name: NO₂
+                            name: NO₂ (Azote)
                             ring_entity: sensor.dioxyde_d_azote_vence
                             ring_type: open
                             ring_size: 3
@@ -20231,7 +20344,7 @@ views:
                                 }
                           - type: custom:ring-tile
                             entity: sensor.dioxyde_de_soufre_vence
-                            name: SO₂
+                            name: SO₂ (Souffre)
                             ring_entity: sensor.dioxyde_de_soufre_vence
                             ring_type: open
                             ring_size: 3
@@ -20328,39 +20441,6 @@ views:
                                   transform: scale(0.57);
                                   margin: 0px 0px 0px 0px;
                                 }
-                          - type: custom:ring-tile
-                            entity: sensor.ozone_vence
-                            name: O₃
-                            ring_entity: sensor.ozone_vence
-                            ring_type: opn
-                            ring_size: 3
-                            scale: ticks_with_labels
-                            middle_element: value_with_unit
-                            bottom_element: name
-                            colorize_icon: true
-                            indicator: dot
-                            min: 0
-                            max: 7
-                            colour:
-                              '0': '#ddd'
-                              '1': '#50f0e6'
-                              '2': '#50ccaa'
-                              '3': '#f0e641'
-                              '4': '#ff5050'
-                              '5': '#960032'
-                              '6': '#872181'
-                              '7': '#888'
-                            card_mod:
-                              style: |
-                                ha-card {
-                                  border: none !important;
-                                  box-shadow: none !important;
-                                  background: none !important;
-                                  align-items: center;
-                                  justify-content: center;      
-                                  transform: scale(0.57);
-                                  margin: 0px 0px 0px -2px;
-                                }        
             card_mod:
               style: |
                 ha-card {
