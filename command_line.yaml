@@ -86,3 +86,14 @@
       - ts
     # "[L310] sensor Backup GitHub Status (command_line)"
 
+# ---------------------------------------------------------------------------------
+# annotations_log:
+# - "[L310] sensor Backup GitHub Status (command_line)"
+
+- sensor:
+    name: "Git Last Weekly Tag"
+    unique_id: git_last_weekly_tag
+    command: >-
+      bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
+    scan_interval: 1800
+    # "[L330] sensor Git Last Weekly Tag"
