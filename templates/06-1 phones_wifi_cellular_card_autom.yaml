@@ -20,7 +20,7 @@
   - name: "Condition Eric Wifi"
     unique_id: condition_eric_wifi
     state: >-
-      {% if is_state('sensor.gm1901_network_type', 'wifi') %}
+      {% if is_state('sensor.poco_x7_pro_network_type', 'wifi') %}
         true
       {% else %}
         false
