@@ -843,11 +843,11 @@
     to: wifi
     from: cellular
   - trigger: state
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     to: cellular
     from: wifi
   - trigger: state
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     to: wifi
     from: cellular
   conditions: []
@@ -860,7 +860,7 @@
           entity_id: sensor.ne2213_mamour_network_type
           state: cellular
         - condition: state
-          entity_id: sensor.gm1901_network_type
+          entity_id: sensor.poco_x7_pro_network_type
           state: cellular
       sequence:
       - action: notify.mobile_app_poco_x7_pro
@@ -892,7 +892,7 @@
           entity_id: sensor.ne2213_mamour_network_type
           state: wifi
         - condition: state
-          entity_id: sensor.gm1901_network_type
+          entity_id: sensor.poco_x7_pro_network_type
           state: cellular
       sequence:
       - action: notify.mobile_app_poco_x7_pro
@@ -924,7 +924,7 @@
           entity_id: sensor.ne2213_mamour_network_type
           state: cellular
         - condition: state
-          entity_id: sensor.gm1901_network_type
+          entity_id: sensor.poco_x7_pro_network_type
           state: wifi
       sequence:
       - action: notify.mobile_app_poco_x7_pro
@@ -956,7 +956,7 @@
           entity_id: sensor.ne2213_mamour_network_type
           state: wifi
         - condition: state
-          entity_id: sensor.gm1901_network_type
+          entity_id: sensor.poco_x7_pro_network_type
           state: wifi
       sequence:
       - action: notify.mobile_app_poco_x7_pro
@@ -1058,12 +1058,12 @@
     to: wifi
     trigger: state
   - alias: Changement de réseau d'Eric 'wifi' -> 'cellular'
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau d'Eric 'cellular' -> 'wifi'
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -1188,7 +1188,7 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - target:
@@ -1227,8 +1227,8 @@
     - data:
         title: Clim [2] en [CELLULAR]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Les 3 Clim {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
+          {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
@@ -1256,7 +1256,7 @@
         entity_id: sensor.ne2213_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - target:
@@ -1297,7 +1297,7 @@
     - data:
         title: Clim [MAMOUR] en [WIFI]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
@@ -1325,10 +1325,10 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - target:
@@ -1369,7 +1369,7 @@
     - data:
         title: clim [ERIC] en [WIFI]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
@@ -1400,10 +1400,10 @@
         entity_id: sensor.ne2213_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - target:
@@ -1446,8 +1446,8 @@
     - data:
         title: clim [2] en [WIFI]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Salon & Bureau {{
-          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon & Bureau
+          {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre
           {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -1560,12 +1560,12 @@
     to: wifi
   - alias: Changement de réseau d'Eric (Wifi vers Cellular)
     trigger: state
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: wifi
     to: cellular
   - alias: Changement de réseau d'Eric (Cellular vers Wifi)
     trigger: state
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: cellular
     to: wifi
   - alias: Changement de température extérieure
@@ -1584,7 +1584,7 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - data:
@@ -1618,7 +1618,7 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - data:
@@ -1655,10 +1655,10 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - data:
@@ -1695,10 +1695,10 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - data:
@@ -1745,12 +1745,12 @@
     to: wifi
     trigger: state
   - alias: Changement de réseau d'Eric
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau d'Eric
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -1805,7 +1805,7 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - target:
@@ -1844,7 +1844,7 @@
     - data:
         title: Clim-N [2] en [CELLULAR]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Les 3 Clim à {{
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim à {{
           states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
@@ -1870,7 +1870,7 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - target:
@@ -1911,7 +1911,7 @@
     - data:
         title: Clim-N [MAMOUR] en [WIFI]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Chambre à {{ (states('sensor.temperature_differentielle')
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{ (states('sensor.temperature_differentielle')
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Bureau à {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
@@ -1939,10 +1939,10 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - target:
@@ -1983,7 +1983,7 @@
     - data:
         title: Clim-N [ERIC] en [WIFI]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Chambre à {{ (states('sensor.temperature_differentielle')
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{ (states('sensor.temperature_differentielle')
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Bureau à {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
@@ -2011,10 +2011,10 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - target:
@@ -2055,7 +2055,7 @@
     - data:
         title: Clim-N [2] en [WIFI]
         message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.gm1901_network_type' %}\n  Chambre à {{ (states('sensor.temperature_differentielle')
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{ (states('sensor.temperature_differentielle')
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Bureau à {{ states('sensor.temperature_cible')
           | float }}°\n{% endif %}"
@@ -2077,12 +2077,12 @@
     to: wifi
   - alias: Changement de réseau d'Eric (Wifi vers Cellular)
     trigger: state
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: wifi
     to: cellular
   - alias: Changement de réseau d'Eric (Cellular vers Wifi)
     trigger: state
-    entity_id: sensor.gm1901_network_type
+    entity_id: sensor.poco_x7_pro_network_type
     from: cellular
     to: wifi
   - alias: Changement de température extérieure
@@ -2115,7 +2115,7 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - data:
@@ -2152,7 +2152,7 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
     - data:
@@ -2192,10 +2192,10 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - data:
@@ -2235,10 +2235,10 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_network_type
+        entity_id: sensor.poco_x7_pro_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.gm1901_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
         state: Freebox_GG
     then:
     - data:
