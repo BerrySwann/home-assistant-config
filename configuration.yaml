@@ -61,6 +61,11 @@ input_boolean: !include input_boolean.yaml
 
 sensor: !include sensors.yaml
 
+#renvoi au fichier shell_command.yaml
+# Services shell_command (NOUVEAU)
+shell_command: !include shell_command.yaml
+# "[L16] include shell_command.yaml"
+
 #renvoi au fichier themes.yaml
 #themes: !include themes.yaml
 
@@ -157,10 +162,7 @@ openai_conversation:
   model: "gpt-4o-mini"
 
 
-shell_command:
-  z2m_error_append: >
-    sh -c 'mkdir -p /config/zigbee2mqtt/log &&
-    printf "%s - %s\n" "{{ now().isoformat() }}" "{{ line }}" >> /config/zigbee2mqtt/log/error.log'
+
 
 bluetooth:
 

@@ -51,14 +51,16 @@
       done
     value_template: "{{value}}"
 
-    # SpeedTest
-
+#========================================================
+#
+#     SpeedTest
+#
+# =======================================================
 
 - sensor:
     name: "SpeedTest CLI Data"
     unique_id: speedtest_cli_data
     command: "/config/3rdparty/speedtest/speedtest --format=json --accept-license --accept-gdpr"
-    #Toutes les 4 heures, 60 * 60 * 4 = 14400  3600 = 1 heure
     scan_interval: 1800
     command_timeout: 60
     value_template: >-
@@ -72,8 +74,45 @@
       }}
 
 - sensor:
-    name: z2m_errorlog_last10
-    command: "tail -n 10 /config/zigbee2mqtt/log/error.log || echo 'Aucun fichier /config/zigbee2mqtt/log/error.log'"
-    scan_interval: 30
-    command_timeout: 10
-  
+    name: "Backup GitHub Status"
+    unique_id: backup_github_status
+    command: >-
+      bash -lc 'if grep -F "Backup GitHub OK:" /config/.logs/ha_git_backup.log >/dev/null 2>&1;
+      then TS=$(grep -F "Backup GitHub OK:" /config/.logs/ha_git_backup.log | tail -n1 | sed -E "s/^.*OK: (.*)$/\1/");
+      echo "{\"ok\":true,\"ts\":\"$TS\"}";
+      else echo "{\"ok\":false,\"ts\":\"\"}"; fi'
+    scan_interval: 60
+    value_template: '{{ "OK" if value_json.ok else "KO" }}'
+    json_attributes:
+      - ts
+
+- sensor:
+    name: "Git Last Weekly Tag"
+    unique_id: git_last_weekly_tag
+    command: >-
+      bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
+    scan_interval: 1800
+
+- sensor:
+    name: "Git Last Weekly Tag"
+    unique_id: git_last_weekly_tag
+    command: >-
+      bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
+    scan_interval: 1800
+
+- sensor:
+    name: "Backup GitHub Journal"
+    unique_id: backup_github_journal
+    command: >-
+      bash -lc 'LOG=/config/.logs/ha_git_backup.log;
+      if [ -s "$LOG" ]; then
+        OUT=$(egrep -a "Backup GitHub OK:|❌|error:|push declined|Permission denied|Host key verification failed" "$LOG" \
+          | tail -n 5 | sed -e "s/\"/\\"/g");
+        printf "{\"text\":\"%s\"}\n" "$OUT";
+      else
+        echo "{\"text\":\"(log vide)\"}";
+      fi'
+    value_template: "ready"
+    json_attributes:
+      - text
+    scan_interval: 60

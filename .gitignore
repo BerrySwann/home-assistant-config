@@ -9,6 +9,7 @@ secrets.yaml
 .google.token
 .cloud
 .git-credentials
+.ssh/
 
 # --- HA runtime ---
 .storage/
@@ -47,3 +48,14 @@ migration-*-to-*.log
 
 # Logs internes
 .logs/
+
+# --- Réduction du bruit (texte et images) ---
+*.txt
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.webp
+*.ico
+# "[L60] Ignorer .txt & images (bruit)"
