@@ -2277,6 +2277,11 @@
     data:
       message: La température extérieure est inferieur a 26 degrés, les clim ont été
         éteinte. Vous pouvez ouvrir les fenêtres.
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
   mode: queued
 - id: '1757248609691'
   alias: '[Backup] Git hourly H+10'
