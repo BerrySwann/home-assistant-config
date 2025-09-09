@@ -136,57 +136,58 @@
       entity_id: sensor.blitzortung_lightning_localisation
     action: homeassistant.update_entity
     data: {}
-  - data:
-      title: /! Attention foudre /!\
-      message: "{% set distance = states('sensor.blitzortung_lightning_distance')
-        | float %} {% set localisation = states('sensor.blitzortung_lightning_localisation')
-        %} {% set azimuth = states('sensor.blitzortung_lightning_azimuth') | float
-        %} {% set impactCount = states('sensor.blitzortung_lightning_counter') | int
-        %} {% set timeSinceLastLightning = states('input_text.dernier_impact_de_foudre_temps_ecoule')
-        %} {% set city = None %} {% if localisation and localisation != '0' %}\n  {%
-        set location = state_attr('sensor.blitzortung_lightning_localisation', 'features')
-        %}\n  {% if location and location[0] and location[0].properties and location[0].properties.geocoding
-        and location[0].properties.geocoding.city %}\n    {% set city = location[0].properties.geocoding.city
-        %}\n  {% endif %}\n{% endif %} {% if distance > 0 %}\n  {% if city %}\n    {%
-        set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km de la maison
-        à ' ~ city ~ '.' %}\n  {% elif azimuth is not none %}\n    {% if 348.75 <=
-        azimuth or azimuth < 11.25 %}\n      {% set message = 'Un éclair a été détecté
-        à ' ~ distance ~ ' Km de la maison au nord.' %}\n    {% elif 11.25 <= azimuth
-        < 33.75 %}\n      {% set message = 'Un éclair a été détecté à ' ~ distance
-        ~ ' Km de la maison au nord-nord-est.' %}\n    {% elif 33.75 <= azimuth <
-        56.25 %}\n      {% set message = 'Un éclair a été détecté à ' ~ distance ~
-        ' Km de la maison au nord-est.' %}\n    {% elif 56.25 <= azimuth < 78.75 %}\n
-        \     {% set message = 'Un éclair a été détecté à ' ~ distance ~ \" Km de
-        la maison à l'est-nord-est.\" %}\n    {% elif 78.75 <= azimuth < 101.25 %}\n
-        \     {% set message = 'Un éclair a été détecté à ' ~ distance ~ \" Km de
-        la maison à l'est.\" %}\n    {% elif 101.25 <= azimuth < 123.75 %}\n      {%
-        set message = 'Un éclair a été détecté à ' ~ distance ~ \" Km de la maison
-        à l'est-sud-est.\" %}\n    {% elif 123.75 <= azimuth < 146.25 %}\n      {%
-        set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km de la maison
-        au sud-est.' %}\n    {% elif 146.25 <= azimuth < 168.75 %}\n      {% set message
-        = 'Un éclair a été détecté à ' ~ distance ~ ' Km de la maison au sud-sud-est.'
-        %}\n    {% elif 168.75 <= azimuth < 191.25 %}\n      {% set message = 'Un
-        éclair a été détecté à ' ~ distance ~ ' Km de la maison au sud.' %}\n    {%
-        elif 191.25 <= azimuth < 213.75 %}\n      {% set message = 'Un éclair a été
-        détecté à ' ~ distance ~ ' Km de la maison au sud-sud-ouest.' %}\n    {% elif
-        213.75 <= azimuth < 236.25 %}\n      {% set message = 'Un éclair a été détecté
-        à ' ~ distance ~ ' Km de la maison au sud-ouest.' %}\n    {% elif 236.25 <=
-        azimuth < 258.75 %}\n      {% set message = 'Un éclair a été détecté à ' ~
-        distance ~ \" Km de la maison à l'ouest-sud-ouest.\" %}\n    {% elif 258.75
-        <= azimuth < 281.25 %}\n      {% set message = 'Un éclair a été détecté à
-        ' ~ distance ~ \" Km de la maison à l'\\ouest.\" %}\n    {% elif 281.25 <=
-        azimuth < 303.75 %}\n      {% set message = 'Un éclair a été détecté à ' ~
-        distance ~ \" Km de la maison à l'ouest-nord-ouest.\" %}\n    {% elif 303.75
-        <= azimuth < 326.25 %}\n      {% set message = 'Un éclair a été détecté à
-        ' ~ distance ~ ' Km de la maison au nord-ouest.' %}\n    {% elif 326.25 <=
-        azimuth < 348.75 %}\n      {% set message = 'Un éclair a été détecté à ' ~
-        distance ~ ' Km de la maison au nord-nord-ouest.' %}\n    {% endif %}\n  {%
-        else %}\n    {% set message = 'Un éclair a été détecté à ' ~ distance ~ '
-        Km de la maison.' %}\n  {% endif %}\n{% else %}\n  {% set message = 'Pas d\\'impact
-        de foudre détecté.' %}\n{% endif %} {{ message }}<br>{{ timeSinceLastLightning
-        }}. {% if impactCount > 0 %}\n  <strong>{{ impactCount }}</strong> impact(s)
-        détecté(s)\n{% endif %}"
-    action: notify.mobile_app_poco_x7_pro
+  - action: notify.mobile_app_poco_x7_pro
+    metadata: {}
+    data:
+      title: /!\ Attention foudre /!\
+      message: '{% set distance = states(''sensor.blitzortung_lightning_distance'')
+        | float %} {% set localisation = states(''sensor.blitzortung_lightning_localisation'')
+        %} {% set azimuth = states(''sensor.blitzortung_lightning_azimuth'') | float
+        %} {% set impactCount = states(''sensor.blitzortung_lightning_counter'') |
+        int %} {% set timeSinceLastLightning = states(''input_text.dernier_impact_de_foudre_temps_ecoule'')
+        %} {% set city = None %} {% if localisation and localisation != ''0'' %}   {%
+        set location = state_attr(''sensor.blitzortung_lightning_localisation'', ''features'')
+        %}   {% if location and location[0] and location[0].properties and location[0].properties.geocoding
+        and location[0].properties.geocoding.city %}     {% set city = location[0].properties.geocoding.city
+        %}   {% endif %} {% endif %} {% if distance > 0 %}   {% if city %}     {%
+        set message = ''Un éclair a été détecté à '' ~ distance ~ '' Km de la maison
+        à '' ~ city ~ ''.'' %}   {% elif azimuth is not none %}     {% if 348.75 <=
+        azimuth or azimuth < 11.25 %}       {% set message = ''Un éclair a été détecté
+        à '' ~ distance ~ '' Km de la maison au nord.'' %}     {% elif 11.25 <= azimuth
+        < 33.75 %}       {% set message = ''Un éclair a été détecté à '' ~ distance
+        ~ '' Km de la maison au nord-nord-est.'' %}     {% elif 33.75 <= azimuth <
+        56.25 %}       {% set message = ''Un éclair a été détecté à '' ~ distance
+        ~ '' Km de la maison au nord-est.'' %}     {% elif 56.25 <= azimuth < 78.75
+        %}       {% set message = ''Un éclair a été détecté à '' ~ distance ~ " Km
+        de la maison à l''est-nord-est." %}     {% elif 78.75 <= azimuth < 101.25
+        %}       {% set message = ''Un éclair a été détecté à '' ~ distance ~ " Km
+        de la maison à l''est." %}     {% elif 101.25 <= azimuth < 123.75 %}       {%
+        set message = ''Un éclair a été détecté à '' ~ distance ~ " Km de la maison
+        à l''est-sud-est." %}     {% elif 123.75 <= azimuth < 146.25 %}       {% set
+        message = ''Un éclair a été détecté à '' ~ distance ~ '' Km de la maison au
+        sud-est.'' %}     {% elif 146.25 <= azimuth < 168.75 %}       {% set message
+        = ''Un éclair a été détecté à '' ~ distance ~ '' Km de la maison au sud-sud-est.''
+        %}     {% elif 168.75 <= azimuth < 191.25 %}       {% set message = ''Un éclair
+        a été détecté à '' ~ distance ~ '' Km de la maison au sud.'' %}     {% elif
+        191.25 <= azimuth < 213.75 %}       {% set message = ''Un éclair a été détecté
+        à '' ~ distance ~ '' Km de la maison au sud-sud-ouest.'' %}     {% elif 213.75
+        <= azimuth < 236.25 %}       {% set message = ''Un éclair a été détecté à
+        '' ~ distance ~ '' Km de la maison au sud-ouest.'' %}     {% elif 236.25 <=
+        azimuth < 258.75 %}       {% set message = ''Un éclair a été détecté à ''
+        ~ distance ~ " Km de la maison à l''ouest-sud-ouest." %}     {% elif 258.75
+        <= azimuth < 281.25 %}       {% set message = ''Un éclair a été détecté à
+        '' ~ distance ~ " Km de la maison à l''\ouest." %}     {% elif 281.25 <= azimuth
+        < 303.75 %}       {% set message = ''Un éclair a été détecté à '' ~ distance
+        ~ " Km de la maison à l''ouest-nord-ouest." %}     {% elif 303.75 <= azimuth
+        < 326.25 %}       {% set message = ''Un éclair a été détecté à '' ~ distance
+        ~ '' Km de la maison au nord-ouest.'' %}     {% elif 326.25 <= azimuth < 348.75
+        %}       {% set message = ''Un éclair a été détecté à '' ~ distance ~ '' Km
+        de la maison au nord-nord-ouest.'' %}     {% endif %}   {% else %}     {%
+        set message = ''Un éclair a été détecté à '' ~ distance ~ '' Km de la maison.''
+        %}   {% endif %} {% else %}   {% set message = ''Pas d\''impact de foudre
+        détecté.'' %} {% endif %} {{ message }}<br>{{ timeSinceLastLightning }}. {%
+        if impactCount > 0 %}   <strong>{{ impactCount }}</strong> impact(s) détecté(s)
+        {% endif %}'
   - delay:
       hours: 0
       minutes: 1
@@ -1597,17 +1598,8 @@
           Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n  {% elif
           states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n    T°Ext
           Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Les 3 Clim {{
-          states('sensor.temperature_cible') | float }}°.\n  {% endif %}\n   {% if
-          states('sensor.th_balcon_nord_temperature_trend') == 'increasing' %}\n      T°Ext
-          Up >>> {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend')
-          == 'decreasing' %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n  {% endif
-          %}\n{% endif %}"
+          states('sensor.temperature_cible') | float }}°.\n  {% endif %}\n{% endif
+          %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
@@ -1635,16 +1627,7 @@
           }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
           & Chambre {{ states('sensor.temperature_cible') | float }}°\n  {% endif
-          %}\n    {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
-          Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n  {% endif %}\n{% endif %}"
+          %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
@@ -1675,16 +1658,7 @@
           }}° Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Chambre {{ states('sensor.temperature_cible') | float }}°\n  {% endif
-          %}\n     {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
-          Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n  {% endif %}\n{% endif %}"
+          %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
@@ -1716,15 +1690,6 @@
           }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
           + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n  {% endif %}\n     {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
           | float }}°\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   mode: queued
@@ -2271,6 +2236,9 @@
       minutes: 10
       seconds: 0
     below: -1
+  - trigger: state
+    entity_id:
+    - sensor.temperature_delta
   conditions:
   - condition: time
     after: 08:00:00
@@ -2293,17 +2261,17 @@
       - climate.clim
       - climate.clim_du_bureau
       - climate.clim_de_la_chambre
-  - action: notify.mobile_app_ne2213
-    metadata: {}
-    data:
-      message: La température extérieure est inferieur a 26 degrés, les clim ont été
-        éteinte. Vous pouvez ouvrir les fenêtres.
-      title: T°Ext < à 26°C
   - action: notify.mobile_app_poco_x7_pro
     metadata: {}
     data:
       title: T°Ext < à 26°C
-      message: T°Ext < à 26°C, les clim ont éé éteinte.
+      message: T°Ext < à 26°C, les clim ont été éteinte.
+  - action: notify.mobile_app_ne2213_mamour
+    metadata: {}
+    data:
+      message: La température extérieure est inferieur a 26 degrés, les clim ont été
+        éteinte. Vous pouvez ouvrir les fenêtres.
+      title: T°Ext < à 26°C, les clim ont été éteinte.
   - action: notify.alexa_media_echo_show_salon
     metadata: {}
     data:
