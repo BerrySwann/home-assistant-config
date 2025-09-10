@@ -2272,11 +2272,13 @@
       message: La température extérieure est inferieur a 26 degrés, les clim ont été
         éteinte. Vous pouvez ouvrir les fenêtres.
       title: T°Ext < à 26°C, les clim ont été éteinte.
+    enabled: false
   - action: notify.alexa_media_echo_show_salon
     metadata: {}
     data:
       message: La température extérieure est inferieur a 26 degrés, les clim ont été
         éteinte. Vous pouvez ouvrir les fenêtres.
+    enabled: false
   - delay:
       hours: 1
       minutes: 0
