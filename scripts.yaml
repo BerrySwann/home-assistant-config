@@ -1,10 +1,11 @@
-git_pull_sync:
-  alias: "Git Pull (fetch+ff-only)"
+git_pull_fetch_ff_only:
+  alias: Git_Pull
   mode: queued
   sequence:
-    - service: shell_command.git_pull_ff
-    - delay: "00:00:02"
-    - service: persistent_notification.create
-      data:
-        title: "Git Pull"
-        message: "Fetch/prune + pull --ff-only lancé sur /config."
+  - action: shell_command.git_pull_ff
+  - delay: 00:00:02
+  - data:
+      title: Git Pull
+      message: Fetch/prune + pull --ff-only lancé sur /config.
+    action: persistent_notification.create
+  description: ''
