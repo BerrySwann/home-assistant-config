@@ -116,6 +116,7 @@
       - text
     scan_interval: 60
 
+
 - sensor:
     name: "GitHub Default Branch"
     unique_id: github_default_branch
