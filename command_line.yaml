@@ -73,44 +73,43 @@
         | to_json 
       }}
 
+# --- Backup GitHub Status (OK/KO + ts) ---
 - sensor:
     name: "Backup GitHub Status"
     unique_id: backup_github_status
     command: >-
-      bash -lc 'if grep -F "Backup GitHub OK:" /config/.logs/ha_git_backup.log >/dev/null 2>&1;
-      then TS=$(grep -F "Backup GitHub OK:" /config/.logs/ha_git_backup.log | tail -n1 | sed -E "s/^.*OK: (.*)$/\1/");
-      echo "{\"ok\":true,\"ts\":\"$TS\"}";
-      else echo "{\"ok\":false,\"ts\":\"\"}"; fi'
+      bash -lc 'LOG=/config/.logs/ha_git_backup.log;
+      if [ -s "$LOG" ] && grep -F "Backup GitHub OK:" "$LOG" >/dev/null 2>&1; then
+        TS=$(grep -F "Backup GitHub OK:" "$LOG" | tail -n1 | sed -E "s/^.*OK: (.*)$/\1/");
+        printf "{\"ok\":true,\"ts\":\"%s\"}\n" "$TS";
+      else
+        echo "{\"ok\":false,\"ts\":\"\"}";
+      fi'
     scan_interval: 60
-    value_template: '{{ "OK" if value_json.ok else "KO" }}'
+    value_template: "{{ 'OK' if value_json.ok else 'KO' }}"
     json_attributes:
       - ts
 
+# --- Dernier tag weekly ---
 - sensor:
     name: "Git Last Weekly Tag"
     unique_id: git_last_weekly_tag
     command: >-
-      bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
+      bash -lc 'cd /config && git tag --list "weekly-*" | sort | tail -n1 || true'
     scan_interval: 1800
 
-- sensor:
-    name: "Git Last Weekly Tag"
-    unique_id: git_last_weekly_tag
-    command: >-
-      bash -lc 'cd /config && (git tag --list "weekly-*" | sort | tail -n1 || true)' 
-    scan_interval: 1800
-
+# --- Journal (5 dernières lignes pertinentes) ---
 - sensor:
     name: "Backup GitHub Journal"
     unique_id: backup_github_journal
     command: >-
       bash -lc 'LOG=/config/.logs/ha_git_backup.log;
       if [ -s "$LOG" ]; then
-        OUT=$(egrep -a "Backup GitHub OK:|❌|error:|push declined|Permission denied|Host key verification failed" "$LOG" \
-          | tail -n 5 | sed -e "s/\"/\\"/g");
-        printf "{\"text\":\"%s\"}\n" "$OUT";
+        OUT=$(grep -aE "Backup GitHub OK:|❌|ABANDON|error:|push declined|Permission denied|Host key verification failed|Tag créé" "$LOG" | tail -n 5);
+        OUT_ESCAPED=$(printf "%s" "$OUT" | sed -e "s/\\\\/\\\\\\\\/g" -e "s/\"/\\\\\"/g" -e ":a;N;\$!ba;s/\n/\\\\n/g");
+        printf "{\"text\":\"%s\"}\n" "$OUT_ESCAPED";
       else
-        echo "{\"text\":\"(log vide)\"}";
+        echo "{\"text\":\"—\"}";
       fi'
     value_template: "ready"
     json_attributes:
