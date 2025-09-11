@@ -14,6 +14,12 @@ fi
 
 cd /config
 
+# juste après: cd /config
+if [[ "$(git rev-parse --abbrev-ref HEAD)" == "master" ]]; then
+  echo "❌ Sur la branche master — ABANDON (protégée)" >> "$LOG_FILE"
+  exit 1
+fi
+
 # (Optionnel) Évite des warnings "detected dubious ownership"
 git config --global --add safe.directory /config || true  # [CLEAN]
 

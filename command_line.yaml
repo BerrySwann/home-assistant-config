@@ -115,3 +115,14 @@
     json_attributes:
       - text
     scan_interval: 60
+
+- sensor:
+    name: "GitHub Default Branch"
+    unique_id: github_default_branch
+    command: >-
+      bash -lc 'curl -s -H "User-Agent: HAOS" https://api.github.com/repos/BerrySwann/home-assistant-config |
+      grep -m1 "\"default_branch\"" |
+      sed -E '\''s/.*"default_branch":[[:space:]]*"([^"]*)".*/\1/'\'''
+    scan_interval: 3600
+    value_template: >-
+      {{ value if value not in [None, "", "null"] else "unknown" }}
