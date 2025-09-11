@@ -1,4 +1,4 @@
-git_pull_fetch_ff_only:
+git_pull:
   alias: Git_Pull
   mode: queued
   sequence:
