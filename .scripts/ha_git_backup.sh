@@ -104,3 +104,4 @@ if [[ -f "$TOKEN_FILE" ]]; then
     http://supervisor/core/api/services/persistent_notification/create >/dev/null || true
 fi
 # "[L66] notif HA optionnelle"
+
