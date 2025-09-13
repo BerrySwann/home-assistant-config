@@ -1,4 +1,4 @@
-# 🏠 Home Assistant – Configuration d’Eric Rodi
+# 🏠 Home Assistant – Configuration de Berry Swann
 
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2025.9.x-blue?logo=home-assistant&logoColor=white)](https://www.home-assistant.io/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/BerrySwann/home-assistant-config)](https://github.com/BerrySwann/home-assistant-config)
