@@ -97,7 +97,8 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 ---
 
 ## 📸 Aperçu
-*(Screenshots Lovelace à insérer ici)*
+<img width="1217" height="3665" alt="image" src="https://github.com/user-attachments/assets/09a282c3-31d4-4bf3-afe6-52d68abefe63" />
+
 
 ---
 
