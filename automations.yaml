@@ -2345,3 +2345,124 @@
       message: Échec ou pas de commit depuis 15 min. Vérifie /config/.logs/ha_git_backup.log
     action: persistent_notification.create
   mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
+- id: restart_studio_code_server_daily
+  alias: Redémarrage quotidien Studio Code Server
+  description: ''
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+  mode: single
