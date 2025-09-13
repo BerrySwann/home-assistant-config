@@ -520,8 +520,11 @@ class Device(CustomConfigHelper):
                 DataCoordinator(self, self.update_miio_commands, update_interval=timedelta(seconds=interval)),
             )
         self.coordinators.extend(lst)
+
+        idx = 0
         for coo in lst:
-            await coo.async_config_entry_first_refresh()
+            idx += 1
+            await coo.async_setup(index=idx)
 
     async def init_miot_coordinators(self, interval=60):
         lst = []
@@ -727,7 +730,14 @@ class Device(CustomConfigHelper):
                 elif self.local:
                     result = await self.local.async_send(method, params)
                 if self.cloud and cloud_params:
-                    result = await self.cloud.async_set_props(cloud_params)
+                    if self.custom_config_bool('cloud_set_single'):
+                        result = [
+                            res[0]
+                            for param in cloud_params
+                            if (res := await self.cloud.async_set_props([param]))
+                        ]
+                    else:
+                        result = await self.cloud.async_set_props(cloud_params)
                 if err := MiotResults(result).has_error:
                     self.log.warning('Device write error: %s', [payload, data, err])
 
