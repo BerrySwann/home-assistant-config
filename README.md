@@ -107,8 +107,8 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 - [Home Assistant Docs](https://www.home-assistant.io/docs/)
 - [Community Add-ons (Hass.io)](https://github.com/hassio-addons/repository)
 - [Forum Home Assistant](https://community.home-assistant.io/)
-- [Frorum Howmation](https://howmation.com/fr_FR/).
-- [forum domotique](https://forumdomotique.com/).
+- [Frorum Howmation](https://howmation.com/fr_FR/)
+- [forum domotique](https://forumdomotique.com/)
 - [Forum HACF (communauté francophone)](https://forum.hacf.fr)
 
 - [Mon dépôt GitHub](https://github.com/BerrySwann/home-assistant-config)
