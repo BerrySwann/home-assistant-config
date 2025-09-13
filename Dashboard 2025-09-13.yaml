@@ -5602,7 +5602,7 @@ views:
                   - name
                   - state
                 icon: mdi:ceiling-light
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.entree
             primary: Entrée
             secondary: |
@@ -5696,7 +5696,7 @@ views:
                 color: state
                 state_content: state
             heading: Salon
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.salon
             primary: Salon
             secondary: |
@@ -5759,7 +5759,7 @@ views:
                     border: 1px solid {% if is_state('light.salon', 'on') %} green {% else %} grey {% endif %};
                     background-color: {% if is_state('light.salon', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                   }
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.table
             primary: Table
             secondary: |
@@ -5837,7 +5837,7 @@ views:
                   - name
                   - state
                 icon: mdi:ceiling-light
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.cuisine
             primary: Cuisine
             secondary: |
@@ -5915,7 +5915,7 @@ views:
                   - name
                   - state
                 icon: mdi:ceiling-light
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.couloir
             primary: Couloir
             secondary: |
@@ -6024,7 +6024,7 @@ views:
             heading: Bureau
           - type: custom:vertical-stack-in-card
             cards:
-              - type: custom:mushroom-template-card
+              - type: custom:mushroom-legacy-template-card
                 entity: light.bureau_z2m
                 primary: Bureau
                 secondary: |
@@ -6057,11 +6057,6 @@ views:
                   {% else %}
                     grey
                   {% endif %}
-                tap_action:
-                  action: toggle
-                grid_options:
-                  columns: 6
-                  rows: 2
                 card_mod:
                   style:
                     mushroom-state-info$: |
@@ -6116,7 +6111,7 @@ views:
                       --chip-border-color: {% if is_state('light.bureau_z2m', 'on') %} green {% else %} grey {% endif %};
                       --chip-height: 30px;
                       margin-left: 80%;
-                      bottom: 15px;
+                      bottom: 10px;
                       background: none !important;
                       box-shadow: none !important;
                       border: none !important;
@@ -6129,116 +6124,80 @@ views:
                 }
             grid_options:
               columns: 6
-              rows: 2
-          - type: custom:vertical-stack-in-card
-            cards:
-              - type: custom:mushroom-template-card
-                entity: light.bureau
-                primary: Ecran P.C.
-                secondary: |
-                  {% if is_state('light.bureau', 'on') %}
-                    Allumée
-                  {% else %}
-                    Éteint
-                  {% endif %}
-                icon: |
-                  {% if is_state('light.bureau', 'on') %}
-                    mdi:television
-                  {% else %}
-                   mdi:television
-                  {% endif %}
-                icon_color: |
-                  {% if is_state('light.bureau', 'on') %}
-                    green
-                  {% else %}
-                    grey
-                  {% endif %}
-                badge_icon: |
-                  {% if is_state('light.bureau', 'on') %}
-                    mdi:checkbox-marked-circle
-                  {% else %}
-                    mdi:checkbox-blank-circle-outline
-                  {% endif %}
-                badge_color: |
-                  {% if is_state('light.bureau', 'on') %}
-                    green
-                  {% else %}
-                    grey
-                  {% endif %}
-                tap_action:
-                  action: toggle
-                grid_options:
-                  columns: 6
-                  rows: 2
-                visibility:
-                  - condition: state
-                    entity: switch.hue_smart_eco_pc_bureau
-                    state: 'on'
-                card_mod:
-                  style:
-                    mushroom-state-info$: |
-                      .primary {
-                        position: relative;
-                        top: -5px;
-                        left: 10px;
-                        font-size: 24px !important;
-                        font-weight: bold;
-                      }
-                      .secondary {
-                        position: relative;
-                        top: 5px;
-                        left: 10px;
-                        font-size: 12px !important;
-                      }
-                    .: |
-                      :host {
-                        --mush-icon-size: 70px;
-                      }
+              rows: auto
+          - type: conditional
+            conditions:
+              - entity: switch.hue_smart_eco_pc_bureau
+                state: 'on'
+            card:
+              type: custom:vertical-stack-in-card
+              cards:
+                - type: custom:mushroom-legacy-template-card
+                  entity: light.bureau
+                  primary: Ecran P.C.
+                  secondary: |
+                    {% if is_state('light.bureau', 'on') %}
+                      Allumée
+                    {% else %}
+                      Éteint
+                    {% endif %}
+                  icon: mdi:television
+                  icon_color: '{{ ''green'' if is_state(''light.bureau'',''on'') else ''grey'' }}'
+                  badge_icon: >-
+                    {{ 'mdi:checkbox-marked-circle' if
+                    is_state('light.bureau','on') else
+                    'mdi:checkbox-blank-circle-outline' }}
+                  badge_color: '{{ ''green'' if is_state(''light.bureau'',''on'') else ''grey'' }}'
+                  tap_action:
+                    action: toggle
+                  card_mod:
+                    style:
+                      mushroom-state-info$: >
+                        .primary { top: -5px; left: 10px; font-size: 24px
+                        !important; font-weight: bold; }
+
+                        .secondary { position: relative; top: 5px; left: 10px;
+                        font-size: 12px !important; }
+                      .: |
+                        :host { --mush-icon-size: 65px; }
+                      style: |
+                        ha-card {
+                          background: transparent !important;
+                          border: none !important;
+                          box-shadow: none !important;
+                          margin-top: 0;
+                        }
+                - type: custom:mushroom-chips-card
+                  chips:
+                    - type: template
+                      entity: light.bureau
+                      tap_action:
+                        action: navigate
+                        navigation_path: '#ecranpc'
+                      icon: mdi:television
+                      icon_color: |
+                        {% if is_state('light.bureau','on') %} green
+                        {% elif is_state('light.bureau','off') %} grey
+                        {% endif %}
+                  card_mod:
                     style: |
                       ha-card {
-                        border: 1px solid {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
-                        background-color: {% if is_state('light.bureau', 'on') %} rgba(0, 255, 0, 0.0) 
-                        {% else %} 
-                          transparent 
-                        {% endif %};
+                        --chip-border-width: 1;
+                        --chip-border-color: {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
+                        --chip-height: 30px;
+                        margin-left: 80%;
+                        bottom: 10px;
+                        background: none !important;
+                        box-shadow: none !important;
+                        border: none !important;
                       }
-              - type: custom:mushroom-chips-card
-                chips:
-                  - type: template
-                    entity: light.bureau
-                    tap_action:
-                      action: navigate
-                      navigation_path: '#ecranpc'
-                    icon: |
-                      {% if is_state('light.bureau', 'on') %}
-                        mdi:television
-                      {% else %}
-                        mdi:television
-                      {% endif %}
-                    icon_color: |
-                      {% if is_state(entity, 'on') %}
-                        green
-                      {% elif is_state(entity, 'off') %}
-                        grey
-                      {% endif %}
-                card_mod:
-                  style: |
-                    ha-card {
-                      --chip-border-width: 1;
-                      --chip-border-color: {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
-                      --chip-height: 30px;
-                      margin-left: 80%;
-                      bottom: 15px;
-                      background: none !important;
-                      box-shadow: none !important;
-                      border: none !important;
-                    }
-            card_mod:
-              style: |
-                ha-card {
-                  border: 1px solid {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
-                  background-color: {% if is_state('light.bureau', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
-                }
+              card_mod:
+                style: |
+                  ha-card {
+                    border: 1px solid {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
+                    background-color: {% if is_state('light.bureau', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
+                    transition: background-color 200ms ease, border-color 200ms ease;
+                  }
             grid_options:
               columns: 6
               rows: auto
@@ -6265,7 +6224,7 @@ views:
                 entity: switch.relais_lumiere_sdb_sonoff
                 color: state
                 icon: mdi:mirror-rectangle
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: switch.salle_de_bain
             primary: Salle de Bain
             secondary: |
@@ -6345,7 +6304,7 @@ views:
                 icon: hue:flourish-alt
                 color: state
                 state_content: state
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.chambre
             primary: Chambre
             secondary: |
@@ -6446,7 +6405,7 @@ views:
             card:
               type: custom:vertical-stack-in-card
               cards:
-                - type: custom:mushroom-template-card
+                - type: custom:mushroom-legacy-template-card
                   entity: light.lit
                   primary: Têtes de Lit
                   secondary: >
@@ -14055,13 +14014,37 @@ views:
                       {% set tag = states('sensor.git_last_weekly_tag') %} {%
                       set iso = now().isocalendar() %} {% set current =
                       "weekly-%04d-W%02d" | format(iso[0], iso[1]) %} {{ 'green'
-                      if tag == current else 'amber' }}
+                      if (tag and tag.startswith(current)) else 'amber' }}
+                  - type: template
+                    entity: sensor.github_default_branch
+                    icon: mdi:source-branch
+                    content: >-
+                      Branche: {{ states('sensor.github_default_branch') or
+                      'unknown' }}
+                    icon_color: >-
+                      {% set b = states('sensor.github_default_branch') %} {{
+                      'green' if b == 'main' else 'amber' }}
                     tap_action:
-                      action: none
+                      action: url
+                      url_path: >-
+                        https://github.com/BerrySwann/home-assistant-config/branches
+                      new_tab: true
                     hold_action:
-                      action: none
-                    double_tap_action:
-                      action: none
+                      action: url
+                      url_path: >-
+                        https://github.com/BerrySwann/home-assistant-config/settings/branches
+                      new_tab: true
+                  - type: template
+                    icon: mdi:cloud-download-outline
+                    content: Pull
+                    tap_action:
+                      action: call-service
+                      service: script.git_pull
+                    hold_action:
+                      action: url
+                      url_path: >-
+                        https://github.com/BerrySwann/home-assistant-config/commits/main
+                      new_tab: true
                 card_mod:
                   style: >
                     ha-card { background: none !important; box-shadow: none
@@ -14111,8 +14094,6 @@ views:
                   style: >
                     ha-card { background: none !important; box-shadow: none
                     !important; border: none !important; }
-
-                    # "[L430] card_mod"
     title: reserve
     cards: []
   - type: sections
@@ -15511,7 +15492,7 @@ views:
             heading: Entrée
             heading_style: title
             badges: []
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: switch.prise_horloge_ikea
             primary: Prise Eco. Horloge
             secondary: |
@@ -15591,7 +15572,7 @@ views:
                 tap_action:
                   action: more-info
             heading: Salon
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.hue_smart_salon
             primary: Prise Eco. Salon (Chargeur ACU. etc...)
             secondary: |
@@ -15654,7 +15635,7 @@ views:
                     border: 1px solid {% if is_state('light.hue_smart_salon', 'on') %} green {% else %} grey {% endif %};
                     background-color: {% if is_state('light.hue_smart_salon', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                   }  
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.hue_smart_tv_salon
             primary: Prise Eco. TV Salon
             secondary: |
@@ -15734,7 +15715,7 @@ views:
                 tap_action:
                   action: more-info
             heading: Bureau
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: switch.hue_smart_eco_pc_bureau
             primary: Prise Eco. PC Bureau
             secondary: |
@@ -15807,7 +15788,7 @@ views:
                 show_icon: true
                 entity: sensor.clim_de_la_chambre_temperature
                 color: green
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.hue_smart_tv_chambre
             primary: Prise Eco. TV Chambre
             secondary: |
@@ -15875,16 +15856,16 @@ views:
             heading: Tête de Lit
             heading_style: title
             badges: []
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: switch.prise_tete_de_lit_chambre
             primary: Prise Eco. Têtes de Lit
             secondary: |
-              {% if is_state('light.hue_smart_tv_chambre', 'on') %}
+              {% if is_state('switch.prise_tete_de_lit_chambre', 'on') %}
                 Allumée
               {% else %}
                 Economie 
               {% endif %}
-            icon: |
+            icon: |-
               {% if is_state('switch.prise_tete_de_lit_chambre', 'on') %}
                 mdi:power-socket-fr
               {% else %}

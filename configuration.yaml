@@ -17,27 +17,19 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # Pour powercalc
-
 powercalc:
 
 # Pour Cloudflared
-
 http:
   use_x_forwarded_for: true
   trusted_proxies:
     - 172.30.33.0/24
-#  ssl_certificate: /ssl/www.erodi-ha.com.pem
-# ssl_key: /ssl/www.erodi-ha.com.privkey.pem
 
 # Protege l'acssé a HA
-
   ip_ban_enabled: true
   login_attempts_threshold: 3
 
-
-
-
-# renvoi au fichier template.yaml
+#renvoi au fichier template.yaml
 #template: !include template.yaml
 template: !include_dir_merge_list templates/
 
@@ -64,16 +56,8 @@ sensor: !include sensors.yaml
 #renvoi au fichier shell_command.yaml
 # Services shell_command (NOUVEAU)
 shell_command: !include shell_command.yaml
-# "[L16] include shell_command.yaml"
-
-#renvoi au fichier themes.yaml
-#themes: !include themes.yaml
-
-#renvie au fichier lovelave
-#lovelace: !include lovelace.yaml
 
   # Amazon
-
 alexa_media:
   accounts:
     - email: !secret amazon_user
@@ -81,7 +65,6 @@ alexa_media:
       url: amazon.fr
 
   # Telegram
-
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_token
@@ -97,9 +80,6 @@ notify:
     filename: /config/zigbee2mqtt/log/error.log
     timestamp: false
     
-
-
-
 
 # BASE DE DONNEE MariaDB
 recorder:
@@ -123,46 +103,24 @@ recorder:
       - sensor.date*
       - sensor.time*
 
-
-
-
-    # Notification FOUDRES
-#sensor:
-# - platform: rest
-#   name: blitzortung_lightning_localisation
-#   scan_interval: 86400
-#   resource_template: >-
-#     {%- set lat = state_attr('sensor.blitzortung_lightning_distance', 'lat') -%} 
-#     {%- set lon = state_attr('sensor.blitzortung_lightning_distance', 'lon') -%} 
-#     https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat={{lat}}&lon={{lon}}
-#   value_template: '{{value_json.features | length}}'
-#   json_attributes:
-#     - features
-
 sql:
   - name: Taille DB Home Assistant
-    # "[L4] Crée sensor.taille_db_home_assistant"
+    # Crée sensor.taille_db_home_assistant"
     db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
-    # "[L5] core-mariadb : URL de la DB de l’add-on MariaDB"
+    # core-mariadb : URL de la DB de l’add-on MariaDB"
     query: >
       SELECT Round(Sum(data_length + index_length) / POWER(1024,2), 1) AS value
       FROM information_schema.tables
       WHERE table_schema = "homeassistant";
-    # "[L8-L10] Requête 'Database size' (doc officielle MariaDB/MySQL)"
+    # Requête 'Database size' (doc officielle MariaDB/MySQL)"
     column: value
     unit_of_measurement: MiB
     device_class: data_size
     unique_id: taille_db_home_assistant
 
-
-
-
 openai_conversation:
   api_key: !secret chat_gpt_api_key
   model: "gpt-4o-mini"
-
-
-
 
 bluetooth:
 
