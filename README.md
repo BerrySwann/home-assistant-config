@@ -97,7 +97,8 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 ---
 
 ## 📸 Aperçu
-<img width="1218" height="3510" alt="image" src="https://github.com/user-attachments/assets/2a51025a-419e-4b38-9882-d95a7ee7c8cb" />
+<img width="1218" height="3510" alt="image" src="https://github.com/user-attachments/assets/7c3a7943-d287-4c01-b860-80ea76232a2f" />
+
 
 
 
