@@ -26,12 +26,14 @@ http:
   trusted_proxies:
     - 172.30.0.0/16   # tous les add-ons / ingress / tunnels
     - 192.168.1.0/24  # ton LAN local
-
   # Protège l’accès à HA
   ip_ban_enabled: true
   # bannissement IP"
   login_attempts_threshold: 3
   # seuil de tentatives
+  #clé privé / public
+  ssl_certificate: /ssl/local.crt
+  ssl_key: /ssl/local.key
 
 #renvoi au fichier template.yaml
 #template: !include template.yaml
