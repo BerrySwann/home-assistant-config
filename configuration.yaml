@@ -24,11 +24,8 @@ http:
   use_x_forwarded_for: true
 
   trusted_proxies:
-    - 172.30.0.0/16
-    - 172.16.0.0/12
-    - 192.168.1.0/24
-    - 10.0.0.0/8
-    - 172.30.33.0/24
+    - 172.30.0.0/16   # tous les add-ons / ingress / tunnels
+    - 192.168.1.0/24  # ton LAN local
 
   # Protège l’accès à HA
   ip_ban_enabled: true
