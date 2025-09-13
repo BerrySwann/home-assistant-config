@@ -1,0 +1,15 @@
+# =======================================================================
+# Linky total (HP + HC) -> cumul kWh pour graphiques mensuels
+# =======================================================================
+
+- sensor:
+    - name: "Linky total kWh (MEData)"
+      unique_id: linky_total_kwh_medata
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      state: >
+        {% set hp = states('sensor.linky_25481620821301_hp_consumption') | float(0) %}
+        {% set hc = states('sensor.linky_25481620821301_hc_consumption') | float(0) %}
+        {{ (hp + hc) | round(3) }}
+      # "[L12] Nouveau capteur cumulatif = HP + HC"
