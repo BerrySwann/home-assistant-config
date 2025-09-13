@@ -1,0 +1,21 @@
+linky_2024_months_json:
+  name: "Linky 2024 (12 mois JSON)"
+  max: 255
+  initial: "[0,0,0,0,0,0,0,0,0,0,0,0]"
+  # "[L51] Remplacer par tes 12 valeurs 2024 une fois"
+
+linky_2023_months_json:
+  name: "Linky 2023 (12 mois JSON)"
+  max: 255
+  initial: "[0,0,0,0,0,0,0,0,0,0,0,0]"
+  # "[L55] Remplacer par tes 12 valeurs 2023 une fois"
+
+linky_2022_months_json:
+  name: "Linky 2022 (12 mois JSON)"
+  max: 255
+  initial: "[0,0,0,0,0,0,0,0,0,0,0,0]"
+  # "[L59] Remplacer par tes 12 valeurs 2022 une fois"
+
+# ---------------------------------------------------------------------------------
+# annotations_log:
+# - "[L51-L59] JSON 12 mois figés (2024/2023/2022)"

@@ -335,3 +335,16 @@ all_standby_daily:
   cycle: daily
   # "[L220] idem"
 
+#============================================================================
+#
+# TOTO Linky -> Mois / années (compteur ELEC)
+#
+#============================================================================
+
+energy_monthly_total:
+  source: sensor.linky_total_kwh_medata
+  cycle: monthly
+  # "[L21] Reset le 1er du mois → la valeur courante = conso du mois"
+# ---------------------------------------------------------------------------------
+# annotations_log:
+# - "[L21] utility_meter energy_monthly_total (mensuel)"

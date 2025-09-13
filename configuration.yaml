@@ -63,6 +63,9 @@ sensor: !include sensors.yaml
 # Services shell_command (NOUVEAU)
 shell_command: !include shell_command.yaml
 
+#renvoi au fichier input_text.yaml
+input_text: !include input_text.yaml
+
   # Amazon
 alexa_media:
   accounts:

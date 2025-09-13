@@ -2368,3 +2368,100 @@
 - *id001
 - *id001
 - *id001
+- id: '1757782947640'
+  alias: 'Linky 2025: MAJ mensuelle quotidienne à minuit'
+  description: ''
+  triggers:
+  - at: 00:00:10
+    trigger: time
+  conditions: []
+  actions:
+  - variables:
+      m: '{{ now().month }}'
+      val: '{{ states(''sensor.energy_monthly_total'') | float(0) }}'
+  - choose:
+    - conditions: '{{ m == 1 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m01
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 2 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m02
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 3 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m03
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 4 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m04
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 5 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m05
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 6 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m06
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 7 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m07
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 8 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m08
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 9 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m09
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 10 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m10
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 11 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m11
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+    - conditions: '{{ m == 12 }}'
+      sequence:
+      - target:
+          entity_id: input_number.linky_2025_m12
+        data:
+          value: '{{ val }}'
+        action: input_number.set_value
+  mode: single
