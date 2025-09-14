@@ -35,7 +35,7 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 - **Ecojoko** → consommation électrique réseau
 - **Node-RED Companion** → automatisations avancées
 - **Browser Mod** → pop-ups et navigation dynamique
-- **Météo France** + Blitzortung (alertes météo & orages)
+- **Météo France + Blitzortung** (alertes météo & orages)
 - **Meross LAN(WIFI)** / **HUE** / **IKEA** / **NOUS** (prises, inter., B.P., lampes et capteurs Zigbee)
 
 ---
