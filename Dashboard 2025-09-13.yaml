@@ -547,6 +547,7 @@ streamline_templates:
         cards:
           - type: custom:apexcharts-card
             chart_type: radialBar
+            cache: true
             series:
               - entity: '[[humidity_entity]]'
                 max: 100
