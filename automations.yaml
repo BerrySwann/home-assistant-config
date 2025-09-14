@@ -2369,99 +2369,34 @@
 - *id001
 - *id001
 - id: '1757782947640'
-  alias: 'Linky 2025: MAJ mensuelle quotidienne à minuit'
-  description: ''
+  alias: 'Linky: snapshot du mois N-1 → input_number.mNN'
+  description: Copie last_period du utility_meter mensuel dans le helper du mois correspondant.
   triggers:
-  - at: 00:00:10
+  - at: 00:05:00
     trigger: time
-  conditions: []
+  conditions:
+  - condition: template
+    value_template: '{{ state_attr(''utility_meter.linky_monthly'', ''last_period'')
+      is not none }}
+
+      '
   actions:
   - variables:
-      m: '{{ now().month }}'
-      val: '{{ states(''sensor.energy_monthly_total'') | float(0) }}'
-  - choose:
-    - conditions: '{{ m == 1 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m01
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 2 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m02
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 3 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m03
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 4 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m04
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 5 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m05
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 6 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m06
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 7 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m07
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 8 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m08
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 9 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m09
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 10 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m10
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 11 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m11
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
-    - conditions: '{{ m == 12 }}'
-      sequence:
-      - target:
-          entity_id: input_number.linky_2025_m12
-        data:
-          value: '{{ val }}'
-        action: input_number.set_value
+      target_year: 2025
+      prev_month: '{{ 12 if now().month == 1 else (now().month - 1) }}
+
+        '
+      value_kwh: '{{ state_attr(''utility_meter.linky_monthly'',''last_period'')|float(0)
+        | round(2) }}
+
+        '
+      entity_id_to_set: '{{ ''input_number.linky_%d_m%02d'' | format(target_year,
+        prev_month) }}
+
+        '
+  - target:
+      entity_id: '{{ entity_id_to_set }}'
+    data:
+      value: '{{ value_kwh }}'
+    action: input_number.set_value
   mode: single
