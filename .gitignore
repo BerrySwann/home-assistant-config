@@ -10,6 +10,7 @@ secrets.yaml
 .cloud
 .git-credentials
 .ssh/
+myelectricaldata/
 
 # --- HA runtime ---
 .storage/
