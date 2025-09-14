@@ -17652,7 +17652,7 @@ views:
                     yaxis_id: W_day
                     type: column
                     color: gainsboro
-                    unit: W
+                    unit: Wh
                     transform: return x * 1000;
                     group_by:
                       func: diff
@@ -17663,7 +17663,7 @@ views:
                     yaxis_id: Avg
                     type: line
                     color: '#F44336'
-                    unit: W
+                    unit: Wh
                     stroke_width: 2
                     stroke_dash: 8
                     group_by:
@@ -17672,7 +17672,7 @@ views:
                   - entity: sensor.mini_pc_mean_730h_wh
                     name: Mean(730h)
                     color: '#FF5252'
-                    unit: W
+                    unit: Wh
                     stroke_width: 2
                     stroke_dash: 8
                     show:
