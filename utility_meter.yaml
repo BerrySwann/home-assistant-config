@@ -334,21 +334,3 @@ all_standby_daily:
   source: sensor.all_standby_kwh
   cycle: daily
   # "[L220] idem"
-
-#============================================================================
-#
-# TOTO Linky -> Mois / années (compteur ELEC)
-#
-#============================================================================
-
-# utility_meter.yaml
-linky_monthly:
-  source: sensor.linky_total_kwh_medata
-  # "[L3] source = cumul total kWh (MEData) : OK 'total_increasing'"
-  cycle: monthly
-  net_consumption: true
-  # "[L5] last_period = conso du mois précédent (kWh)"
-# ---------------------------------------------------------------------------------
-# annotations_log:
-# - "[L3] source: sensor.linky_total_kwh_medata"
-# - "[L5] on exploitera 'last_period' pour snapshot m01..m12"

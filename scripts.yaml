@@ -9,29 +9,3 @@ git_pull:
       message: Fetch/prune + pull --ff-only lancé sur /config.
     action: persistent_notification.create
   description: ''
-linky_backfill_mois_courant_precedent_helpers:
-  alias: 'Linky: backfill mois courant & précédent → helpers'
-  mode: single
-  sequence:
-  - variables:
-      target_year: 2025
-      now_month: '{{ now().month }}'
-      prev_month: '{{ 12 if now().month == 1 else (now().month - 1) }}'
-      sens: sensor.linky_25481620821301_consumption
-      val_current: '{{ state_attr(sens, ''current_month'') | float(0) | round(2) }}'
-      val_last: '{{ state_attr(sens, ''last_month'') | float(0) | round(2) }}'
-      eid_current: '{{ ''input_number.linky_%d_m%02d'' | format(target_year, now_month)
-        }}'
-      eid_last: '{{ ''input_number.linky_%d_m%02d'' | format(target_year, prev_month)
-        }}'
-  - target:
-      entity_id: '{{ eid_current }}'
-    data:
-      value: '{{ val_current }}'
-    action: input_number.set_value
-  - target:
-      entity_id: '{{ eid_last }}'
-    data:
-      value: '{{ val_last }}'
-    action: input_number.set_value
-  description: ''
