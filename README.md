@@ -23,7 +23,6 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 - **Samba Share** (partage réseau)
 - **Cloudflared** (remote access sécurisé)
 - **Uptime Kuma** (monitoring services)
-- **Piper (Wyoming TTS)** (voix locale)
 - **phpMyAdmin** (gestion DB)
 - **AdGuard Home** (DNS / blocage pubs)
 - **Glances** (stats système)
@@ -37,7 +36,7 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 - **Node-RED Companion** → automatisations avancées
 - **Browser Mod** → pop-ups et navigation dynamique
 - **Météo France** + Blitzortung (alertes météo & orages)
-- **Meross LAN** / **Nous** / **IKEA Tradfri** (prises et capteurs Zigbee/Wi-Fi)
+- **Meross LAN(WIFI)** / **HUE** / **IKEA** / **NOUS** (prises, inter., B.P., lampes et capteurs Zigbee)
 
 ---
 
@@ -46,8 +45,8 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 - Vues optimisées pour tablette & téléphone
 - **Custom cards via HACS** :
   - `apexcharts-card`, `auto-entities`, `bar-card`, `bubble-card`, `ring-tile-card`, `streamline-card`, `mushroom-*`, `vertical-stack-in-card`, etc.
-- **Exemples** :
-  - Suivi énergie : conso journalière & mensuelle (diff/730h-> (~1 mois)), moyennes glissantes (mean 24h / 730h)
+- **Exemples** : (730h = ~1 mois)
+  - Suivi énergie : conso journalière & mensuelle (diff/730h), moyennes glissantes (mean 24h / 730h)
   - Suivi clim/radiateurs avec cibles calculées (été/hiver)
   - Pop-ups Bubble par pièce (températures, qualité d’air, état appareils)
   - Cartes météo (Météo France, Blitzortung, pollens, UV, etc.)
@@ -56,7 +55,7 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 
 ## ⚡ Énergie & Confort
 - **Utility meters** (journaliers / 730h) pour chaque appareil
-- **Sensors statistiques** (moyennes 24h, 730h-> (~1 mois), etc.)
+- **Sensors statistiques** (moyennes 24h, 730h, etc.)
 - **Delta intérieur/extérieur** et calcul automatique de la **température cible climatisation**
 - Graphiques ApexCharts avec **color thresholds** & brush
 
@@ -81,8 +80,6 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 ---
 
 ## 🛠️ Particularités
-- **Annotations permanentes** dans les fichiers YAML :  
-  chaque correction est commentée avec `# "[Lxxx] ancienne valeur"`
 - **Optimisation MariaDB** : purge automatique, `recorder` limité
 - **Zigbee2MQTT** : suivi complet réseau (network table, routers/endpoints)
 
@@ -90,7 +87,7 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 
 ## 🚀 Prochains objectifs
 - Migration complète des dashboards vers `streamline_templates`
-- Automatisation intelligente climatisation (IA locale + météo)
+- Automatisation intelligente climatisation (locale + météo)
 - Intégration plus poussée des capteurs air qualité (PM2.5, COV)
 - Ajout d’un monitoring détaillé pour Studio Code Server (RAM/CPU)
 
