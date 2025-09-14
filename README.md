@@ -71,7 +71,7 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 ---
 
 ## 📂 Structure de fichiers
-- `configuration.yaml` → inclut les sous-fichiers
+- `configuration.yaml` → inclut les sous-fichiers → (À revoir)
 - `automations.yaml` → règles YAML
 - `templates/` → templates Jinja2 (capteurs, helpers)
 - `dashboard*.yaml` → dashboards Lovelace versionnés
