@@ -170,7 +170,7 @@
       {% else %} 
         0.00 
       {% endif %}
-  - name: "Eclairage Eclairage Salle de Bain (2) MENSUEL"
+  - name: "Eclairage Salle de Bain (2) MENSUEL"
     unique_id: eclairage_sdb_2_mensuel
     device_class: energy
     unit_of_measurement: kWh
@@ -181,7 +181,7 @@
       {% else %} 
         0.00 
       {% endif %}
-  - name: "Eclairage Eclairage Salle de Bain (2) HEBDOMADAIRE"
+  - name: "Eclairage Salle de Bain (2) HEBDOMADAIRE"
     unique_id: eclairage_sdb_2_hebdomadaire
     device_class: energy
     unit_of_measurement: kWh
@@ -192,7 +192,7 @@
       {% else %} 
         0.00 
       {% endif %}
-  - name: "Eclairage Eclairage Salle de Bain (2) QUOTIDIEN"
+  - name: "Eclairage Salle de Bain (2) QUOTIDIEN"
     unique_id: eclairage_sdb_2_quotidien
     device_class: energy
     unit_of_measurement: kWh
