@@ -1928,11 +1928,11 @@ views:
                         }
                       }
                       return `
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_apparte_2_energy_daily')}</span>
+                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_appart_2_energy_daily')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salon_5_energy_daily')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_cuisine_1_energy_daily')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_bureau_5_energy_daily')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_eclairage_salle_de_bain_2_quotidien')}</span>
+                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salle_de_bain_2_quotidien')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_chambre_4_energy_daily')}</span>
                       `;
                     ]]]
@@ -1950,11 +1950,11 @@ views:
                         }
                       }
                       return `
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_apparte_2_energy_monthly')}</span>
+                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_appart_2_energy_monthly')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salon_5_energy_monthly')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_cuisine_1_energy_monthly')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_bureau_5_energy_monthly')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_eclairage_salle_de_bain_2_mensuel')}</span>
+                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salle_de_bain_2_mensuel')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_chambre_4_energy_monthly')}</span>
                       `;
                     ]]]
@@ -14999,12 +14999,12 @@ views:
                 state_content:
                   - name
                   - state
-                entity: sensor.eclairage_eclairage_salle_de_bain_2_quotidien
+                entity: sensor.eclairage_salle_de_bain_2_quotidien
                 name: Q
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_eclairage_salle_de_bain_2_hebdomadaire
+                entity: sensor.eclairage_salle_de_bain_2_hebdomadaire
                 name: H
                 color: orange
                 state_content:
@@ -15013,7 +15013,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_eclairage_salle_de_bain_2_mensuel
+                entity: sensor.eclairage_salle_de_bain_2_mensuel
                 name: M
                 color: deep-orange
                 state_content:
