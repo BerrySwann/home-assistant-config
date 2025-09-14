@@ -9,7 +9,7 @@
 # windrose-card - LABEL Direction du Vent Vence
 #========================================================================
 - sensor:
-  - name: "Direction du Vent Vence lable"
+  - name: "Direction du Vent Vence label"
     unique_id: vence_wind_direction_label
     state: >
       {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}

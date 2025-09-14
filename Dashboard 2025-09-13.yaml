@@ -13,7 +13,7 @@ streamline_templates:
               label: lum.
             - url: /dashboard-tablette/clim
               icon: mdi:air-conditioner
-              label: Cilm
+              label: Clim
             - url: /dashboard-tablette/stores
               icon: mdi:window-shutter
               label: Stores
@@ -61,7 +61,7 @@ streamline_templates:
             delta_7 = states('sensor.delta_7') | int %} {% set delta_5 =
             states('sensor.delta_5') | int %}
 
-            {% if temperature_exterieure >= 99 %}
+            {% if temperature_exterieure > 32 %}
                {% set temperature_cible = consigne_de_base %}
               - Consigne de Base : {{ consigne_de_base | round(0) }}°C
               {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
@@ -69,7 +69,7 @@ streamline_templates:
               {% set temperature_cible = temperature_exterieure - delta_5 %}
               **- Calcul T°Ext. > 32°C [ {{ temperature_exterieure | round(0) }} - {{ delta_5 }} = {{ temperature_cible | round(0) }} ]**
 
-            {% elif temperature_exterieure > 99 %}
+            {% elif temperature_exterieure >= 40 %}
               {% set temperature_cible = consigne_de_base %}
               - Consigne de Base : {{ consigne_de_base | round(0) }}°C
               {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
@@ -85,11 +85,11 @@ streamline_templates:
               - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
             {% endif %}
 
-            {% if temperature_exterieure > 99 %}        
+            {% if temperature_exterieure > 32 %}        
               - Température Cible = {{ temperature_cible | round(0) }}°C            
               - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
 
-            {% elif temperature_exterieure > 99 %}        
+            {% elif temperature_exterieure >= 40 %}        
               - Température Cible Cible = {{ temperature_cible | round(0) }}°C            
               - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
 
@@ -98,9 +98,9 @@ streamline_templates:
               - Température différentielle = {{ (states('sensor.temperature_differentielle') | int) + (temperature_cible - consigne_de_base) | round(0) }}°C
             {% endif %}
 
-            {% if temperature_exterieure > 26 %}
+            {% if temperature_exterieure > 32 %}
               **DELTA: {{ states('sensor.temperature_delta') }}**
-            {% elif temperature_exterieure > 40 %}        
+            {% elif temperature_exterieure >= 40 %}        
               **DELTA: {{ states('sensor.temperature_delta') }}**
             {% else %}     
               **DELTA: {{ states('sensor.temperature_delta') }}**
@@ -3692,7 +3692,7 @@ views:
                   top_right:
                     label: Direction du Vent
                     color: white
-                    entity: sensor.direction_du_vent_vence_lable
+                    entity: sensor.direction_du_vent_vence_label
                     label_text_size: 50
                     value_text_size: 60
                   bottom_left:
