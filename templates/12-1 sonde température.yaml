@@ -1,0 +1,32 @@
+
+# =======================================================================
+# Lecture des sondes temperature (Mini PC)
+# =======================================================================
+
+- sensor:
+      - name: "Température Carte Mère"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state: "{{ (states('sensor.thermal_zone_0_temp') | float / 1000) | round(1) }}"
+      - name: "Température CPU (Package)"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state: "{{ (states('sensor.temperature_cpu_package') | float / 1000) | round(1) }}"
+      - name: "Température Core 0"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state: "{{ (states('sensor.temperature_core_0') | float / 1000) | round(1) }}"
+      - name: "Température Core 1"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state: "{{ (states('sensor.temperature_core_1') | float / 1000) | round(1) }}"
+      - name: "Température Core 2"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state: "{{ (states('sensor.temperature_core_2') | float / 1000) | round(1) }}"
+      - name: "Température Core 3"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state: "{{ (states('sensor.temperature_core_3') | float / 1000) | round(1) }}"
+
+    

@@ -127,3 +127,40 @@
     scan_interval: 3600
     value_template: >-
       {{ value if value not in [None, "", "null"] else "unknown" }}
+
+      sensor:
+  - platform: command_line
+    name: "Température Carte Mère"
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: "{{ (value | float / 1000) | round(1) }}"
+
+  - platform: command_line
+    name: "Température CPU Package"
+    command: "cat /sys/class/thermal/thermal_zone1/temp"
+    unit_of_measurement: "°C"
+    value_template: "{{ (value | float / 1000) | round(1) }}"
+
+  - platform: command_line
+    name: "Température Core 0"
+    command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp2_input"
+    unit_of_measurement: "°C"
+    value_template: "{{ (value | float / 1000) | round(1) }}"
+
+  - platform: command_line
+    name: "Température Core 1"
+    command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp3_input"
+    unit_of_measurement: "°C"
+    value_template: "{{ (value | float / 1000) | round(1) }}"
+
+  - platform: command_line
+    name: "Température Core 2"
+    command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp4_input"
+    unit_of_measurement: "°C"
+    value_template: "{{ (value | float / 1000) | round(1) }}"
+
+ 
+    name: "Température Core 3"
+    command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp5_input"
+    unit_of_measurement: "°C"
+    value_template: "{{ (value | float / 1000) | round(1) }}"
