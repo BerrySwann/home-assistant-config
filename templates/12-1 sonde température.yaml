@@ -15,22 +15,22 @@
         device_class: temperature
         state: "{{ (states('sensor.temperature_cpu_package') | float / 1000) | round(1) }}"
       - name: "Température Core 0"
-        unique_id: temperature_c0
+        unique_id: temperature_core_0
         unit_of_measurement: "°C"
         device_class: temperature
         state: "{{ (states('sensor.temperature_core_0') | float / 1000) | round(1) }}"
       - name: "Température Core 1"
-        unique_id: temperature_c1
+        unique_id: temperature_core_1
         unit_of_measurement: "°C"
         device_class: temperature
         state: "{{ (states('sensor.temperature_core_1') | float / 1000) | round(1) }}"
       - name: "Température Core 2"
-        unique_id: temperature_c2
+        unique_id: temperature_core_2
         unit_of_measurement: "°C"
         device_class: temperature
         state: "{{ (states('sensor.temperature_core_2') | float / 1000) | round(1) }}"
       - name: "Température Core 3"
-        unique_id: temperature_c3
+        unique_id: temperature_core_3
         unit_of_measurement: "°C"
         device_class: temperature
         state: "{{ (states('sensor.temperature_core_3') | float / 1000) | round(1) }}"

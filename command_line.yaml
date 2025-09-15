@@ -150,28 +150,28 @@
 
 - sensor:
     name: "Température Core 0 (sys)"
-    unique_id: temperature_c0_sys
+    unique_id: temperature_core_0_sys
     command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp2_input"
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
 - sensor:
     name: "Température Core 1 (sys)"
-    unique_id: temperature_c1_sys
+    unique_id: temperature_core_1_sys
     command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp3_input"
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
 - sensor:
     name: "Température Core 2 (sys)"
-    unique_id: temperature_c2_sys
+    unique_id: temperature_core_2_sys
     command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp4_input"
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
 - sensor:
     name: "Température Core 3 (sys)"
-    unique_id: temperature_c3_sys
+    unique_id: temperature_core_ 3_sys
     command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp5_input"
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
