@@ -146,6 +146,7 @@
     unique_id: temperature_cpu_package_sys
     command: "cat /sys/class/thermal/thermal_zone1/temp"
     unit_of_measurement: "°C"
+    icon: mdi:thermometer
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
 - sensor:
