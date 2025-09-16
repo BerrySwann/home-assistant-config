@@ -399,6 +399,8 @@ devices:
   '0x70ac08fffe7c23f5':
     friendly_name: Poussoir (IKEA TRADFRI)
     icon: device_icons/0e5620d0686df0cf2acef54f6efff171.png
+  '0x1cc089fffe4e04f6':
+    friendly_name: Ecran P.C. 3 PLAY HUE
 groups:
   '1':
     friendly_name: Bureau z2m
