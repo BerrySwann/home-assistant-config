@@ -1,0 +1,5 @@
+- sensor:
+  - name: "all_standby_current"
+    unique_id: all_standby_current
+    unit_of_measurement: "A"
+    state: "0"

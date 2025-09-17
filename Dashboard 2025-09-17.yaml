@@ -707,7 +707,7 @@ streamline_templates:
           yaxis_id: Watts
           type: area
           color: '[[energy_color]]'
-          stroke_width: 2
+          stroke_width: 1
           opacity: 0.4
           fill_raw: last
           group_by:
@@ -719,7 +719,7 @@ streamline_templates:
           type: line
           color: '#F44336'
           unit: A
-          stroke_width: 1
+          stroke_width: 0.5
           group_by:
             func: last
             duration: 1m
@@ -737,7 +737,6 @@ streamline_templates:
         - entity: '[[mean_24h_kwh_entity]]'
           name: Mean(24h)
           color: '#F44336'
-          unit: kWh
           show:
             in_header: true
             in_brush: false
@@ -747,7 +746,7 @@ streamline_templates:
           yaxis_id: Watts
           type: area
           color: '[[energy_color]]'
-          stroke_width: 1
+          stroke_width: 0.5
           opacity: 0.4
           show:
             in_brush: true
@@ -3124,7 +3123,7 @@ views:
                 custom_fields:
                   titre: |
                     [[[
-                      return 'Info Qualitée d\'Air';
+                      return 'Qualité de l\'Air ambiant';
                     ]]]
                   espace_debut: |
                     [[[
@@ -11560,6 +11559,46 @@ views:
             grid_options:
               columns: 36
               rows: auto
+          - type: custom:apexcharts-card
+            chart_type: pie
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+            apex_config:
+              chart:
+                height: 200px
+              legend:
+                show: false
+            header:
+              show: true
+              title: Conso. journalière H.P./H.C. sur 24h.
+              show_states: true
+              colorize_states: true
+            all_series_config:
+              group_by:
+                func: diff
+                duration: 24h
+              show:
+                legend_value: false
+                extremas: false
+            show:
+              loading: true
+              last_updated: false
+            series:
+              - entity: sensor.ecojoko_consommation_hp_reseau
+                name: Heure pleine
+                color: rgb(211, 58, 79)
+              - entity: sensor.ecojoko_consommation_hc_reseau
+                name: Heure creuse
+                color: rgb(72, 132, 213)
+            card_mod:
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: horizontal-stack
             cards:
               - type: statistic
@@ -12085,6 +12124,8 @@ views:
                       entity_id: ^sensor.lampe*ikea*power$
                     - options: {}
                       entity_id: ^*hue*$
+                    - options: {}
+                      entity_id: ^*poco*$
                     - options: {}
                       entity_id: ^*device*$
                     - options: {}
@@ -12626,7 +12667,7 @@ views:
                                 - card_title: Vieilles
                                 - energy_entity: sensor.all_standby_power
                                 - energy_color: grey
-                                - current_entity: sensor.all_standby_power
+                                - current_entity: sensor.all_standby_current
                                 - mean_24h_kwh_entity: sensor.all_standby_mean_24h_kwh
                         attributes:
                           label: Vieilles
@@ -16757,7 +16798,7 @@ views:
                           navigation_path: '#disk'
                         entities:
                           - entity: sensor.system_monitor_utilisation_du_disque
-                            name: SSD MVMe 512Go
+                            name: SSD SATA 512Go
                             icon: mdi:harddisk
                             color: rgb(142,142,142)
                             height: 40px
@@ -16937,7 +16978,7 @@ views:
                     hours_to_show: 24
                     decimals: 0
                     hour24: true
-                    line_width: 3
+                    line_width: 2
                     points_per_hour: 6
                     card_mod:
                       style: |
@@ -16965,7 +17006,7 @@ views:
                             color: rgb(81,140,67)
                             height: 20px
                             min: 0
-                            max: 3.6
+                            max: 4
                             target: 3.125
                         animation:
                           state: 'on'
@@ -17015,9 +17056,9 @@ views:
                     icon_tap_action:
                       action: navigate
                       navigation_path: '#temp'
-                    entity: sensor.system_monitor_temperature_du_processeur
+                    entity: sensor.temperature_cpu_package_sys
                     name: Température CPU
-                    ring_entity: sensor.system_monitor_temperature_du_processeur
+                    ring_entity: sensor.temperature_cpu_package_sys
                     ring_type: open
                     ring_size: 3
                     scale: ticks_with_labels
@@ -17027,10 +17068,11 @@ views:
                     indicator: dot
                     min: 0
                     max: 100
+                    max_decimals: 0
                     colour:
                       '0': ha_green
-                      '59': ha_green
-                      '60': ha_orange
+                      '64': ha_green
+                      '65': ha_orange
                       '74': ha_orange
                       '75': ha_red
                     card_mod:
@@ -17039,12 +17081,13 @@ views:
                           background: none !important;
                           box-shadow: none !important;
                           border: none !important;
+                          cursor: pointer; /* confort visuel */
                         }
                   - type: custom:mini-graph-card
                     entities:
-                      - entity: sensor.system_monitor_temperature_du_processeur
+                      - entity: sensor.temperature_cpu_package_sys
                         color: rgb(255,193,7)
-                        name: Temp. CPU
+                        name: Température CPU
                     show:
                       labels: true
                       legend: true
@@ -17060,7 +17103,7 @@ views:
                     hours_to_show: 24
                     decimals: 0
                     hour24: true
-                    line_width: 3
+                    line_width: 2
                     points_per_hour: 6
                     tap_action:
                       action: navigate
@@ -17081,12 +17124,260 @@ views:
                   - type: horizontal-stack
                     cards:
                       - type: custom:bar-card
+                        entities:
+                          - entity: sensor.temperature_core_0_sys
+                            name: Core 0
+                            color: rgb(81,140,67)
+                            height: 25px
+                            min: 0
+                            max: 100
+                            target: 75
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: 'off'
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 64
+                          - color: rgb(255,152,1)
+                            from: 65
+                            to: 74
+                          - color: rgb(244,67,54)
+                            from: 75
+                            to: 100
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 12px;
+                              font-weight: bold;
+                              --mdc-icon-size: 30px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                      - type: custom:bar-card
+                        entities:
+                          - entity: sensor.temperature_core_1_sys
+                            name: Core 1
+                            color: rgb(81,140,67)
+                            height: 25px
+                            min: 0
+                            max: 100
+                            target: 75
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: 'off'
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 64
+                          - color: rgb(255,152,1)
+                            from: 65
+                            to: 74
+                          - color: rgb(244,67,54)
+                            from: 75
+                            to: 100
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 12px;
+                              font-weight: bold;
+                              --mdc-icon-size: 30px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                      - type: custom:bar-card
+                        entities:
+                          - entity: sensor.temperature_core_2_sys
+                            name: Core 2
+                            color: darkgreen
+                            height: 25px
+                            min: 0
+                            max: 100
+                            target: 75
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: 'off'
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 64
+                          - color: rgb(255,152,1)
+                            from: 65
+                            to: 74
+                          - color: rgb(244,67,54)
+                            from: 75
+                            to: 100
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 12px;
+                              font-weight: bold;
+                              --mdc-icon-size: 30px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                      - type: custom:bar-card
+                        entities:
+                          - entity: sensor.temperature_core_3_sys
+                            name: Core 3
+                            color: darkgreen
+                            height: 25px
+                            min: 0
+                            max: 100
+                            target: 75
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: 'off'
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 64
+                          - color: rgb(255,152,1)
+                            from: 65
+                            to: 74
+                          - color: rgb(244,67,54)
+                            from: 75
+                            to: 100
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 12px;
+                              font-weight: bold;
+                              --mdc-icon-size: 30px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                    }
+              - type: custom:stack-in-card
+                mode: vertical
+                cards:
+                  - type: horizontal-stack
+                    cards:
+                      - type: custom:bar-card
                         tap_action:
                           action: navigate
                           navigation_path: '#temp'
                         entities:
-                          - entity: sensor.system_monitor_temperature_du_processeur
-                            name: Temp. CPU
+                          - entity: sensor.temperature_cpu_package_sys
+                            name: Température CPU
+                            icon: mdi:thermometer
+                            color: rgb(81,140,67)
+                            height: 20px
+                            min: 0
+                            max: 100
+                            target: 88
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: inside
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 64
+                          - color: rgb(255,152,1)
+                            from: 65
+                            to: 74
+                          - color: rgb(244,67,54)
+                            from: 75
+                            to: 100
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 11px;
+                              font-weight: bold;
+                              --mdc-icon-size: 15px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
+              - type: custom:stack-in-card
+                mode: vertical
+                cards:
+                  - type: horizontal-stack
+                    cards:
+                      - type: custom:bar-card
+                        tap_action:
+                          action: navigate
+                          navigation_path: '#temp'
+                        entities:
+                          - entity: sensor.temperature_carte_mere_sys
+                            name: Température Carte Mère
                             icon: mdi:thermometer
                             color: rgb(81,140,67)
                             height: 20px
@@ -17187,7 +17478,7 @@ views:
                     hours_to_show: 24
                     decimals: 0
                     hour24: true
-                    line_width: 3
+                    line_width: 2
                     points_per_hour: 6
                     tap_action:
                       action: navigate
@@ -17522,162 +17813,25 @@ views:
                 hide_backdrop: false
                 close_on_click: false
                 bg_opacity: '0'
-              - type: custom:apexcharts-card
-                experimental:
-                  color_threshold: true
-                  brush: true
-                graph_span: 24h
-                cache: true
-                span:
-                  offset: +2m
-                apex_config:
-                  chart:
-                    height: 340px
-                now:
-                  show: true
-                  color: darkred
-                  label: Now
-                header:
-                  show: true
-                  title: Mini PC
-                  show_states: true
-                  colorize_states: true
-                yaxis:
-                  - id: Watts
-                    min: 0
-                    max: auto
-                    decimals: 0
-                    opposite: false
-                    apex_config:
-                      tickAmount: 10
-                  - id: A
-                    min: 0
-                    max: auto
-                    decimals: 2
-                    opposite: true
-                    apex_config:
-                      tickAmount: 10
-                all_series_config:
-                  show:
-                    legend_value: false
-                    extremas: true
-                  curve: stepline
-                brush:
-                  selection_span: 1h
-                series:
-                  - entity: sensor.prise_mini_pc_ikea_power
-                    name: Instantané
-                    yaxis_id: Watts
-                    type: area
-                    color: gainsboro
-                    stroke_width: 2
-                    opacity: 0.4
-                    fill_raw: last
-                    group_by:
-                      func: last
-                      duration: 1m
-                  - entity: sensor.prise_mini_pc_ikea_current
-                    name: Intensité
-                    yaxis_id: A
-                    type: line
-                    color: '#F44336'
-                    unit: A
-                    stroke_width: 1
-                    group_by:
-                      func: last
-                      duration: 1m
-                  - entity: sensor.mini_pc_mean_24h_wh
-                    name: Avg(24h)
-                    yaxis_id: Watts
-                    type: line
-                    color: '#F44336'
-                    unit: W
-                    stroke_width: 2
-                    stroke_dash: 8
-                  - entity: sensor.prise_mini_pc_ikea_power
-                    yaxis_id: Watts
-                    type: area
-                    color: gainsboro
-                    stroke_width: 1
-                    opacity: 0.4
-                    show:
-                      in_brush: true
-                      in_chart: false
-                    group_by:
-                      func: last
-                      duration: 10m
+              - type: custom:streamline-card
+                template: conso_temps_reel_appareil
+                variables:
+                  - card_title: Prise Mini P.C.
+                  - energy_entity: sensor.prise_mini_pc_ikea_power
+                  - energy_color: gainsboro
+                  - current_entity: sensor.prise_mini_pc_ikea_current
+                  - mean_24h_kwh_entity: sensor.mini_pc_mean_24h_wh
                 card_mod:
                   style: >
                     ha-card { background: none !important; border: none
                     !important; box-shadow: none !important; }
-              - type: custom:apexcharts-card
-                graph_span: 730h
-                cache: true
-                span:
-                  end: day
-                apex_config:
-                  chart:
-                    height: 250px
-                now:
-                  show: false
-                header:
-                  show: true
-                  title: Mini PC
-                  show_states: true
-                  colorize_states: true
-                yaxis:
-                  - id: W_day
-                    min: 0
-                    max: auto
-                    decimals: 0
-                    opposite: false
-                    apex_config:
-                      tickAmount: 10
-                  - id: Avg
-                    min: 0
-                    max: auto
-                    decimals: 0
-                    opposite: true
-                    apex_config:
-                      tickAmount: 10
-                all_series_config:
-                  show:
-                    legend_value: true
-                    extremas: true
-                brush:
-                  selection_span: 24h
-                series:
-                  - entity: sensor.prise_mini_pc_ikea_energy
-                    name: Conso. par jour
-                    yaxis_id: W_day
-                    type: column
-                    color: gainsboro
-                    unit: Wh
-                    transform: return x * 1000;
-                    group_by:
-                      func: diff
-                      duration: 24h
-                      start_with_last: true
-                  - entity: sensor.prise_mini_pc_ikea_energy
-                    name: Avg(730h)
-                    yaxis_id: Avg
-                    type: line
-                    color: '#F44336'
-                    unit: Wh
-                    stroke_width: 2
-                    stroke_dash: 8
-                    group_by:
-                      func: avg
-                      duration: 730h
-                  - entity: sensor.mini_pc_mean_730h_wh
-                    name: Mean(730h)
-                    color: '#FF5252'
-                    unit: Wh
-                    stroke_width: 2
-                    stroke_dash: 8
-                    show:
-                      in_brush: false
-                      in_chart: false
+              - type: custom:streamline-card
+                template: conso_mensuelle_appareil
+                variables:
+                  title: Conso. mensuel Prise Mini P.C.
+                  energy_entity: sensor.prise_mini_pc_ikea_energy
+                  color: gainsboro
+                  mean_730h_kwh_entity: sensor.mini_pc_mean_730h_wh
                 card_mod:
                   style: >
                     ha-card { background: none !important; border: none
@@ -17693,7 +17847,7 @@ views:
                 show_last_changed: false
                 show_attribute: false
                 button_type: name
-                name: Espace disque utilisé (SSD Mvme)
+                name: Espace disque utilisé (SSD SATA)
                 icon: mdi:harddisk
                 show_icon: true
                 show_name: true
