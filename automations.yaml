@@ -2429,3 +2429,21 @@
 - *id001
 - *id001
 - *id001
+- id: '1758129997644'
+  alias: (C) [TEST Notification température Up ou Down de 6h00 -> 20:00]
+  description: Notification température Up ou Down en fonction des présences et réseaux
+  triggers:
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_network_type
+    - sensor.th_balcon_nord_temperature
+    trigger: state
+  conditions:
+  - condition: time
+    after: 06:00:00
+    before: '20:00:00'
+  actions:
+  - data:
+      message: '{{ states(''sensor.message_clim_personnalise'') }}'
+    action: notify.mobile_app_poco_x7_pro
+  mode: queued
