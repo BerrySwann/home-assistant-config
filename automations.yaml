@@ -1604,15 +1604,20 @@
     then:
     - data:
         title: Clim [2] en [CELLULAR]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
-          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_bureau_nous',
+          'on') and\n      is_state('switch.clim_chambre_nous', 'on') %}\n  {% if
+          trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
           }}° Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {%
           elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n
           \     T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature') }}°
           Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {% endif
-          %}\n  {% endif %}\n{% endif %}"
+          %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id == 'sensor.th_balcon_nord_temperature'
+          %}\n    {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
+          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°\n
+          \   {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
@@ -1641,7 +1646,12 @@
           Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
+          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
@@ -1673,7 +1683,12 @@
           Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Bureau {{ (states('sensor.temperature_differentielle')
           | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
+          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
@@ -1706,7 +1721,12 @@
           }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
           + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
           | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
+          | float }}°\n   {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754231821638'
@@ -2103,14 +2123,20 @@
     then:
     - data:
         title: Clim-n [2] en [CELLULAR]
-        message: "{% if trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n
-          \ {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n    T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
-          Les 3 Clim {{ states('sensor.temperature_cible') | float }}°\n  {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n    T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Les 3 Clim {{
-          states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{% endif
-          %}"
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_bureau_nous',
+          'on') and\n      is_state('switch.clim_chambre_nous', 'on') %}\n  {% if
+          trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}° Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {%
+          elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n
+          \     T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature') }}°
+          Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {% endif
+          %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id == 'sensor.th_balcon_nord_temperature'
+          %}\n    {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
+          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°\n
+          \   {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
     if:
@@ -2140,17 +2166,23 @@
     then:
     - data:
         title: Clim-n [MAMOUR] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n
-          \ {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n    T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
-          Chambre {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% elif states('sensor.th_balcon_nord_temperature_trend')
-          == 'decreasing' %}\n    T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}° Chambre {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{%
-          endif %}"
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
+          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
+          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
@@ -2183,17 +2215,23 @@
     then:
     - data:
         title: Clim-n [ERIC] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n
-          \ {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n    T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
-          Chambre {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}° Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% elif states('sensor.th_balcon_nord_temperature_trend')
-          == 'decreasing' %}\n    T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}° Chambre {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{%
-          endif %}"
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
+          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
+          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Bureau {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
@@ -2226,17 +2264,24 @@
     then:
     - data:
         title: Clim-n [2] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n
-          \ {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n    T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°
-          Chambre {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% elif states('sensor.th_balcon_nord_temperature_trend')
-          == 'decreasing' %}\n    T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}° Chambre {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Bureau {{ states('sensor.temperature_cible') | float }}°\n  {% endif %}\n{%
-          endif %}"
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
+          + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend')
+          == 'decreasing' %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
+          + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n   {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
+          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
+          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
+          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
+          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754491576463'
