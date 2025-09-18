@@ -598,3 +598,30 @@
   sampling_size: 400
   # "[S132]"
   # -test- -upload-
+
+
+
+  - platform: history_stats
+    name: "Ecojoko Jour 0"
+    entity_id: sensor.ecojoko_consommation_reseau
+    state: "available"
+    type: sum
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+  - platform: history_stats
+    name: "Ecojoko Jour 1"
+    entity_id: sensor.ecojoko_consommation_reseau
+    state: "available"
+    type: sum
+    start: "{{ now().replace(hour=0, minute=0, second=0) - timedelta(days=1) }}"
+    end: "{{ now().replace(hour=0, minute=0, second=0) }}"
+
+  - platform: history_stats
+    name: "Ecojoko Jour 2"
+    entity_id: sensor.ecojoko_consommation_reseau
+    state: "available"
+    type: sum
+    start: "{{ now().replace(hour=0, minute=0, second=0) - timedelta(days=2) }}"
+    end: "{{ now().replace(hour=0, minute=0, second=0) - timedelta(days=1) }}"
+  # Répétez pour J3 à J7 en ajustant les `timedelta(days=X)`
