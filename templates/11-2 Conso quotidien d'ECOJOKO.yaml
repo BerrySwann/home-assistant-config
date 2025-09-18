@@ -1,0 +1,134 @@
+# ==========================================================================
+# SENSORS POUR CALCULER LA CONSOMMATION QUOTIDIENNE (7 Jours)
+# ==========================================================================
+- sensor:
+  - name: "Ecojoko Consommation Jour 0"
+    unique_id: ecojoko_conso_jour_0
+    unit_of_measurement: "kWh"
+    state: >
+      {% set end_state = states('sensor.ecojoko_consommation_reseau') | float(0) %}
+      {% set start_state = state_attr('sensor.ecojoko_consommation_reseau', 'last_changed') %}
+      {% if start_state %}
+        {% set states_history = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+        {% if states_history %}
+          {% set start_value = states_history | selectattr('last_changed', 'lt', now().replace(hour=0, minute=0, second=0)) | map(attribute='state') | first | float(0) %}
+          {{ (end_state - start_value) | round(2) }}
+        {% else %}
+          {{ end_state | round(2) }}
+        {% endif %}
+      {% else %}
+        {{ end_state | round(2) }}
+      {% endif %}
+    icon: mdi:flash
+
+  - name: "Ecojoko Consommation Jour 1"
+    unique_id: ecojoko_conso_jour_1
+    unit_of_measurement: "kWh"
+    state: >
+      {% set start = now().replace(hour=0, minute=0, second=0) - timedelta(days=1) %}
+      {% set end = now().replace(hour=0, minute=0, second=0) %}
+      {% set states = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+      {% if states %}
+        {% set start_value = states | selectattr('last_changed', 'lt', end) | selectattr('last_changed', 'ge', start) | map(attribute='state') | first | float(0) %}
+        {% set end_value = states | selectattr('last_changed', 'lt', end) | map(attribute='state') | last | float(0) %}
+        {{ (end_value - start_value) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    icon: mdi:flash
+
+  - name: "Ecojoko Consommation Jour 2"
+    unique_id: ecojoko_conso_jour_2
+    unit_of_measurement: "kWh"
+    state: >
+      {% set start = now().replace(hour=0, minute=0, second=0) - timedelta(days=2) %}
+      {% set end = now().replace(hour=0, minute=0, second=0) - timedelta(days=1) %}
+      {% set states = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+      {% if states %}
+        {% set start_value = states | selectattr('last_changed', 'lt', end) | selectattr('last_changed', 'ge', start) | map(attribute='state') | first | float(0) %}
+        {% set end_value = states | selectattr('last_changed', 'lt', end) | map(attribute='state') | last | float(0) %}
+        {{ (end_value - start_value) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    icon: mdi:flash
+
+  - name: "Ecojoko Consommation Jour 3"
+    unique_id: ecojoko_conso_jour_3
+    unit_of_measurement: "kWh"
+    state: >
+      {% set start = now().replace(hour=0, minute=0, second=0) - timedelta(days=3) %}
+      {% set end = now().replace(hour=0, minute=0, second=0) - timedelta(days=2) %}
+      {% set states = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+      {% if states %}
+        {% set start_value = states | selectattr('last_changed', 'lt', end) | selectattr('last_changed', 'ge', start) | map(attribute='state') | first | float(0) %}
+        {% set end_value = states | selectattr('last_changed', 'lt', end) | map(attribute='state') | last | float(0) %}
+        {{ (end_value - start_value) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    icon: mdi:flash
+
+  - name: "Ecojoko Consommation Jour 4"
+    unique_id: ecojoko_conso_jour_4
+    unit_of_measurement: "kWh"
+    state: >
+      {% set start = now().replace(hour=0, minute=0, second=0) - timedelta(days=4) %}
+      {% set end = now().replace(hour=0, minute=0, second=0) - timedelta(days=3) %}
+      {% set states = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+      {% if states %}
+        {% set start_value = states | selectattr('last_changed', 'lt', end) | selectattr('last_changed', 'ge', start) | map(attribute='state') | first | float(0) %}
+        {% set end_value = states | selectattr('last_changed', 'lt', end) | map(attribute='state') | last | float(0) %}
+        {{ (end_value - start_value) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    icon: mdi:flash
+
+  - name: "Ecojoko Consommation Jour 5"
+    unique_id: ecojoko_conso_jour_5
+    unit_of_measurement: "kWh"
+    state: >
+      {% set start = now().replace(hour=0, minute=0, second=0) - timedelta(days=5) %}
+      {% set end = now().replace(hour=0, minute=0, second=0) - timedelta(days=4) %}
+      {% set states = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+      {% if states %}
+        {% set start_value = states | selectattr('last_changed', 'lt', end) | selectattr('last_changed', 'ge', start) | map(attribute='state') | first | float(0) %}
+        {% set end_value = states | selectattr('last_changed', 'lt', end) | map(attribute='state') | last | float(0) %}
+        {{ (end_value - start_value) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    icon: mdi:flash
+
+  - name: "Ecojoko Consommation Jour 6"
+    unique_id: ecojoko_conso_jour_6
+    unit_of_measurement: "kWh"
+    state: >
+      {% set start = now().replace(hour=0, minute=0, second=0) - timedelta(days=6) %}
+      {% set end = now().replace(hour=0, minute=0, second=0) - timedelta(days=5) %}
+      {% set states = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+      {% if states %}
+        {% set start_value = states | selectattr('last_changed', 'lt', end) | selectattr('last_changed', 'ge', start) | map(attribute='state') | first | float(0) %}
+        {% set end_value = states | selectattr('last_changed', 'lt', end) | map(attribute='state') | last | float(0) %}
+        {{ (end_value - start_value) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    icon: mdi:flash
+
+  - name: "Ecojoko Consommation Jour 7"
+    unique_id: ecojoko_conso_jour_7
+    unit_of_measurement: "kWh"
+    state: >
+      {% set start = now().replace(hour=0, minute=0, second=0) - timedelta(days=7) %}
+      {% set end = now().replace(hour=0, minute=0, second=0) - timedelta(days=6) %}
+      {% set states = state_attr('sensor.ecojoko_consommation_reseau', 'states') %}
+      {% if states %}
+        {% set start_value = states | selectattr('last_changed', 'lt', end) | selectattr('last_changed', 'ge', start) | map(attribute='state') | first | float(0) %}
+        {% set end_value = states | selectattr('last_changed', 'lt', end) | map(attribute='state') | last | float(0) %}
+        {{ (end_value - start_value) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    icon: mdi:flash
