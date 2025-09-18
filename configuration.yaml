@@ -32,8 +32,8 @@ http:
   login_attempts_threshold: 3
   # seuil de tentatives
   #clé privé / public
-  ssl_certificate: /ssl/local.crt
-  ssl_key: /ssl/local.key
+  #ssl_certificate: /ssl/local.crt
+  #ssl_key: /ssl/local.key
 
 #renvoi au fichier template.yaml
 #template: !include template.yaml
