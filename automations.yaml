@@ -835,24 +835,11 @@
   description: Automatisation basée sur le type de réseau (Wifi et Cellular) des deux
     portables
   triggers:
-  - trigger: state
-    entity_id: sensor.ne2213_mamour_network_type
-    to: cellular
-    from: wifi
-  - trigger: state
-    entity_id: sensor.ne2213_mamour_network_type
-    to: wifi
-    from: cellular
-  - trigger: state
-    entity_id:
-    - sensor.poco_x7_pro_network_type
-    to: cellular
-    from: wifi
-  - trigger: state
-    entity_id:
-    - sensor.poco_x7_pro_network_type
-    to: wifi
-    from: cellular
+  - triggers:
+    - entity_id:
+      - sensor.ne2213_mamour_network_type
+      - sensor.poco_x7_pro_network_type
+      trigger: state
   conditions: []
   actions:
   - choose:
