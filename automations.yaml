@@ -2272,8 +2272,8 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754491576463'
-  alias: (I) [ CLIM 'off' si delta = -1 ] Coupe les clim si le delta intérieur et
-    extérieur est égale a -1
+  alias: (I) [ CLIM 'off' si delta >= -1 ] Coupe les clim si le delta intérieur et
+    extérieur est égale ou superieur a -1
   description: ''
   triggers:
   - trigger: numeric_state
@@ -2299,6 +2299,17 @@
     - fri
     - sat
     - sun
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: switch.clim_salon_nous
+      state: 'on'
+    - condition: state
+      entity_id: switch.clim_du_bureau_nous
+      state: 'on'
+    - condition: state
+      entity_id: switch.clim_chambre_nous
+      state: 'on'
   actions:
   - action: climate.set_hvac_mode
     metadata: {}
@@ -2314,19 +2325,6 @@
     data:
       title: T°Ext < à 26°C
       message: T°Ext < à 26°C, les clim ont été éteinte.
-  - action: notify.mobile_app_ne2213_mamour
-    metadata: {}
-    data:
-      message: La température extérieure est inferieur a 26 degrés, les clim ont été
-        éteinte. Vous pouvez ouvrir les fenêtres.
-      title: T°Ext < à 26°C, les clim ont été éteinte.
-    enabled: false
-  - action: notify.alexa_media_echo_show_salon
-    metadata: {}
-    data:
-      message: La température extérieure est inferieur a 26 degrés, les clim ont été
-        éteinte. Vous pouvez ouvrir les fenêtres.
-    enabled: false
   - delay:
       hours: 1
       minutes: 0
@@ -2417,7 +2415,7 @@
 - *id001
 - *id001
 - id: '1758129997644'
-  alias: (C) [TEST Notification température Up ou Down de 6h00 -> 20:00]
+  alias: (C) [TEST Notification température Up ou Down de 6h00 -> 20h00]
   description: Notification température Up ou Down en fonction des présences et réseaux
   triggers:
   - entity_id:
@@ -2429,6 +2427,24 @@
   - condition: time
     after: 06:00:00
     before: '20:00:00'
+  actions:
+  - data:
+      message: '{{ states(''sensor.message_clim_personnalise'') }}'
+    action: notify.mobile_app_poco_x7_pro
+  mode: queued
+- id: '1758298361594'
+  alias: (D) [TEST Notification température Up ou Down de 20h00 -> 6h00]
+  description: Notification température Up ou Down en fonction des présences et réseaux
+  triggers:
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_network_type
+    - sensor.th_balcon_nord_temperature
+    trigger: state
+  conditions:
+  - condition: time
+    after: '20:00:00'
+    before: 06:00:00
   actions:
   - data:
       message: '{{ states(''sensor.message_clim_personnalise'') }}'

@@ -21,7 +21,7 @@
       {% set tres_diff = (temp_diff + (temp_cible - consigne_base)) | round(1) %}
       {% set sant_clims = is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous', 'on') and is_state('switch.clim_chambre_nous', 'on') %}
       {% if mamour == 'cellular' and eric == 'cellular' %}
-        Clim [2] en [CELLULAR] -
+        Clim [2] en [CELLULAR]
         {% if sant_clims %}
           {% if tendance == 'increasing' %}
             T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_cible }}°.
@@ -40,7 +40,7 @@
           {% endif %}
         {% endif %}
       {% elif mamour == 'wifi' and eric == 'cellular' %}
-        Clim [MAMOUR] en [WIFI] -
+        Clim [MAMOUR] en [WIFI]
         {% if sant_clims %}
           {% if tendance == 'increasing' %}
             T°Ext Up >>> {{ temp_ext }}° Salon {{ tres_diff }}° - Bureau & Chambre {{ temp_cible }}°
@@ -59,7 +59,7 @@
           {% endif %}
         {% endif %}
       {% elif mamour == 'cellular' and eric == 'wifi' %}
-        Clim [ERIC] en [WIFI] -
+        Clim [ERIC] en [WIFI]
         {% if sant_clims %}
           {% if tendance == 'increasing' %}
             T°Ext Up >>> {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}°
@@ -78,7 +78,7 @@
           {% endif %}
         {% endif %}
       {% elif mamour == 'wifi' and eric == 'wifi' %}
-        Clim [2] en [WIFI] -
+        Clim [2] en [WIFI] 
         {% if sant_clims %}
           {% if tendance == 'increasing' %}
             T°Ext Up >>> {{ temp_ext }}° Salon & Bureau {{ tres_diff }}° & Chambre {{ temp_cible }}°
