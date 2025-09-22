@@ -712,8 +712,8 @@ var init_decorators = __esm(() => {
   init_query_assigned_nodes();
 });
 
-// src/config.ts
-var DesktopPosition, DEFAULT_NAVBAR_CONFIG, STUB_CONFIG;
+// src/types/config.ts
+var DesktopPosition, NavbarCustomActions, DEFAULT_NAVBAR_CONFIG, STUB_CONFIG;
 var init_config = __esm(() => {
   ((DesktopPosition2) => {
     DesktopPosition2["top"] = "top";
@@ -721,6 +721,16 @@ var init_config = __esm(() => {
     DesktopPosition2["bottom"] = "bottom";
     DesktopPosition2["right"] = "right";
   })(DesktopPosition ||= {});
+  ((NavbarCustomActions2) => {
+    NavbarCustomActions2["openPopup"] = "open-popup";
+    NavbarCustomActions2["navigateBack"] = "navigate-back";
+    NavbarCustomActions2["showNotifications"] = "show-notifications";
+    NavbarCustomActions2["quickbar"] = "quickbar";
+    NavbarCustomActions2["openEditMode"] = "open-edit-mode";
+    NavbarCustomActions2["toggleMenu"] = "toggle-menu";
+    NavbarCustomActions2["logout"] = "logout";
+    NavbarCustomActions2["customJSAction"] = "custom-js-action";
+  })(NavbarCustomActions ||= {});
   DEFAULT_NAVBAR_CONFIG = {
     routes: [],
     template: undefined,
@@ -730,7 +740,8 @@ var init_config = __esm(() => {
         desktop_px: 100,
         mobile_px: 80,
         media_player_px: 100
-      }
+      },
+      reflect_child_state: false
     },
     desktop: {
       show_labels: false,
@@ -791,7 +802,125 @@ var init_config = __esm(() => {
   };
 });
 
-// src/dom-utils.ts
+// src/types/types.ts
+function genericGetProperty(obj, key) {
+  return key.split(".").reduce((o6, k2) => o6?.[k2], obj);
+}
+function genericSetProperty(obj, key, value) {
+  const paths = key.split(".");
+  const finalKey = paths.pop();
+  const copy = Array.isArray(obj) ? [...obj] : { ...obj };
+  let currentObj = copy;
+  let originalObj = obj;
+  for (let i5 = 0;i5 < paths.length; i5++) {
+    const p3 = paths[i5];
+    if (typeof originalObj[p3] !== "object" || originalObj[p3] === undefined || originalObj[p3] === null) {
+      const nextKey = paths[i5 + 1];
+      const isArrayIndex = nextKey !== undefined && !isNaN(Number(nextKey));
+      currentObj[p3] = isArrayIndex ? [] : {};
+    } else {
+      currentObj[p3] = Array.isArray(originalObj[p3]) ? [...originalObj[p3]] : { ...originalObj[p3] };
+    }
+    currentObj = currentObj[p3];
+    originalObj = originalObj[p3] ?? {};
+  }
+  currentObj[finalKey] = value;
+  return copy;
+}
+
+// src/types/index.ts
+var init_types = __esm(() => {
+  init_config();
+});
+
+// src/utils/base-types/object.ts
+function deepMergeKeepArrays(item, newData) {
+  if (Array.isArray(newData)) {
+    return newData;
+  } else if (newData !== null && typeof newData === "object" && item !== null && typeof item === "object") {
+    const result = { ...item };
+    for (const key in newData) {
+      if (newData[key] === null) {
+        delete result[key];
+      } else if (newData[key] !== undefined) {
+        result[key] = deepMergeKeepArrays(item[key], newData[key]);
+      }
+    }
+    return result;
+  } else if (newData !== undefined) {
+    return newData;
+  }
+  return item;
+}
+
+// src/utils/base-types/string.ts
+var mapStringToEnum = (enumType, value) => {
+  if (Object.values(enumType).includes(value)) {
+    return value;
+  }
+  return;
+}, generateHash = (str) => {
+  let hash = 0;
+  for (let i5 = 0;i5 < str.length; i5++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i5);
+  }
+  return hash.toString();
+};
+
+// src/utils/template.ts
+var templateFunctionCache, isTemplate = (value) => {
+  return typeof value === "string" && value.trim().startsWith("[[[") && value.trim().endsWith("]]]");
+}, cleanTemplate = (value) => {
+  if (!isTemplate(value))
+    return null;
+  return value.replace(/\[\[\[|\]\]\]/g, "").trim();
+}, wrapTemplate = (value) => {
+  return isTemplate(value) ? value : `[[[${value}]]]`;
+}, processTemplate = (hass, navbar, template) => {
+  if (template == null || !isTemplate(template)) {
+    return template;
+  }
+  try {
+    const clean = cleanTemplate(template);
+    if (clean === null) {
+      console.error(`NavbarCard: Invalid template format: ${template}`);
+      return template;
+    }
+    const hashed = generateHash(clean);
+    let func = templateFunctionCache.get(hashed);
+    if (!func) {
+      func = new Function("states", "user", "hass", "navbar", clean);
+      templateFunctionCache.set(hashed, func);
+    }
+    const result = func(hass.states, hass.user, hass, {
+      isDesktop: navbar?.isDesktop ?? false
+    });
+    if (result === undefined) {
+      console.error(`NavbarCard: Template did not return a value: ${template}`);
+      return template;
+    }
+    return result;
+  } catch (err) {
+    console.error(`NavbarCard: Error evaluating template: ${err}`);
+    return template;
+  }
+}, processBadgeTemplate = (hass, template) => {
+  if (!hass || !template)
+    return false;
+  try {
+    const func = new Function("states", `return ${template}`);
+    return Boolean(func(hass.states));
+  } catch (err) {
+    console.error("NavbarCard: Error evaluating badge template:", err);
+    return false;
+  }
+};
+var init_template = __esm(() => {
+  init_utils();
+  templateFunctionCache = new Map;
+});
+
+// src/utils/dom.ts
 function fireDOMEvent(node, type, options, detailOverride, EventConstructor) {
   const constructor = EventConstructor || Event;
   const event = new constructor(type, options);
@@ -881,7 +1010,7 @@ var DASHBOARD_PADDING_STYLE_ID = "navbar-card-forced-padding-styles", DEFAULT_ST
           display: block;
           height: ${mobilePaddingPx}px;
           width: 100%;
-          background-color: transparent; 
+          background-color: transparent;
           }
         }
       `;
@@ -907,98 +1036,28 @@ var DASHBOARD_PADDING_STYLE_ID = "navbar-card-forced-padding-styles", DEFAULT_ST
 }, injectStyles = (root, defaultStyles, userStyles) => {
   createStyleElement(root, DEFAULT_STYLES_ID, defaultStyles);
   createStyleElement(root, USER_STYLES_ID, userStyles);
+}, hapticFeedback = (hapticType = "selection") => {
+  return fireDOMEvent(window, "haptic", undefined, hapticType);
+}, preventEventDefault = (e5) => {
+  e5.preventDefault();
+  e5.stopPropagation();
+}, conditionallyRender = (condition, renderContent) => {
+  if (condition) {
+    return renderContent();
+  }
+  return x`<div class="loader-container">
+    <span class="loader"></span>
+  </div>`;
 };
-var init_dom_utils = __esm(() => {
+var init_dom = __esm(() => {
+  init_lit();
   init_config();
 });
 
-// src/utils.ts
-function deepMergeKeepArrays(item, newData) {
-  if (Array.isArray(newData)) {
-    return newData;
-  } else if (newData !== null && typeof newData === "object" && item !== null && typeof item === "object") {
-    const result = { ...item };
-    for (const key in newData) {
-      if (newData[key] === null) {
-        delete result[key];
-      } else if (newData[key] !== undefined) {
-        result[key] = deepMergeKeepArrays(item[key], newData[key]);
-      }
-    }
-    return result;
-  } else if (newData !== undefined) {
-    return newData;
-  }
-  return item;
-}
-var mapStringToEnum = (enumType, value) => {
-  if (Object.values(enumType).includes(value)) {
-    return value;
-  }
-  return;
-}, processBadgeTemplate = (hass, template) => {
-  if (!template || !hass)
-    return false;
-  try {
-    const func = new Function("states", `return ${template}`);
-    return func(hass.states);
-  } catch (e5) {
-    console.error(`NavbarCard: Error evaluating badge template: ${e5}`);
-    return false;
-  }
-}, generateHash = (str) => {
-  let hash = 0;
-  for (let i5 = 0;i5 < str.length; i5++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i5);
-  }
-  return hash.toString();
-}, templateFunctionCache, extractAccessibleStateVariables = (navbar) => {
-  return {
-    isDesktop: navbar?.isDesktop ?? false
-  };
-}, processTemplate = (hass, navbar, template) => {
-  if (!template)
-    return template;
-  if (typeof template !== "string")
-    return template;
-  if (!(template.trim().startsWith("[[[") && template.trim().endsWith("]]]"))) {
-    return template;
-  }
-  try {
-    const cleanTemplate = template.replace(/\[\[\[|\]\]\]/g, "");
-    const hashedTemplate = generateHash(cleanTemplate);
-    let func = templateFunctionCache.get(hashedTemplate);
-    if (!func) {
-      func = new Function("states", "user", "hass", "navbar", cleanTemplate);
-      templateFunctionCache.set(hashedTemplate, func);
-    }
-    return func(hass.states, hass.user, hass, extractAccessibleStateVariables(navbar));
-  } catch (e5) {
-    console.error(`NavbarCard: Error evaluating template: ${e5}`);
-    return template;
-  }
-}, cleanTemplate = (template) => {
-  if (typeof template === "string") {
-    return template.replace(/\[\[\[|\]\]\]/g, "");
-  }
-  return template?.toString() ?? "";
-}, isTemplate = (template) => {
-  if (typeof template === "string") {
-    return template.trim().startsWith("[[[") && template.trim().endsWith("]]]");
-  }
-  return false;
-}, wrapTemplate = (template) => {
-  const trimmed = template.trim();
-  if (trimmed.startsWith("[[[") && trimmed.endsWith("]]]")) {
-    return template;
-  }
-  return `[[[${template}]]]`;
-}, hapticFeedback = (hapticType = "selection") => {
-  return fireDOMEvent(window, "haptic", undefined, hapticType);
-};
+// src/utils/index.ts
 var init_utils = __esm(() => {
-  init_dom_utils();
-  templateFunctionCache = new Map;
+  init_template();
+  init_dom();
 });
 
 // src/styles.ts
@@ -1029,7 +1088,7 @@ var init_styles = __esm(() => {
     --navbar-box-shadow-desktop: var(--material-shadow-elevation-2dp);
     --navbar-box-shadow-mobile-floating: var(--material-shadow-elevation-2dp);
 
-    --navbar-z-index: 3;
+    --navbar-z-index: 7;
     --navbar-popup-backdrop-z-index: 900;
     --navbar-popup-z-index: 901;
   }
@@ -1196,6 +1255,13 @@ var init_styles = __esm(() => {
     border-radius: 14px;
     object-fit: cover;
     margin-right: 6px;
+  }
+
+  .media-player .media-player-icon-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--disabled-color);
   }
 
   .media-player .media-player-info {
@@ -1501,6 +1567,10 @@ var init_styles = __esm(() => {
     --icon-primary-color: var(--navbar-primary-color);
   }
 
+  .popup-item.popuplabelbackground {
+    max-width: unset;
+  }
+
   .popup-item.active .button {
     color: var(--navbar-primary-color);
     background: color-mix(in srgb, var(--navbar-primary-color) 30%, white);
@@ -1511,31 +1581,32 @@ var init_styles = __esm(() => {
     display: flex;
     flex-direction: column;
     gap: 6px;
-
-    ha-textfield {
-      width: 100%;
-    }
-
-    ha-button {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .navbar-template-toggle-button {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5em;
-      padding: 0px !important;
-      border-radius: 99px;
-      font-size: 0.85em;
-      font-weight: 600;
-      border: 0px;
-      padding: 4px 8px !important;
-      cursor: pointer;
-    }
   }
+
+  .navbar-editor ha-textfield {
+    width: 100%;
+  }
+
+  .navbar-editor ha-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .navbar-editor .navbar-template-toggle-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0px !important;
+    border-radius: 99px;
+    font-size: 0.85em;
+    font-weight: 600;
+    border: 0px;
+    padding: 4px 8px !important;
+    cursor: pointer;
+  }
+
   .editor-section {
     display: flex;
     flex-direction: column;
@@ -1549,10 +1620,9 @@ var init_styles = __esm(() => {
   }
   .editor-row-item {
     flex: 1;
-
-    ha-textfield {
-      width: 100%;
-    }
+  }
+  .editor-row-item ha-textfield {
+    width: 100%;
   }
   @media (max-width: 600px) {
     .editor-row {
@@ -1574,23 +1644,23 @@ var init_styles = __esm(() => {
     flex-direction: column;
     gap: 0.25em;
   }
-  ha-expansion-panel {
-    h4[slot='header'],
-    h5[slot='header'],
-    h6[slot='header'] {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.7em;
-      padding: 0.2em 0.5em 0.2em 0;
-      height: 40px;
-      margin: 0px !important;
-      margin-left: 1em;
+  ha-expansion-panel h4[slot='header'],
+  ha-expansion-panel h5[slot='header'],
+  ha-expansion-panel h6[slot='header'] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.7em;
+    padding: 0.2em 0.5em 0.2em 0;
+    height: 40px;
+    margin: 0px !important;
+    margin-left: 1em;
+  }
 
-      .expansion-panel-title {
-        flex: 1;
-      }
-    }
+  ha-expansion-panel h4[slot='header'] .expansion-panel-title,
+  ha-expansion-panel h5[slot='header'] .expansion-panel-title,
+  ha-expansion-panel h6[slot='header'] .expansion-panel-title {
+    flex: 1;
   }
   .route-header {
     display: flex;
@@ -1716,6 +1786,32 @@ var init_styles = __esm(() => {
   .editor-tab-button ha-icon {
     --mdc-icon-size: 18px;
   }
+  .loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 60px;
+  }
+  .loader {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid transparent;
+    border-top: 4px solid var(--primary-color, #03a9f4);
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
   ROUTES_EDITOR_DND_STYLES = i`
   .draggable-route {
@@ -1749,32 +1845,6 @@ var init_styles = __esm(() => {
   }
 `;
 });
-
-// src/types.ts
-function genericGetProperty(obj, key) {
-  return key.split(".").reduce((o6, k2) => o6?.[k2], obj);
-}
-function genericSetProperty(obj, key, value) {
-  const paths = key.split(".");
-  const finalKey = paths.pop();
-  const copy = Array.isArray(obj) ? [...obj] : { ...obj };
-  let currentObj = copy;
-  let originalObj = obj;
-  for (let i5 = 0;i5 < paths.length; i5++) {
-    const p3 = paths[i5];
-    if (typeof originalObj[p3] !== "object" || originalObj[p3] === undefined || originalObj[p3] === null) {
-      const nextKey = paths[i5 + 1];
-      const isArrayIndex = nextKey !== undefined && !isNaN(Number(nextKey));
-      currentObj[p3] = isArrayIndex ? [] : {};
-    } else {
-      currentObj[p3] = Array.isArray(originalObj[p3]) ? [...originalObj[p3]] : { ...originalObj[p3] };
-    }
-    currentObj = currentObj[p3];
-    originalObj = originalObj[p3] ?? {};
-  }
-  currentObj[finalKey] = value;
-  return copy;
-}
 
 // node_modules/@kipk/load-ha-components/dist/load-ha-components.js
 var DEFAULT_HA_COMPONENTS, loadHaComponents = async (components) => {
@@ -1885,11 +1955,10 @@ var HAActions, GENERIC_JS_TEMPLATE_HELPER, BOOLEAN_JS_TEMPLATE_HELPER, STRING_JS
 var init_navbar_card_editor = __esm(() => {
   init_lit();
   init_decorators();
-  init_config();
+  init_dist();
+  init_types();
   init_utils();
   init_styles();
-  init_dom_utils();
-  init_dist();
   ((HAActions2) => {
     HAActions2["tap_action"] = "tap_action";
     HAActions2["hold_action"] = "hold_action";
@@ -1912,6 +1981,9 @@ var init_navbar_card_editor = __esm(() => {
     constructor() {
       super(...arguments);
       this._config = { routes: [] };
+      this._lazyLoadedSections = {
+        ["routes" /* routes */]: false
+      };
     }
     firstUpdated(_changedProperties) {
       super.firstUpdated(_changedProperties);
@@ -1933,8 +2005,16 @@ var init_navbar_card_editor = __esm(() => {
         "ha-textarea"
       ]);
     }
-    setConfig(config) {
-      this._config = config;
+    markSectionAsLazyLoaded(section) {
+      if (this._lazyLoadedSections[section])
+        return;
+      this._lazyLoadedSections[section] = true;
+      setTimeout(() => {
+        this.requestUpdate();
+      }, 200);
+    }
+    setConfig(config2) {
+      this._config = config2;
     }
     updateConfig(newConfig) {
       this._config = deepMergeKeepArrays(this._config, newConfig);
@@ -2013,6 +2093,12 @@ var init_navbar_card_editor = __esm(() => {
       }}" />
     `;
     }
+    makeColorPicker(options) {
+      return this.makeTextInput({
+        ...options,
+        type: "text"
+      });
+    }
     makeTemplatable(options) {
       const { label, inputType, ...rest } = options;
       const value = genericGetProperty(this._config, options.configKey);
@@ -2063,6 +2149,9 @@ var init_navbar_card_editor = __esm(() => {
         label: "",
         ...rest
       }) : options.inputType === "entity" ? this.makeEntityPicker({
+        label: "",
+        ...rest
+      }) : options.inputType === "color" ? this.makeColorPicker({
         label: "",
         ...rest
       }) : this.makeTextInput({
@@ -2226,6 +2315,11 @@ var init_navbar_card_editor = __esm(() => {
         configKey: `${baseConfigKey}.icon_selected`
       })}
             ${this.makeTemplatable({
+        inputType: "color",
+        label: "Icon color",
+        configKey: `${baseConfigKey}.icon_color`
+      })}
+            ${this.makeTemplatable({
         inputType: "string",
         label: "Image",
         configKey: `${baseConfigKey}.image`,
@@ -2289,7 +2383,7 @@ var init_navbar_card_editor = __esm(() => {
           return;
         let parsedPopup = [];
         try {
-          parsedPopup = JSON.parse(cleanTemplate(item.popup) ?? "[]");
+          parsedPopup = JSON.parse(cleanTemplate(item.popup?.toString()) ?? "[]");
         } catch (_e) {
           parsedPopup = [];
         }
@@ -2448,6 +2542,14 @@ var init_navbar_card_editor = __esm(() => {
           Layout
         </h4>
         <div class="editor-section">
+          <label class="editor-label">Reflect child state</label>
+          ${this.makeSwitch({
+        label: "Display routes as selected if any of its popup items is selected",
+        configKey: "layout.reflect_child_state",
+        defaultValue: DEFAULT_NAVBAR_CONFIG.layout?.reflect_child_state
+      })}
+        </div>
+        <div class="editor-section">
           <label class="editor-label">Auto padding</label>
           ${this.makeSwitch({
         label: "Enable auto padding",
@@ -2472,7 +2574,8 @@ var init_navbar_card_editor = __esm(() => {
         placeholder: DEFAULT_NAVBAR_CONFIG.layout?.auto_padding?.mobile_px?.toString(),
         helper: "Padding for mobile mode. 0 to disable."
       })}
-        </div></ha-expansion-panel
+        </div>
+      </ha-expansion-panel>
     `;
     }
     renderHapticEditor() {
@@ -2532,6 +2635,28 @@ var init_navbar_card_editor = __esm(() => {
         label: "Show media player",
         configKey: "media_player.show",
         helper: BOOLEAN_JS_TEMPLATE_HELPER
+      })}
+          ${Object.values(HAActions).map((type) => {
+        const key = `media_player.${type}`;
+        const actionValue = genericGetProperty(this._config, key);
+        const label = this._chooseLabelForAction(type);
+        return x`
+              ${actionValue != null ? this.makeActionSelector({
+          actionType: type,
+          configKey: key
+        }) : x`
+                    <ha-button
+                      @click=${() => this.updateConfigByKey(key, {
+          action: "none"
+        })}
+                      style="margin-bottom: 1em;"
+                      outlined
+                      hasTrailingIcon>
+                      <ha-icon slot="start" icon="mdi:plus"></ha-icon>
+                      <span>Add ${label}</span>
+                    </ha-button>
+                  `}
+            `;
       })}
         </div>
       </ha-expansion-panel>
@@ -2640,17 +2765,25 @@ var init_navbar_card_editor = __esm(() => {
     }
     renderRoutesEditor() {
       return x`
-      <ha-expansion-panel outlined>
+      <ha-expansion-panel
+        outlined
+        @expanded-changed=${(e5) => {
+        if (e5.target.expanded) {
+          this.markSectionAsLazyLoaded("routes" /* routes */);
+        }
+      }}>
         <h4 slot="header">
           <ha-icon icon="mdi:routes"></ha-icon>
           Routes
         </h4>
         <div class="editor-section">
-          <div class="routes-container">
-            ${(this._config.routes ?? []).map((route, i5) => {
-        return this.makeDraggableRouteEditor(route, i5);
+          ${conditionallyRender(this._lazyLoadedSections["routes" /* routes */], () => x`
+              <div class="routes-container">
+                ${(this._config.routes ?? []).map((route2, i5) => {
+        return this.makeDraggableRouteEditor(route2, i5);
       })}
-          </div>
+              </div>
+            `)}
           ${this.makeButton({
         text: "Add Route",
         icon: "mdi:plus",
@@ -2684,7 +2817,9 @@ var init_navbar_card_editor = __esm(() => {
       }
     }
     isCustomAction(value) {
-      return !["none", "hass_action"].includes(value);
+      if (value === "none")
+        return false;
+      return Object.values(NavbarCustomActions).includes(value);
     }
     makeActionSelector(options) {
       const ACTIONS = [
@@ -2694,6 +2829,7 @@ var init_navbar_card_editor = __esm(() => {
         { label: "Toggle Menu", value: "toggle-menu" /* toggleMenu */ },
         { label: "Quickbar", value: "quickbar" /* quickbar */ },
         { label: "Open Edit Mode", value: "open-edit-mode" /* openEditMode */ },
+        { label: "Logout current user", value: "logout" /* logout */ },
         { label: "Custom JS Action", value: "custom-js-action" /* customJSAction */ },
         {
           label: "Show Notifications",
@@ -2846,8 +2982,8 @@ var init_navbar_card_editor = __esm(() => {
       if (routeIndex == null) {
         routes = [...routes, newItemData];
       } else {
-        const popup = [...routes[routeIndex].popup || [], newItemData];
-        routes[routeIndex] = { ...routes[routeIndex], popup };
+        const popup2 = [...routes[routeIndex].popup || [], newItemData];
+        routes[routeIndex] = { ...routes[routeIndex], popup: popup2 };
       }
       this.updateConfig({ routes });
     };
@@ -2858,11 +2994,11 @@ var init_navbar_card_editor = __esm(() => {
       if (popupIndex == null) {
         routes.splice(routeIndex, 1);
       } else {
-        const popup = [...routes[routeIndex].popup || []];
-        popup.splice(popupIndex, 1);
+        const popup2 = [...routes[routeIndex].popup || []];
+        popup2.splice(popupIndex, 1);
         routes[routeIndex] = {
           ...routes[routeIndex],
-          popup: popup.length === 0 ? undefined : popup
+          popup: popup2.length === 0 ? undefined : popup2
         };
       }
       this.updateConfig({ routes: routes.length === 0 ? undefined : routes });
@@ -2874,16 +3010,20 @@ var init_navbar_card_editor = __esm(() => {
   __legacyDecorateClassTS([
     r5()
   ], NavbarCardEditor.prototype, "_config", undefined);
+  __legacyDecorateClassTS([
+    r5()
+  ], NavbarCardEditor.prototype, "_lazyLoadedSections", undefined);
   NavbarCardEditor = __legacyDecorateClassTS([
     t3("navbar-card-editor")
   ], NavbarCardEditor);
 });
+// package.json
+var version = "1.1.0";
 
 // src/navbar-card.ts
 init_lit();
 init_decorators();
-// package.json
-var version = "1.0.0";
+init_types();
 
 // node_modules/custom-card-helpers/dist/index.m.js
 var t4;
@@ -2904,13 +3044,175 @@ var de = function(e5, t5, r7) {
   r7 === undefined && (r7 = false), r7 ? history.replaceState(null, "", t5) : history.pushState(null, "", t5), ne(window, "location-changed", { replace: r7 });
 };
 
-// src/navbar-card.ts
-init_config();
+// src/components/navbar/route/base-route.ts
+init_types();
 init_utils();
-init_dom_utils();
-init_styles();
 
-// src/color.ts
+class BaseRoute {
+  _navbarCard;
+  data;
+  _iconInstance;
+  _badgeInstance;
+  constructor(_navbarCard, data) {
+    this._navbarCard = _navbarCard;
+    this.data = data;
+  }
+  get url() {
+    return this.data.url;
+  }
+  get icon() {
+    return this._iconInstance ??= new Icon(this._navbarCard, this);
+  }
+  get badge() {
+    return this._badgeInstance ??= new Badge(this._navbarCard, this);
+  }
+  get label() {
+    if (!this._shouldShowLabels())
+      return null;
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this.data.label) ?? " ";
+  }
+  get hidden() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this.data.hidden);
+  }
+  get selected() {
+    return this.data.selected != null ? processTemplate(this._navbarCard._hass, this._navbarCard, this.data.selected) : window.location.pathname === this.url;
+  }
+  get tap_action() {
+    return this.data.tap_action;
+  }
+  get hold_action() {
+    return this.data.hold_action;
+  }
+  get double_tap_action() {
+    return this.data.double_tap_action;
+  }
+  executeAction = (target, element, action, actionType) => {
+    forceResetRipple(target);
+    const triggerHaptic = (strong) => {
+      if (this._shouldTriggerHaptic(actionType, strong)) {
+        hapticFeedback();
+      }
+    };
+    if (action?.action !== "open-popup" /* openPopup */) {
+      if (element instanceof Route) {
+        element.popup.close();
+      } else if (element instanceof PopupItem) {
+        element.closeParentPopup();
+      }
+    }
+    setTimeout(() => {
+      switch (action?.action) {
+        case "open-popup" /* openPopup */:
+          if (element instanceof Route) {
+            if (element.popup.items.length === 0) {
+              console.error(`[navbar-card] No popup items found for route: ${element.label}`);
+            } else {
+              triggerHaptic();
+              element.popup.open(target);
+            }
+          }
+          break;
+        case "toggle-menu" /* toggleMenu */:
+          triggerHaptic();
+          fireDOMEvent(this._navbarCard, "hass-toggle-menu", {
+            bubbles: true,
+            composed: true
+          });
+          break;
+        case "quickbar" /* quickbar */:
+          triggerHaptic();
+          fireDOMEvent(this._navbarCard, "keydown", {
+            bubbles: true,
+            composed: true,
+            key: this._chooseKeyForQuickbar(action)
+          }, undefined, KeyboardEvent);
+          break;
+        case "show-notifications" /* showNotifications */:
+          triggerHaptic();
+          fireDOMEvent(this._navbarCard, "hass-show-notifications", {
+            bubbles: true,
+            composed: true
+          });
+          break;
+        case "navigate-back" /* navigateBack */:
+          triggerHaptic(true);
+          window.history.back();
+          break;
+        case "open-edit-mode" /* openEditMode */:
+          triggerHaptic();
+          forceOpenEditMode();
+          break;
+        case "logout" /* logout */:
+          triggerHaptic();
+          this._navbarCard._hass.auth.revoke();
+          break;
+        case "custom-js-action" /* customJSAction */:
+          triggerHaptic();
+          processTemplate(this._navbarCard._hass, this._navbarCard, action.code);
+          break;
+        default:
+          if (action != null) {
+            triggerHaptic();
+            fireDOMEvent(this._navbarCard, "hass-action", { bubbles: true, composed: true }, {
+              action: actionType,
+              config: { [`${actionType}_action`]: action }
+            });
+          } else if (actionType === "tap" && element.url) {
+            triggerHaptic(true);
+            de(this, element.url);
+          }
+          break;
+      }
+    }, 10);
+  };
+  _shouldShowLabels = () => {
+    const config2 = this._navbarCard.isDesktop ? this._navbarCard.config?.desktop?.show_labels : this._navbarCard.config?.mobile?.show_labels;
+    if (typeof config2 === "boolean")
+      return config2;
+    return config2 === "popup_only" && this instanceof PopupItem || config2 === "routes_only" && !(this instanceof PopupItem);
+  };
+  _shouldShowLabelBackground = () => {
+    const enabled = this._navbarCard.isDesktop ? this._navbarCard.config?.desktop?.show_popup_label_backgrounds : this._navbarCard.config?.mobile?.show_popup_label_backgrounds;
+    return !!enabled;
+  };
+  _shouldTriggerHaptic(actionType, isNavigation = false) {
+    const hapticConfig = this._navbarCard.config?.haptic;
+    if (typeof hapticConfig === "boolean") {
+      return hapticConfig;
+    }
+    if (!hapticConfig) {
+      return !isNavigation;
+    }
+    if (isNavigation) {
+      return hapticConfig.url ?? false;
+    }
+    switch (actionType) {
+      case "tap":
+        return hapticConfig.tap_action ?? false;
+      case "hold":
+        return hapticConfig.hold_action ?? false;
+      case "double_tap":
+        return hapticConfig.double_tap_action ?? false;
+      default:
+        return false;
+    }
+  }
+  _chooseKeyForQuickbar = (action) => {
+    switch (action.mode) {
+      case "devices":
+        return "d";
+      case "entities":
+        return "e";
+      case "commands":
+      default:
+        return "c";
+    }
+  };
+}
+// src/components/navbar/badge/badge.ts
+init_lit();
+
+// src/components/color.ts
 var hexToDecimal = (hex) => parseInt(hex, 16);
 var decimalToHex = (decimal) => decimal.toString(16).padStart(2, "0");
 var isValidInt = (value) => {
@@ -3122,20 +3424,11 @@ Supported formats: [r,g,b] | [r,g,b,a]`);
     return [this.r, this.g, this.b, this.a];
   }
 }
-
-// src/navbar-card.ts
-window.customCards = window.customCards || [];
-window.customCards.push({
-  type: "navbar-card",
-  name: "Navbar card",
-  preview: true,
-  description: "Card with a full-width bottom nav on mobile and a flexible nav on desktop that can be placed on any side of the screen."
-});
-var DEFAULT_DESKTOP_POSITION = "bottom" /* bottom */;
+// src/components/action-events.ts
 var DOUBLE_TAP_DELAY = 250;
 var HOLD_ACTION_DELAY = 500;
 
-class NavbarCard extends i4 {
+class ActionEvents {
   holdTimeoutId = null;
   holdTriggered = false;
   pointerStartX = 0;
@@ -3143,366 +3436,41 @@ class NavbarCard extends i4 {
   lastTapTime = 0;
   lastTapTarget = null;
   tapTimeoutId = null;
-  connectedCallback() {
-    super.connectedCallback();
-    forceResetRipple(this);
-    window.addEventListener("resize", this._checkDesktop);
-    this._checkDesktop();
-    const homeAssistantRoot = document.querySelector("body > home-assistant");
-    this._inEditDashboardMode = this.parentElement?.closest("hui-card-edit-mode") != null;
-    this._inEditCardMode = homeAssistantRoot?.shadowRoot?.querySelector("hui-dialog-edit-card")?.shadowRoot?.querySelector("ha-dialog") != null;
-    this._inPreviewMode = this.parentElement?.closest(".card > .preview") != null;
-    injectStyles(this, getDefaultStyles(), this._config?.styles ? r(this._config.styles) : i``);
-    forceDashboardPadding({
-      desktop: this._config?.desktop ?? DEFAULT_NAVBAR_CONFIG.desktop,
-      mobile: this._config?.mobile ?? DEFAULT_NAVBAR_CONFIG.mobile,
-      auto_padding: this._config?.layout?.auto_padding,
-      show_media_player: this._showMediaPlayer ?? false
-    });
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener("resize", this._checkDesktop);
-    removeDashboardPadding();
-    this._popup = null;
-  }
-  set hass(hass) {
-    this._hass = hass;
-    const { visible } = this._shouldShowMediaPlayer();
-    if (this._showMediaPlayer !== visible) {
-      this._showMediaPlayer = visible;
-    }
-  }
-  setConfig(config) {
-    if (config?.template) {
-      const templates = getNavbarTemplates();
-      if (!templates) {
-        console.warn('[navbar-card] No templates configured in this dashboard. Please refer to "templates" documentation for more information.' + `
-
-` + `https://github.com/joseluis9595/lovelace-navbar-card?tab=readme-ov-file#templates
-`);
-      } else {
-        const templateConfig = templates[config.template];
-        if (templateConfig) {
-          config = {
-            ...templateConfig,
-            ...config
-          };
-        }
-      }
-    }
-    if (!config.routes) {
-      throw new Error('"routes" param is required for navbar card');
-    }
-    config.routes.forEach((route) => {
-      if (route.icon == null && route.image == null) {
-        throw new Error('Each route must have either an "icon" or "image" property configured');
-      }
-      if (route.popup == null && route.submenu == null && route.tap_action == null && route.hold_action == null && route.url == null && route.double_tap_action == null) {
-        throw new Error('Each route must have either "url", "popup", "tap_action", "hold_action" or "double_tap_action" property configured');
-      }
-      if (route.tap_action && route.tap_action.action == null) {
-        throw new Error('"tap_action" must have an "action" property');
-      }
-      if (route.hold_action && route.hold_action.action == null) {
-        throw new Error('"hold_action" must have an "action" property');
-      }
-      if (route.double_tap_action && route.double_tap_action.action == null) {
-        throw new Error('"double_tap_action" must have an "action" property');
-      }
-    });
-    this._config = config;
-  }
-  updated(_changedProperties) {
-    super.updated(_changedProperties);
-    if (_changedProperties.has("_showMediaPlayer")) {
-      forceDashboardPadding({
-        desktop: this._config?.desktop ?? DEFAULT_NAVBAR_CONFIG.desktop,
-        mobile: this._config?.mobile ?? DEFAULT_NAVBAR_CONFIG.mobile,
-        auto_padding: this._config?.layout?.auto_padding,
-        show_media_player: this._showMediaPlayer ?? false
-      });
-    }
-  }
-  static getStubConfig() {
-    return STUB_CONFIG;
-  }
-  _getRouteIcon(route, isActive) {
-    const icon = processTemplate(this._hass, this, route.icon);
-    const image = processTemplate(this._hass, this, route.image);
-    const iconSelected = processTemplate(this._hass, this, route.icon_selected);
-    const imageSelected = processTemplate(this._hass, this, route.image_selected);
-    return image ? x`<img
-          class="image ${isActive ? "active" : ""}"
-          src="${isActive && imageSelected ? imageSelected : image}"
-          alt="${route.label || ""}" />` : x`<ha-icon
-          class="icon ${isActive ? "active" : ""}"
-          icon="${isActive && iconSelected ? iconSelected : icon}"></ha-icon>`;
-  }
-  _shouldShowLabelBackground = () => {
-    const enabled = this.isDesktop ? this._config?.desktop?.show_popup_label_backgrounds : this._config?.mobile?.show_popup_label_backgrounds;
-    return !!enabled;
-  };
-  _renderBadge(route, isRouteActive) {
-    if (!route.badge) {
-      return x``;
-    }
-    let showBadge = false;
-    if (route.badge.show !== undefined) {
-      showBadge = processTemplate(this._hass, this, route.badge.show);
-    } else if (route.badge.template) {
-      showBadge = processBadgeTemplate(this._hass, route.badge.template);
-    }
-    if (!showBadge) {
-      return x``;
-    }
-    const count = processTemplate(this._hass, this, route.badge.count) ?? null;
-    const hasCount = count != null;
-    const backgroundColor = processTemplate(this._hass, this, route.badge.color) ?? "red";
-    const textColor = processTemplate(this._hass, this, route.badge.textColor);
-    const contrastingColor = textColor ?? Color.from(backgroundColor).contrastingColor().hex();
-    return x`<div
-      class="badge ${isRouteActive ? "active" : ""} ${hasCount ? "with-counter" : ""}"
-      style="background-color: ${backgroundColor}; color: ${contrastingColor}">
-      ${count}
-    </div>`;
-  }
-  _shouldTriggerHaptic(actionType, isNavigation = false) {
-    const hapticConfig = this._config?.haptic;
-    if (typeof hapticConfig === "boolean") {
-      return hapticConfig;
-    }
-    if (!hapticConfig) {
-      return !isNavigation;
-    }
-    if (isNavigation) {
-      return hapticConfig.url ?? false;
-    }
-    switch (actionType) {
-      case "tap":
-        return hapticConfig.tap_action ?? false;
-      case "hold":
-        return hapticConfig.hold_action ?? false;
-      case "double_tap":
-        return hapticConfig.double_tap_action ?? false;
-      default:
-        return false;
-    }
-  }
-  _shouldShowLabels = (isSubmenu) => {
-    const config = this.isDesktop ? this._config?.desktop?.show_labels : this._config?.mobile?.show_labels;
-    if (typeof config === "boolean")
-      return config;
-    return config === "popup_only" && isSubmenu || config === "routes_only" && !isSubmenu;
-  };
-  _checkDesktop = () => {
-    this.isDesktop = (window.innerWidth ?? 0) >= (this._config?.desktop?.min_width ?? 768);
-  };
-  _renderRoute = (route) => {
-    const isActive = route.selected != null ? processTemplate(this._hass, this, route.selected) : window.location.pathname == route.url;
-    const isHidden = processTemplate(this._hass, this, route.hidden);
-    if (isHidden) {
-      return null;
-    }
-    const label = this._shouldShowLabels(false) ? processTemplate(this._hass, this, route.label) ?? null : null;
-    return x`
-      <div
-        class="route ${isActive ? "active" : ""}"
-        @mouseenter=${(e5) => this._handleMouseEnter(e5, route)}
-        @mousemove=${(e5) => this._handleMouseMove(e5, route)}
-        @mouseleave=${(e5) => this._handleMouseLeave(e5, route)}
-        @pointerdown=${(e5) => this._handlePointerDown(e5, route)}
-        @pointermove=${(e5) => this._handlePointerMove(e5, route)}
-        @pointerup=${(e5) => this._handlePointerUp(e5, route)}
-        @pointercancel=${(e5) => this._handlePointerMove(e5, route)}>
-        <div class="button ${isActive ? "active" : ""}">
-          ${this._getRouteIcon(route, isActive)}
-          <ha-ripple></ha-ripple>
-        </div>
-
-        ${label ? x`<div class="label ${isActive ? "active" : ""}">${label}</div>` : x``}
-        ${this._renderBadge(route, isActive)}
-      </div>
-    `;
-  };
-  _closePopup = () => {
-    const popup = this.shadowRoot?.querySelector(".navbar-popup");
-    const backdrop = this.shadowRoot?.querySelector(".navbar-popup-backdrop");
-    if (popup && backdrop) {
-      popup.classList.remove("visible");
-      backdrop.classList.remove("visible");
-      setTimeout(() => {
-        this._popup = null;
-      }, 200);
-    } else {
-      this._popup = null;
-    }
-    window.removeEventListener("keydown", this._onPopupKeyDownListener);
-  };
-  _getPopupStyles(anchorRect, position) {
-    const windowWidth = window.innerWidth;
-    switch (position) {
-      case "top":
-        return {
-          style: i`
-            top: ${anchorRect.top + anchorRect.height}px;
-            left: ${anchorRect.x}px;
-          `,
-          labelPositionClassName: "label-right",
-          popupDirectionClassName: "open-bottom"
-        };
-      case "left":
-        return {
-          style: i`
-            top: ${anchorRect.top}px;
-            left: ${anchorRect.x + anchorRect.width}px;
-          `,
-          labelPositionClassName: "label-bottom",
-          popupDirectionClassName: "open-right"
-        };
-      case "right":
-        return {
-          style: i`
-            top: ${anchorRect.top}px;
-            right: ${windowWidth - anchorRect.x}px;
-          `,
-          labelPositionClassName: "label-bottom",
-          popupDirectionClassName: "open-left"
-        };
-      case "bottom":
-      case "mobile":
-      default:
-        if (anchorRect.x > windowWidth / 2) {
-          return {
-            style: i`
-              top: ${anchorRect.top}px;
-              right: ${windowWidth - anchorRect.x - anchorRect.width}px;
-            `,
-            labelPositionClassName: "label-left",
-            popupDirectionClassName: "open-up"
-          };
-        } else {
-          return {
-            style: i`
-              top: ${anchorRect.top}px;
-              left: ${anchorRect.left}px;
-            `,
-            labelPositionClassName: "label-right",
-            popupDirectionClassName: "open-up"
-          };
-        }
-    }
-  }
-  _openPopup = (route, target) => {
-    const popupItems = processTemplate(this._hass, this, route.popup) ?? route.popup ?? route.submenu;
-    if (typeof popupItems === "string") {
-      console.warn(`[navbar-card] Invalid JSTemplate provided for route: ${route.label}`);
-      return;
-    }
-    if (!popupItems || popupItems.length === 0) {
-      console.warn(`[navbar-card] No popup items provided for route: ${route.label}`);
-      return;
-    }
-    const anchorRect = target.getBoundingClientRect();
-    const { style, labelPositionClassName, popupDirectionClassName } = this._getPopupStyles(anchorRect, !this.isDesktop ? "mobile" : this._config?.desktop?.position ?? DEFAULT_DESKTOP_POSITION);
-    this._popup = x`
-      <div class="navbar-popup-backdrop"></div>
-      <div
-        class="
-          navbar-popup
-          ${popupDirectionClassName}
-          ${labelPositionClassName}
-          ${this.isDesktop ? "desktop" : "mobile"}
-          ${this._shouldShowLabelBackground() ? "popuplabelbackground" : ""}
-        "
-        style="${style}">
-        ${popupItems.map((popupItem, index) => {
-      const isActive = popupItem.selected != null ? processTemplate(this._hass, this, popupItem.selected) : window.location.pathname == popupItem.url;
-      const isHidden = processTemplate(this._hass, this, popupItem.hidden);
-      if (isHidden) {
-        return null;
-      }
-      const label = this._shouldShowLabels(true) ? processTemplate(this._hass, this, popupItem.label) ?? " " : null;
-      const showLabelBackground = this._shouldShowLabelBackground();
-      return x`<div
-              class="
-              popup-item 
-              ${popupDirectionClassName}
-              ${labelPositionClassName}
-              ${isActive ? "active" : ""}
-              "
-              style="--index: ${index}"
-              @click=${(e5) => this._handlePointerUp(e5, popupItem, true)}>
-              <div
-                class="button ${showLabelBackground ? "popuplabelbackground" : ""}">
-                ${this._getRouteIcon(popupItem, isActive)}
-                <md-ripple></md-ripple>
-                ${this._renderBadge(popupItem, false)}
-                ${showLabelBackground && label ? x`<div class="label">${label}</div>` : x``}
-              </div>
-              ${!showLabelBackground && label ? x`<div class="label">${label}</div>` : x``}
-            </div>`;
-    }).filter((x2) => x2 != null)}
-      </div>
-    `;
-    requestAnimationFrame(() => {
-      const popup = this.shadowRoot?.querySelector(".navbar-popup");
-      const backdrop = this.shadowRoot?.querySelector(".navbar-popup-backdrop");
-      if (popup && backdrop) {
-        popup.classList.add("visible");
-        backdrop.classList.add("visible");
-      }
-    });
-    window.addEventListener("keydown", this._onPopupKeyDownListener);
-    setTimeout(() => {
-      const backdrop = this.shadowRoot?.querySelector(".navbar-popup-backdrop");
-      if (backdrop) {
-        backdrop.addEventListener("click", (e5) => {
-          e5.preventDefault();
-          e5.stopPropagation();
-          this._closePopup();
-        });
-      }
-    }, 400);
-  };
-  _onPopupKeyDownListener = (e5) => {
-    if (e5.key === "Escape" && this._popup) {
+  preventPropagation = (handler) => {
+    return (e5, element) => {
       e5.preventDefault();
-      this._closePopup();
-    }
+      e5.stopPropagation();
+      handler(e5, element);
+    };
   };
-  _handleMouseEnter = (e5, _route) => {
+  handleMouseEnter = this.preventPropagation((e5, _element) => {
     const ripple = e5.currentTarget.querySelector("ha-ripple");
     if (ripple)
       ripple.hovered = true;
-  };
-  _handleMouseMove = (e5, _route) => {
+  });
+  handleMouseMove = this.preventPropagation((e5, _element) => {
     const ripple = e5.currentTarget.querySelector("ha-ripple");
     if (ripple)
       ripple.hovered = true;
-  };
-  _handleMouseLeave = (e5, _route) => {
+  });
+  handleMouseLeave = this.preventPropagation((e5, _element) => {
     const ripple = e5.currentTarget.querySelector("ha-ripple");
     if (ripple)
       ripple.hovered = false;
-  };
-  _handlePointerDown = (e5, route) => {
+  });
+  handlePointerDown = this.preventPropagation((e5, element) => {
     this.pointerStartX = e5.clientX;
     this.pointerStartY = e5.clientY;
-    if (route.hold_action) {
+    if (element.hold_action) {
       this.holdTriggered = false;
       this.holdTimeoutId = window.setTimeout(() => {
-        if (this._shouldTriggerHaptic("hold")) {
-          hapticFeedback();
-        }
         this.holdTriggered = true;
       }, HOLD_ACTION_DELAY);
     }
-  };
-  _handlePointerMove = (e5, _route) => {
-    if (!this.holdTimeoutId) {
+  });
+  handlePointerMove = this.preventPropagation((e5, _element) => {
+    if (!this.holdTimeoutId)
       return;
-    }
     const moveX = Math.abs(e5.clientX - this.pointerStartX);
     const moveY = Math.abs(e5.clientY - this.pointerStartY);
     if (moveX > 10 || moveY > 10) {
@@ -3511,8 +3479,8 @@ class NavbarCard extends i4 {
         this.holdTimeoutId = null;
       }
     }
-  };
-  _handlePointerUp = (e5, route, isPopup = false) => {
+  });
+  handlePointerUp = this.preventPropagation((e5, element) => {
     if (this.holdTimeoutId !== null) {
       clearTimeout(this.holdTimeoutId);
       this.holdTimeoutId = null;
@@ -3521,227 +3489,496 @@ class NavbarCard extends i4 {
     const currentTime = new Date().getTime();
     const timeDiff = currentTime - this.lastTapTime;
     const isDoubleTap = timeDiff < DOUBLE_TAP_DELAY && e5.target === this.lastTapTarget;
-    if (isDoubleTap && route.double_tap_action) {
+    if (isDoubleTap && element.double_tap_action) {
       if (this.tapTimeoutId !== null) {
         clearTimeout(this.tapTimeoutId);
         this.tapTimeoutId = null;
       }
-      this._handleDoubleTapAction(currentTarget, route, isPopup);
+      this.handleDoubleTapAction(currentTarget, element);
       this.lastTapTime = 0;
       this.lastTapTarget = null;
-    } else if (this.holdTriggered && route.hold_action) {
-      this._handleHoldAction(currentTarget, route, isPopup);
+    } else if (this.holdTriggered && element.hold_action) {
+      this.handleHoldAction(currentTarget, element);
       this.lastTapTime = 0;
       this.lastTapTarget = null;
     } else {
       this.lastTapTime = currentTime;
       this.lastTapTarget = e5.target;
-      this._handleTapAction(currentTarget, route, isPopup);
+      this.handleTapAction(currentTarget, element);
     }
     this.holdTriggered = false;
+  });
+  handleHoldAction = (target, element) => {
+    element.executeAction(target, element, element.hold_action, "hold");
   };
-  _handleHoldAction = (target, route, isPopupItem = false) => {
-    this._executeAction(target, route, route.hold_action, "hold", isPopupItem);
+  handleDoubleTapAction = (target, element) => {
+    element.executeAction(target, element, element.double_tap_action, "double_tap");
   };
-  _handleDoubleTapAction = (target, route, isPopupItem = false) => {
-    this._executeAction(target, route, route.double_tap_action, "double_tap", isPopupItem);
-  };
-  _handleTapAction = (target, route, isPopupItem = false) => {
-    if (route.double_tap_action) {
+  handleTapAction = (target, element) => {
+    if (element.double_tap_action) {
       this.tapTimeoutId = window.setTimeout(() => {
-        this._executeAction(target, route, route.tap_action, "tap", isPopupItem);
+        element.executeAction(target, element, element.tap_action, "tap");
       }, DOUBLE_TAP_DELAY);
     } else {
-      this._executeAction(target, route, route.tap_action, "tap", isPopupItem);
+      element.executeAction(target, element, element.tap_action, "tap");
     }
   };
-  _chooseKeyForQuickbar = (action) => {
-    switch (action.mode) {
-      case "devices":
-        return "d";
-      case "entities":
-        return "e";
-      case "commands":
-      default:
-        return "c";
+}
+// src/components/navbar/badge/badge.ts
+init_utils();
+
+class Badge {
+  _navbarCard;
+  _route;
+  constructor(_navbarCard, _route) {
+    this._navbarCard = _navbarCard;
+    this._route = _route;
+  }
+  get show() {
+    const badge = this._route.data.badge;
+    if (!badge)
+      return false;
+    if (badge.show) {
+      return processTemplate(this._navbarCard._hass, this._navbarCard, badge.show) ?? false;
     }
-  };
-  _executeAction = (target, route, action, actionType, isPopupItem = false) => {
-    forceResetRipple(target);
-    if (action?.action !== "open-popup" /* openPopup */ && isPopupItem) {
-      this._closePopup();
+    if (badge.template) {
+      return processBadgeTemplate(this._navbarCard._hass, badge.template);
     }
-    switch (action?.action) {
-      case "open-popup" /* openPopup */:
-        if (!isPopupItem) {
-          const popupItems = route.popup ?? route.submenu;
-          if (!popupItems) {
-            console.error(`[navbar-card] No popup items found for route: ${route.label}`);
-          } else {
-            if (this._shouldTriggerHaptic(actionType)) {
-              hapticFeedback();
-            }
-            this._openPopup(route, target);
-          }
-        }
-        break;
-      case "toggle-menu" /* toggleMenu */:
-        if (this._shouldTriggerHaptic(actionType)) {
-          hapticFeedback();
-        }
-        fireDOMEvent(this, "hass-toggle-menu", {
-          bubbles: true,
-          composed: true
-        });
-        break;
-      case "quickbar" /* quickbar */:
-        if (this._shouldTriggerHaptic(actionType)) {
-          hapticFeedback();
-        }
-        fireDOMEvent(this, "keydown", {
-          bubbles: true,
-          composed: true,
-          key: this._chooseKeyForQuickbar(action)
-        }, undefined, KeyboardEvent);
-        break;
-      case "show-notifications" /* showNotifications */:
-        if (this._shouldTriggerHaptic(actionType)) {
-          hapticFeedback();
-        }
-        fireDOMEvent(this, "hass-show-notifications", {
-          bubbles: true,
-          composed: true
-        });
-        break;
-      case "navigate-back" /* navigateBack */:
-        if (this._shouldTriggerHaptic(actionType, true)) {
-          hapticFeedback();
-        }
-        window.history.back();
-        break;
-      case "open-edit-mode" /* openEditMode */:
-        if (this._shouldTriggerHaptic(actionType)) {
-          hapticFeedback();
-        }
-        forceOpenEditMode();
-        break;
-      case "custom-js-action" /* customJSAction */:
-        if (this._shouldTriggerHaptic(actionType)) {
-          hapticFeedback();
-        }
-        processTemplate(this._hass, this, action.code);
-        break;
-      default:
-        if (action != null) {
-          if (this._shouldTriggerHaptic(actionType)) {
-            hapticFeedback();
-          }
-          setTimeout(() => {
-            fireDOMEvent(this, "hass-action", { bubbles: true, composed: true }, {
-              action: actionType,
-              config: {
-                [`${actionType}_action`]: action
-              }
-            });
-          }, 10);
-        } else if (actionType === "tap" && route.url) {
-          if (this._shouldTriggerHaptic(actionType, true)) {
-            hapticFeedback();
-          }
-          de(this, route.url);
-        }
-        break;
+    return false;
+  }
+  get count() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.badge?.count) ?? null;
+  }
+  get backgroundColor() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.badge?.color) ?? "red";
+  }
+  get textColor() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.badge?.textColor) ?? null;
+  }
+  get contrastingColor() {
+    return this.textColor ?? Color.from(this.backgroundColor).contrastingColor().hex();
+  }
+  render() {
+    if (!this._route.badge || !this.show)
+      return x``;
+    const hasCounter = this.count != null;
+    return x`
+      <div
+        class="badge ${this._route.selected ? "active" : ""} ${hasCounter ? "with-counter" : ""}"
+        style="background-color:${this.backgroundColor}; color:${this.contrastingColor}">
+        ${this.count ?? ""}
+      </div>
+    `;
+  }
+}
+// src/components/navbar/icon/icon.ts
+init_lit();
+init_utils();
+
+class Icon {
+  _navbarCard;
+  _route;
+  constructor(_navbarCard, _route) {
+    this._navbarCard = _navbarCard;
+    this._route = _route;
+  }
+  get icon() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.icon);
+  }
+  get image() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.image);
+  }
+  get iconSelected() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.icon_selected);
+  }
+  get imageSelected() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.image_selected);
+  }
+  get iconColor() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.icon_color);
+  }
+  render() {
+    const isSelected = this._route.selected;
+    const resolvedImage = this.image;
+    const resolvedImageSelected = this.imageSelected;
+    const resolvedIcon = this.icon;
+    const resolvedIconSelected = this.iconSelected;
+    const resolvedIconColor = this.iconColor;
+    if (!resolvedImage && !resolvedIcon) {
+      return x``;
     }
-  };
-  _shouldShowMediaPlayer = () => {
-    if (!this._config || !this._config.media_player || !this._config.media_player.entity) {
-      return { visible: false };
+    return resolvedImage ? x` <img
+          class="image ${isSelected ? "active" : ""}"
+          src="${isSelected && resolvedImageSelected ? resolvedImageSelected : resolvedImage}"
+          alt="${this._route.label || ""}" />` : x` <ha-icon
+          class="icon ${isSelected ? "active" : ""}"
+          style="--icon-primary-color: ${resolvedIconColor ?? "inherit"}"
+          icon="${isSelected && resolvedIconSelected ? resolvedIconSelected : resolvedIcon}"></ha-icon>`;
+  }
+}
+// src/components/navbar/route/route.ts
+init_lit();
+init_utils();
+class Route extends BaseRoute {
+  _routeData;
+  _events = new ActionEvents;
+  _popupInstance;
+  constructor(_navbarCard, _routeData) {
+    super(_navbarCard, _routeData);
+    this._routeData = _routeData;
+    this._validateRoute();
+  }
+  get popup() {
+    return this._popupInstance ??= new Popup(this._navbarCard, processTemplate(this._navbarCard._hass, this._navbarCard, this._routeData.popup) ?? this._routeData.popup ?? this._routeData.submenu ?? []);
+  }
+  get isSelfOrChildActive() {
+    if (this._navbarCard.config?.layout?.reflect_child_state && !this.selected) {
+      return this.popup.items.some((item) => item.selected);
     }
-    if (this.isDesktop)
-      return { visible: false };
-    const entity = processTemplate(this._hass, this, this._config.media_player.entity);
-    const mediaPlayerState = this._hass.states[entity];
-    if (!mediaPlayerState)
-      return {
-        visible: true,
-        error: `Entity not found "${entity}"`
-      };
-    if (this._config.media_player.show != null) {
-      const show = processTemplate(this._hass, this, this._config.media_player.show);
-      return { visible: show };
+    return this.selected;
+  }
+  render() {
+    if (this.hidden)
+      return null;
+    const isActive = this.isSelfOrChildActive;
+    return x`
+      <div
+        class="route ${isActive ? "active" : ""}"
+        @click=${preventEventDefault}
+        @mouseenter=${(e5) => this._events.handleMouseEnter(e5, this)}
+        @mousemove=${(e5) => this._events.handleMouseMove(e5, this)}
+        @mouseleave=${(e5) => this._events.handleMouseLeave(e5, this)}
+        @pointerdown=${(e5) => this._events.handlePointerDown(e5, this)}
+        @pointermove=${(e5) => this._events.handlePointerMove(e5, this)}
+        @pointerup=${(e5) => this._events.handlePointerUp(e5, this)}
+        @pointercancel=${(e5) => this._events.handlePointerMove(e5, this)}>
+        <div class="button ${isActive ? "active" : ""}">
+          ${this.icon.render()}
+          <ha-ripple></ha-ripple>
+          ${this.badge.render()}
+        </div>
+        ${this.label ? x`<div class="label ${isActive ? "active" : ""}">
+              ${this.label}
+            </div>` : x``}
+      </div>
+    `;
+  }
+  _validateRoute() {
+    if (!this.data.icon && !this.data.image) {
+      throw new Error('Each route must have either an "icon" or "image" property configured');
     }
-    return {
-      visible: ["playing", "paused"].includes(mediaPlayerState?.state)
-    };
-  };
-  _handleMediaPlayerClick = (e5) => {
-    e5.preventDefault();
-    e5.stopPropagation();
-    const entity = processTemplate(this._hass, this, this._config?.media_player?.entity);
-    if (!entity)
-      return;
-    fireDOMEvent(this, "hass-more-info", {
-      bubbles: true,
-      composed: true
-    }, {
-      entityId: entity
+    if (!this._routeData.popup && !this.tap_action && !this.hold_action && !this.url && !this.double_tap_action) {
+      throw new Error("Each route must have at least one actionable property (url, popup, tap_action, hold_action, double_tap_action)");
+    }
+    if (this.tap_action && !this.tap_action.action) {
+      throw new Error('"tap_action" must have an "action" property');
+    }
+    if (this.hold_action && !this.hold_action.action) {
+      throw new Error('"hold_action" must have an "action" property');
+    }
+    if (this.double_tap_action && !this.double_tap_action.action) {
+      throw new Error('"double_tap_action" must have an "action" property');
+    }
+  }
+}
+// src/components/navbar/route/popup/popup.ts
+init_lit();
+init_types();
+
+class Popup {
+  _navbarCard;
+  _popupItemData;
+  _popupItems = [];
+  constructor(_navbarCard, _popupItemData) {
+    this._navbarCard = _navbarCard;
+    this._popupItemData = _popupItemData;
+    _popupItemData.forEach((_itemData, _index) => {
+      this._popupItems.push(new PopupItem(this._navbarCard, this, _itemData, _index));
     });
+  }
+  get items() {
+    return this._popupItems;
+  }
+  open(target) {
+    const anchorRect = target.getBoundingClientRect();
+    const { style, labelPositionClassName, popupDirectionClassName } = this._getPopupStyles(anchorRect, !this._navbarCard.isDesktop ? "mobile" : this._navbarCard.config?.desktop?.position ?? "bottom" /* bottom */);
+    this._navbarCard.focusedPopup = x`
+      <div class="navbar-popup-backdrop"></div>
+      <div
+        class="
+          navbar-popup
+          ${popupDirectionClassName}
+          ${labelPositionClassName}
+          ${this._navbarCard.isDesktop ? "desktop" : "mobile"}
+          ${this._shouldShowLabelBackground() ? "popuplabelbackground" : ""}
+        "
+        style="${style}">
+        ${this.items.map((popupItem) => popupItem.render(popupDirectionClassName, labelPositionClassName)).filter((x2) => x2 != null)}
+      </div>
+    `;
+    requestAnimationFrame(() => {
+      const popup = this._navbarCard.shadowRoot?.querySelector(".navbar-popup");
+      const backdrop = this._navbarCard.shadowRoot?.querySelector(".navbar-popup-backdrop");
+      if (popup && backdrop) {
+        popup.classList.add("visible");
+        backdrop.classList.add("visible");
+      }
+    });
+    window.addEventListener("keydown", this._onPopupKeyDownListener);
+    setTimeout(() => {
+      const backdrop = this._navbarCard.shadowRoot?.querySelector(".navbar-popup-backdrop");
+      if (backdrop) {
+        backdrop.addEventListener("click", (e5) => {
+          e5.preventDefault();
+          e5.stopPropagation();
+          this.close();
+        });
+      }
+    }, 400);
+  }
+  close() {
+    const popup = this._navbarCard.shadowRoot?.querySelector(".navbar-popup");
+    const backdrop = this._navbarCard.shadowRoot?.querySelector(".navbar-popup-backdrop");
+    if (popup && backdrop) {
+      popup.classList.remove("visible");
+      backdrop.classList.remove("visible");
+      setTimeout(() => {
+        this._navbarCard.focusedPopup = null;
+      }, 200);
+    } else {
+      this._navbarCard.focusedPopup = null;
+    }
+    window.removeEventListener("keydown", this._onPopupKeyDownListener);
+  }
+  _shouldShowLabelBackground = () => {
+    const enabled = this._navbarCard.isDesktop ? this._navbarCard.config?.desktop?.show_popup_label_backgrounds : this._navbarCard.config?.mobile?.show_popup_label_backgrounds;
+    return !!enabled;
   };
+  _getPopupStyles(anchorRect, position) {
+    const { top, left, x: x2, width, height } = anchorRect;
+    const windowWidth = window.innerWidth;
+    const positions = {
+      top: {
+        style: i`
+          top: ${top + height}px;
+          left: ${x2}px;
+        `,
+        label: "label-right",
+        dir: "open-bottom"
+      },
+      left: {
+        style: i`
+          top: ${top}px;
+          left: ${x2 + width}px;
+        `,
+        label: "label-bottom",
+        dir: "open-right"
+      },
+      right: {
+        style: i`
+          top: ${top}px;
+          right: ${windowWidth - x2}px;
+        `,
+        label: "label-bottom",
+        dir: "open-left"
+      },
+      bottom: null,
+      mobile: null
+    };
+    if (positions[position]) {
+      return {
+        style: positions[position].style,
+        labelPositionClassName: positions[position].label,
+        popupDirectionClassName: positions[position].dir
+      };
+    }
+    const isRightSide = x2 > windowWidth / 2;
+    return isRightSide ? {
+      style: i`
+            top: ${top}px;
+            right: ${windowWidth - x2 - width}px;
+          `,
+      labelPositionClassName: "label-left",
+      popupDirectionClassName: "open-up"
+    } : {
+      style: i`
+            top: ${top}px;
+            left: ${left}px;
+          `,
+      labelPositionClassName: "label-right",
+      popupDirectionClassName: "open-up"
+    };
+  }
+  _onPopupKeyDownListener = (e5) => {
+    if (e5.key === "Escape" && this._navbarCard.focusedPopup) {
+      e5.preventDefault();
+      this.close();
+    }
+  };
+}
+// src/components/navbar/route/popup/popup-item.ts
+init_lit();
+init_utils();
+
+class PopupItem extends BaseRoute {
+  _parentPopup;
+  _index;
+  _events = new ActionEvents;
+  constructor(_navbarCard, _parentPopup, _data, _index) {
+    super(_navbarCard, _data);
+    this._parentPopup = _parentPopup;
+    this._index = _index;
+  }
+  closeParentPopup() {
+    this._parentPopup.close();
+  }
+  render(popupDirectionClassName, labelPositionClassName) {
+    if (this.hidden)
+      return null;
+    const showLabelBackground = this._shouldShowLabelBackground();
+    return x`<div
+      class="
+        popup-item
+        ${popupDirectionClassName}
+        ${labelPositionClassName}
+        ${showLabelBackground ? "popuplabelbackground" : ""}
+        ${this.selected ? "active" : ""}
+      "
+      style="--index: ${this._index}"
+      @click=${preventEventDefault}
+      @mouseenter=${(e5) => this._events.handleMouseEnter(e5, this)}
+      @mousemove=${(e5) => this._events.handleMouseMove(e5, this)}
+      @mouseleave=${(e5) => this._events.handleMouseLeave(e5, this)}
+      @pointerdown=${(e5) => this._events.handlePointerDown(e5, this)}
+      @pointermove=${(e5) => this._events.handlePointerMove(e5, this)}
+      @pointerup=${(e5) => this._events.handlePointerUp(e5, this)}
+      @pointercancel=${(e5) => this._events.handlePointerMove(e5, this)}>
+      <div class="button ${showLabelBackground ? "popuplabelbackground" : ""}">
+        ${this.icon.render()}
+        <md-ripple></md-ripple>
+        ${this.badge.render()}
+        ${showLabelBackground && this.label ? x`<div class="label">${this.label}</div>` : x``}
+      </div>
+      ${!showLabelBackground && this.label ? x`<div class="label">${this.label}</div>` : x``}
+    </div>`;
+  }
+}
+// src/navbar-card.ts
+init_utils();
+init_styles();
+
+// src/components/media-player.ts
+init_lit();
+init_utils();
+class MediaPlayer {
+  _navbarCard;
+  _events = new ActionEvents;
+  constructor(_navbarCard) {
+    this._navbarCard = _navbarCard;
+  }
+  get tap_action() {
+    return this._navbarCard.config?.media_player?.tap_action;
+  }
+  get hold_action() {
+    return this._navbarCard.config?.media_player?.hold_action;
+  }
+  get double_tap_action() {
+    return this._navbarCard.config?.media_player?.double_tap_action;
+  }
+  executeAction = (_target, _element, action, actionType) => {
+    const entity = this._getEntity();
+    if (action) {
+      fireDOMEvent(this._navbarCard, "hass-action", { bubbles: true, composed: true }, {
+        action: actionType,
+        config: { [`${actionType}_action`]: action, entity }
+      });
+    } else if (actionType === "tap") {
+      if (entity) {
+        fireDOMEvent(this._navbarCard, "hass-more-info", { bubbles: true, composed: true }, { entityId: entity });
+      }
+    }
+  };
+  shouldShowMediaPlayer = () => {
+    const config2 = this._navbarCard.config?.media_player;
+    if (!config2?.entity)
+      return { visible: false };
+    if (this._navbarCard.isDesktop)
+      return { visible: false };
+    const entity = this._getEntity();
+    const state2 = this._navbarCard._hass.states[entity ?? ""];
+    if (!state2)
+      return { visible: true, error: `Entity not found "${entity}"` };
+    if (config2.show != null) {
+      return {
+        visible: processTemplate(this._navbarCard._hass, this._navbarCard, config2.show)
+      };
+    }
+    return { visible: ["playing", "paused"].includes(state2.state) };
+  };
+  _getEntity() {
+    return processTemplate(this._navbarCard._hass, this._navbarCard, this._navbarCard.config?.media_player?.entity);
+  }
   _handleMediaPlayerSkipNextClick = (e5) => {
     e5.preventDefault();
     e5.stopPropagation();
-    const entity = processTemplate(this._hass, this, this._config?.media_player?.entity);
-    if (!entity)
-      return;
-    this._hass.callService("media_player", "media_next_track", {
-      entity_id: entity
-    });
+    const entity = this._getEntity();
+    if (entity) {
+      this._navbarCard._hass.callService("media_player", "media_next_track", {
+        entity_id: entity
+      });
+    }
   };
   _handleMediaPlayerPlayPauseClick = (e5) => {
     e5.preventDefault();
     e5.stopPropagation();
-    const entity = processTemplate(this._hass, this, this._config?.media_player?.entity);
+    const entity = this._getEntity();
     if (!entity)
       return;
-    const mediaPlayerState = this._hass.states[entity];
-    if (!mediaPlayerState)
+    const state2 = this._navbarCard._hass.states[entity];
+    if (!state2)
       return;
-    if (mediaPlayerState.state === "playing") {
-      this._hass.callService("media_player", "media_pause", {
-        entity_id: entity
-      });
-    } else {
-      this._hass.callService("media_player", "media_play", {
-        entity_id: entity
-      });
-    }
+    const action = state2.state === "playing" ? "media_pause" : "media_play";
+    this._navbarCard._hass.callService("media_player", action, {
+      entity_id: entity
+    });
   };
-  _renderMediaPlayer = () => {
-    const { visible, error } = this._shouldShowMediaPlayer();
+  render = () => {
+    const { visible, error } = this.shouldShowMediaPlayer();
     if (!visible)
       return x``;
-    const entity = processTemplate(this._hass, this, this._config.media_player.entity);
+    const entity = this._getEntity();
+    if (!entity)
+      return x``;
     if (error) {
       return x`<ha-card class="media-player error">
         <ha-alert alert-type="error"> ${error} </ha-alert>
       </ha-card>`;
     }
-    const mediaPlayerState = this._hass.states[entity];
+    const mediaPlayerState = this._navbarCard._hass.states[entity];
+    const mediaPlayerImage = mediaPlayerState.attributes.entity_picture;
     const progress = mediaPlayerState.attributes.media_position != null ? mediaPlayerState.attributes.media_position / mediaPlayerState.attributes.media_duration : null;
     return x`
-      <ha-card class="media-player" @click=${this._handleMediaPlayerClick}>
+      <ha-card
+        class="media-player"
+        @pointerdown=${(e5) => this._events.handlePointerDown(e5, this)}
+        @pointermove=${(e5) => this._events.handlePointerMove(e5, this)}
+        @pointerup=${(e5) => this._events.handlePointerUp(e5, this)}
+        @mouseenter=${(e5) => this._events.handleMouseEnter(e5, this)}
+        @mouseleave=${(e5) => this._events.handleMouseLeave(e5, this)}>
         <div
           class="media-player-bg"
-          style=${this._config?.media_player?.album_cover_background ? `background-image: url(${mediaPlayerState.attributes.entity_picture});` : ""}></div>
+          style=${this._navbarCard.config?.media_player?.album_cover_background ? `background-image: url(${mediaPlayerState.attributes.entity_picture});` : ""}></div>
         ${progress != null ? x` <div class="media-player-progress-bar">
               <div
                 class="media-player-progress-bar-fill"
                 style="width: ${progress * 100}%"></div>
             </div>` : x``}
-        <img
-          class="media-player-image"
-          src=${mediaPlayerState.attributes.entity_picture}
-          alt=${mediaPlayerState.attributes.media_title} />
+        ${mediaPlayerImage ? x`<img
+              class="media-player-image"
+              src=${mediaPlayerImage}
+              alt=${mediaPlayerState.attributes.media_title} />` : x`<ha-icon
+              class="media-player-image media-player-icon-fallback"
+              icon="mdi:music"></ha-icon>`}
         <div class="media-player-info">
           <span class="media-player-title"
             >${mediaPlayerState.attributes.media_title}</span
@@ -3754,7 +3991,9 @@ class NavbarCard extends i4 {
           class="media-player-button media-player-button-play-pause"
           appearance="accent"
           variant="brand"
-          @click=${this._handleMediaPlayerPlayPauseClick}>
+          @click=${this._handleMediaPlayerPlayPauseClick}
+          @pointerdown=${preventEventDefault}
+          @pointerup=${preventEventDefault}>
           <ha-icon
             icon=${mediaPlayerState.state === "playing" ? "mdi:pause" : "mdi:play"}></ha-icon>
         </ha-button>
@@ -3762,55 +4001,142 @@ class NavbarCard extends i4 {
           class="media-player-button media-player-button-skip"
           appearance="plain"
           variant="neutral"
-          @click=${this._handleMediaPlayerSkipNextClick}>
+          @click=${this._handleMediaPlayerSkipNextClick}
+          @pointerdown=${preventEventDefault}
+          @pointerup=${preventEventDefault}>
           <ha-icon icon="mdi:skip-next"></ha-icon>
         </ha-button>
       </ha-card>
     `;
   };
-  render() {
-    if (!this._config) {
-      return x``;
+}
+
+// src/navbar-card.ts
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "navbar-card",
+  name: "Navbar card",
+  preview: true,
+  description: "Full-width bottom nav on mobile and flexible desktop nav that can be placed on any side."
+});
+
+class NavbarCard extends i4 {
+  constructor() {
+    super(...arguments);
+    this._routes = [];
+    this.focusedPopup = null;
+  }
+  _mediaPlayer = new MediaPlayer(this);
+  set hass(hass) {
+    this._hass = hass;
+    const { visible } = this._mediaPlayer.shouldShowMediaPlayer();
+    if (this._showMediaPlayer !== visible) {
+      this._showMediaPlayer = visible;
     }
-    const { routes, desktop, mobile } = this._config;
-    const { position: desktopPosition, hidden: desktopHidden } = desktop ?? {};
-    const { hidden: mobileHidden } = mobile ?? {};
-    const isEditMode = this._inEditDashboardMode || this._inPreviewMode || this._inEditCardMode;
-    const desktopPositionClassname = mapStringToEnum(DesktopPosition, desktopPosition) ?? DEFAULT_DESKTOP_POSITION;
-    const deviceModeClassName = this.isDesktop ? "desktop" : "mobile";
-    const editModeClassname = isEditMode ? "edit-mode" : "";
-    const mobileModeClassname = mobile?.mode === "floating" ? "floating" : "";
-    const isDesktopHidden = processTemplate(this._hass, this, desktopHidden);
-    const isMobileHidden = processTemplate(this._hass, this, mobileHidden);
-    if (!isEditMode && (this.isDesktop && !!isDesktopHidden || !this.isDesktop && !!isMobileHidden)) {
-      return x``;
-    }
-    return x`
-      <div
-        class="navbar ${editModeClassname} ${deviceModeClassName} ${desktopPositionClassname} ${mobileModeClassname}">
-        ${this._renderMediaPlayer()}
-        <ha-card
-          class="navbar-card ${deviceModeClassName} ${desktopPositionClassname} ${mobileModeClassname}">
-          ${routes?.map(this._renderRoute).filter((x2) => x2 != null)}
-        </ha-card>
-      </div>
-      ${this._popup}
-    `;
+  }
+  get isInEditMode() {
+    return !!this._inEditDashboardMode || !!this._inEditCardMode || !!this._inPreviewMode;
+  }
+  static getStubConfig() {
+    return STUB_CONFIG;
   }
   static async getConfigElement() {
     await Promise.resolve().then(() => (init_navbar_card_editor(), exports_navbar_card_editor));
     return document.createElement("navbar-card-editor");
   }
+  connectedCallback() {
+    super.connectedCallback();
+    forceResetRipple(this);
+    window.addEventListener("resize", this._checkDesktop);
+    this._detectModes();
+    this._checkDesktop();
+    injectStyles(this, getDefaultStyles(), this.config?.styles ? r(this.config.styles) : i``);
+    forceDashboardPadding({
+      desktop: this.config?.desktop ?? DEFAULT_NAVBAR_CONFIG.desktop,
+      mobile: this.config?.mobile ?? DEFAULT_NAVBAR_CONFIG.mobile,
+      auto_padding: this.config?.layout?.auto_padding,
+      show_media_player: this._showMediaPlayer ?? false
+    });
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener("resize", this._checkDesktop);
+    removeDashboardPadding();
+    this.focusedPopup = null;
+  }
+  setConfig(config2) {
+    if (config2?.template) {
+      const templates = getNavbarTemplates();
+      if (templates) {
+        const templateConfig = templates[config2.template];
+        if (templateConfig) {
+          config2 = deepMergeKeepArrays(templateConfig, config2);
+        }
+      } else {
+        console.warn(`[navbar-card] No templates configured in this dashboard. Please refer to "templates" documentation for more information.
+
+https://github.com/joseluis9595/lovelace-navbar-card?tab=readme-ov-file#templates
+`);
+      }
+    }
+    if (!config2.routes) {
+      throw new Error('"routes" param is required for navbar card');
+    }
+    if (JSON.stringify(config2) === JSON.stringify(this.config))
+      return;
+    this._routes = config2.routes.map((route2) => new Route(this, route2));
+    this.config = config2;
+  }
+  updated(_changedProperties) {
+    super.updated(_changedProperties);
+    if (_changedProperties.has("_showMediaPlayer")) {
+      forceDashboardPadding({
+        desktop: this.config?.desktop ?? DEFAULT_NAVBAR_CONFIG.desktop,
+        mobile: this.config?.mobile ?? DEFAULT_NAVBAR_CONFIG.mobile,
+        auto_padding: this.config?.layout?.auto_padding,
+        show_media_player: this._showMediaPlayer ?? false
+      });
+    }
+  }
+  render() {
+    if (!this.config || this._shouldHide())
+      return x``;
+    const desktopPosition = mapStringToEnum(DesktopPosition, this.config.desktop?.position) ?? "bottom" /* bottom */;
+    const deviceClass = this.isDesktop ? "desktop" : "mobile";
+    const editClass = this.isInEditMode ? "edit-mode" : "";
+    const mobileModeClass = this.config.mobile?.mode === "floating" ? "floating" : "";
+    return x`
+      <div
+        class="navbar ${editClass} ${deviceClass} ${desktopPosition} ${mobileModeClass}">
+        ${this._mediaPlayer.render()}
+        <ha-card
+          class="navbar-card ${deviceClass} ${desktopPosition} ${mobileModeClass}">
+          ${this._routes.map((route2) => route2.render()).filter(Boolean)}
+        </ha-card>
+      </div>
+      ${this.focusedPopup ?? x``}
+    `;
+  }
+  _checkDesktop = () => {
+    this.isDesktop = (window.innerWidth || 0) >= (this.config?.desktop?.min_width ?? 768);
+  };
+  _shouldHide() {
+    if (this.isInEditMode)
+      return false;
+    const desktopHidden = processTemplate(this._hass, this, this.config?.desktop?.hidden);
+    const mobileHidden = processTemplate(this._hass, this, this.config?.mobile?.hidden);
+    return !this.isInEditMode && (this.isDesktop && desktopHidden || !this.isDesktop && mobileHidden);
+  }
+  _detectModes() {
+    const homeAssistantRoot = document.querySelector("body > home-assistant");
+    this._inEditDashboardMode = this.parentElement?.closest("hui-card-edit-mode") != null;
+    this._inEditCardMode = !!homeAssistantRoot?.shadowRoot?.querySelector("hui-dialog-edit-card")?.shadowRoot?.querySelector("ha-dialog");
+    this._inPreviewMode = this.parentElement?.closest(".card > .preview") != null;
+  }
 }
 __legacyDecorateClassTS([
   n4({ attribute: false })
 ], NavbarCard.prototype, "_hass", undefined);
-__legacyDecorateClassTS([
-  r5()
-], NavbarCard.prototype, "_config", undefined);
-__legacyDecorateClassTS([
-  r5()
-], NavbarCard.prototype, "isDesktop", undefined);
 __legacyDecorateClassTS([
   r5()
 ], NavbarCard.prototype, "_inEditDashboardMode", undefined);
@@ -3822,10 +4148,19 @@ __legacyDecorateClassTS([
 ], NavbarCard.prototype, "_inPreviewMode", undefined);
 __legacyDecorateClassTS([
   r5()
-], NavbarCard.prototype, "_popup", undefined);
+], NavbarCard.prototype, "config", undefined);
 __legacyDecorateClassTS([
   r5()
 ], NavbarCard.prototype, "_showMediaPlayer", undefined);
+__legacyDecorateClassTS([
+  r5()
+], NavbarCard.prototype, "_routes", undefined);
+__legacyDecorateClassTS([
+  r5()
+], NavbarCard.prototype, "focusedPopup", undefined);
+__legacyDecorateClassTS([
+  r5()
+], NavbarCard.prototype, "isDesktop", undefined);
 NavbarCard = __legacyDecorateClassTS([
   t3("navbar-card")
 ], NavbarCard);
@@ -3835,14 +4170,14 @@ console.info(`%c navbar-card%cv${version} `, `background-color: #555;
       color: #fff;
       font-weight: 800;
       font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-      text-shadow: 0 1px 0 rgba(1, 1, 1, 0.3); 
+      text-shadow: 0 1px 0 rgba(1, 1, 1, 0.3);
       border-radius: 16px 0 0 16px;`, `background-color:rgb(0, 135, 197);
       padding: 6px 8px;
       padding-left: 6px;
       color: #fff;
       font-weight: 800;
       font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-      text-shadow: 0 1px 0 rgba(1, 1, 1, 0.3); 
+      text-shadow: 0 1px 0 rgba(1, 1, 1, 0.3);
       border-radius: 0 16px 16px 0;`);
 export {
   NavbarCard
