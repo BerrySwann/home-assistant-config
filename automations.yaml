@@ -1591,7 +1591,7 @@
     then:
     - data:
         title: Clim [2] en [CELLULAR]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_du_bureau_nous',
           'on') and\n      is_state('switch.clim_chambre_nous', 'on') %}\n  {% if
           trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
@@ -1622,7 +1622,7 @@
     then:
     - data:
         title: Clim [MAMOUR] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
           'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
           == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
@@ -1659,7 +1659,7 @@
     then:
     - data:
         title: Clim [ERIC] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
           'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
           == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
@@ -1696,7 +1696,7 @@
     then:
     - data:
         title: Clim [2] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
           'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
           == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
@@ -2110,7 +2110,7 @@
     then:
     - data:
         title: Clim-n [2] en [CELLULAR]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_du_bureau_nous',
           'on') and\n      is_state('switch.clim_chambre_nous', 'on') %}\n  {% if
           trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
@@ -2153,7 +2153,7 @@
     then:
     - data:
         title: Clim-n [MAMOUR] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
           'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
           == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
@@ -2202,7 +2202,7 @@
     then:
     - data:
         title: Clim-n [ERIC] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
           'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
           == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
@@ -2251,7 +2251,7 @@
     then:
     - data:
         title: Clim-n [2] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_bureau_nous',
+        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
           'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
           == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
           == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
