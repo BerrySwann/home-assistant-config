@@ -1125,11 +1125,19 @@
           hvac_mode: 'off'
         action: climate.set_hvac_mode
       - action: notify.mobile_app_poco_x7_pro
-        data: {}
-      - data:
-          entity_id: input_number.msg_4_fenetres_ouvertes_previous
-          value: 1
-        action: input_number.set_value
+        data:
+          title: Clim. désactivées
+          message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
+            and is_state('binary_sensor.contact_fenetre_salon_ikea_contact', 'on')
+            %}\n  La fenêtre du Salon a été ouverte.\n{% elif trigger.entity_id ==
+            'binary_sensor.contact_fenetre_cuisine_ikea_contact' and is_state('binary_sensor.contact_fenetre_cuisine_ikea_contact',
+            'on') %}\n  La fenêtre de la Cuisine a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_bureau_ikea_contact' and is_state('binary_sensor.contact_fenetre_bureau_ikea_contact',
+            'on') %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_chambre_ikea_contact' and is_state('binary_sensor.contact_fenetre_chambre_ikea_contact',
+            'on') %}\n  La fenêtre de la Chambre a été ouverte.\n{% endif %}\n  {%
+            if states('sensor.nbre_de_fenetres_ouvertes') == '4' %}\n    Toutes les
+            fenêtres sont ouvertes.\n  {% endif %}\n"
     - alias: SI TOUTES LES FENÊTRES SONT FERMÉES (condition AND)
       conditions:
       - condition: and
@@ -1486,15 +1494,14 @@
       title: Fermeture en cours
       message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
         and states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'off' %}\n
-        \ La fenêtre du Salon a été fermée.\n\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_cuisine_ikea_contact'
+        \ La fenêtre du Salon a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_cuisine_ikea_contact'
         and states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'off'
-        %}\n  La fenêtre de la Cuisine a été fermée.\n\n{% elif trigger.entity_id
-        == 'binary_sensor.contact_fenetre_bureau_ikea_contact' and states('binary_sensor.contact_fenetre_bureau_ikea_contact')
-        == 'off' %}\n  La fenêtre du Bureau a été fermée.\n\n{% elif trigger.entity_id
+        %}\n  La fenêtre de la Cuisine a été fermée.\n{% elif trigger.entity_id ==
+        'binary_sensor.contact_fenetre_bureau_ikea_contact' and states('binary_sensor.contact_fenetre_bureau_ikea_contact')
+        == 'off' %}\n  La fenêtre du Bureau a été fermée.\n{% elif trigger.entity_id
         == 'binary_sensor.contact_fenetre_chambre_ikea_contact' and states('binary_sensor.contact_fenetre_chambre_ikea_contact')
-        == 'off' %}\n  La fenêtre de la Chambre a été fermée.\n\n{% endif %}\n{% if
-        states('sensor.nbre_de_fenetres_fermees') == '4' %} Toutes les fenêtres sont
-        maintenant fermées.\n{% endif %}\n"
+        == 'off' %}\n  La fenêtre de la Chambre a été fermée.\n{% endif %} {% if states('sensor.nbre_de_fenetres_fermees')
+        == '4' %} \n  Toutes les fenêtres sont maintenant fermées.\n{% endif %}\n"
     action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754230309244'
