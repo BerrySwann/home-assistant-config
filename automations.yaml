@@ -831,8 +831,8 @@
       %} {{ result.sensors | join('', '') }}'
   mode: single
 - id: '1748450913123'
-  alias: Automate éCO. (Prise) selon le réseau (Wifi et/ou Celullar) des 2 portables
-  description: Automatisation basée sur le type de réseau (Wifi et Cellular) des deux
+  alias: Automation éCO. (Prise) selon le réseau [Wifi et/ou Celullar] des 2 portables
+  description: Automation basée sur le type de réseau [Wifi et Cellular] des deux
     portables
   triggers:
   - triggers:
@@ -856,7 +856,7 @@
       - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
-          message: '[4] prises [OFF]'
+          message: '[5] prises [OFF]'
           title: éCO Prises [2] en [Cellular]
       - type: turn_off
         device_id: 953354483097f440ca3b80ee31579839
@@ -924,7 +924,7 @@
       - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
-          message: '[1] prises [ON]'
+          message: '[2] prises [ON]'
           title: éCO Prises [Eric] en [WIFI]
       - type: turn_off
         device_id: 953354483097f440ca3b80ee31579839
@@ -960,7 +960,7 @@
       - action: notify.mobile_app_poco_x7_pro
         metadata: {}
         data:
-          message: '[4] prises [ON]'
+          message: '[5] prises [ON]'
           title: éCO Prises [2] en [WIFI]
       - type: turn_on
         device_id: a1e1e27131bc91a248ad196be29ae36f
@@ -983,7 +983,7 @@
         entity_id: fdb008a5af2652bb414838d475af4b94
         domain: switch
       alias: '[2] en [WIFI]'
-  mode: single
+  mode: queued
 - id: '1750309185567'
   alias: (H) [ CLIM DEBUG ] Debug clim en auto -> sensor.mode_ete_hiver
   description: Vérifie toutes les minutes si les clims sont bien en mode 'sensor.mode_ete_hiver',
@@ -1493,14 +1493,9 @@
         == 'off' %}\n  La fenêtre du Bureau a été fermée.\n\n{% elif trigger.entity_id
         == 'binary_sensor.contact_fenetre_chambre_ikea_contact' and states('binary_sensor.contact_fenetre_chambre_ikea_contact')
         == 'off' %}\n  La fenêtre de la Chambre a été fermée.\n\n{% endif %}\n{% if
-        states('sensor.nbre_de_fenetres_fermees') == '4' and states('input_number.msg_4_fenetres_fermees_previous')
-        | float | round == 1 %} Toutes les fenêtres sont maintenant fermées.\n{% endif
-        %}\n"
+        states('sensor.nbre_de_fenetres_fermees') == '4' %} Toutes les fenêtres sont
+        maintenant fermées.\n{% endif %}\n"
     action: notify.mobile_app_poco_x7_pro
-  - data:
-      entity_id: input_number.msg_4_fenetres_ouvertes_previous
-      value: 0
-    action: input_number.set_value
   mode: queued
 - id: '1754230309244'
   alias: (F) [ CLIM ] Automatisation qui détecte quand un climatiseur est désactivé
@@ -2429,7 +2424,7 @@
     before: '20:00:00'
   actions:
   - data:
-      message: '{{ states(''sensor.message_clim_personnalise'') }}'
+      message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
     action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1758298361594'
@@ -2447,6 +2442,6 @@
     before: 06:00:00
   actions:
   - data:
-      message: '{{ states(''sensor.message_clim_personnalise'') }}'
+      message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
     action: notify.mobile_app_poco_x7_pro
   mode: queued
