@@ -1,1 +1,3 @@
-
+clim_turned_off_by_window:
+  name: "Clim éteinte par fenêtre (flag temporaire)"
+  initial: off

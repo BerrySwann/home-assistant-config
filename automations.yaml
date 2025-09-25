@@ -1477,32 +1477,42 @@
     action: notify.mobile_app_poco_x7_pro
   mode: single
 - id: '1754214931347'
-  alias: (E) [ CLIM ] Automatisation pour l'envoie de notification de la fermeture
-    des fenêtres
-  description: Envoie une notification lorsque une fenêtre est fermée.
+  alias: (F) [ CLIM ] Automatisation qui détecte quand un climatiseur est désactivé
+    et envoie une notification
   triggers:
   - entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
-    from: 'on'
-    to: 'off'
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
     trigger: state
+    from:
+    to: 'off'
   actions:
-  - data:
-      title: Fermeture en cours
-      message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
-        and states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'off' %}\n
-        \ La fenêtre du Salon a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_cuisine_ikea_contact'
-        and states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'off'
-        %}\n  La fenêtre de la Cuisine a été fermée.\n{% elif trigger.entity_id ==
-        'binary_sensor.contact_fenetre_bureau_ikea_contact' and states('binary_sensor.contact_fenetre_bureau_ikea_contact')
-        == 'off' %}\n  La fenêtre du Bureau a été fermée.\n{% elif trigger.entity_id
-        == 'binary_sensor.contact_fenetre_chambre_ikea_contact' and states('binary_sensor.contact_fenetre_chambre_ikea_contact')
-        == 'off' %}\n  La fenêtre de la Chambre a été fermée.\n{% endif %} {% if states('sensor.nbre_de_fenetres_fermees')
-        == '4' %} \n  Toutes les fenêtres sont maintenant fermées.\n{% endif %}\n"
-    action: notify.mobile_app_poco_x7_pro
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.entity_id == ''climate.clim'' }}'
+      sequence:
+      - action: notify.mobile_app_poco_x7_pro
+        data:
+          title: ARRÊT CLIM
+          message: La clim. du Salon a été coupée manuellement.
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.entity_id == ''climate.clim_du_bureau'' }}'
+      sequence:
+      - action: notify.mobile_app_poco_x7_pro
+        data:
+          title: ARRÊT CLIM
+          message: La clim. du Bureau a été coupée manuellement.
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.entity_id == ''climate.clim_de_la_chambre'' }}'
+      sequence:
+      - action: notify.mobile_app_poco_x7_pro
+        data:
+          title: ARRÊT CLIM
+          message: La clim. de la Chambre a été coupée manuellement.
   mode: queued
 - id: '1754230309244'
   alias: (F) [ CLIM ] Automatisation qui détecte quand un climatiseur est désactivé

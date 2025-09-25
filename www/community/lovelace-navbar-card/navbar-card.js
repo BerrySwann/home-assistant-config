@@ -1088,7 +1088,7 @@ var init_styles = __esm(() => {
     --navbar-box-shadow-desktop: var(--material-shadow-elevation-2dp);
     --navbar-box-shadow-mobile-floating: var(--material-shadow-elevation-2dp);
 
-    --navbar-z-index: 7;
+    --navbar-z-index: 3;
     --navbar-popup-backdrop-z-index: 900;
     --navbar-popup-z-index: 901;
   }
@@ -3018,7 +3018,7 @@ var init_navbar_card_editor = __esm(() => {
   ], NavbarCardEditor);
 });
 // package.json
-var version = "1.1.0";
+var version = "1.1.1";
 
 // src/navbar-card.ts
 init_lit();
@@ -3414,6 +3414,9 @@ Supported formats: [r,g,b] | [r,g,b,a]`);
   rgba() {
     return { r: this.r, g: this.g, b: this.b, a: this.a };
   }
+  rgbaString() {
+    return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+  }
   hex() {
     return `#${decimalToHex(this.r)}${decimalToHex(this.g)}${decimalToHex(this.b)}`;
   }
@@ -3574,7 +3577,6 @@ class Badge {
 // src/components/navbar/icon/icon.ts
 init_lit();
 init_utils();
-
 class Icon {
   _navbarCard;
   _route;
@@ -3595,7 +3597,15 @@ class Icon {
     return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.image_selected);
   }
   get iconColor() {
-    return processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.icon_color);
+    try {
+      const rawValue = processTemplate(this._navbarCard._hass, this._navbarCard, this._route.data.icon_color);
+      if (isTemplate(rawValue)) {
+        return null;
+      }
+      return new Color(rawValue).rgbaString();
+    } catch (_err) {
+      return null;
+    }
   }
   render() {
     const isSelected = this._route.selected;
