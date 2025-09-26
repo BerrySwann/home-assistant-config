@@ -1,4 +1,68 @@
 streamline_templates:
+  clim_ampere_ring-tile:
+    card:
+      type: vertical-stack
+      cards:
+        - type: custom:ring-tile
+          name: '[[card_name]]'
+          entity: '[[entity]]'
+          ring_entity: '[[entity]]'
+          ring_type: open
+          ring_size: 3
+          scale: ticks_with_labels
+          top_element: none
+          middle_element: value_with_unit
+          bottom_element: name
+          colorize_icon: true
+          indicator: dot
+          min: 0
+          max: 10
+          colour:
+            '0': ha_green
+            '4': ha_green
+            '5': ha_orange
+            '6': ha_orange
+            '7': ha_red
+            '10': ha_red
+          card_mod:
+            style: |
+              ha-card {
+                background: none !important;
+                border: none !important;
+                box-shadow: none !important;
+              }
+  clim_voltage_ring-tile:
+    card:
+      type: vertical-stack
+      cards:
+        - type: custom:ring-tile
+          name: '[[card_name]]'
+          entity: '[[entity]]'
+          ring_entity: '[[entity]]'
+          ring_type: open
+          ring_size: 3
+          scale: ticks_with_labels
+          top_element: none
+          middle_element: value_with_unit
+          bottom_element: name
+          colorize_icon: true
+          indicator: dot
+          min: 170
+          max: 240
+          colour:
+            '170': ha_red
+            '190': ha_red
+            '195': ha_orange
+            '205': ha_orange
+            '210': ha_green
+            '240': ha_green
+          card_mod:
+            style: |
+              ha-card {
+                background: none !important;
+                border: none !important;
+                box-shadow: none !important;
+              }
   nav_bar:
     card:
       type: vertical-stack
@@ -1288,10 +1352,12 @@ views:
               .bubble-button-background {
                 background-color:
                   ${ state === 'home'
-                    ? 'green'
+                    ? 'darkgreen'
                     : state === 'not_home'
                       ? 'rgb(255, 103, 0)'
-                      : 'grey'
+                      : state === 'LECLERC VENCE'
+                        ? 'rgb(0, 102, 204)'
+                        : 'grey'
                   } !important;
               }
               .bubble-icon,
@@ -1301,7 +1367,9 @@ views:
                     ? 'darkgreen'
                     : state === 'not_home'
                       ? 'rgb(255, 103, 0)'
-                      : 'grey'
+                      : state === 'LECLERC VENCE'
+                        ? 'rgb(0, 102, 204)'
+                        : 'grey'
                   } !important;
               }
 
@@ -1310,7 +1378,9 @@ views:
                   ? 'mdi:home'
                   : state === 'not_home'
                     ? 'mdi:home-off'
-                    : 'mdi:crosshairs-question'
+                    : state === 'LECLERC VENCE'
+                      ? 'mdi:basket-check'
+                      : 'mdi:crosshairs-question'
               )}
           - type: custom:mushroom-entity-card
             entity: binary_sensor.detecteur_de_fuite_ikea_water_leak
@@ -2090,7 +2160,7 @@ views:
                       };
 
                       var bureauEntities = ['light.bureau_z2m'];
-                      if (states['switch.hue_smart_eco_pc_bureau'].state === 'on') {
+                      if (states['switch.ecran_p_c_3_play_hue'].state === 'on') {
                         bureauEntities.push('light.bureau');
                       }
                       var bureau = {
@@ -5617,12 +5687,6 @@ views:
               {% else %}
                 mdi:ceiling-light-outline
               {% endif %}
-            icon_color: |
-              {% if is_state('light.entree', 'on') %}
-                green
-              {% else %}
-                grey
-              {% endif %}
             badge_icon: |
               {% if is_state('light.entree', 'on') %}
                 mdi:checkbox-marked-circle
@@ -5640,6 +5704,13 @@ views:
             grid_options:
               columns: 12
               rows: 2
+            color: |
+              {% if is_state('light.entree', 'on') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            features_position: bottom
             card_mod:
               style:
                 mushroom-state-info$: |
@@ -5711,12 +5782,6 @@ views:
               {% else %}
                 mdi:sofa-outline
               {% endif %}
-            icon_color: |
-              {% if is_state('light.salon', 'on') %}
-                green
-              {% else %}
-                grey
-              {% endif %}
             badge_icon: |
               {% if is_state('light.salon', 'on') %}
                 mdi:checkbox-marked-circle
@@ -5734,6 +5799,13 @@ views:
             grid_options:
               columns: 6
               rows: 2
+            color: |
+              {% if is_state('light.salon', 'on') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            features_position: bottom
             card_mod:
               style:
                 mushroom-state-info$: |
@@ -5769,12 +5841,6 @@ views:
                 Éteint
               {% endif %}
             icon: mdi:table-chair
-            icon_color: |
-              {% if is_state('light.table', 'on') %}
-                green
-              {% else %}
-                grey
-              {% endif %}
             badge_icon: |
               {% if is_state('light.table', 'on') %}
                 mdi:checkbox-marked-circle
@@ -5792,6 +5858,13 @@ views:
             grid_options:
               columns: 6
               rows: 2
+            color: |
+              {% if is_state('light.table', 'on') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            features_position: bottom
             card_mod:
               style:
                 mushroom-state-info$: |
@@ -5852,12 +5925,6 @@ views:
               {% else %}
                 mdi:ceiling-light-outline
               {% endif %}
-            icon_color: |
-              {% if is_state('light.cuisine', 'on') %}
-                green
-              {% else %}
-                grey
-              {% endif %}
             badge_icon: |
               {% if is_state('light.cuisine', 'on') %}
                 mdi:checkbox-marked-circle
@@ -5875,6 +5942,13 @@ views:
             grid_options:
               columns: 12
               rows: 2
+            color: |
+              {% if is_state('light.cuisine', 'on') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            features_position: bottom
             card_mod:
               style:
                 mushroom-state-info$: |
@@ -5930,12 +6004,6 @@ views:
               {% else %}
                 mdi:ceiling-light-outline
               {% endif %}
-            icon_color: |
-              {% if is_state('light.couloir', 'on') %}
-                green
-              {% else %}
-                grey
-              {% endif %}
             badge_icon: |
               {% if is_state('light.couloir', 'on') %}
                 mdi:checkbox-marked-circle
@@ -5953,6 +6021,13 @@ views:
             grid_options:
               columns: 12
               rows: 2
+            color: |
+              {% if is_state('light.couloir', 'on') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            features_position: bottom
             card_mod:
               style:
                 mushroom-state-info$: |
@@ -6057,6 +6132,13 @@ views:
                   {% else %}
                     grey
                   {% endif %}
+                color: |
+                  {% if is_state('light.bureau_z2m', 'on') %}
+                    green
+                  {% else %}
+                    grey
+                  {% endif %}
+                features_position: bottom
                 card_mod:
                   style:
                     mushroom-state-info$: |
@@ -6112,9 +6194,6 @@ views:
                       --chip-height: 30px;
                       margin-left: 80%;
                       bottom: 10px;
-                      background: none !important;
-                      box-shadow: none !important;
-                      border: none !important;
                     }
             card_mod:
               style: |
@@ -6124,80 +6203,123 @@ views:
                 }
             grid_options:
               columns: 6
-              rows: auto
-          - type: conditional
-            conditions:
-              - entity: switch.hue_smart_eco_pc_bureau
-                state: 'on'
-            card:
-              type: custom:vertical-stack-in-card
-              cards:
-                - type: custom:mushroom-legacy-template-card
-                  entity: light.bureau
-                  primary: Ecran P.C.
-                  secondary: |
-                    {% if is_state('light.bureau', 'on') %}
-                      Allumée
-                    {% else %}
-                      Éteint
-                    {% endif %}
-                  icon: mdi:television
-                  icon_color: '{{ ''green'' if is_state(''light.bureau'',''on'') else ''grey'' }}'
-                  badge_icon: >-
-                    {{ 'mdi:checkbox-marked-circle' if
-                    is_state('light.bureau','on') else
-                    'mdi:checkbox-blank-circle-outline' }}
-                  badge_color: '{{ ''green'' if is_state(''light.bureau'',''on'') else ''grey'' }}'
-                  tap_action:
-                    action: toggle
-                  card_mod:
-                    style:
-                      mushroom-state-info$: >
-                        .primary { top: -5px; left: 10px; font-size: 24px
-                        !important; font-weight: bold; }
-
-                        .secondary { position: relative; top: 5px; left: 10px;
-                        font-size: 12px !important; }
-                      .: |
-                        :host { --mush-icon-size: 65px; }
-                      style: |
-                        ha-card {
-                          background: transparent !important;
-                          border: none !important;
-                          box-shadow: none !important;
-                          margin-top: 0;
-                        }
-                - type: custom:mushroom-chips-card
-                  chips:
-                    - type: template
-                      entity: light.bureau
-                      tap_action:
-                        action: navigate
-                        navigation_path: '#ecranpc'
-                      icon: mdi:television
-                      icon_color: |
-                        {% if is_state('light.bureau','on') %} green
-                        {% elif is_state('light.bureau','off') %} grey
-                        {% endif %}
+              rows: 2
+          - type: custom:vertical-stack-in-card
+            cards:
+              - type: conditional
+                conditions:
+                  - entity: switch.ecran_p_c_3_play_hue
+                    state: 'on'
+                card:
+                  type: custom:vertical-stack-in-card
                   card_mod:
                     style: |
                       ha-card {
-                        --chip-border-width: 1;
-                        --chip-border-color: {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
-                        --chip-height: 30px;
-                        margin-left: 80%;
-                        bottom: 10px;
-                        background: none !important;
-                        box-shadow: none !important;
-                        border: none !important;
+                        border: 1px solid {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
+                        background-color: {% if is_state('light.bureau', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                       }
-              card_mod:
-                style: |
-                  ha-card {
-                    border: 1px solid {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
-                    background-color: {% if is_state('light.bureau', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
-                    transition: background-color 200ms ease, border-color 200ms ease;
-                  }
+                  cards:
+                    - type: custom:mushroom-legacy-template-card
+                      entity: light.bureau
+                      primary: Bureau
+                      secondary: |
+                        {% if is_state('light.bureau', 'on') %}
+                          Allumée
+                        {% else %}
+                          Éteint
+                        {% endif %}
+                      icon: |
+                        {% if is_state('light.bureau', 'on') %}
+                          mdi:television
+                        {% else %}
+                          mdi:television
+                        {% endif %}
+                      icon_color: |
+                        {% if is_state('light.bureau', 'on') %}
+                          green
+                        {% else %}
+                          grey
+                        {% endif %}
+                      badge_icon: |
+                        {% if is_state('light.bureau', 'on') %}
+                          mdi:checkbox-marked-circle
+                        {% else %}
+                          mdi:checkbox-blank-circle-outline
+                        {% endif %}
+                      badge_color: |
+                        {% if is_state('light.bureau', 'on') %}
+                          green
+                        {% else %}
+                          grey
+                        {% endif %}
+                      color: |
+                        {% if is_state('light.bureau', 'on') %}
+                          green
+                        {% else %}
+                          grey
+                        {% endif %}
+                      features_position: bottom
+                      card_mod:
+                        style:
+                          mushroom-state-info$: |
+                            .primary {
+                              position: relative;
+                              top: -5px;
+                              left: 10px;
+                              font-size: 24px !important;
+                              font-weight: bold;
+                            }
+                            .secondary {
+                              position: relative;
+                              top: 5px;
+                              left: 10px;
+                              font-size: 12px !important;
+                            }
+                          .: |
+                            :host {
+                              --mush-icon-size: 70px;
+                            }
+                          style: |
+                            ha-card {
+                              padding: 0 !important;
+                              border: none !important;
+                              background-color: transparent !important;
+                            }
+                      grid_options:
+                        columns: 6
+                        rows: 2
+                    - type: custom:mushroom-chips-card
+                      chips:
+                        - type: template
+                          entity: light.bureau
+                          tap_action:
+                            action: navigate
+                            navigation_path: '#ecranpc'
+                          icon: |
+                            {% if is_state('light.bureau', 'on') %}
+                              mdi:television
+                            {% else %}
+                              mdi:television
+                            {% endif %}
+                          icon_color: |
+                            {% if is_state(entity, 'on') %}
+                              green
+                            {% elif is_state(entity, 'off') %}
+                              grey
+                            {% endif %}
+                      card_mod:
+                        style: |
+                          ha-card {
+                            --chip-border-width: 1;
+                            --chip-border-color: {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
+                            --chip-height: 30px;
+                            margin-left: 80%;
+                            bottom: 10px;
+                            padding: 0 !important;
+                            background: none !important;
+                            box-shadow: none !important;
+                            border: none !important;
+                          }
             grid_options:
               columns: 6
               rows: auto
@@ -12237,7 +12359,7 @@ views:
                   start: day
                 apex_config:
                   chart:
-                    height: 600px
+                    height: 580px
                 header:
                   show: true
                   title: Conso. journalière (Cumul sur 24h)
@@ -12697,7 +12819,7 @@ views:
               start: month
             apex_config:
               chart:
-                height: 600px
+                height: 580px
             header:
               show: true
               title: Conso. mensuel
@@ -12774,6 +12896,13 @@ views:
             heading: Entrée
             heading_style: title
             badges: []
+            card_mod: null
+            style: |
+              ha-card {
+                background: transparent !important;
+                box-shadow: none !important;
+                border: none !important;
+              }
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
@@ -13229,52 +13358,22 @@ views:
                 --bubble-state-climate-fan-only-color: #008B8B;
                 --bubble-state-climate-heat-color: #DC143C;
               }
-          - type: gauge
-            entity: sensor.clim_salon_nous_current
-            name: Clim. Salon (A)
-            unit: A
-            needle: true
-            min: 0
-            max: 10
-            severity:
-              green: 0
-              yellow: 7.5
-              red: 9
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_voltage_ring-tile
+            variables:
+              card_name: Clim. Salon (V)
+              entity: sensor.clim_salon_nous_voltage
             grid_options:
               columns: 6
               rows: 3
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: gauge
-            entity: sensor.clim_salon_nous_voltage
-            name: Clim. Salon (V)
-            needle: true
-            max: 240
-            severity:
-              green: 219
-              yellow: 200
-              red: 180
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_ampere_ring-tile
+            variables:
+              card_name: Clim. Salon (A)
+              entity: sensor.clim_salon_nous_current
             grid_options:
               columns: 6
               rows: 3
-            unit: V
-            min: 180
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
@@ -13393,52 +13492,22 @@ views:
             show_attribute: true
             attribute: fan_mode
             name: Radiateur de la Cuisine
-          - type: gauge
-            entity: sensor.radiateur_elec_cuisine_current
-            name: Radiateur Cuisine (A)
-            unit: A
-            needle: true
-            min: 0
-            max: 10
-            severity:
-              green: 0
-              yellow: 7.5
-              red: 9
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_voltage_ring-tile
+            variables:
+              card_name: Rad. Cuisine (V)
+              entity: sensor.radiateur_elec_cuisine_voltage
             grid_options:
               columns: 6
-              rows: auto
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: gauge
-            entity: sensor.radiateur_elec_cuisine_voltage
-            name: Radiateur Cuisine (V)
-            needle: true
-            max: 240
-            severity:
-              green: 219
-              yellow: 200
-              red: 0
-            tap_action:
-              action: none
+              rows: 3
+          - type: custom:streamline-card
+            template: clim_ampere_ring-tile
+            variables:
+              card_name: Rad. Cuisine (A)
+              entity: sensor.radiateur_elec_cuisine_current
             grid_options:
               columns: 6
-              rows: auto
-            unit: V
-            min: 180
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
+              rows: 3
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
@@ -13565,52 +13634,22 @@ views:
                 --bubble-state-climate-fan-only-color: #008B8B;
                 --bubble-state-climate-heat-color: #DC143C;
               }
-          - type: gauge
-            entity: sensor.clim_bureau_current
-            name: Clim. Bureau (A)
-            unit: A
-            needle: true
-            min: 0
-            max: 10
-            severity:
-              green: 0
-              yellow: 7.5
-              red: 9
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_voltage_ring-tile
+            variables:
+              card_name: Clim. Bureau (V)
+              entity: sensor.clim_bureau_voltage
             grid_options:
               columns: 6
               rows: 3
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: gauge
-            entity: sensor.clim_bureau_voltage
-            name: Clim. Bureau (V)
-            needle: true
-            max: 240
-            severity:
-              green: 219
-              yellow: 200
-              red: 0
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_ampere_ring-tile
+            variables:
+              card_name: Clim. Bureau (A)
+              entity: sensor.clim_bureau_current
             grid_options:
               columns: 6
               rows: 3
-            unit: V
-            min: 180
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
@@ -13690,52 +13729,22 @@ views:
                 show_icon: true
                 entity: sensor.th_salle_de_bain_temperature
                 color: green
-          - type: gauge
-            entity: sensor.prise_radiateur_salle_de_bain_nous_current
-            name: Rad. SdB (A)
-            unit: A
-            needle: true
-            min: 0
-            max: 10
-            severity:
-              green: 0
-              yellow: 7.5
-              red: 9
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_voltage_ring-tile
+            variables:
+              card_name: Rad. SdB (V)
+              entity: sensor.prise_radiateur_salle_de_bain_nous_voltage
             grid_options:
               columns: 6
               rows: 3
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: gauge
-            entity: sensor.prise_radiateur_salle_de_bain_nous_voltage
-            name: Rad. SdB (V)
-            needle: true
-            max: 240
-            severity:
-              green: 219
-              yellow: 200
-              red: 0
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_ampere_ring-tile
+            variables:
+              card_name: Rad. SdB (A)
+              entity: sensor.prise_radiateur_salle_de_bain_nous_current
             grid_options:
               columns: 6
               rows: 3
-            unit: V
-            min: 180
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
@@ -13862,52 +13871,22 @@ views:
                 --bubble-state-climate-fan-only-color: #008B8B;
                 --bubble-state-climate-heat-color: #DC143C;
               }
-          - type: gauge
-            entity: sensor.clim_chambre_nous_current
-            name: Clim. chambre (A)
-            unit: A
-            needle: true
-            min: 0
-            max: 10
-            severity:
-              green: 0
-              yellow: 7.5
-              red: 9
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_voltage_ring-tile
+            variables:
+              card_name: Clim. chambre (V)
+              entity: sensor.clim_chambre_nous_voltage
             grid_options:
               columns: 6
               rows: 3
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: gauge
-            entity: sensor.clim_chambre_nous_voltage
-            name: Clim. chambre (V)
-            needle: true
-            max: 240
-            severity:
-              green: 219
-              yellow: 200
-              red: 0
-            tap_action:
-              action: none
+          - type: custom:streamline-card
+            template: clim_ampere_ring-tile
+            variables:
+              card_name: Clim. chambre (A)
+              entity: sensor.clim_chambre_nous_current
             grid_options:
               columns: 6
               rows: 3
-            unit: V
-            min: 180
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
@@ -14689,12 +14668,12 @@ views:
                 transform: return x * 1000;
                 unit: W
               - entity: sensor.lampe_bureau_1_hue_energy
-                name: Bureau IKEA 1
+                name: Bureau HUE 1
                 color: rgb(122, 178, 211)
                 transform: return x * 1000;
                 unit: W
               - entity: sensor.lampe_bureau_2_hue_energy
-                name: Bureau IKEA 2
+                name: Bureau HUE 2
                 color: rgb(74, 98, 138)
                 transform: return x * 1000;
                 unit: W
@@ -14746,12 +14725,12 @@ views:
                 transform: return x * 1000;
                 unit: W
               - entity: sensor.lampe_bureau_1_hue_energy
-                name: Bureau IKEA 1
+                name: Bureau HUE 1
                 color: rgb(122, 178, 211)
                 transform: return x * 1000;
                 unit: W
               - entity: sensor.lampe_bureau_2_hue_energy
-                name: Bureau IKEA 2
+                name: Bureau HUE 2
                 color: rgb(74, 98, 138)
                 transform: return x * 1000;
                 unit: W
@@ -15534,7 +15513,7 @@ views:
             heading: Entrée
             heading_style: title
             badges: []
-          - type: custom:mushroom-legacy-template-card
+          - type: custom:mushroom-template-card
             entity: switch.prise_horloge_ikea
             primary: Prise Eco. Horloge
             secondary: |
@@ -15614,7 +15593,7 @@ views:
                 tap_action:
                   action: more-info
             heading: Salon
-          - type: custom:mushroom-legacy-template-card
+          - type: custom:mushroom-template-card
             entity: light.hue_smart_salon
             primary: Prise Eco. Salon (Chargeur ACU. etc...)
             secondary: |
@@ -15677,7 +15656,7 @@ views:
                     border: 1px solid {% if is_state('light.hue_smart_salon', 'on') %} green {% else %} grey {% endif %};
                     background-color: {% if is_state('light.hue_smart_salon', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                   }  
-          - type: custom:mushroom-legacy-template-card
+          - type: custom:mushroom-template-card
             entity: light.hue_smart_tv_salon
             primary: Prise Eco. TV Salon
             secondary: |
@@ -15757,7 +15736,7 @@ views:
                 tap_action:
                   action: more-info
             heading: Bureau
-          - type: custom:mushroom-legacy-template-card
+          - type: custom:mushroom-template-card
             entity: switch.hue_smart_eco_pc_bureau
             primary: Prise Eco. PC Bureau
             secondary: |
@@ -15830,7 +15809,7 @@ views:
                 show_icon: true
                 entity: sensor.clim_de_la_chambre_temperature
                 color: green
-          - type: custom:mushroom-legacy-template-card
+          - type: custom:mushroom-template-card
             entity: light.hue_smart_tv_chambre
             primary: Prise Eco. TV Chambre
             secondary: |
@@ -15898,7 +15877,7 @@ views:
             heading: Tête de Lit
             heading_style: title
             badges: []
-          - type: custom:mushroom-legacy-template-card
+          - type: custom:mushroom-template-card
             entity: switch.prise_tete_de_lit_chambre
             primary: Prise Eco. Têtes de Lit
             secondary: |
@@ -19911,7 +19890,7 @@ views:
                 template: pm25
                 variables:
                   entity_sensor: sensor.qualite_air_bureau_ikea_pm25
-                  mean_24h_entity: sensor.tcov_bureau_moy_24h
+                  mean_24h_entity: sensor.pm2_5_bureau_moy_24h
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
