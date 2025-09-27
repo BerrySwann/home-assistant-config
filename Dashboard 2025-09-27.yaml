@@ -15513,7 +15513,7 @@ views:
             heading: Entrée
             heading_style: title
             badges: []
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: switch.prise_horloge_ikea
             primary: Prise Eco. Horloge
             secondary: |
@@ -15593,7 +15593,7 @@ views:
                 tap_action:
                   action: more-info
             heading: Salon
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.hue_smart_salon
             primary: Prise Eco. Salon (Chargeur ACU. etc...)
             secondary: |
@@ -15656,7 +15656,7 @@ views:
                     border: 1px solid {% if is_state('light.hue_smart_salon', 'on') %} green {% else %} grey {% endif %};
                     background-color: {% if is_state('light.hue_smart_salon', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                   }  
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.hue_smart_tv_salon
             primary: Prise Eco. TV Salon
             secondary: |
@@ -15736,7 +15736,7 @@ views:
                 tap_action:
                   action: more-info
             heading: Bureau
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: switch.hue_smart_eco_pc_bureau
             primary: Prise Eco. PC Bureau
             secondary: |
@@ -15809,7 +15809,7 @@ views:
                 show_icon: true
                 entity: sensor.clim_de_la_chambre_temperature
                 color: green
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: light.hue_smart_tv_chambre
             primary: Prise Eco. TV Chambre
             secondary: |
@@ -15877,7 +15877,7 @@ views:
             heading: Tête de Lit
             heading_style: title
             badges: []
-          - type: custom:mushroom-template-card
+          - type: custom:mushroom-legacy-template-card
             entity: switch.prise_tete_de_lit_chambre
             primary: Prise Eco. Têtes de Lit
             secondary: |
