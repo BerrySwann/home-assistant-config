@@ -2485,7 +2485,8 @@
     action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1759042747368'
-  alias: '[DB] Purge MariaDB + repack'
+  alias: DB Purge MariaDB + Repack
+  description: ''
   triggers:
   - at: 03:30:00
     trigger: time
