@@ -2484,3 +2484,16 @@
       message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
     action: notify.mobile_app_poco_x7_pro
   mode: queued
+- id: '1759042747368'
+  alias: '[DB] Purge MariaDB + repack'
+  triggers:
+  - at: 03:30:00
+    trigger: time
+  conditions: []
+  actions:
+  - data:
+      keep_days: 32
+      repack: true
+      apply_filter: true
+    action: recorder.purge
+  mode: single
