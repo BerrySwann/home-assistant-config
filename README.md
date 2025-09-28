@@ -22,7 +22,7 @@ Il reflète mon installation domotique complète : énergie, climatisation, suiv
 - **Studio Code Server** (édition des configs dans HAOS)
 - **Samba Share** (partage réseau)
 - **Cloudflared** (remote access sécurisé)
-- **Uptime Kuma** (monitoring services) <- en pause
+- **Uptime Kuma** (monitoring services)
 - **phpMyAdmin** (gestion DB)
 - **AdGuard Home** (DNS / blocage pubs) <- en pause
 - **Glances** (stats système)
