@@ -126,7 +126,7 @@ streamline_templates:
             states('sensor.delta_5') | int %}
 
             {% if temperature_exterieure > 32 %}
-              {% set temperature_cible = consigne_de_base %}
+              refe{% set temperature_cible = consigne_de_base %}
               - Consigne de Base : {{ consigne_de_base | round(0) }}°C
               {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
               - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
