@@ -126,7 +126,7 @@ streamline_templates:
             states('sensor.delta_5') | int %}
 
             {% if temperature_exterieure > 32 %}
-               {% set temperature_cible = consigne_de_base %}
+              {% set temperature_cible = consigne_de_base %}
               - Consigne de Base : {{ consigne_de_base | round(0) }}°C
               {% set temperature_differentielle = states('sensor.temperature_differentielle') | int %}
               - Consigne différentielle : {{ temperature_differentielle | round(0) }}°C
@@ -3473,12 +3473,11 @@ views:
                 content: >
                   <center>Température: <ha-icon
                   icon="mdi:home-thermometer"></ha-icon> {{
-                  states("sensor.th_balcon_nord_temperature") |
-                  round(0)}}°C</center>
+                  states("sensor.th_balcon_nord_temperature")}}°C</center>
                 card_mod:
                   style: |
                     ha-card {
-                      font-size: 19px;
+                      font-size: 17px;
                       background: none !important;
                       box-shadow: none !important;
                       border: none !important;
@@ -3491,7 +3490,7 @@ views:
                 card_mod:
                   style: |
                     ha-card {
-                      font-size: 19px;
+                      font-size: 17px;
                       background: none !important;
                       box-shadow: none !important;
                       border: none !important;
@@ -3750,14 +3749,10 @@ views:
                   as_heading: false
                 corner_info:
                   top_left:
-                    label: Vitesse de la rafale actuelle
+                    label: Vitesse du Vent
                     unit: ' km/h'
-                    entity: sensor.vence_wind_gust
-                    label_text_size: 50
-                    value_text_size: 60
-                    input_unit: kph
-                    output_unit: kph
-                    precision: 1
+                    entity: sensor.vitesse_du_vent_vence
+                    label_text_size: 40
                   top_right:
                     label: Direction du Vent
                     color: white
@@ -3770,10 +3765,14 @@ views:
                     entity: sensor.direction_du_vent_vence
                     label_text_size: 40
                   bottom_right:
-                    label: Vitesse du Vent
+                    label: Vitesse de la rafale actuelle
                     unit: ' km/h'
-                    entity: sensor.vitesse_du_vent_vence
-                    label_text_size: 40
+                    entity: sensor.vence_wind_gust
+                    label_text_size: 50
+                    value_text_size: 60
+                    input_unit: kph
+                    output_unit: kph
+                    precision: 1
                 actions:
                   top_left:
                     tap_action:
@@ -10332,6 +10331,8 @@ views:
                 entities:
                   - entity: switch.schedule_clim_du_bureau_week
                     name: Programmation Climatisation Bureau Semaine
+                show_header_toggle: false
+                state_color: true
                 card_mod:
                   style: |
                     ha-card {
@@ -10413,6 +10414,8 @@ views:
                 entities:
                   - entity: switch.schedule_clim_du_bureau_week_end
                     name: Programmation Climatisation Bureau Week-end
+                state_color: true
+                show_header_toggle: false
                 card_mod:
                   style: |
                     ha-card {
@@ -10568,6 +10571,7 @@ views:
                 entities:
                   - entity: switch.schedule_clim_de_la_chambre_week
                     name: Programmation Climatisation Chambre Semaine
+                state_color: true
                 card_mod:
                   style: |
                     ha-card {
@@ -10649,6 +10653,7 @@ views:
                 entities:
                   - entity: switch.schedule_clim_de_la_chambre_week_end
                     name: Programmation Climatisation Chambre Week-End
+                state_color: true
                 card_mod:
                   style: |
                     ha-card {
@@ -13996,6 +14001,17 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
+          - type: custom:bubble-card
+            card_type: separator
+            name: GitHub
+            icon: mdi:github
+            rows: 2
+            styles: |-
+              .bubble-line {
+                background: var(--primary-text-color);
+                opacity: 1;
+              }
+            card_layout: normal
           - type: vertical-stack
             cards:
               - type: custom:mushroom-chips-card
@@ -14115,6 +14131,76 @@ views:
                   style: >
                     ha-card { background: none !important; box-shadow: none
                     !important; border: none !important; }
+          - type: custom:bubble-card
+            card_type: separator
+            name: Restart VSCode
+            icon: mdi:check-bold
+            rows: 2
+            styles: |-
+              .bubble-line {
+                background: var(--primary-text-color);
+                opacity: 1;
+              }
+            card_layout: normal
+          - type: custom:button-card
+            entity: automation.redemarrage_quotidien_studio_code_server
+            name: Redémarrer Studio Code Server
+            icon: mdi:restart
+            tap_action:
+              action: call-service
+              service: automation.trigger
+              service_data:
+                entity_id: automation.redemarrage_quotidien_studio_code_server
+            styles:
+              card:
+                - background: transparent
+                - border: 0.1px solid white
+                - border-radius: 12px
+                - color: white
+                - font-size: 14px
+                - padding: 4px
+              icon:
+                - width: 40px
+                - height: 40px
+                - color: white
+              name:
+                - font-size: 16px
+                - margin-top: 12px
+          - type: custom:bubble-card
+            card_type: separator
+            name: MariaDB
+            icon: mdi:database-cog-outline
+            rows: 2
+            styles: |-
+              .bubble-line {
+                background: var(--primary-text-color);
+                opacity: 1;
+              }
+            card_layout: normal
+          - type: custom:button-card
+            entity: automation.redemarrage_quotidien_studio_code_server
+            name: '[DB] Purge MariaDB + Repack'
+            icon: mdi:database-check-outline
+            tap_action:
+              action: call-service
+              service: automation.trigger
+              service_data:
+                entity_id: automation.db_purge_mariadb_repack
+            styles:
+              card:
+                - background: transparent
+                - border: 0.1px solid white
+                - border-radius: 12px
+                - color: white
+                - font-size: 14px
+                - padding: 4px
+              icon:
+                - width: 40px
+                - height: 40px
+                - color: white
+              name:
+                - font-size: 16px
+                - margin-top: 12px
     title: reserve
     cards: []
   - type: sections
@@ -17050,9 +17136,9 @@ views:
                     max_decimals: 0
                     colour:
                       '0': ha_green
-                      '64': ha_green
+                      '60': ha_green
                       '65': ha_orange
-                      '74': ha_orange
+                      '70': ha_orange
                       '75': ha_red
                     card_mod:
                       style: |
