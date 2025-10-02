@@ -1222,7 +1222,6 @@ views:
                     style: |
                       ha-card {
                         box-shadow: none !important;
-                        
                         border: none !important;
                       }
             grid_options:
