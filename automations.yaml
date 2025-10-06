@@ -1019,7 +1019,7 @@
     action: climate.set_hvac_mode
   - data:
       title: DEBUG CLIM
-      message: Force -> {{ states('sensor.mode_ete_hiver') }}
+      message: Force -> {{ states('sensor.mode_ete_hiver_etat') }}
     action: notify.mobile_app_poco_x7_pro
 - id: '1751912898399'
   alias: (A) (6h00 -> 20h00) [ TEST 2025-08-03 ] Automatisation pour contrôler de
