@@ -30,6 +30,12 @@
     unit_of_measurement: "°C"
     state: "19"
 
+- sensor:
+  - name: "Temperature éCO. Hiver"
+    unique_id: temperature_eco_hiver
+    unit_of_measurement: "°C"
+    state: "17"
+
 - sensor: #mode Cool
   - name: "Delta_5"
     unique_id: delta_5
