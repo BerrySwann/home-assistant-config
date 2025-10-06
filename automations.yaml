@@ -1468,7 +1468,7 @@
   conditions: []
   actions:
   - data:
-      message: 'Le mode a changé pour: {{ states(''sensor.mode_ete_hiver'') }}'
+      message: 'Le mode a changé pour: {{ states(''sensor.mode_ete_hiver_etat'') }}'
       title: CHANGEMENT DE MODE
     action: notify.mobile_app_poco_x7_pro
   mode: single
