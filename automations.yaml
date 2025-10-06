@@ -1580,176 +1580,6 @@
           title: ARRÊT CLIM
           message: La clim. de la Chambre a été coupée manuellement.
   mode: queued
-- id: '1754230979266'
-  alias: (C) [ Notification température Up ou Down de 6h00 -> 20:00]
-  description: (C) [ Notification température Up ou Down ]
-  triggers:
-  - alias: Changement de réseau de Mamour (Wifi vers Cellular)
-    trigger: state
-    entity_id: sensor.ne2213_mamour_network_type
-    from: wifi
-    to: cellular
-  - alias: Changement de réseau de Mamour (Cellular vers Wifi)
-    trigger: state
-    entity_id: sensor.ne2213_mamour_network_type
-    from: cellular
-    to: wifi
-  - alias: Changement de réseau d'Eric (Wifi vers Cellular)
-    trigger: state
-    entity_id: sensor.poco_x7_pro_network_type
-    from: wifi
-    to: cellular
-  - alias: Changement de réseau d'Eric (Cellular vers Wifi)
-    trigger: state
-    entity_id: sensor.poco_x7_pro_network_type
-    from: cellular
-    to: wifi
-  - alias: Changement de température extérieure
-    trigger: state
-    entity_id: sensor.th_balcon_nord_temperature
-  conditions: []
-  actions:
-  - alias: SI 2 PORTABLES EN CELLULAR
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: 06:00:00
-        before: '20:00:00'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: cellular
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: cellular
-    then:
-    - data:
-        title: Clim [2] en [CELLULAR]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_du_bureau_nous',
-          'on') and\n      is_state('switch.clim_chambre_nous', 'on') %}\n  {% if
-          trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {%
-          elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n
-          \     T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature') }}°
-          Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {% endif
-          %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id == 'sensor.th_balcon_nord_temperature'
-          %}\n    {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°\n
-          \   {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  - alias: SI MAMOUR EN WIFI
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: 06:00:00
-        before: '20:00:00'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: cellular
-    then:
-    - data:
-        title: Clim [MAMOUR] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
-          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  - alias: SI ERIC EN WIFI
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: 06:00:00
-        before: '20:00:00'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: cellular
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_wi_fi_connection
-        state: Freebox_GG
-    then:
-    - data:
-        title: Clim [ERIC] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
-          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Bureau {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  - alias: SI 2 PORTABLES EN WIFI
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: 06:00:00
-        before: '20:00:00'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_wi_fi_connection
-        state: Freebox_GG
-    then:
-    - data:
-        title: Clim [2] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
-          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
-          + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend')
-          == 'decreasing' %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
-          + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n   {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  mode: queued
 - id: '1754231821638'
   alias: (B) (20h00 -> 6h00) [ TEST 2025-08-03 ] Automatisation pour contrôler de
     [20h00 <-> 06h00] les climatiseurs en fonction de la température intérieure/extérieure
@@ -2085,226 +1915,6 @@
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   mode: queued
-- id: '1754236302209'
-  alias: (D) [ Notification température Up ou Down de 20h00 -> 06h00]
-  description: (C) [ Notification température Up ou Down ]
-  triggers:
-  - alias: Changement de réseau de Mamour (Wifi vers Cellular)
-    trigger: state
-    entity_id: sensor.ne2213_mamour_network_type
-    from: wifi
-    to: cellular
-  - alias: Changement de réseau de Mamour (Cellular vers Wifi)
-    trigger: state
-    entity_id: sensor.ne2213_mamour_network_type
-    from: cellular
-    to: wifi
-  - alias: Changement de réseau d'Eric (Wifi vers Cellular)
-    trigger: state
-    entity_id: sensor.poco_x7_pro_network_type
-    from: wifi
-    to: cellular
-  - alias: Changement de réseau d'Eric (Cellular vers Wifi)
-    trigger: state
-    entity_id: sensor.poco_x7_pro_network_type
-    from: cellular
-    to: wifi
-  - alias: Changement de température extérieure
-    trigger: state
-    entity_id: sensor.th_balcon_nord_temperature
-  - trigger: time
-    at: '20:00:00'
-  conditions: []
-  actions:
-  - alias: SI 2 PORTABLES EN CELLULAR
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: '20:00:00'
-        before: 06:00:00
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: cellular
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: cellular
-    then:
-    - data:
-        title: Clim-n [2] en [CELLULAR]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and\n      is_state('switch.clim_du_bureau_nous',
-          'on') and\n      is_state('switch.clim_chambre_nous', 'on') %}\n  {% if
-          trigger.entity_id == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {%
-          elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n
-          \     T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature') }}°
-          Les 3 Clim {{ states('sensor.temperature_cible') | float }}°.\n    {% endif
-          %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id == 'sensor.th_balcon_nord_temperature'
-          %}\n    {% if states('sensor.th_balcon_nord_temperature_trend') == 'increasing'
-          %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature') }}°\n
-          \   {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  - alias: SI MAMOUR EN WIFI
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: '20:00:00'
-        before: 06:00:00
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: cellular
-    then:
-    - data:
-        title: Clim-n [MAMOUR] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
-          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  - alias: SI ERIC EN WIFI
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: '20:00:00'
-        before: 06:00:00
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: cellular
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_wi_fi_connection
-        state: Freebox_GG
-    then:
-    - data:
-        title: Clim-n [ERIC] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
-          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
-          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
-          & Chambre {{ states('sensor.temperature_cible') | float }}°\n    {% elif
-          states('sensor.th_balcon_nord_temperature_trend') == 'decreasing' %}\n      T°Ext
-          Down <<< {{ states('sensor.th_balcon_nord_temperature') }}° Bureau {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  - alias: SI 2 PORTABLES EN WIFI
-    if:
-    - condition: and
-      conditions:
-      - condition: time
-        after: '20:00:00'
-        before: 06:00:00
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
-        state: 'off'
-      - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_wi_fi_connection
-        state: Freebox_GG
-    then:
-    - data:
-        title: Clim-n [2] en [WIFI]
-        message: "{% if is_state('switch.clim_salon_nous', 'on') and is_state('switch.clim_du_bureau_nous',
-          'on') and is_state('switch.clim_chambre_nous', 'on') %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
-          + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend')
-          == 'decreasing' %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}° Salon & Bureau {{ (states('sensor.temperature_differentielle') | float
-          + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n   {% endif %}\n  {% endif %}\n{% else %}\n  {% if trigger.entity_id
-          == 'sensor.th_balcon_nord_temperature' %}\n    {% if states('sensor.th_balcon_nord_temperature_trend')
-          == 'increasing' %}\n      T°Ext Up >>> {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% elif states('sensor.th_balcon_nord_temperature_trend') == 'decreasing'
-          %}\n      T°Ext Down <<< {{ states('sensor.th_balcon_nord_temperature')
-          }}°\n    {% endif %}\n  {% endif %}\n{% endif %}"
-      action: notify.mobile_app_poco_x7_pro
-  mode: queued
 - id: '1754491576463'
   alias: (I) [ CLIM 'off' si delta >= -1 ] Coupe les clim si le delta intérieur et
     extérieur est égale ou superieur a -1
@@ -2449,7 +2059,7 @@
 - *id001
 - *id001
 - id: '1758129997644'
-  alias: (C) [TEST Notification température Up ou Down de 6h00 -> 20h00]
+  alias: (C) Notification température Up ou Down de [6h00 -> 20h00]
   description: Notification température Up ou Down en fonction des présences et réseaux
   triggers:
   - entity_id:
@@ -2467,7 +2077,7 @@
     action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1758298361594'
-  alias: (D) [TEST Notification température Up ou Down de 20h00 -> 6h00]
+  alias: (D) Notification température Up ou Down de [20h00 -> 6h00]
   description: Notification température Up ou Down en fonction des présences et réseaux
   triggers:
   - entity_id:
@@ -2498,3 +2108,1304 @@
       apply_filter: true
     action: recorder.purge
   mode: single
+- id: '1759744211147'
+  alias: (A)  [TEST] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
+    en   fonction de la température intérieure/extérieure [DELTA] et du type de réseau   des
+    portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres   [OUVERTE(S)/FERMÉE(S)]
+    qui sont contrôlées 24h sur 24.
+  description: '[TEST] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
+    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+    des portables [WIFI/CELLULAR]. (SAUF) L''état des fenêtres [OUVERTE(S)/FERMÉE(S)]
+    qui sont contrôlées 24h sur 24.'
+  triggers:
+  - alias: Changement d'état des fenêtres 'off' -> 'on'
+    entity_id:
+    - binary_sensor.contact_fenetre_salon_ikea_contact
+    - binary_sensor.contact_fenetre_cuisine_ikea_contact
+    - binary_sensor.contact_fenetre_bureau_ikea_contact
+    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'off'
+    to: 'on'
+    trigger: state
+  - alias: Changement d'état des fenêtres 'on' -> 'off'
+    entity_id:
+    - binary_sensor.contact_fenetre_salon_ikea_contact
+    - binary_sensor.contact_fenetre_cuisine_ikea_contact
+    - binary_sensor.contact_fenetre_bureau_ikea_contact
+    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'on'
+    to: 'off'
+    trigger: state
+  - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement de réseau d'Eric 'wifi' -> 'cellular'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau d'Eric 'cellular' -> 'wifi'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement d'état des climatiseurs à 'heat'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: heat
+  - alias: Changement d'état des climatiseurs à 'cool'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: cool
+  - alias: Changement d'état des climatiseurs à 'fan_only'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: fan_only
+  - trigger: state
+    entity_id:
+    - sensor.temperature_cible
+  - trigger: time
+    at: 06:00:00
+  conditions: []
+  actions:
+  - alias: SI UNE FENÊTRES EST OUVERTES OU TOUTES FERMÉES
+    choose:
+    - alias: SI UNE OU PLUSIEURS FENÊTRES SONT OUVERTES (condition OR)
+      conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+          state: 'on'
+      sequence:
+      - target:
+          entity_id:
+          - climate.clim
+          - climate.clim_du_bureau
+          - climate.clim_de_la_chambre
+        data:
+          hvac_mode: 'off'
+        action: climate.set_hvac_mode
+      - action: notify.mobile_app_poco_x7_pro
+        data:
+          title: Clim. DÉSACTIVÉES
+          message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
+            and is_state('binary_sensor.contact_fenetre_salon_ikea_contact', 'on')
+            %}\n  La fenêtre du Salon a été ouverte.\n{% elif trigger.entity_id ==
+            'binary_sensor.contact_fenetre_cuisine_ikea_contact' and is_state('binary_sensor.contact_fenetre_cuisine_ikea_contact',
+            'on') %}\n  La fenêtre de la Cuisine a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_bureau_ikea_contact' and is_state('binary_sensor.contact_fenetre_bureau_ikea_contact',
+            'on') %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_chambre_ikea_contact' and is_state('binary_sensor.contact_fenetre_chambre_ikea_contact',
+            'on') %}\n  La fenêtre de la Chambre a été ouverte.\n{% endif %}\n  {%
+            if states('sensor.nbre_de_fenetres_ouvertes') == '4' %}\n    Toutes les
+            fenêtres sont ouvertes.\n  {% endif %}\n"
+    - alias: SI TOUTES LES FENÊTRES SONT FERMÉES (condition AND)
+      conditions:
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+          state: 'off'
+      sequence:
+      - target:
+          entity_id:
+          - climate.clim
+          - climate.clim_du_bureau
+          - climate.clim_de_la_chambre
+        data:
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_hvac_mode
+      - target:
+          entity_id:
+          - climate.clim
+          - climate.clim_du_bureau
+          - climate.clim_de_la_chambre
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+  - alias: SI 2 PORTABLES EN CELLULAR
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: Clim [2] en [CELLULAR]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
+          {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  - alias: SI MAMOUR EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: Clim [MAMOUR] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  - alias: SI ERIC EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
+        state: Freebox_GG
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: clim [ERIC] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  - alias: SI 2 PORTABLES EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
+        state: Freebox_GG
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: clim [2] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon & Bureau
+          {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre
+          {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  mode: queued
+- id: '1759744373014'
+  alias: (A) [TEST] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
+    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+    des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
+    qui sont contrôlées 24h sur 24.
+  description: '[TEST] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
+    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+    des portables [WIFI/CELLULAR]. (SAUF) L''état des fenêtres [OUVERTE(S)/FERMÉE(S)]
+    qui sont contrôlées 24h sur 24.'
+  triggers:
+  - alias: Changement d'état des fenêtres 'off' -> 'on'
+    entity_id:
+    - binary_sensor.contact_fenetre_salon_ikea_contact
+    - binary_sensor.contact_fenetre_cuisine_ikea_contact
+    - binary_sensor.contact_fenetre_bureau_ikea_contact
+    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'off'
+    to: 'on'
+    trigger: state
+  - alias: Changement d'état des fenêtres 'on' -> 'off'
+    entity_id:
+    - binary_sensor.contact_fenetre_salon_ikea_contact
+    - binary_sensor.contact_fenetre_cuisine_ikea_contact
+    - binary_sensor.contact_fenetre_bureau_ikea_contact
+    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'on'
+    to: 'off'
+    trigger: state
+  - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement de réseau d'Eric 'wifi' -> 'cellular'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau d'Eric 'cellular' -> 'wifi'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement d'état des climatiseurs à 'heat'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: heat
+  - alias: Changement d'état des climatiseurs à 'cool'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: cool
+  - alias: Changement d'état des climatiseurs à 'fan_only'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: fan_only
+  - trigger: state
+    entity_id:
+    - sensor.temperature_cible
+  - trigger: time
+    at: 06:00:00
+  conditions: []
+  actions:
+  - alias: SI UNE FENÊTRES EST OUVERTES OU TOUTES FERMÉES
+    choose:
+    - alias: SI UNE OU PLUSIEURS FENÊTRES SONT OUVERTES (condition OR)
+      conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+          state: 'on'
+      sequence:
+      - target:
+          entity_id:
+          - climate.clim
+          - climate.clim_du_bureau
+          - climate.clim_de_la_chambre
+        data:
+          hvac_mode: 'off'
+        action: climate.set_hvac_mode
+      - action: notify.mobile_app_poco_x7_pro
+        data:
+          title: Clim. DÉSACTIVÉES
+          message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
+            and is_state('binary_sensor.contact_fenetre_salon_ikea_contact', 'on')
+            %}\n  La fenêtre du Salon a été ouverte.\n{% elif trigger.entity_id ==
+            'binary_sensor.contact_fenetre_cuisine_ikea_contact' and is_state('binary_sensor.contact_fenetre_cuisine_ikea_contact',
+            'on') %}\n  La fenêtre de la Cuisine a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_bureau_ikea_contact' and is_state('binary_sensor.contact_fenetre_bureau_ikea_contact',
+            'on') %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_chambre_ikea_contact' and is_state('binary_sensor.contact_fenetre_chambre_ikea_contact',
+            'on') %}\n  La fenêtre de la Chambre a été ouverte.\n{% endif %}\n  {%
+            if states('sensor.nbre_de_fenetres_ouvertes') == '4' %}\n    Toutes les
+            fenêtres sont ouvertes.\n  {% endif %}\n"
+    - alias: SI TOUTES LES FENÊTRES SONT FERMÉES (condition AND)
+      conditions:
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+          state: 'off'
+      sequence:
+      - target:
+          entity_id:
+          - climate.clim
+          - climate.clim_du_bureau
+          - climate.clim_de_la_chambre
+        data:
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_hvac_mode
+      - target:
+          entity_id:
+          - climate.clim
+          - climate.clim_du_bureau
+          - climate.clim_de_la_chambre
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+  - alias: SI 2 PORTABLES EN CELLULAR
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - if:
+      - condition: state
+        entity_id: sensor.mode_ete_hiver
+        state: heat
+      then:
+      - target:
+          entity_id: climate.clim
+        data:
+          temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: Clim [2] en [CELLULAR]
+          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+            or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
+            Clim {{ states('sensor.temperature_eco_hiver') | float }}° (mode hiver).\n{%
+            endif %}"
+        action: notify.mobile_app_poco_x7_pro
+      else:
+      - target:
+          entity_id: climate.clim
+        data:
+          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: Clim [2] en [CELLULAR]
+          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+            or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
+            Clim {{ states('sensor.temperature_cible') | float }}°.\n{% endif %}"
+        action: notify.mobile_app_poco_x7_pro
+  - alias: SI MAMOUR EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: Clim [MAMOUR] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  - alias: SI ERIC EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
+        state: Freebox_GG
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: clim [ERIC] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
+          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
+          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
+          | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  - alias: SI 2 PORTABLES EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
+        state: Freebox_GG
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: clim [2] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon & Bureau
+          {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre
+          {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  mode: queued
+- id: '1759744815294'
+  alias: '(B) [TEST] Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
+    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+    des portables [WIFI/CELLULAR]. '
+  description: 'Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
+    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+    des portables [WIFI/CELLULAR]. '
+  triggers:
+  - alias: Changement de réseau de Mamour
+    entity_id: sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau de Mamour
+    entity_id: sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement de réseau d'Eric
+    entity_id: sensor.poco_x7_pro_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau d'Eric
+    entity_id: sensor.poco_x7_pro_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement d'état des climatiseurs à 'heat'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: heat
+  - alias: Changement d'état des climatiseurs à 'cool'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: cool
+  - alias: Changement d'état des climatiseurs à 'fan_only'
+    trigger: state
+    entity_id:
+    - climate.clim
+    - climate.clim_du_bureau
+    - climate.clim_de_la_chambre
+    to: fan_only
+  - trigger: state
+    entity_id:
+    - sensor.temperature_cible
+  - trigger: time
+    at: '20:00:00'
+  conditions: []
+  actions:
+  - alias: SI 2 PORTABLES EN CELLULAR
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: '20:00:00'
+        before: 06:00:00
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - if:
+      - condition: state
+        entity_id: sensor.mode_ete_hiver
+        state: heat
+      then:
+      - target:
+          entity_id: climate.clim
+        data:
+          temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: Clim-N [2] en [CELLULAR]
+          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+            or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
+            Clim à {{ states('sensor.temperature_eco_hiver') | float }}° (mode hiver).\n{%
+            endif %}"
+        action: notify.mobile_app_poco_x7_pro
+      else:
+      - target:
+          entity_id: climate.clim
+        data:
+          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_du_bureau
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_de_la_chambre
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: Clim-N [2] en [CELLULAR]
+          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+            or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
+            Clim à {{ states('sensor.temperature_cible') | float }}°.\n{% endif %}"
+        action: notify.mobile_app_poco_x7_pro
+  - alias: SI MAMOUR EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: '20:00:00'
+        before: 06:00:00
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: Clim-N [MAMOUR] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
+          & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  - alias: SI ERIC EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: '20:00:00'
+        before: 06:00:00
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
+        state: Freebox_GG
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: Clim-N [ERIC] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
+          & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  - alias: SI 2 PORTABLES EN WIFI
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: '20:00:00'
+        before: 06:00:00
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
+        state: Freebox_GG
+    then:
+    - target:
+        entity_id: climate.clim
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_du_bureau
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
+          (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+          | float)) | round(1) }}'
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_temperature
+    - target:
+        entity_id: climate.clim_de_la_chambre
+      data:
+        fan_mode: auto
+      action: climate.set_fan_mode
+    - data:
+        title: Clim-N [2] en [WIFI]
+        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
+          & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  mode: queued
