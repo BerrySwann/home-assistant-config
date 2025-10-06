@@ -30,23 +30,23 @@
     unit_of_measurement: "°C"
     state: "19"
 
-- sensor:
+- sensor: #mode Cool
   - name: "Delta_5"
     unique_id: delta_5
     unit_of_measurement: "°C"
     state: "5"
 
-- sensor:
+- sensor: #mode Cool
   - name: "Delta_7"
     unique_id: delta_7
     unit_of_measurement: "°C"
     state: "7"
 
 #========================================================================
-# CALCUL - Temperature Cible
+# CALCUL - Temperature Cible Mode cool
 #========================================================================
 
-- sensor:
+- sensor: #mode Cool
   - name: "Temperature Cible"
     unique_id: temperature_cible
     unit_of_measurement: "°C"
@@ -55,10 +55,10 @@
       {% set consigne_de_base = states('sensor.consigne_de_base') | int %}
       {% set delta_5 = states('sensor.delta_5') | int %}
       {% set delta_7 = states('sensor.delta_7') | int %}
-      {% if temperature_exterieure >= 40 %}
-        {{ temperature_exterieure - delta_7 }}
-      {% elif temperature_exterieure >= 32 %}
+      {% if temperature_exterieure >= 32 %}
         {{ temperature_exterieure - delta_5 }}
+      {% elif temperature_exterieure >= 40 %}
+        {{ temperature_exterieure - delta_7 }}
       {% else %}
         {{ consigne_de_base }}
       {% endif %}
