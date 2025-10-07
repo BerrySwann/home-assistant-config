@@ -5,20 +5,17 @@
       {% set mamour = states('sensor.ne2213_mamour_network_type') %}
       {% set eric = states('sensor.poco_x7_pro_network_type') %}
       {% set tendance = states('sensor.th_balcon_nord_temperature_trend') %}
-      {% set temp_ext = states('sensor.th_balcon_nord_temperature') %}
-      {% set temp_cible = states('sensor.temperature_cible_20h_6h') | float %}
-      {% set temp_diff = states('sensor.temperature_differentielle_20h_6h') | float %}
-      {% set consigne_base = states('sensor.consigne_de_base_20h_6h') | float %}
+      {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float %}
+      {% set temp_cible = states('sensor.temperature_cible') | float %}
+      {% set temp_diff = states('sensor.temperature_differentielle') | float %}
+      {% set consigne_base = states('sensor.consigne_de_base') | float %}
       {% set tres_diff = (temp_diff + (temp_cible - consigne_base)) | round(1) %}
-      {% set temp_eco = states('sensor.temperature_eco_hiver_20h_6h') | float %}
+      {% set temp_eco = states('sensor.temperature_eco_hiver') | float %}
       {% set mode_ete_hiver = states('sensor.mode_ete_hiver') %}
       {% set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
       {% set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
       {% set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
-      {% set mode_salon = state_attr('climate.tado_salon', 'hvac_mode') %}
-      {% set mode_bureau = state_attr('climate.tado_bureau', 'hvac_mode') %}
-      {% set mode_chambre = state_attr('climate.tado_chambre', 'hvac_mode') %}
-      {% set clims_alimentees = [prise_salon, prise_bureau, prise_chambre] | select('==', True) | list | length > 0 %}
+      {% set clims_alimentees = prise_salon or prise_bureau or prise_chambre %}
       {% set sant_clims = prise_salon and prise_bureau and prise_chambre %}
 
       {% if mamour == 'cellular' and eric == 'cellular' %}
@@ -65,11 +62,11 @@
         Clim [MAMOUR] en [WIFI]
         {% if clims_alimentees %}
           {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°
+            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°
+            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% else %}
-            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°
+            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% endif %}
         {% else %}
           {% if tendance == 'increasing' %}
@@ -85,11 +82,11 @@
         Clim [ERIC] en [WIFI]
         {% if clims_alimentees %}
           {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°
+            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°
+            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% else %}
-            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°
+            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% endif %}
         {% else %}
           {% if tendance == 'increasing' %}
@@ -105,11 +102,11 @@
         Clim [2] en [WIFI]
         {% if clims_alimentees %}
           {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° Salon & Bureau {{ temp_cible }}°
+            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° Salon & Bureau {{ temp_cible }}°
+            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% else %}
-            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° & Salon & Bureau {{ temp_cible }}°
+            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% endif %}
         {% else %}
           {% if tendance == 'increasing' %}

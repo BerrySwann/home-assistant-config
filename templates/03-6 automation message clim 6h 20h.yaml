@@ -1,11 +1,12 @@
-sensor:
-  - name: "Message Clim personnalisé 6h 20h"
-    unique_id: message_clim_personnalise_6h_20h
+- sensor:
+  - name: "Message Clim personnalisé 20h 6h"
+    unique_id: message_clim_personnalise_20h_6h
     state: >
+      {# Définition des variables avec les entités confirmées #}
       {% set mamour = states('sensor.ne2213_mamour_network_type') %}
       {% set eric = states('sensor.poco_x7_pro_network_type') %}
       {% set tendance = states('sensor.th_balcon_nord_temperature_trend') %}
-      {% set temp_ext = states('sensor.th_balcon_nord_temperature') %}
+      {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float %}
       {% set temp_cible = states('sensor.temperature_cible') | float %}
       {% set temp_diff = states('sensor.temperature_differentielle') | float %}
       {% set consigne_base = states('sensor.consigne_de_base') | float %}
@@ -15,13 +16,10 @@ sensor:
       {% set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
       {% set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
       {% set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
-      {% set mode_salon = state_attr('climate.clim', 'hvac_mode') %}
-      {% set mode_bureau = state_attr('climate.clim_du_bureau', 'hvac_mode') %}
-      {% set mode_chambre = state_attr('climate.clim_de_la_chambre', 'hvac_mode') %}
-      {% set clims_alimentees = [prise_salon, prise_bureau, prise_chambre] | select('==', True) | list | length > 0 %}
-      {% set au_moins_une_clim_en_mode_actif = (mode_salon in ['cool', 'heat']) or (mode_bureau in ['cool', 'heat']) or (mode_chambre in ['cool', 'heat']) %}
+      {% set clims_alimentees = prise_salon or prise_bureau or prise_chambre %}
       {% set sant_clims = prise_salon and prise_bureau and prise_chambre %}
 
+      {# Logique de génération des messages #}
       {% if mamour == 'cellular' and eric == 'cellular' %}
         Clim [2] en [CELLULAR]
         {% if mode_ete_hiver == 'heat' %}
@@ -42,14 +40,32 @@ sensor:
               Temp. stable {{ temp_ext }}° (prises éteintes).
             {% endif %}
           {% endif %}
-        {% else %}
+        {% elif mode_ete_hiver == 'cool' %}
           {% if sant_clims %}
             {% if tendance == 'increasing' %}
-              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_cible }}°.
+              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_cible }}° (mode été).
             {% elif tendance == 'decreasing' %}
-              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_cible }}°.
+              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_cible }}° (mode été).
             {% else %}
-              Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_cible }}°.
+              Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_cible }}° (mode été).
+            {% endif %}
+          {% else %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° (prises éteintes).
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° (prises éteintes).
+            {% else %}
+              Temp. stable {{ temp_ext }}° (prises éteintes).
+            {% endif %}
+          {% endif %}
+        {% else %} {# mode_ete_hiver == 'fan_only' #}
+          {% if sant_clims %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim en mode ventilation.
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim en mode ventilation.
+            {% else %}
+              Temp. stable {{ temp_ext }}° Les 3 Clim en mode ventilation.
             {% endif %}
           {% else %}
             {% if tendance == 'increasing' %}
@@ -65,12 +81,30 @@ sensor:
       {% elif mamour == 'wifi' and eric == 'cellular' %}
         Clim [MAMOUR] en [WIFI]
         {% if clims_alimentees %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Salon {{ tres_diff }}° - Bureau & Chambre {{ temp_cible }}°
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Salon {{ tres_diff }}° - Bureau & Chambre {{ temp_cible }}°
-          {% else %}
-            Temp. stable {{ temp_ext }}° Salon {{ tres_diff }}° - Bureau & Chambre {{ temp_cible }}°
+          {% if mode_ete_hiver == 'heat' %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}° (mode hiver).
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}° (mode hiver).
+            {% else %}
+              Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}° (mode hiver).
+            {% endif %}
+          {% elif mode_ete_hiver == 'cool' %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}° (mode été).
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}° (mode été).
+            {% else %}
+              Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}° (mode été).
+            {% endif %}
+          {% else %} {# mode_ete_hiver == 'fan_only' #}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau en mode ventilation.
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau en mode ventilation.
+            {% else %}
+              Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau en mode ventilation.
+            {% endif %}
           {% endif %}
         {% else %}
           {% if tendance == 'increasing' %}
@@ -85,12 +119,30 @@ sensor:
       {% elif mamour == 'cellular' and eric == 'wifi' %}
         Clim [ERIC] en [WIFI]
         {% if clims_alimentees %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}°
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}°
-          {% else %}
-            Temp. stable {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}°
+          {% if mode_ete_hiver == 'heat' %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}° (mode hiver).
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}° (mode hiver).
+            {% else %}
+              Temp. stable {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}° (mode hiver).
+            {% endif %}
+          {% elif mode_ete_hiver == 'cool' %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}° (mode été).
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}° (mode été).
+            {% else %}
+              Temp. stable {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre {{ temp_cible }}° (mode été).
+            {% endif %}
+          {% else %} {# mode_ete_hiver == 'fan_only' #}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre en mode ventilation.
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre en mode ventilation.
+            {% else %}
+              Temp. stable {{ temp_ext }}° Bureau {{ tres_diff }}° - Salon & Chambre en mode ventilation.
+            {% endif %}
           {% endif %}
         {% else %}
           {% if tendance == 'increasing' %}
@@ -105,12 +157,30 @@ sensor:
       {% elif mamour == 'wifi' and eric == 'wifi' %}
         Clim [2] en [WIFI]
         {% if clims_alimentees %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Salon & Bureau {{ tres_diff }}° & Chambre {{ temp_cible }}°
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Salon & Bureau {{ tres_diff }}° & Chambre {{ temp_cible }}°
-          {% else %}
-            Temp. stable {{ temp_ext }}° Salon & Bureau {{ tres_diff }}° & Chambre {{ temp_cible }}°
+          {% if mode_ete_hiver == 'heat' %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° Salon & Bureau {{ temp_cible }}° (mode hiver).
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° Salon & Bureau {{ temp_cible }}° (mode hiver).
+            {% else %}
+              Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° & Salon & Bureau {{ temp_cible }}° (mode hiver).
+            {% endif %}
+          {% elif mode_ete_hiver == 'cool' %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° Salon & Bureau {{ temp_cible }}° (mode été).
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° Salon & Bureau {{ temp_cible }}° (mode été).
+            {% else %}
+              Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° & Salon & Bureau {{ temp_cible }}° (mode été).
+            {% endif %}
+          {% else %} {# mode_ete_hiver == 'fan_only' #}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° & Salon & Bureau en mode ventilation.
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° & Salon & Bureau en mode ventilation.
+            {% else %}
+              Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° & Salon & Bureau en mode ventilation.
+            {% endif %}
           {% endif %}
         {% else %}
           {% if tendance == 'increasing' %}

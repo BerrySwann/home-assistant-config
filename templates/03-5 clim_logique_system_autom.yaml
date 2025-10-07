@@ -6,7 +6,7 @@
 #
 #========================================================================
 
-- sensor:
+- sensor: # Changement de mode en fonction de la T° exterieur)
   - name: "Mode Été/Hiver"
     unique_id: mode_ete_hiver
     state: >-
@@ -18,33 +18,33 @@
         cool
       {% endif %}
 
-- sensor:
+- sensor: #(coonsigne de base hiver / 28° l'été)
   - name: "Consigne de Base"
     unique_id: consigne_de_Base
     unit_of_measurement: "°C"
     state: "18"
 
-- sensor:
+- sensor: #(confort hiver / 27° l'été)
   - name: "Temperature différentielle"
     unique_id: temperature_différentielle
     unit_of_measurement: "°C"
     state: "19"
 
-- sensor:
+- sensor: #(éco hiver)
   - name: "Temperature éCO. Hiver"
     unique_id: temperature_eco_hiver
     unit_of_measurement: "°C"
     state: "17"
 
-- sensor: #mode Cool
+- sensor: #mode Cool si T° exterieur est > +32°
   - name: "Delta_5"
     unique_id: delta_5
     unit_of_measurement: "°C"
     state: "5"
 
-- sensor: #mode Cool
+- sensor: #mode Cool si T° exterieur est > +40°
   - name: "Delta_7"
-    unique_id: delta_7
+    unique_id: delta_7 
     unit_of_measurement: "°C"
     state: "7"
 
