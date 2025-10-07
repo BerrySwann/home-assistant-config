@@ -15,9 +15,9 @@ sensor:
       {% set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
       {% set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
       {% set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
-      {% set mode_salon = state_attr('climate.tado_salon', 'hvac_mode') %}
-      {% set mode_bureau = state_attr('climate.tado_bureau', 'hvac_mode') %}
-      {% set mode_chambre = state_attr('climate.tado_chambre', 'hvac_mode') %}
+      {% set mode_salon = state_attr('climate.clim', 'hvac_mode') %}
+      {% set mode_bureau = state_attr('climate.clim_du_bureau', 'hvac_mode') %}
+      {% set mode_chambre = state_attr('climate.clim_de_la_chambre', 'hvac_mode') %}
       {% set clims_alimentees = [prise_salon, prise_bureau, prise_chambre] | select('==', True) | list | length > 0 %}
       {% set au_moins_une_clim_en_mode_actif = (mode_salon in ['cool', 'heat']) or (mode_bureau in ['cool', 'heat']) or (mode_chambre in ['cool', 'heat']) %}
       {% set sant_clims = prise_salon and prise_bureau and prise_chambre %}
