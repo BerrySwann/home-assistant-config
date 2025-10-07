@@ -8,8 +8,6 @@
       {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float %}
       {% set temp_cible = states('sensor.temperature_cible') | float %}
       {% set temp_diff = states('sensor.temperature_differentielle') | float %}
-      {% set consigne_base = states('sensor.consigne_de_base') | float %}
-      {% set tres_diff = (temp_diff + (temp_cible - consigne_base)) | round(1) %}
       {% set temp_eco = states('sensor.temperature_eco_hiver') | float %}
       {% set mode_ete_hiver = states('sensor.mode_ete_hiver') %}
       {% set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
@@ -58,55 +56,21 @@
           {% endif %}
         {% endif %}
 
-      {% elif mamour == 'wifi' and eric == 'cellular' %}
-        Clim [MAMOUR] en [WIFI]
-        {% if clims_alimentees %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
-          {% else %}
-            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
-          {% endif %}
+      {% elif (mamour == 'wifi' and eric == 'cellular') or (mamour == 'cellular' and eric == 'wifi') or (mamour == 'wifi' and eric == 'wifi') %}
+        {% if mamour == 'wifi' and eric == 'cellular' %}
+          Clim [MAMOUR] en [WIFI]
+        {% elif mamour == 'cellular' and eric == 'wifi' %}
+          Clim [ERIC] en [WIFI]
         {% else %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° (prises éteintes).
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° (prises éteintes).
-          {% else %}
-            Temp. stable {{ temp_ext }}° (prises éteintes).
-          {% endif %}
+          Clim [2] en [WIFI]
         {% endif %}
-
-      {% elif mamour == 'cellular' and eric == 'wifi' %}
-        Clim [ERIC] en [WIFI]
         {% if clims_alimentees %}
           {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
+            T°Ext Up >>> {{ temp_ext }}° Chambre {{ temp_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
+            T°Ext Down <<< {{ temp_ext }}° Chambre {{ temp_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% else %}
-            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
-          {% endif %}
-        {% else %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° (prises éteintes).
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° (prises éteintes).
-          {% else %}
-            Temp. stable {{ temp_ext }}° (prises éteintes).
-          {% endif %}
-        {% endif %}
-
-      {% elif mamour == 'wifi' and eric == 'wifi' %}
-        Clim [2] en [WIFI]
-        {% if clims_alimentees %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
-          {% else %}
-            Temp. stable {{ temp_ext }}° Chambre {{ tres_diff }}° - Salon & Bureau {{ temp_cible }}°.
+            Temp. stable {{ temp_ext }}° Chambre {{ temp_diff }}° - Salon & Bureau {{ temp_cible }}°.
           {% endif %}
         {% else %}
           {% if tendance == 'increasing' %}
