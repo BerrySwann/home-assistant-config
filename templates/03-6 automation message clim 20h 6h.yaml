@@ -14,30 +14,23 @@
       {% set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
       {% set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
       {% set clims_alimentees = prise_salon or prise_bureau or prise_chambre %}
-      {% set sant_clims = prise_salon and prise_bureau and prise_chambre %}
 
       {% if mamour == 'cellular' and eric == 'cellular' %}
         Clim [2] en [CELLULAR]
         {% if mode_ete_hiver == 'heat' %}
-          {% if sant_clims %}
+          {% if clims_alimentees %}
             {% if tendance == 'increasing' %}
-              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim (remonter {{ temp_eco }}°) (éCO Heat)
+              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (éCO Heat)
             {% elif tendance == 'decreasing' %}
-              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim (remonter {{ temp_eco }}°) (éCO Heat)
+              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (éCO Heat)
             {% else %}
-              Temp. stable {{ temp_ext }}° Les 3 Clim (remonter {{ temp_eco }}°) (éCO Heat)
+              Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (éCO Heat)
             {% endif %}
           {% else %}
-            {% if tendance == 'increasing' %}
-              T°Ext Up >>> {{ temp_ext }}° (Units off)
-            {% elif tendance == 'decreasing' %}
-              T°Ext Down <<< {{ temp_ext }}° (Units off)
-            {% else %}
-              Temp. stable {{ temp_ext }}° (Units off)
-            {% endif %}
+            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
           {% endif %}
         {% elif mode_ete_hiver == 'cool' %}
-          {% if sant_clims %}
+          {% if clims_alimentees %}
             {% if tendance == 'increasing' %}
               T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_cible }}° (Cool)
             {% elif tendance == 'decreasing' %}
@@ -46,16 +39,10 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_cible }}° (Cool)
             {% endif %}
           {% else %}
-            {% if tendance == 'increasing' %}
-              T°Ext Up >>> {{ temp_ext }}° (Units off)
-            {% elif tendance == 'decreasing' %}
-              T°Ext Down <<< {{ temp_ext }}° (Units off)
-            {% else %}
-              Temp. stable {{ temp_ext }}° (Units off)
-            {% endif %}
+            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
           {% endif %}
         {% else %} {# mode_ete_hiver == 'fan_only' #}
-          {% if sant_clims %}
+          {% if clims_alimentees %}
             {% if tendance == 'increasing' %}
               T°Ext Up >>> {{ temp_ext }}° Les 3 Clim (Fan)
             {% elif tendance == 'decreasing' %}
@@ -64,13 +51,7 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim (Fan)
             {% endif %}
           {% else %}
-            {% if tendance == 'increasing' %}
-              T°Ext Up >>> {{ temp_ext }}° (Units off)
-            {% elif tendance == 'decreasing' %}
-              T°Ext Down <<< {{ temp_ext }}° (Units off)
-            {% else %}
-              Temp. stable {{ temp_ext }}° (Units off)
-            {% endif %}
+            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
           {% endif %}
         {% endif %}
       {% elif (mamour == 'wifi' and eric == 'cellular') or (mamour == 'cellular' and eric == 'wifi') or (mamour == 'wifi' and eric == 'wifi') %}
@@ -108,13 +89,7 @@
             {% endif %}
           {% endif %}
         {% else %}
-          {% if tendance == 'increasing' %}
-            T°Ext Up >>> {{ temp_ext }}° (Units off)
-          {% elif tendance == 'decreasing' %}
-            T°Ext Down <<< {{ temp_ext }}° (Units off)
-          {% else %}
-            Temp. stable {{ temp_ext }}° (Units off)
-          {% endif %}
+          T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
         {% endif %}
       {% else %}
         Aucun message pertinent actuellement.
