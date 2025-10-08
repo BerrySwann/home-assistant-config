@@ -1017,6 +1017,11 @@
     data:
       hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
     action: climate.set_hvac_mode
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
   - data:
       title: DEBUG CLIM
       message: Force -> {{ states('sensor.mode_ete_hiver_etat') }}
@@ -1467,6 +1472,7 @@
     trigger: state
   conditions: []
   actions:
+  - delay: 00:00:03
   - data:
       message: 'Le mode a changé pour: {{ states(''sensor.mode_ete_hiver_etat'') }}'
       title: CHANGEMENT DE MODE
@@ -3218,6 +3224,9 @@
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: cellular
     then:
@@ -3358,6 +3367,9 @@
       - condition: state
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
+      - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: wifi

@@ -27,7 +27,7 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (éCO Heat)
             {% endif %}
           {% else %}
-            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
+            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim OFF]
           {% endif %}
         {% elif mode_ete_hiver == 'cool' %}
           {% if clims_alimentees %}
@@ -39,7 +39,7 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_cible }}° (Cool)
             {% endif %}
           {% else %}
-            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
+            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim OFF]
           {% endif %}
         {% else %} {# mode_ete_hiver == 'fan_only' #}
           {% if clims_alimentees %}
@@ -51,7 +51,7 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim (Fan)
             {% endif %}
           {% else %}
-            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
+            T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim OFF]
           {% endif %}
         {% endif %}
       {% elif (mamour == 'wifi' and eric == 'cellular') or (mamour == 'cellular' and eric == 'wifi') or (mamour == 'wifi' and eric == 'wifi') %}
@@ -89,7 +89,7 @@
             {% endif %}
           {% endif %}
         {% else %}
-          T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim est OFF]
+          T°Ext {{tendance}} >>> {{ temp_ext }}° [Clim OFF]
         {% endif %}
       {% else %}
         Aucun message pertinent actuellement.
