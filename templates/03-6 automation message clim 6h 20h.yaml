@@ -27,8 +27,13 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (éCO Heat)
             {% endif %}
           {% else %}
-            T°Ext {{ tendance }} => {{ temp_ext }}° [Clim OFF]
-          {% endif %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% else %}
+              Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% endif %}
         {% elif mode_ete_hiver == 'cool' %}
           {% if clims_alimentees %}
             {% if tendance == 'increasing' %}
@@ -39,8 +44,13 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_cible }}° (Cool)
             {% endif %}
           {% else %}
-            T°Ext {{ tendance }} => {{ temp_ext }}° [Clim OFF]
-          {% endif %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% else %}
+              Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% endif %}
         {% else %} {# mode_ete_hiver == 'fan_only' #}
           {% if clims_alimentees %}
             {% if tendance == 'increasing' %}
@@ -51,8 +61,13 @@
               Temp. stable {{ temp_ext }}° Les 3 Clim (Fan)
             {% endif %}
           {% else %}
-            T°Ext {{ tendance }} => {{ temp_ext }}° [Clim OFF]
-          {% endif %}
+            {% if tendance == 'increasing' %}
+              T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% elif tendance == 'decreasing' %}
+              T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% else %}
+              Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+            {% endif %}
         {% endif %}
       {% elif mamour == 'wifi' and eric == 'cellular' %}
         Clim [MAMOUR] en [WIFI]
@@ -83,8 +98,13 @@
             {% endif %}
           {% endif %}
         {% else %}
-          T°Ext {{ tendance }} => {{ temp_ext }}° [Clim OFF]
-        {% endif %}
+          {% if tendance == 'increasing' %}
+            T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% elif tendance == 'decreasing' %}
+            T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% else %}
+            Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% endif %}
       {% elif mamour == 'cellular' and eric == 'wifi' %}
         Clim [ERIC] en [WIFI]
         {% if clims_alimentees %}
@@ -114,8 +134,13 @@
             {% endif %}
           {% endif %}
         {% else %}
-          T°Ext {{ tendance }} => {{ temp_ext }}° [Clim OFF]
-        {% endif %}
+          {% if tendance == 'increasing' %}
+            T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% elif tendance == 'decreasing' %}
+            T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% else %}
+            Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% endif %}
       {% elif mamour == 'wifi' and eric == 'wifi' %}
         Clim [2] en [WIFI]
         {% if clims_alimentees %}
@@ -145,8 +170,13 @@
             {% endif %}
           {% endif %}
         {% else %}
-          T°Ext {{ tendance }} => {{ temp_ext }}° [Clim OFF]
-        {% endif %}
+          {% if tendance == 'increasing' %}
+            T°Ext Up >>> {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% elif tendance == 'decreasing' %}
+            T°Ext Down <<< {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% else %}
+            Temp. stable {{ temp_ext }}° Les 3 Clim {{ temp_eco }}° (Units OFF)
+          {% endif %}
       {% else %}
         Aucun message pertinent actuellement
       {% endif %}
