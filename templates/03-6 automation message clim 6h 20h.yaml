@@ -1,6 +1,6 @@
 - sensor:
-  - name: "Message Clim personnalisé 6h 20h"
-    unique_id: message_clim_personnalise_6h_20h
+  - name: "Message Clim personnalisé 6h 20h_en pause"
+    unique_id: message_clim_personnalise_6h_20h_en_pause
     state: >
       {% set mamour = states('sensor.ne2213_mamour_network_type') %}
       {% set eric = states('sensor.poco_x7_pro_network_type') %}
