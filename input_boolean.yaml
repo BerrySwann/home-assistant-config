@@ -1,1 +1,9 @@
+mamour_at_home:
+  name: "Mamour à la maison (Wi-Fi)"
+  initial: off
+  icon: mdi:wifi
 
+eric_at_home:
+  name: "Eric à la maison (Wi-Fi)"
+  initial: off
+  icon: mdi:wifi

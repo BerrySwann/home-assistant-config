@@ -2069,8 +2069,8 @@
   description: Notification température Up ou Down en fonction des présences et réseaux
   triggers:
   - entity_id:
-    - sensor.ne2213_mamour_network_type
-    - sensor.poco_x7_pro_network_type
+    - sensor.ne2213_mamour_wi_fi_connection
+    - sensor.poco_x7_pro_wi_fi_connection
     - sensor.th_balcon_nord_temperature
     trigger: state
   conditions:
@@ -3421,3 +3421,129 @@
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   mode: queued
+- id: '1760088843808'
+  alias: Notifier les changements de message clim
+  triggers:
+  - entity_id: sensor.message_clim_personnalise_6h_20h
+    trigger: state
+  actions:
+  - variables:
+      current_state: '{{ trigger[0].to_state.state }}'
+      message_parts: '{{ current_state.split(''|'') }}'
+  - data:
+      message: '{{ current_state }}'
+    action: notify.notify
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ ''CELLULAR'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Présence] Personne n''est à la maison (mode CELLULAR)'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''MAMOUR'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Présence] Seul Mamour est à la maison (Wi-Fi)'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''ERIC'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Présence] Seul Eric est à la maison (Wi-Fi)'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''2_WIFI'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Présence] Mamour et Eric sont à la maison (Wi-Fi)'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''Up >>>'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Tendance] Température extérieure en hausse : {{ message_parts[1].strip()
+            }}'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''Down <<<'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Tendance] Température extérieure en baisse : {{ message_parts[1].strip()
+            }}'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''stable'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Tendance] Température extérieure stable : {{ message_parts[1].strip()
+            }}'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''Heat'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Mode] Chauffage activé : {{ message_parts[2].strip() }}'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''Cool'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Mode] Rafraîchissement activé : {{ message_parts[2].strip() }}'
+        action: notify.notify
+    - conditions:
+      - condition: template
+        value_template: '{{ ''Fan'' in current_state }}'
+      sequence:
+      - data:
+          message: '[Mode] Ventilation activée : {{ message_parts[2].strip() }}'
+        action: notify.notify
+- id: '1760090152183'
+  alias: Mettre à jour la présence de Mamour (Wi-Fi)
+  description: ''
+  triggers:
+  - entity_id: sensor.ne2213_mamour_wi_fi_connection
+    trigger: state
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == ''Freebox_GG'' }}'
+      sequence:
+      - entity_id: input_boolean.mamour_at_home
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state != ''Freebox_GG'' }}'
+      sequence:
+      - entity_id: input_boolean.mamour_at_home
+        action: input_boolean.turn_off
+- id: '1760090322195'
+  alias: Mettre à jour la présence de Eric (Wi-Fi)
+  description: ''
+  triggers:
+  - entity_id: sensor.poco_x7_pro_wi_fi_connection
+    trigger: state
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == ''Freebox_GG'' }}'
+      sequence:
+      - entity_id: input_boolean.eric_at_home
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state != ''Freebox_GG'' }}'
+      sequence:
+      - entity_id: input_boolean.eric_at_home
+        action: input_boolean.turn_off
