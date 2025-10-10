@@ -38,6 +38,8 @@
       {%- endif %}
 
       {# --- Détermination du message de mode (Heat/Cool/Fan) --- #}
+
+      {# --- HEAT --- #}
       {%- if mode_ete_hiver == 'heat' %}
         {%- set mode_label = "(éCO Heat)" if clims_alimentees else "(Units OFF)" %}
         {%- if mamour == 'cellular' and eric == 'cellular' %}
@@ -49,6 +51,8 @@
         {%- elif mamour == 'wifi' and eric == 'wifi' %}
           {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Heat)" %}
         {%- endif %}
+
+      {# --- COOL --- #}
       {%- elif mode_ete_hiver == 'cool' %}
         {%- set mode_label = "(Cool)" if clims_alimentees else "(Units OFF)" %}
         {%- if mamour == 'cellular' and eric == 'cellular' %}
@@ -60,6 +64,8 @@
         {%- elif mamour == 'wifi' and eric == 'wifi' %}
           {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Cool)" %}
         {%- endif %}
+
+      {# --- FAN_ONLY --- #}
       {%- elif mode_ete_hiver == 'fan_only' %}
         {%- if clims_alimentees %}
           {%- set message_mode = "Les 3 Clim (Fan)" %}
@@ -69,4 +75,6 @@
       {%- endif %}
 
       {# --- Construction du message final --- #}
-      {{ message_header }} {{ message_tendance }} {{ message_mode }}
+      {{ message_header }} 
+      {{ message_tendance }}
+      {{ message_mode }}
