@@ -3422,91 +3422,99 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1760088843808'
-  alias: Notifier les changements de message clim
+  alias: Notifier les changements de message clim (Mobile)
+  description: ''
   triggers:
   - entity_id: sensor.message_clim_personnalise_6h_20h
     trigger: state
   actions:
-  - variables:
-      current_state: '{{ trigger[0].to_state.state }}'
-      message_parts: '{{ current_state.split(''|'') }}'
   - data:
-      message: '{{ current_state }}'
-    action: notify.notify
+      message: '{{ trigger.to_state.state }}'
+    action: notify.mobile_app_poco_x7_pro
   - choose:
     - conditions:
       - condition: template
-        value_template: '{{ ''CELLULAR'' in current_state }}'
+        value_template: '{{ ''CELLULAR'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Personne n''est à la maison (mode CELLULAR)'
-        action: notify.notify
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''MAMOUR'' in current_state }}'
+        value_template: '{{ ''MAMOUR'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Seul Mamour est à la maison (Wi-Fi)'
-        action: notify.notify
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''ERIC'' in current_state }}'
+        value_template: '{{ ''ERIC'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Seul Eric est à la maison (Wi-Fi)'
-        action: notify.notify
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''2_WIFI'' in current_state }}'
+        value_template: '{{ ''2_WIFI'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Mamour et Eric sont à la maison (Wi-Fi)'
-        action: notify.notify
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''Up >>>'' in current_state }}'
+        value_template: '{{ ''Up >>>'' in trigger.to_state.state }}'
       sequence:
-      - data:
-          message: '[Tendance] Température extérieure en hausse : {{ message_parts[1].strip()
+      - variables:
+          temp_ext: '{{ trigger.to_state.state.split(''|'')[1].split(''>>>'')[1].split(''°'')[0].strip()
             }}'
-        action: notify.notify
+      - data:
+          message: '[Tendance] Température extérieure en hausse : {{ temp_ext }}°'
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''Down <<<'' in current_state }}'
+        value_template: '{{ ''Down <<<'' in trigger.to_state.state }}'
       sequence:
-      - data:
-          message: '[Tendance] Température extérieure en baisse : {{ message_parts[1].strip()
+      - variables:
+          temp_ext: '{{ trigger.to_state.state.split(''|'')[1].split(''<<<'')[1].split(''°'')[0].strip()
             }}'
-        action: notify.notify
+      - data:
+          message: '[Tendance] Température extérieure en baisse : {{ temp_ext }}°'
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''stable'' in current_state }}'
+        value_template: '{{ ''stable'' in trigger.to_state.state }}'
       sequence:
+      - variables:
+          temp_ext: '{{ trigger.to_state.state.split(''|'')[1].split(''°'')[0].split(''stable
+            '')[1].strip() }}'
       - data:
-          message: '[Tendance] Température extérieure stable : {{ message_parts[1].strip()
-            }}'
-        action: notify.notify
+          message: '[Tendance] Température extérieure stable : {{ temp_ext }}°'
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''Heat'' in current_state }}'
+        value_template: '{{ ''Heat'' in trigger.to_state.state }}'
       sequence:
+      - variables:
+          message_part: '{{ trigger.to_state.state.split(''|'')[2] }}'
       - data:
-          message: '[Mode] Chauffage activé : {{ message_parts[2].strip() }}'
-        action: notify.notify
+          message: '[Mode] Chauffage activé : {{ message_part }}'
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''Cool'' in current_state }}'
+        value_template: '{{ ''Cool'' in trigger.to_state.state }}'
       sequence:
+      - variables:
+          message_part: '{{ trigger.to_state.state.split(''|'')[2] }}'
       - data:
-          message: '[Mode] Rafraîchissement activé : {{ message_parts[2].strip() }}'
-        action: notify.notify
+          message: '[Mode] Rafraîchissement activé : {{ message_part }}'
+        action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''Fan'' in current_state }}'
+        value_template: '{{ ''Fan'' in trigger.to_state.state }}'
       sequence:
       - data:
-          message: '[Mode] Ventilation activée : {{ message_parts[2].strip() }}'
-        action: notify.notify
+          message: '[Mode] Ventilation activée'
+        action: notify.mobile_app_poco_x7_pro
 - id: '1760090152183'
   alias: Mettre à jour la présence de Mamour (Wi-Fi)
   description: ''
