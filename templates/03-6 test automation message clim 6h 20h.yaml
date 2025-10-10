@@ -6,19 +6,15 @@
       {%- set mamour_at_home = is_state('input_boolean.mamour_at_home', 'on') %}
       {%- set eric_at_home = is_state('input_boolean.eric_at_home', 'on') %}
 
-      {# --- Notification pour la détection de présence --- #}
+      {# --- Logique de présence (4 cas) --- #}
       {%- if mamour_at_home and eric_at_home %}
         {%- set presence = "2_WIFI" %}
-        {%- service notify.notify(message="[Présence] Mamour et Eric sont à la maison (Wi-Fi)") %}
       {%- elif mamour_at_home and not eric_at_home %}
         {%- set presence = "MAMOUR_WIFI" %}
-        {%- service notify.notify(message="[Présence] Seul Mamour est à la maison (Wi-Fi)") %}
       {%- elif not mamour_at_home and eric_at_home %}
         {%- set presence = "ERIC_WIFI" %}
-        {%- service notify.notify(message="[Présence] Seul Eric est à la maison (Wi-Fi)") %}
       {%- else %}
         {%- set presence = "CELLULAR" %}
-        {%- service notify.notify(message="[Présence] Personne n'est à la maison (mode CELLULAR)") %}
       {%- endif %}
 
       {# --- Récupération des autres données --- #}
@@ -33,16 +29,13 @@
       {%- set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
       {%- set clims_alimentees = prise_salon or prise_bureau or prise_chambre %}
 
-      {# --- Notification pour la tendance --- #}
+      {# --- Détermination du message de tendance --- #}
       {%- if tendance == 'increasing' %}
         {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
-        {%- service notify.notify(message="[Tendance] Température extérieure en hausse : " ~ temp_ext ~ "°") %}
       {%- elif tendance == 'decreasing' %}
         {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
-        {%- service notify.notify(message="[Tendance] Température extérieure en baisse : " ~ temp_ext ~ "°") %}
       {%- else %}
         {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
-        {%- service notify.notify(message="[Tendance] Température extérieure stable : " ~ temp_ext ~ "°") %}
       {%- endif %}
 
       {# --- Détermination du message de mode (Heat/Cool/Fan) --- #}
@@ -50,85 +43,72 @@
         {%- if presence == "CELLULAR" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (éCO Heat)" %}
-            {%- service notify.notify(message="[Mode HEAT] Les 3 Clim en mode éCO : " ~ temp_eco ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode HEAT] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- elif presence == "MAMOUR_WIFI" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Heat)" %}
-            {%- service notify.notify(message="[Mode HEAT] Salon à " ~ temp_diff ~ "°, Bureau & Chambre à " ~ temp_cible ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode HEAT] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- elif presence == "ERIC_WIFI" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Heat)" %}
-            {%- service notify.notify(message="[Mode HEAT] Bureau à " ~ temp_diff ~ "°, Salon & Chambre à " ~ temp_cible ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode HEAT] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- elif presence == "2_WIFI" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Heat)" %}
-            {%- service notify.notify(message="[Mode HEAT] Salon & Bureau à " ~ temp_diff ~ "°, Chambre à " ~ temp_cible ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode HEAT] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- endif %}
-
       {%- elif mode_ete_hiver == 'cool' %}
         {%- if presence == "CELLULAR" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° (Cool)" %}
-            {%- service notify.notify(message="[Mode COOL] Les 3 Clim à " ~ temp_cible ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode COOL] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- elif presence == "MAMOUR_WIFI" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Cool)" %}
-            {%- service notify.notify(message="[Mode COOL] Salon à " ~ temp_diff ~ "°, Bureau & Chambre à " ~ temp_cible ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode COOL] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- elif presence == "ERIC_WIFI" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Cool)" %}
-            {%- service notify.notify(message="[Mode COOL] Bureau à " ~ temp_diff ~ "°, Salon & Chambre à " ~ temp_cible ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode COOL] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- elif presence == "2_WIFI" %}
           {%- if clims_alimentees %}
             {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Cool)" %}
-            {%- service notify.notify(message="[Mode COOL] Salon & Bureau à " ~ temp_diff ~ "°, Chambre à " ~ temp_cible ~ "°") %}
           {%- else %}
             {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-            {%- service notify.notify(message="[Mode COOL] Les 3 Clim éteintes (Units OFF)") %}
           {%- endif %}
         {%- endif %}
-
       {%- elif mode_ete_hiver == 'fan_only' %}
         {%- if clims_alimentees %}
           {%- set message_mode = "Les 3 Clim (Fan)" %}
-          {%- service notify.notify(message="[Mode FAN] Les 3 Clim en mode ventilation") %}
         {%- else %}
           {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- service notify.notify(message="[Mode FAN] Les 3 Clim éteintes (Units OFF)") %}
         {%- endif %}
       {%- endif %}
 
-      {# --- Notification pour le message final --- #}
-      {%- set message_final = message_header ~ " | " ~ message_tendance ~ " | " ~ message_mode %}
-      {%- service notify.notify(message="[CLIM] " ~ message_final) %}
+      {# --- Détermination du message d'en-tête --- #}
+      {%- if presence == "CELLULAR" %}
+        {%- set message_header = "Clim [2] en [CELLULAR]" %}
+      {%- elif presence == "MAMOUR_WIFI" %}
+        {%- set message_header = "Clim [MAMOUR] en [WIFI]" %}
+      {%- elif presence == "ERIC_WIFI" %}
+        {%- set message_header = "Clim [ERIC] en [WIFI]" %}
+      {%- elif presence == "2_WIFI" %}
+        {%- set message_header = "Clim [2] en [WIFI]" %}
+      {%- endif %}
 
-      {# --- Retour du message pour l'affichage --- #}
+      {# --- Construction du message final --- #}
       {{ message_header }} {{ message_tendance }} {{ message_mode }}
