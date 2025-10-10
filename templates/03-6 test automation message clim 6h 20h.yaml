@@ -21,18 +21,84 @@
       {# --- Vérification de la présence réelle à la maison (garde-fou SSID) --- #}
       {%- set mamour_at_home = (mamour_network == 'wifi' and mamour_wifi == home_ssid) %}
       {%- set eric_at_home = (eric_network == 'wifi' and eric_wifi == home_ssid) %}
+      {%- set both_not_at_home = (mamour_network == 'wifi' and mamour_wifi != home_ssid and eric_network == 'wifi' and eric_wifi != home_ssid) %}
+      {%- set both_in_cellular = (mamour_network == 'cellular' and eric_network == 'cellular') %}
+      {%- set mamour_in_other_wifi = (mamour_network == 'wifi' and mamour_wifi != home_ssid) %}
+      {%- set eric_in_other_wifi = (eric_network == 'wifi' and eric_wifi != home_ssid) %}
 
-      {# --- Logique d'origine conservée --- #}
-      {%- if mamour_network == 'cellular' and eric_network == 'cellular' %}
-        {%- set message_header = "Clim [2] en [CELLULAR]" %}
+      {# --- Logique de contrôle des climatiseurs --- #}
+      {%- if both_in_cellular or (mamour_in_other_wifi and eric_network == 'cellular') or (eric_in_other_wifi and mamour_network == 'cellular') or both_not_at_home %}
+        {# Les deux en cellular ou en WiFi (mais pas à la maison) #}
+        {%- if mode_ete_hiver == 'heat' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (éCO Heat)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- elif mode_ete_hiver == 'cool' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° (Cool)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- endif %}
+        {%- set message_header = "Clim [2] en [CELLULAR/WIFI_?!]" %}
+
       {%- elif mamour_at_home and eric_network == 'cellular' %}
+        {# Mamour à la maison + Eric en cellular #}
+        {%- if mode_ete_hiver == 'heat' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Heat)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- elif mode_ete_hiver == 'cool' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Cool)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- endif %}
         {%- set message_header = "Clim [MAMOUR] en [WIFI]" %}
+
       {%- elif mamour_network == 'cellular' and eric_at_home %}
+        {# Eric à la maison + Mamour en cellular #}
+        {%- if mode_ete_hiver == 'heat' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Heat)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- elif mode_ete_hiver == 'cool' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Cool)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- endif %}
         {%- set message_header = "Clim [ERIC] en [WIFI]" %}
+
       {%- elif mamour_at_home and eric_at_home %}
+        {# Les deux à la maison #}
+        {%- if mode_ete_hiver == 'heat' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Heat)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- elif mode_ete_hiver == 'cool' %}
+          {%- if clims_alimentees %}
+            {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Cool)" %}
+          {%- else %}
+            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
+          {%- endif %}
+        {%- endif %}
         {%- set message_header = "Clim [2] en [WIFI]" %}
+
       {%- else %}
+        {# Cas par défaut (si aucune condition n'est remplie) #}
         {%- set message_header = "Aucun message pertinent actuellement" %}
+        {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
       {%- endif %}
 
       {# --- Détermination du message de tendance --- #}
@@ -44,74 +110,7 @@
         {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
       {%- endif %}
 
-      {# --- Détermination du message de mode (Heat/Cool/Fan) --- #}
-      {# ---MODE HEAT --- #}
-
-      {%- if mode_ete_hiver == 'heat' %}
-        {%- if mamour_network == 'cellular' and eric_network == 'cellular' %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (éCO Heat)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- elif mamour_at_home and eric_network == 'cellular' %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Heat)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- elif mamour_network == 'cellular' and eric_at_home %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Heat)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- elif mamour_at_home and eric_at_home %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Heat)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- endif %}
-
-      {# ---MODE COOL --- #}
-      {%- elif mode_ete_hiver == 'cool' %}
-        {%- if mamour_network == 'cellular' and eric_network == 'cellular' %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° (Cool)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- elif mamour_at_home and eric_network == 'cellular' %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Cool)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- elif mamour_network == 'cellular' and eric_at_home %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Cool)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- elif mamour_at_home and eric_at_home %}
-          {%- if clims_alimentees %}
-            {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Cool)" %}
-          {%- else %}
-            {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-          {%- endif %}
-        {%- endif %}
-
-      {# ---MODE FAN_ONLY --- #}
-      {%- elif mode_ete_hiver == 'fan_only' %}
-        {%- if clims_alimentees %}
-          {%- set message_mode = "Les 3 Clim (Fan)" %}
-        {%- else %}
-          {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° (Units OFF)" %}
-        {%- endif %}
-      {%- endif %}
-
       {# --- Construction du message final --- #}
-      {{ message_header }} 
-      {{ message_tendance }} 
+      {{ message_header }}
+      {{ message_tendance }}
       {{ message_mode }}

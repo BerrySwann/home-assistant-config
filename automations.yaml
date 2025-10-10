@@ -2709,6 +2709,15 @@
         after: 06:00:00
         before: '20:00:00'
       - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
       - condition: state
@@ -2820,6 +2829,15 @@
         after: 06:00:00
         before: '20:00:00'
       - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
       - condition: state
@@ -2892,6 +2910,15 @@
         after: 06:00:00
         before: '20:00:00'
       - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
       - condition: state
@@ -2963,6 +2990,15 @@
       - condition: time
         after: 06:00:00
         before: '20:00:00'
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
@@ -3422,22 +3458,19 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1760088843808'
-  alias: Notifier les changements de message clim (Mobile)
+  alias: (J) Notifier les changements de message clim (Mobile)
   description: ''
   triggers:
   - entity_id: sensor.message_clim_personnalise_6h_20h
     trigger: state
   actions:
-  - data:
-      message: '{{ trigger.to_state.state }}'
-    action: notify.mobile_app_poco_x7_pro
   - choose:
     - conditions:
       - condition: template
         value_template: '{{ ''CELLULAR'' in trigger.to_state.state }}'
       sequence:
       - data:
-          message: '[Présence] Personne n''est à la maison (mode CELLULAR)'
+          message: '[Présence] Personne n''est à la maison (mode CELLULAR/WIFI_?!)'
         action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
@@ -3455,7 +3488,7 @@
         action: notify.mobile_app_poco_x7_pro
     - conditions:
       - condition: template
-        value_template: '{{ ''2_WIFI'' in trigger.to_state.state }}'
+        value_template: '{{ ''Clim [2] en [WIFI]'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Mamour et Eric sont à la maison (Wi-Fi)'
@@ -3465,7 +3498,7 @@
         value_template: '{{ ''Up >>>'' in trigger.to_state.state }}'
       sequence:
       - variables:
-          temp_ext: '{{ trigger.to_state.state.split(''|'')[1].split(''>>>'')[1].split(''°'')[0].strip()
+          temp_ext: '{{ trigger.to_state.state.split(''|'')[1].split(''Up >>>'')[1].split(''°'')[0].strip()
             }}'
       - data:
           message: '[Tendance] Température extérieure en hausse : {{ temp_ext }}°'
@@ -3475,7 +3508,7 @@
         value_template: '{{ ''Down <<<'' in trigger.to_state.state }}'
       sequence:
       - variables:
-          temp_ext: '{{ trigger.to_state.state.split(''|'')[1].split(''<<<'')[1].split(''°'')[0].strip()
+          temp_ext: '{{ trigger.to_state.state.split(''|'')[1].split(''Down <<<'')[1].split(''°'')[0].strip()
             }}'
       - data:
           message: '[Tendance] Température extérieure en baisse : {{ temp_ext }}°'
