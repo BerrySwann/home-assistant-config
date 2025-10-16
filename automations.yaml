@@ -1937,6 +1937,8 @@
   - trigger: state
     entity_id:
     - sensor.temperature_delta
+  - trigger: time_pattern
+    minutes: /1
   conditions:
   - condition: time
     after: 08:00:00
