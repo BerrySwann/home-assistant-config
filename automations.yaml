@@ -3754,7 +3754,7 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1760088843808'
-  alias: (J) Notifier les changements de message clim (Mobile)
+  alias: (K) Notifier les changements de message clim (Mobile)
   description: ''
   triggers:
   - entity_id: sensor.message_clim_personnalise_6h_20h
@@ -3884,3 +3884,64 @@
       sequence:
       - entity_id: input_boolean.eric_at_home
         action: input_boolean.turn_off
+- id: '1760723744000'
+  alias: (J) [ CLIM 'off' si prises clim extérieur sont 'off'
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.temperature_delta_valeur
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    below: -1
+  - trigger: state
+    entity_id:
+    - sensor.temperature_delta_valeur
+  - trigger: time_pattern
+    minutes: /1
+  conditions:
+  - condition: time
+    after: 08:00:00
+    before: '20:00:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+    - sun
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: switch.clim_salon_nous
+      state: 'on'
+    - condition: state
+      entity_id: switch.clim_du_bureau_nous
+      state: 'on'
+    - condition: state
+      entity_id: switch.clim_chambre_nous
+      state: 'on'
+  actions:
+  - action: climate.set_hvac_mode
+    metadata: {}
+    data:
+      hvac_mode: 'off'
+    target:
+      entity_id:
+      - climate.clim
+      - climate.clim_du_bureau
+      - climate.clim_de_la_chambre
+  - action: notify.mobile_app_poco_x7_pro
+    metadata: {}
+    data:
+      title: T°Ext < à 26°C
+      message: T°Ext < à 26°C, les clim ont été éteinte.
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  mode: queued
