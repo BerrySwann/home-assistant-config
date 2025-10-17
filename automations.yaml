@@ -1928,7 +1928,7 @@
   triggers:
   - trigger: numeric_state
     entity_id:
-    - sensor.temperature_delta
+    - sensor.temperature_delta_valeur
     for:
       hours: 0
       minutes: 10
@@ -1936,7 +1936,7 @@
     below: -1
   - trigger: state
     entity_id:
-    - sensor.temperature_delta
+    - sensor.temperature_delta_valeur
   - trigger: time_pattern
     minutes: /1
   conditions:
