@@ -3888,19 +3888,13 @@
   alias: (J) [ CLIM 'off' si prises clim extérieur sont 'off'
   description: ''
   triggers:
-  - trigger: numeric_state
-    entity_id:
-    - sensor.temperature_delta_valeur
-    for:
-      hours: 0
-      minutes: 10
-      seconds: 0
-    below: -1
   - trigger: state
     entity_id:
-    - sensor.temperature_delta_valeur
-  - trigger: time_pattern
-    minutes: /1
+    - switch.clim_salon_nous
+    - switch.clim_du_bureau_nous
+    - switch.clim_chambre_nous
+    from: 'on'
+    to: 'off'
   conditions:
   - condition: time
     after: 08:00:00
@@ -3913,17 +3907,17 @@
     - fri
     - sat
     - sun
-  - condition: and
+  - condition: or
     conditions:
     - condition: state
       entity_id: switch.clim_salon_nous
-      state: 'on'
+      state: 'off'
     - condition: state
       entity_id: switch.clim_du_bureau_nous
-      state: 'on'
+      state: 'off'
     - condition: state
       entity_id: switch.clim_chambre_nous
-      state: 'on'
+      state: 'off'
   actions:
   - action: climate.set_hvac_mode
     metadata: {}
