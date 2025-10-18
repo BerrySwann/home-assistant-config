@@ -3886,7 +3886,7 @@
       - entity_id: input_boolean.eric_at_home
         action: input_boolean.turn_off
 - id: '1760723744000'
-  alias: '[CLIM] OFF SI PRISES EXTÉRIEURES SONT ''OFF'''
+  alias: (K) [CLIM OFF] SI [PRISES] EXTÉRIEURES SONT [OFF]
   description: Éteint chaque climatiseur intérieur 1 minute après que sa prise extérieure
     associée soit coupée. Envoie des notifications uniquement entre 6h00 et 20h00.
   triggers:
@@ -3896,6 +3896,10 @@
     - switch.clim_chambre_nous
     from: 'on'
     to: 'off'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
     trigger: state
   - minutes: /1
     trigger: time_pattern
@@ -3906,7 +3910,6 @@
       - condition: state
         entity_id: switch.clim_salon_nous
         state: 'off'
-        for: 00:01:00
       sequence:
       - target:
           entity_id: climate.clim
@@ -3919,19 +3922,13 @@
           before: '20:00:00'
         then:
         - data:
-            title: CLIM SALON ÉTEINTE
-            message: '[PRISE CLIM] EXT. [SALON] EST COUPÉE DEPUIS 1 MIN.'
+            title: '[CLIM] SALON [OFF]'
+            message: '[PRISE CLIM] ext. [SALON] est [OFF] depuis 1 min.'
           action: notify.mobile_app_poco_x7_pro
-      - delay:
-          hours: 1
-          minutes: 0
-          seconds: 0
-          milliseconds: 0
     - conditions:
       - condition: state
         entity_id: switch.clim_du_bureau_nous
         state: 'off'
-        for: 00:01:00
       sequence:
       - target:
           entity_id: climate.clim_du_bureau
@@ -3944,19 +3941,13 @@
           before: '20:00:00'
         then:
         - data:
-            title: CLIM BUREAU ÉTEINTE
-            message: '[PRISE CLIM] EXT. [BUREAU] EST COUPÉE DEPUIS 1 MIN.'
+            title: '[CLIM] BUREAU [OFF]'
+            message: '[PRISE CLIM] ext. [BUREAU] est [OFF] depuis 1 min.'
           action: notify.mobile_app_poco_x7_pro
-      - delay:
-          hours: 1
-          minutes: 0
-          seconds: 0
-          milliseconds: 0
     - conditions:
       - condition: state
         entity_id: switch.clim_chambre_nous
         state: 'off'
-        for: 00:01:00
       sequence:
       - target:
           entity_id: climate.clim_de_la_chambre
@@ -3969,12 +3960,7 @@
           before: '20:00:00'
         then:
         - data:
-            title: CLIM CHAMBRE ÉTEINTE
-            message: '[PRISE CLIM] EXT. [CHAMBRE] EST COUPÉE DEPUIS 1 MIN.'
+            title: '[CLIM] CHAMBRE [OFF]'
+            message: '[PRISE CLIM] ext. [CHAMBRE] est [OFF] depuis 1 min.'
           action: notify.mobile_app_poco_x7_pro
-      - delay:
-          hours: 1
-          minutes: 0
-          seconds: 0
-          milliseconds: 0
   mode: queued
