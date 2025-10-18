@@ -1938,9 +1938,9 @@
   conditions:
   - condition: and
     conditions:
-    - condition: numeric_state
-      entity_id: sensor.th_balcon_nord_temperature
-      above: 15
+    - condition: template
+      value_template: '{{ states(''sensor.th_balcon_nord_temperature'') | float >
+        states(''sensor.temperature_hors_gel_hiver'') | float }}'
     - condition: state
       entity_id: switch.clim_salon_nous
       state: 'on'
@@ -1973,7 +1973,7 @@
     action: climate.set_hvac_mode
   - data:
       title: Delta T° < -1°C
-      message: T°Ext < à 26°C, les clim ont été éteinte.
+      message: Les clim ont été éteinte.
     action: notify.mobile_app_poco_x7_pro
   - delay:
       hours: 1
