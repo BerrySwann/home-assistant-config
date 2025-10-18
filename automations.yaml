@@ -1009,6 +1009,11 @@
       entity_id: climate.clim_de_la_chambre
       state: auto
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
   - target:
       entity_id:
       - climate.clim
@@ -1017,11 +1022,6 @@
     data:
       hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
     action: climate.set_hvac_mode
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 3
-      milliseconds: 0
   - data:
       title: DEBUG CLIM
       message: Force -> {{ states('sensor.mode_ete_hiver_etat') }}
@@ -2078,6 +2078,11 @@
     after: 06:00:00
     before: '20:00:00'
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
   - data:
       message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
     action: notify.mobile_app_poco_x7_pro
