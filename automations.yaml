@@ -1935,6 +1935,9 @@
     below: -1
     for: 00:10:00
     trigger: numeric_state
+  - trigger: state
+    entity_id:
+    - automation.i_clim_off_a_26degext_coupe_les_clim_si_la_tdegext_26deg
   conditions:
   - condition: and
     conditions:
