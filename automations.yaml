@@ -3895,6 +3895,8 @@
     - switch.clim_chambre_nous
     from: 'on'
     to: 'off'
+  - trigger: time_pattern
+    minutes: /5
   conditions:
   - condition: time
     after: 08:00:00
