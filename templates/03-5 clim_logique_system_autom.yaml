@@ -36,7 +36,7 @@
     unit_of_measurement: "°C"
     state: "17"
 
-- sensor: #(hors gel hiver 18°)
+- sensor: #(hors gel hiver 15°)
   - name: "Temperature Hors-Gel Hiver"
     unique_id: temperature_hors_gel_hiver
     unit_of_measurement: "°C"
