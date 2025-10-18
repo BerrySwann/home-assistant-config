@@ -18,23 +18,29 @@
         cool
       {% endif %}
 
-- sensor: #(coonsigne de base hiver / 28° l'été)
+- sensor: #(18° coonsigne de base hiver / 28° l'été)
   - name: "Consigne de Base"
     unique_id: consigne_de_Base
     unit_of_measurement: "°C"
     state: "18"
 
-- sensor: #(confort hiver / 27° l'été)
+- sensor: #(19° confort hiver / 27° l'été)
   - name: "Temperature différentielle"
     unique_id: temperature_différentielle
     unit_of_measurement: "°C"
     state: "19"
 
-- sensor: #(éco hiver)
+- sensor: #(éco hiver 17°)
   - name: "Temperature éCO. Hiver"
     unique_id: temperature_eco_hiver
     unit_of_measurement: "°C"
     state: "17"
+
+- sensor: #(hors gel hiver 18°)
+  - name: "Temperature Hors-Gel Hiver"
+    unique_id: temperature_hors_gel_hiver
+    unit_of_measurement: "°C"
+    state: "15"
 
 - sensor: #mode Cool si T° exterieur est > +32°
   - name: "Delta_5"
