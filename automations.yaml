@@ -1922,27 +1922,25 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754491576463'
-  alias: (I) [ CLIM 'off' si delta >= -1 ] Coupe les clim si le delta intérieur et
-    extérieur est égale ou superieur a -1
-  description: ''
+  alias: (I) [CLIM 'off' si delta < -1 et T°Ext > 15] Coupe toutes les clim si delta
+    < -1°C et T°Ext > 15°C
+  description: 'Éteint toutes les climatisations si le delta (intérieur - extérieur)
+    est < -1°C pendant 10 minutes, et que la température extérieure (sensor.th_balcon_nord_temperature)
+    est > 15°C.
+
+    '
   triggers:
-  - trigger: state
-    entity_id:
-    - sensor.temperature_delta_valeur
-  - trigger: numeric_state
-    entity_id:
-    - sensor.temperature_delta_valeur
-    for:
-      hours: 0
-      minutes: 10
-      seconds: 0
+  - entity_id: sensor.temperature_delta_valeur
     below: -1
-  - trigger: time_pattern
-    minutes: /1
+    for: 00:10:00
+    trigger: numeric_state
   conditions:
+  - condition: numeric_state
+    entity_id: sensor.th_balcon_nord_temperature
+    above: 15
   - condition: time
     after: 08:00:00
-    before: '20:00:00'
+    before: '17:00:00'
     weekday:
     - mon
     - tue
@@ -1952,37 +1950,24 @@
     - sat
     - sun
     enabled: false
-  - condition: and
-    conditions:
-    - condition: state
-      entity_id: switch.clim_salon_nous
-      state: 'on'
-    - condition: state
-      entity_id: switch.clim_du_bureau_nous
-      state: 'on'
-    - condition: state
-      entity_id: switch.clim_chambre_nous
-      state: 'on'
   actions:
-  - action: climate.set_hvac_mode
-    metadata: {}
-    data:
+  - data:
       hvac_mode: 'off'
     target:
       entity_id:
       - climate.clim
       - climate.clim_du_bureau
       - climate.clim_de_la_chambre
-  - action: notify.mobile_app_poco_x7_pro
-    metadata: {}
-    data:
-      title: T°Ext < à 26°C
-      message: T°Ext < à 26°C, les clim ont été éteinte.
+    action: climate.set_hvac_mode
   - delay:
       hours: 1
       minutes: 0
       seconds: 0
       milliseconds: 0
+  - data:
+      title: Delta T° < -1°C
+      message: T°Ext < à 26°C, les clim ont été éteinte.
+    action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1757248609691'
   alias: '[Backup] Git hourly H+10'
