@@ -1925,8 +1925,9 @@
   alias: (I) [CLIM 'off' si delta < -1 et T°Ext > 15] Coupe toutes les clim si delta
     < -1°C et T°Ext > 15°C
   description: 'Éteint toutes les climatisations si le delta (intérieur - extérieur)
-    est < -1°C pendant 10 minutes, et que la température extérieure (sensor.th_balcon_nord_temperature)
-    est > 15°C.
+    est < -1°C pendant 10 minutes, que la température extérieure est > 15°C, et que
+    les 3 prises extérieures sont ON. Gère la répartition équilibrée des modes (cool/heat)
+    et la consommation électrique.
 
     '
   triggers:
@@ -1935,21 +1936,32 @@
     for: 00:10:00
     trigger: numeric_state
   conditions:
-  - condition: numeric_state
-    entity_id: sensor.th_balcon_nord_temperature
-    above: 15
-  - condition: time
-    after: 08:00:00
-    before: '17:00:00'
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-    - sat
-    - sun
-    enabled: false
+  - condition: and
+    conditions:
+    - condition: numeric_state
+      entity_id: sensor.th_balcon_nord_temperature
+      above: 15
+    - condition: state
+      entity_id: switch.clim_salon_nous
+      state: 'on'
+    - condition: state
+      entity_id: switch.clim_du_bureau_nous
+      state: 'on'
+    - condition: state
+      entity_id: switch.clim_chambre_nous
+      state: 'on'
+    - condition: time
+      after: 08:00:00
+      before: '17:00:00'
+      weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+      - sun
+      enabled: false
   actions:
   - data:
       hvac_mode: 'off'
@@ -1959,15 +1971,15 @@
       - climate.clim_du_bureau
       - climate.clim_de_la_chambre
     action: climate.set_hvac_mode
+  - data:
+      title: Delta T° < -1°C
+      message: T°Ext < à 26°C, les clim ont été éteinte.
+    action: notify.mobile_app_poco_x7_pro
   - delay:
       hours: 1
       minutes: 0
       seconds: 0
       milliseconds: 0
-  - data:
-      title: Delta T° < -1°C
-      message: T°Ext < à 26°C, les clim ont été éteinte.
-    action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1757248609691'
   alias: '[Backup] Git hourly H+10'
