@@ -2069,44 +2069,75 @@
 - *id001
 - id: '1758129997644'
   alias: (C) Notification température Up ou Down de [6h00 -> 20h00]
-  description: Notification température Up ou Down en fonction des présences et réseaux
+  description: 'Notification température Up ou Down en fonction des présences et réseaux
+    (6h-20h)
+
+    '
   triggers:
   - entity_id:
     - sensor.ne2213_mamour_wi_fi_connection
     - sensor.poco_x7_pro_wi_fi_connection
     - sensor.th_balcon_nord_temperature
+    to:
     trigger: state
   conditions:
   - condition: time
     after: 06:00:00
-    before: '20:00:00'
+    before: '20:00:01'
   actions:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 2
-      milliseconds: 0
-  - data:
-      message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
-    action: notify.mobile_app_poco_x7_pro
+  - delay: 00:00:02
+  - if:
+    - condition: template
+      value_template: "{{ states('sensor.message_clim_personnalise_6h_20h') in ['unknown',
+        'unavailable'] or\n   states('sensor.ne2213_mamour_wi_fi_connection') in ['unknown',
+        'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection') in ['unknown',
+        'unavailable'] or\n   states('sensor.th_balcon_nord_temperature') in ['unknown',
+        'unavailable'] }}\n"
+    then:
+    - data:
+        message: '⚠️ Erreur : Un capteur critique est indisponible ! Vérifiez les
+          dépendances.'
+      action: notify.mobile_app_poco_x7_pro
+    else:
+    - data:
+        message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
+      action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1758298361594'
   alias: (D) Notification température Up ou Down de [20h00 -> 6h00]
-  description: Notification température Up ou Down en fonction des présences et réseaux
+  description: 'Notification température Up ou Down en fonction des présences et réseaux
+    (20h-6h)
+
+    '
   triggers:
   - entity_id:
-    - sensor.ne2213_mamour_network_type
-    - sensor.poco_x7_pro_network_type
+    - sensor.ne2213_mamour_wi_fi_connection
+    - sensor.poco_x7_pro_wi_fi_connection
     - sensor.th_balcon_nord_temperature
+    to:
     trigger: state
   conditions:
   - condition: time
     after: '20:00:00'
-    before: 06:00:00
+    before: 06:00:01
   actions:
-  - data:
-      message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
-    action: notify.mobile_app_poco_x7_pro
+  - delay: 00:00:02
+  - if:
+    - condition: template
+      value_template: "{{ states('sensor.message_clim_personnalise_20h_6h') in ['unknown',
+        'unavailable'] or\n   states('sensor.ne2213_mamour_wi_fi_connection') in ['unknown',
+        'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection') in ['unknown',
+        'unavailable'] or\n   states('sensor.th_balcon_nord_temperature') in ['unknown',
+        'unavailable'] }}\n"
+    then:
+    - data:
+        message: '⚠️ Erreur : Un capteur critique est indisponible ! Vérifiez les
+          dépendances.'
+      action: notify.mobile_app_poco_x7_pro
+    else:
+    - data:
+        message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
+      action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1759042747368'
   alias: DB Purge MariaDB + Repack
