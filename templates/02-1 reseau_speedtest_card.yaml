@@ -39,4 +39,42 @@
       {% else %}
         {{ states('sensor.speedtest_cli_upload') }}
       {% endif %}
+  - name: 'SpeedTest ISP'
+    unique_id: speedtest_isp
+    icon: mdi:access-point-network
+    state: >
+      {% if states('sensor.speedtest_cli_data') not in ['unknown', 'unavailable'] %}
+        {{ (states('sensor.speedtest_cli_data') | from_json).isp }}
+      {% else %}
+        {{ states('sensor.speedtest_isp') }}
+      {% endif %}
 
+  - name: 'SpeedTest Server Name'
+    unique_id: speedtest_server_name
+    icon: mdi:server
+    state: >
+      {% if states('sensor.speedtest_cli_data') not in ['unknown', 'unavailable'] %}
+        {{ (states('sensor.speedtest_cli_data') | from_json).server.name }}
+      {% else %}
+        {{ states('sensor.speedtest_server_name') }}
+      {% endif %}
+
+  - name: 'SpeedTest Server Location'
+    unique_id: speedtest_location
+    icon: mdi:map-marker
+    state: >
+      {% if states('sensor.speedtest_cli_data') not in ['unknown', 'unavailable'] %}
+        {{ (states('sensor.speedtest_cli_data') | from_json).server.location }}
+      {% else %}
+        {{ states('sensor.speedtest_location') }}
+      {% endif %}
+
+  - name: 'SpeedTest Server Country'
+    unique_id: speedtest_country
+    icon: mdi:earth
+    state: >
+      {% if states('sensor.speedtest_cli_data') not in ['unknown', 'unavailable'] %}
+        {{ (states('sensor.speedtest_cli_data') | from_json).server.country }}
+      {% else %}
+        {{ states('sensor.speedtest_country') }}
+      {% endif %}
