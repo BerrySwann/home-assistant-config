@@ -1,6 +1,6 @@
 sensor:
-  - name: "Message Clim personnalisé 6h 20h"
-    unique_id: message_clim_personnalise_6h_20h
+  - name: "Message Clim personnalisé 20h 6h"
+    unique_id: message_clim_personnalise_20h_6h
     state: >
       {# --- Définition des variables de base --- #}
       {%- set home_ssid = "Freebox_GG" %}
@@ -48,7 +48,7 @@ sensor:
         {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
       {%- endif %}
 
-      {# --- Logique principale --- #}
+      {# --- Logique principale pour la nuit (20h-6h) --- #}
       {%- if both_cellular %}
         {# 2 en cellular #}
         {%- set message_header = "Clim [2] en [CELLULAR]" %}
@@ -78,9 +78,9 @@ sensor:
         {%- set message_header = "Clim [MAMOUR] en [WIFI/CELL]" %}
         {%- if clims_alimentees %}
           {%- if mode == 'heat' %}
-            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Heat)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Heat)" %}
           {%- else %}
-            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Cool)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Cool)" %}
           {%- endif %}
         {%- else %}
           {%- set message_mode = "(Units OFF)" %}
@@ -90,9 +90,9 @@ sensor:
         {%- set message_header = "Clim [MAMOUR] en [WIFI/!?]" %}
         {%- if clims_alimentees %}
           {%- if mode == 'heat' %}
-            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Heat)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Heat)" %}
           {%- else %}
-            {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° (Cool)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Cool)" %}
           {%- endif %}
         {%- else %}
           {%- set message_mode = "(Units OFF)" %}
@@ -102,9 +102,9 @@ sensor:
         {%- set message_header = "Clim [ERIC] en [WIFI/CELL]" %}
         {%- if clims_alimentees %}
           {%- if mode == 'heat' %}
-            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Heat)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Heat)" %}
           {%- else %}
-            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Cool)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Cool)" %}
           {%- endif %}
         {%- else %}
           {%- set message_mode = "(Units OFF)" %}
@@ -114,9 +114,9 @@ sensor:
         {%- set message_header = "Clim [ERIC] en [WIFI/!?]" %}
         {%- if clims_alimentees %}
           {%- if mode == 'heat' %}
-            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Heat)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Heat)" %}
           {%- else %}
-            {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° (Cool)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Cool)" %}
           {%- endif %}
         {%- else %}
           {%- set message_mode = "(Units OFF)" %}
@@ -126,9 +126,9 @@ sensor:
         {%- set message_header = "Clim [2] en [WIFI]" %}
         {%- if clims_alimentees %}
           {%- if mode == 'heat' %}
-            {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Heat)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Heat)" %}
           {%- else %}
-            {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° (Cool)" %}
+            {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° (Cool)" %}
           {%- endif %}
         {%- else %}
           {%- set message_mode = "(Units OFF)" %}
@@ -143,3 +143,4 @@ sensor:
       {{ message_header }}
       {{ message_tendance }}
       {{ message_mode }}
+
