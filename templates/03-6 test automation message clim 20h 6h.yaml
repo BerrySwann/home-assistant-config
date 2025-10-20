@@ -1,5 +1,5 @@
 sensor:
-  - name: "Message Clim personnalisé 20h 6h"
+  - name: "Message Clim personnalisé 20h <-> 6h"
     unique_id: message_clim_personnalise_20h_6h
     state: >
       {# --- Définition des variables de base --- #}
