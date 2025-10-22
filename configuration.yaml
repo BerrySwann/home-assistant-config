@@ -140,6 +140,8 @@ bluetooth:
 
 # configuration.yaml
 
+  # configuration.yaml
+
   - platform: command_line
     name: "SpeedTest CLI Data"
     unique_id: speedtest_cli_data
@@ -155,5 +157,10 @@ bluetooth:
         }
         | to_json
       }}
-    json_attributes: ["ping", "download", "upload", "server", "isp"]
+    json_attributes:
+      - ping
+      - download
+      - upload
+      - server
+      - isp
 
