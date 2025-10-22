@@ -136,22 +136,26 @@ bluetooth:
   device_tracker:
   - platform: bluetooth_le_tracker
 
-# SPEEDTEST
-
 # configuration.yaml
-
-  # configuration.yaml
 
   - platform: command_line
     name: "SpeedTest CLI Data"
     unique_id: speedtest_cli_data
     command: "/config/3rdparty/speedtest/speedtest --format=json --accept-license --accept-gdpr"
     scan_interval: 3600
-    command_timeout: 120
-    json_attributes:
-      - ping
-      - download
-      - upload
-      - server
-      - isp
+    command_timeout: 60
+    value_template: >-
+      {{
+        {
+          "ping": value_json.ping.latency,
+          "download": value_json.download.bandwidth,
+          "upload": value_json.upload.bandwidth,
+          "server_name": value_json.server.name,
+          "server_location": value_json.server.location,
+          "server_sponsor": value_json.server.sponsor,
+          "server_country": value_json.server.country,
+          "isp": value_json.isp
+        }
+        | to_json
+      }}
 
