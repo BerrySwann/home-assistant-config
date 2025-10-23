@@ -3509,7 +3509,7 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1759744815294'
-  alias: '(B) [TEST] Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
+  alias: '(B) [GOOD] Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. '
   description: 'Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
