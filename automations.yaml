@@ -668,6 +668,15 @@
   actions:
   - choose:
     - conditions:
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
       - condition: sun
         after: sunrise
         before: sunset
@@ -675,9 +684,9 @@
         entity_id: sensor.th_balcon_nord_temperature
         above: 18
         below: 34
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
-        state: 'off'
+      - condition: numeric_state
+        entity_id: cover.store_salon
+        above: 50
       sequence:
       - target:
           entity_id: cover.store_salon
@@ -685,6 +694,9 @@
         data: {}
       alias: OUVERTURE DU STORE AU LEVER DU SOLEIL  & 2 CONDITIONS
     - conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        above: 34
       - condition: state
         entity_id: sensor.ne2213_mamour_network_type
         state: cellular
@@ -694,9 +706,6 @@
       - condition: sun
         after: sunrise
         before: sunset
-      - condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        above: 34
       sequence:
       - target:
           entity_id: cover.store_salon
@@ -886,6 +895,9 @@
           entity_id: sensor.ne2213_mamour_network_type
           state: wifi
         - condition: state
+          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          state: Freebox_GG
+        - condition: state
           entity_id: sensor.poco_x7_pro_network_type
           state: cellular
       sequence:
@@ -910,7 +922,45 @@
         data:
           message: '[4] prises [ON]'
           title: éCO Prises [Mamour] en [WIFI]
-      alias: '[Mamour] en [WIFI]'
+      alias: '[Mamour] en [WIFI/CELL]'
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: sensor.ne2213_mamour_network_type
+          state: wifi
+        - condition: state
+          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          state: Freebox_GG
+        - condition: state
+          entity_id: sensor.poco_x7_pro_network_type
+          state: wifi
+        - condition: state
+          entity_id: sensor.poco_x7_pro_wi_fi_connection
+          state: ''
+      sequence:
+      - type: turn_on
+        device_id: 953354483097f440ca3b80ee31579839
+        entity_id: 2cd1f3631cffd872644e94b82911bd1c
+        domain: switch
+      - type: turn_on
+        device_id: a1e1e27131bc91a248ad196be29ae36f
+        entity_id: 35b638346b45f3b344173066dab03737
+        domain: light
+      - type: turn_on
+        device_id: 164b6aa99caaca04f27355e5f1f79cb1
+        entity_id: b37c2b271812bf3539f85ecae964b296
+        domain: switch
+      - type: turn_on
+        device_id: 4bbf9eb35f3608d21edb0da3052f8e1d
+        entity_id: fdb008a5af2652bb414838d475af4b94
+        domain: switch
+      - action: notify.mobile_app_poco_x7_pro
+        metadata: {}
+        data:
+          message: '[4] prises [ON]'
+          title: éCO Prises [Mamour] en [WIFI/!?]
+      alias: '[Mamour] en [WIFI/!?]'
     - conditions:
       - condition: and
         conditions:
@@ -920,6 +970,9 @@
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
           state: wifi
+        - condition: state
+          entity_id: sensor.poco_x7_pro_bluetooth_connection
+          state: Freebox_GG
       sequence:
       - type: turn_off
         device_id: 953354483097f440ca3b80ee31579839
@@ -945,8 +998,8 @@
         metadata: {}
         data:
           message: '[2] prises [ON]'
-          title: éCO Prises [Eric] en [WIFI]
-      alias: '[Eric] en [WIFI]'
+          title: éCO Prises [Eric] en [WIFI/CELL]
+      alias: '[Eric] en [WIFI/CELL]'
     - conditions:
       - condition: and
         conditions:
@@ -954,8 +1007,56 @@
           entity_id: sensor.ne2213_mamour_network_type
           state: wifi
         - condition: state
+          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          state: ''
+        - condition: state
           entity_id: sensor.poco_x7_pro_network_type
           state: wifi
+        - condition: state
+          entity_id: sensor.poco_x7_pro_wi_fi_connection
+          state: Freebox_GG
+      sequence:
+      - type: turn_off
+        device_id: 953354483097f440ca3b80ee31579839
+        entity_id: 2cd1f3631cffd872644e94b82911bd1c
+        domain: switch
+      - type: turn_off
+        device_id: a1e1e27131bc91a248ad196be29ae36f
+        entity_id: 35b638346b45f3b344173066dab03737
+        domain: light
+      - type: turn_on
+        device_id: 164b6aa99caaca04f27355e5f1f79cb1
+        entity_id: b37c2b271812bf3539f85ecae964b296
+        domain: switch
+      - type: turn_on
+        device_id: e98e8d5cfad976eba0bc72068c8ce8f0
+        entity_id: 112f9a3e7fdbef3de9b8c3ffe84e3827
+        domain: switch
+      - type: turn_off
+        device_id: 4bbf9eb35f3608d21edb0da3052f8e1d
+        entity_id: fdb008a5af2652bb414838d475af4b94
+        domain: switch
+      - action: notify.mobile_app_poco_x7_pro
+        metadata: {}
+        data:
+          message: '[2] prises [ON]'
+          title: éCO Prises [Eric] en [WIFI/!?]
+      alias: '[Eric] en [WIFI/!?]'
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: sensor.ne2213_mamour_network_type
+          state: wifi
+        - condition: state
+          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          state: Freebox_GG
+        - condition: state
+          entity_id: sensor.poco_x7_pro_network_type
+          state: wifi
+        - condition: state
+          entity_id: sensor.poco_x7_pro_wi_fi_connection
+          state: Freebox_GG
       sequence:
       - type: turn_on
         device_id: a1e1e27131bc91a248ad196be29ae36f
@@ -4926,7 +5027,8 @@
   conditions: []
   actions:
   - choose:
-    - conditions:
+    - alias: OUVERTURE DU STORE SI APRES 7h & CONDITIONS EN AND
+      conditions:
       - condition: and
         conditions:
         - condition: time
@@ -4943,41 +5045,139 @@
         - condition: numeric_state
           entity_id: cover.store_bureau
           attribute: current_position
-          below: 50
+          above: 50
       sequence:
       - target:
           entity_id: cover.store_bureau
         action: cover.open_cover
         data: {}
-      alias: OUVERTURE DU STORE SI APRES 7h & CONDITIONS EN AND
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        above: 25
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
-        state: 'off'
-      - condition: numeric_state
-        entity_id: cover.store_bureau
-        attribute: current_position
-        above: 50
+    - alias: FERMETURE DU STORE SI T° >25° & CONDITIONS EN AND
+      conditions:
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.th_balcon_nord_temperature
+          above: 25
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          state: 'off'
+        - condition: numeric_state
+          entity_id: cover.store_bureau
+          attribute: current_position
+          above: 50
       sequence:
       - target:
           entity_id: cover.store_bureau
         action: cover.close_cover
         data: {}
-      alias: FERMETURE DU STORE SI T° >25°  & 2 CONDITIONS
-    - conditions:
-      - condition: sun
-        after: sunset
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
-        state: 'off'
+    - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL & 1 CONDITION
+      conditions:
+      - condition: and
+        conditions:
+        - condition: sun
+          after: sunset
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          state: 'off'
       sequence:
       - target:
           entity_id: cover.store_bureau
         action: cover.close_cover
         data: {}
-      alias: FERMETURE DU STORE AU COUCHE DU SOLEIL  & 1 CONDITION
+    default: []
+  mode: single
+- id: '1761236981200'
+  alias: '[TEST] Gestion Optimisée du Store Salon'
+  description: 'Gère l''ouverture et la fermeture du store du salon en fonction de
+    la température et de l''heure, avec des conditions spécifiques pour le contact
+    de la fenêtre et la position du store.
+
+    '
+  triggers:
+  - minutes: /5
+    trigger: time_pattern
+  - entity_id: sensor.th_balcon_nord_temperature
+    trigger: state
+  - event: sunrise
+    trigger: sun
+  - event: sunset
+    trigger: sun
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - alias: OUVERTURE DU STORE AU LEVER DU SOLEIL & CONDITIONS EN AND
+      conditions:
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: sensor.ne2213_mamour_network_type
+          state: wifi
+        - condition: state
+          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          state: Freebox_GG
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          state: 'off'
+        - condition: sun
+          after: sunrise
+          before: sunset
+        - condition: numeric_state
+          entity_id: sensor.th_balcon_nord_temperature
+          above: 18
+          below: 32
+        - condition: numeric_state
+          entity_id: cover.store_salon
+          above: 50
+      sequence:
+      - target:
+          entity_id: cover.store_salon
+        action: cover.open_cover
+        data: {}
+    - alias: FERMETURE DU STORE A 50% SI T° >32° & CONDITIONS EN AND
+      conditions:
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.th_balcon_nord_temperature
+          above: 32
+        - condition: state
+          entity_id: sensor.ne2213_mamour_network_type
+          state: cellular
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          state: 'off'
+        - condition: sun
+          after: sunrise
+          before: sunset
+      sequence:
+      - target:
+          entity_id: cover.store_salon
+        data:
+          position: 50
+        action: cover.set_cover_position
+    - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL & CONDITIONS EN AND
+      conditions:
+      - condition: and
+        conditions:
+        - condition: sun
+          after: sunset
+        - condition: state
+          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          state: 'off'
+      sequence:
+      - target:
+          entity_id: cover.store_salon
+        action: cover.close_cover
+        data: {}
     default: []
   mode: single
