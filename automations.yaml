@@ -852,7 +852,8 @@
   conditions: []
   actions:
   - choose:
-    - conditions:
+    - alias: '[2] en [CELLULAR]'
+      conditions:
       - condition: and
         conditions:
         - condition: state
@@ -887,8 +888,8 @@
         data:
           message: '[5] prises [OFF]'
           title: éCO Prises [2] en [Cellular]
-      alias: '[2] en [CELLULAR]'
-    - conditions:
+    - alias: '[Mamour] en [WIFI/CELL]'
+      conditions:
       - condition: and
         conditions:
         - condition: state
@@ -922,8 +923,8 @@
         data:
           message: '[4] prises [ON]'
           title: éCO Prises [Mamour] en [WIFI]
-      alias: '[Mamour] en [WIFI/CELL]'
-    - conditions:
+    - alias: '[Mamour] en [WIFI/!?]'
+      conditions:
       - condition: and
         conditions:
         - condition: state
@@ -935,9 +936,11 @@
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
           state: wifi
-        - condition: state
-          entity_id: sensor.poco_x7_pro_wi_fi_connection
-          state: ''
+        - condition: template
+          value_template: '{{ state(''sensor.poco_x7_pro_wi_fi_connection'') != ''Freebox_GG''
+            }}
+
+            '
       sequence:
       - type: turn_on
         device_id: 953354483097f440ca3b80ee31579839
@@ -960,19 +963,19 @@
         data:
           message: '[4] prises [ON]'
           title: éCO Prises [Mamour] en [WIFI/!?]
-      alias: '[Mamour] en [WIFI/!?]'
-    - conditions:
+    - alias: '[Eric] en [WIFI/CELL]'
+      conditions:
       - condition: and
         conditions:
-        - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
-          state: cellular
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
           state: wifi
         - condition: state
-          entity_id: sensor.poco_x7_pro_bluetooth_connection
+          entity_id: sensor.poco_x7_pro_wi_fi_connection
           state: Freebox_GG
+        - condition: state
+          entity_id: sensor.ne2213_mamour_network_type
+          state: cellular
       sequence:
       - type: turn_off
         device_id: 953354483097f440ca3b80ee31579839
@@ -999,22 +1002,24 @@
         data:
           message: '[2] prises [ON]'
           title: éCO Prises [Eric] en [WIFI/CELL]
-      alias: '[Eric] en [WIFI/CELL]'
-    - conditions:
+    - alias: '[Eric] en [WIFI/!?]'
+      conditions:
       - condition: and
         conditions:
-        - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
-          state: wifi
-        - condition: state
-          entity_id: sensor.ne2213_mamour_wi_fi_connection
-          state: ''
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
           state: wifi
         - condition: state
           entity_id: sensor.poco_x7_pro_wi_fi_connection
           state: Freebox_GG
+        - condition: state
+          entity_id: sensor.ne2213_mamour_network_type
+          state: wifi
+        - condition: template
+          value_template: '{{ state(''sensor.ne2213_mamour_wi_fi_connection'') !=
+            ''Freebox_GG'' }}
+
+            '
       sequence:
       - type: turn_off
         device_id: 953354483097f440ca3b80ee31579839
@@ -1041,8 +1046,8 @@
         data:
           message: '[2] prises [ON]'
           title: éCO Prises [Eric] en [WIFI/!?]
-      alias: '[Eric] en [WIFI/!?]'
-    - conditions:
+    - alias: '[2] en [WIFI]'
+      conditions:
       - condition: and
         conditions:
         - condition: state
@@ -1082,8 +1087,7 @@
         metadata: {}
         data:
           message: '[5] prises [ON]'
-          title: éCO Prises [2] en [WIFI]
-      alias: '[2] en [WIFI]'
+          title: éCO Prises [2] en [WIFI]"
   mode: queued
 - id: '1750309185567'
   alias: (H) [ CLIM DEBUG ] Debug clim en auto -> sensor.mode_ete_hiver
@@ -3982,46 +3986,6 @@
       - data:
           message: '[Mode] Ventilation activée'
         action: notify.mobile_app_poco_x7_pro
-- id: '1760090152183'
-  alias: Mettre à jour la présence de Mamour (Wi-Fi)
-  description: ''
-  triggers:
-  - entity_id: sensor.ne2213_mamour_wi_fi_connection
-    trigger: state
-  actions:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.to_state.state == ''Freebox_GG'' }}'
-      sequence:
-      - entity_id: input_boolean.mamour_at_home
-        action: input_boolean.turn_on
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.to_state.state != ''Freebox_GG'' }}'
-      sequence:
-      - entity_id: input_boolean.mamour_at_home
-        action: input_boolean.turn_off
-- id: '1760090322195'
-  alias: Mettre à jour la présence de Eric (Wi-Fi)
-  description: ''
-  triggers:
-  - entity_id: sensor.poco_x7_pro_wi_fi_connection
-    trigger: state
-  actions:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.to_state.state == ''Freebox_GG'' }}'
-      sequence:
-      - entity_id: input_boolean.eric_at_home
-        action: input_boolean.turn_on
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.to_state.state != ''Freebox_GG'' }}'
-      sequence:
-      - entity_id: input_boolean.eric_at_home
-        action: input_boolean.turn_off
 - id: '1760723744000'
   alias: (K) [CLIM OFF] SI [PRISES] EXTÉRIEURES SONT [OFF]
   description: Éteint chaque climatiseur intérieur 1 minute après que sa prise extérieure
