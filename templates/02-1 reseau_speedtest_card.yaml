@@ -14,7 +14,7 @@
       {% if states('sensor.speedtest_cli_data') not in ['unknown', 'unavailable'] %}
         {{ (states('sensor.speedtest_cli_data') | from_json).ping.latency | round(2) }}
       {% else %}
-        {{ states('sensor.speedtest_ping') }}
+        {{ states('sensor.speedtest_cli_ping') }}
       {% endif %}
 
   - name: 'SpeedTest Download'
@@ -26,7 +26,7 @@
       {% if states('sensor.speedtest_cli_data') not in ['unknown', 'unavailable'] %}
         {{ ((states('sensor.speedtest_cli_data') | from_json).download.bandwidth * 8 / 1e6) | round(2) }}
       {% else %}
-        {{ states('sensor.speedtest_download') }}
+        {{ states('sensor.speedtest_cli_download') }}
       {% endif %}
 
   - name: 'SpeedTest Upload'
@@ -38,7 +38,7 @@
       {% if states('sensor.speedtest_cli_data') not in ['unknown', 'unavailable'] %}
         {{ ((states('sensor.speedtest_cli_data') | from_json).upload.bandwidth * 8 / 1e6) | round(2) }}
       {% else %}
-        {{ states('sensor.speedtest_upload') }}
+        {{ states('sensor.speedtest_cli_upload') }}
       {% endif %}
 
   - name: 'SpeedTest Server Name'
