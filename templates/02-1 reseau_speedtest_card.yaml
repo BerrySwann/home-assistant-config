@@ -5,8 +5,8 @@
 #========================================================================
 
 - sensor:
-  - name: 'SpeedTest Ping'
-    unique_id: speedtest_ping
+  - name: 'SpeedTest CLI Ping'
+    unique_id: speedtest_cli_ping
     icon: mdi:speedometer
     unit_of_measurement: ms
     state_class: measurement
@@ -17,8 +17,8 @@
         {{ states('sensor.speedtest_cli_ping') }}
       {% endif %}
 
-  - name: 'SpeedTest Download'
-    unique_id: speedtest_download
+  - name: 'SpeedTest CLI Download'
+    unique_id: speedtest_cli_download
     icon: mdi:download
     unit_of_measurement: Mbit/s
     state_class: measurement
@@ -29,8 +29,8 @@
         {{ states('sensor.speedtest_cli_download') }}
       {% endif %}
 
-  - name: 'SpeedTest Upload'
-    unique_id: speedtest_upload
+  - name: 'SpeedTest CLI Upload'
+    unique_id: speedtest_cli_upload
     icon: mdi:upload
     unit_of_measurement: Mbit/s
     state_class: measurement
