@@ -1,59 +1,61 @@
 
 - climate:
-      - name: "Clim Bureau (RM4 Template)"
-        unique_id: clim_bureau_rm4_template
-        current_temperature: "{{ states('sensor.temperature_bureau') | float }}"
-        hvac_modes:
-          - "heat"
-          - "cool"
-          - "fan_only"
-          - "off"
-        hvac_action: >
-          {% if is_state('input_boolean.clim_bureau_active', 'on') %}
-            {{ states('sensor.clim_bureau_current_mode') }}
-          {% else %}
-            idle
-          {% endif %}
-        temperature: "{{ states('input_number.clim_bureau_temperature') | float }}"
-        fan_modes:
-          - "fan_silent"
-          - "fan_level_1"
-          - "fan_level_2"
-          - "fan_level_3"
-          - "fan_level_4"
-          - "fan_level_5"
-          - "fan_auto"
-        fan_mode: "{{ states('input_select.clim_bureau_fan_mode') }}"
-        set_temperature:
-          - service: input_number.set_value
-            target:
-              entity_id: input_number.clim_bureau_temperature
-            data:
-              value: "{{ temperature }}"
-          - service: script.set_clim_temperature
-            data:
-              temperature: "{{ temperature }}"
-        set_hvac_mode:
-          - service: input_boolean.turn_on
-            target:
-              entity_id: input_boolean.clim_bureau_active
-          - choose:
-              - conditions: "{{ hvac_mode == 'heat' }}"
-                sequence:
-                  - service: script.set_clim_heat
-              - conditions: "{{ hvac_mode == 'cool' }}"
-                sequence:
-                  - service: script.set_clim_cool
-              - conditions: "{{ hvac_mode == 'fan_only' }}"
-                sequence:
-                  - service: script.set_clim_fan_only
-              - conditions: "{{ hvac_mode == 'off' }}"
-                sequence:
-                  - service: script.set_clim_off
-        set_fan_mode:
-          - service: input_select.select_option
-            target:
-              entity_id: input_select.clim_bureau_fan_mode
-            data:
-              option: "{{ fan_mode }}"
-          - service: script.set_clim_fan_auto  # À adapter pour d'autres modes
+    - name: "Clim Bureau (RM4 Template)"
+      unique_id: clim_bureau_rm4_template
+      current_temperature: "{{ states('sensor.temperature_bureau') | float }}"
+      hvac_modes:
+        - "heat"
+        - "cool"
+        - "fan_only"
+        - "off"
+      hvac_action: >
+        {% if is_state('input_boolean.clim_bureau_active', 'on') %}
+          {{ states('sensor.clim_bureau_current_mode') | default('idle') }}
+        {% else %}
+          idle
+        {% endif %}
+      temperature: "{{ states('input_number.clim_bureau_temperature') | float }}"
+      fan_modes:
+        - "fan_silent"
+        - "fan_level_1"
+        - "fan_level_2"
+        - "fan_level_3"
+        - "fan_level_4"
+        - "fan_level_5"
+        - "fan_auto"
+      fan_mode: "{{ states('input_select.clim_bureau_fan_mode') }}"
+      set_temperature:
+        - service: input_number.set_value
+          target:
+            entity_id: input_number.clim_bureau_temperature
+          data:
+            value: "{{ temperature }}"
+        - service: script.regler_temperature_rm4
+          data:
+            temperature: "{{ temperature }}"
+      set_hvac_mode:
+        - service: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.clim_bureau_active
+        - choose:
+            - conditions: "{{ hvac_mode == 'heat' }}"
+              sequence:
+                - service: script.activer_mode_chauffage_rm4
+            - conditions: "{{ hvac_mode == 'cool' }}"
+              sequence:
+                - service: script.activer_mode_refroidissement_rm4
+            - conditions: "{{ hvac_mode == 'fan_only' }}"
+              sequence:
+                - service: script.activer_mode_ventilateur_rm4
+            - conditions: "{{ hvac_mode == 'off' }}"
+              sequence:
+                - service: script.eteindre_clim_rm4
+      set_fan_mode:
+        - service: input_select.select_option
+          target:
+            entity_id: input_select.clim_bureau_fan_mode
+          data:
+            option: "{{ fan_mode }}"
+        - service: script.regler_ventilateur_rm4
+          data:
+            fan_mode: "{{ fan_mode }}"

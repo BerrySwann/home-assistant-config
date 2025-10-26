@@ -29,7 +29,13 @@
     max: 1
     step: 1
 
-
+  clim_bureau_temperature:
+    name: "Température cible (Bureau)"
+    min: 16
+    max: 32
+    step: 1
+    unit_of_measurement: "°C"
+    initial: 18
 
 
 
