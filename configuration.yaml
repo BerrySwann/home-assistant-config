@@ -152,7 +152,7 @@ climate:
   - platform: smartir
     name: Clim Bureau
     unique_id: clim_bureau_rm4
-    device_code: 1103
+    device_code: 1108
     controller_data: remote.clim_bureau
     temperature_sensor: sensor.th_bureau_temperature
     humidity_sensor: sensor.th_bureau_humidity
