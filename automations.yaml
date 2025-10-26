@@ -5097,9 +5097,10 @@
         - condition: numeric_state
           entity_id: sensor.th_balcon_nord_temperature
           below: 34
-        - condition: numeric_state
+        - condition: state
           entity_id: cover.store_salon
-          above: 50
+          state: closed
+          attribute: current_position
       sequence:
       - target:
           entity_id: cover.store_salon
