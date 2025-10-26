@@ -1,6 +1,5 @@
-# configuration.yaml
-template:
-  - climate:
+
+- climate:
       - name: "Clim Bureau (RM4 Template)"
         unique_id: clim_bureau_rm4_template
         current_temperature: "{{ states('sensor.temperature_bureau') | float }}"
