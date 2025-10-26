@@ -668,7 +668,8 @@
   actions:
   - choose:
     - conditions:
-      - condition: state
+      - alias: OUVERTURE DU STORE AU LEVER DU SOLEIL  & 2 CONDITIONS
+        condition: state
         entity_id: sensor.ne2213_mamour_network_type
         state: wifi
       - condition: state
@@ -682,7 +683,6 @@
         before: sunset
       - condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
-        above: 18
         below: 34
       - condition: numeric_state
         entity_id: cover.store_salon
@@ -692,9 +692,9 @@
           entity_id: cover.store_salon
         action: cover.open_cover
         data: {}
-      alias: OUVERTURE DU STORE AU LEVER DU SOLEIL  & 2 CONDITIONS
     - conditions:
-      - condition: numeric_state
+      - alias: FERMETURE DU STORE A 50% SI T° >34°  & 3 CONDITIONS
+        condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
         above: 34
       - condition: state
@@ -712,8 +712,8 @@
         data:
           position: 50
         action: cover.set_cover_position
-      alias: FERMETURE DU STORE A 50% SI T° >32°  & 3 CONDITIONS
-    - conditions:
+    - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL  & 1 CONDITION
+      conditions:
       - condition: sun
         after: sunset
       - condition: state
@@ -724,7 +724,6 @@
           entity_id: cover.store_salon
         action: cover.close_cover
         data: {}
-      alias: FERMETURE DU STORE AU COUCHER DU SOLEIL  & 1 CONDITION
     default: []
   mode: single
 - id: '1742931674050'
@@ -5097,8 +5096,7 @@
           before: sunset
         - condition: numeric_state
           entity_id: sensor.th_balcon_nord_temperature
-          above: 18
-          below: 32
+          below: 34
         - condition: numeric_state
           entity_id: cover.store_salon
           above: 50
