@@ -14,28 +14,9 @@
     max: 100
     step: 0.01
 
-## nb 1 ou 0 fenêtres ouverte ou fermées
-  msg_4_fenetres_fermees_previous:
-    name: "msg (4) Fenetres Fermees Previous State"
-    initial: 1
-    min: 0
-    max: 1
-    step: 1
 
-  msg_4_fenetres_ouvertes_previous:
-    name: "msg (4) Fenetres Ouvertes Previous State"
-    initial: 1
-    min: 0
-    max: 1
-    step: 1
 
-  clim_bureau_temperature:
-    name: "Température cible (Bureau)"
-    min: 16
-    max: 32
-    step: 1
-    unit_of_measurement: "°C"
-    initial: 18
+
 
 
 

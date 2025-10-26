@@ -7,8 +7,3 @@ eric_at_home:
   name: "Eric à la maison (Wi-Fi)"
   initial: off
   icon: mdi:wifi
-
-
-clim_bureau_active:
-  name: "Clim Bureau Active"
-  initial: off
