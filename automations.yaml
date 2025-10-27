@@ -5057,7 +5057,7 @@
 
     '
   triggers:
-  - minutes: /5
+  - minutes: /1
     trigger: time_pattern
   - entity_id: sensor.th_balcon_nord_temperature
     trigger: state
@@ -5100,7 +5100,6 @@
         - condition: state
           entity_id: cover.store_salon
           state: closed
-          attribute: current_position
       sequence:
       - target:
           entity_id: cover.store_salon
