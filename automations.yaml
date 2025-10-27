@@ -5096,15 +5096,17 @@
           before: sunset
         - condition: numeric_state
           entity_id: sensor.th_balcon_nord_temperature
-          below: 34
+          below: 32
         - condition: state
           entity_id: cover.store_salon
           state: closed
+        enabled: false
       sequence:
       - target:
           entity_id: cover.store_salon
         action: cover.open_cover
         data: {}
+        enabled: false
     - alias: FERMETURE DU STORE A 50% SI T° >32° & CONDITIONS EN AND
       conditions:
       - condition: and
@@ -5121,12 +5123,14 @@
         - condition: sun
           after: sunrise
           before: sunset
+        enabled: false
       sequence:
       - target:
           entity_id: cover.store_salon
         data:
           position: 50
         action: cover.set_cover_position
+        enabled: false
     - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL & CONDITIONS EN AND
       conditions:
       - condition: and
