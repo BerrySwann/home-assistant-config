@@ -45,7 +45,7 @@
   - name: "Lumière Bureau État"
     unique_id: lumiere_bureau_etat
     state: >
-      {% if is_state('switch.hue_smart_eco_pc_bureau', 'off') %}
+      {% if is_state('switch.ecran_p_c_3_play_hue', 'off') %} 
         {% if is_state('light.bureau_z2m', 'on') %}
           Bureau
         {% elif is_state('light.bureau', 'on') %}
