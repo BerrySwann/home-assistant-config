@@ -5214,6 +5214,15 @@
         - condition: time
           before: 06:00:00
       - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
       - condition: state
@@ -5317,6 +5326,15 @@
         - condition: time
           before: 06:00:00
       - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
       - condition: state
@@ -5391,7 +5409,7 @@
       - target:
           entity_id: climate.clim_bureau_rm4_mini
         data:
-          fan_mode: auto
+          fan_mode: breeze
         action: climate.set_fan_mode
       - target:
           entity_id: climate.clim_de_la_chambre
@@ -5425,6 +5443,15 @@
           after: '20:00:00'
         - condition: time
           before: 06:00:00
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
@@ -5467,7 +5494,7 @@
     - target:
         entity_id: climate.clim_bureau_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - target:
         entity_id: climate.clim_de_la_chambre
@@ -5500,6 +5527,15 @@
           after: '20:00:00'
         - condition: time
           before: 06:00:00
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
@@ -5545,7 +5581,7 @@
     - target:
         entity_id: climate.clim_bureau_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - target:
         entity_id: climate.clim_de_la_chambre
@@ -5578,6 +5614,15 @@
           after: '20:00:00'
         - condition: time
           before: 06:00:00
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
@@ -5620,7 +5665,7 @@
     - target:
         entity_id: climate.clim_bureau_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - target:
         entity_id: climate.clim_de_la_chambre
@@ -5653,6 +5698,15 @@
           after: '20:00:00'
         - condition: time
           before: 06:00:00
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
@@ -5698,7 +5752,7 @@
     - target:
         entity_id: climate.clim_bureau_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - target:
         entity_id: climate.clim_de_la_chambre
@@ -5731,6 +5785,15 @@
           after: '20:00:00'
         - condition: time
           before: 06:00:00
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
         state: 'off'
@@ -5776,7 +5839,7 @@
     - target:
         entity_id: climate.clim_bureau_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - target:
         entity_id: climate.clim_de_la_chambre

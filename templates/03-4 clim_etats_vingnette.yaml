@@ -54,7 +54,7 @@
       {% elif is_state('climate.clim_bureau_rm4_mini', 'fan_only') %}
         Fan
       {% else %}
-        erreur
+        erreur*
       {% endif %}
 
 - sensor:
