@@ -45,13 +45,13 @@
   - name: "Clim Bureau État"
     unique_id: clim_bureau_etat
     state: >
-      {% if is_state('climate.clim_du_bureau', 'off') %}
+      {% if is_state('climate.clim_bureau_rm4_mini', 'off') %}
         Off
-      {% elif is_state('climate.clim_du_bureau', 'cool') %}
+      {% elif is_state('climate.clim_bureau_rm4_mini', 'cool') %}
         Cool
-      {% elif is_state('climate.clim_du_bureau', 'heat') %}
+      {% elif is_state('climate.clim_bureau_rm4_mini', 'heat') %}
         Heat
-      {% elif is_state('climate.clim_du_bureau', 'fan_only') %}
+      {% elif is_state('climate.clim_bureau_rm4_mini', 'fan_only') %}
         Fan
       {% else %}
         erreur
