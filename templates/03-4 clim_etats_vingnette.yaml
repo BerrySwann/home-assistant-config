@@ -66,13 +66,13 @@
   - name: "Clim Chambre État"
     unique_id: clim_chambre_etat
     state: >
-      {% if is_state('climate.clim_de_la_chambre', 'off') %}
+      {% if is_state('climate.clim_chambre_rm4_mini', 'off') %}
         Off
-      {% elif is_state('climate.clim_de_la_chambre', 'cool') %}
+      {% elif is_state('climate.clim_chambre_rm4_mini', 'cool') %}
         Cool
-      {% elif is_state('climate.clim_de_la_chambre', 'heat') %}
+      {% elif is_state('climate.clim_chambre_rm4_mini', 'heat') %}
         Heat
-      {% elif is_state('climate.clim_de_la_chambre', 'fan_only') %}
+      {% elif is_state('climate.clim_chambre_rm4_mini', 'fan_only') %}
         Fan
       {% else %}
         erreur
