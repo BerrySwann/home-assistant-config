@@ -1096,7 +1096,7 @@
   - minutes: /1
     trigger: time_pattern
   - entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_chambre_rm4_mini
     - climate.clim_chambre_rm4_mini
     trigger: state
@@ -1104,7 +1104,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: climate.clim
+      entity_id: climate.clim_salon_rm4_mini
       state: auto
     - condition: state
       entity_id: climate.clim_chambre_rm4_mini
@@ -1120,7 +1120,7 @@
       milliseconds: 0
   - target:
       entity_id:
-      - climate.clim
+      - climate.clim_salon_rm4_mini
       - climate.clim_bureau_rm4_mini
       - climate.clim_chambre_rm4_mini
     data:
@@ -1181,21 +1181,21 @@
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: heat
   - alias: Changement d'état des climatiseurs à 'cool'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: cool
   - alias: Changement d'état des climatiseurs à 'fan_only'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
@@ -1227,7 +1227,7 @@
       sequence:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -1266,7 +1266,7 @@
       sequence:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -1274,7 +1274,7 @@
         action: climate.set_hvac_mode
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -1307,13 +1307,13 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -1375,7 +1375,7 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -1383,7 +1383,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -1447,13 +1447,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -1522,7 +1522,7 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -1530,7 +1530,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -1613,7 +1613,7 @@
     et envoyer une notification, uniquement si toutes les fenêtres sont fermées.
   triggers:
   - entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     trigger: state
@@ -1626,7 +1626,7 @@
       - condition: and
         conditions:
         - condition: template
-          value_template: '{{ trigger.entity_id == ''climate.clim'' }}'
+          value_template: '{{ trigger.entity_id == ''climate.clim_salon_rm4_mini'' }}'
         - condition: state
           entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
           state: 'off'
@@ -1721,21 +1721,21 @@
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: heat
   - alias: Changement d'état des climatiseurs à 'cool'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: cool
   - alias: Changement d'état des climatiseurs à 'fan_only'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
@@ -1773,13 +1773,13 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -1838,13 +1838,13 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -1910,13 +1910,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -1982,13 +1982,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -2074,7 +2074,7 @@
       hvac_mode: 'off'
     target:
       entity_id:
-      - climate.clim
+      - climate.clim_salon_rm4_mini
       - climate.clim_bureau_rm4_mini
       - climate.clim_chambre_rm4_mini
     action: climate.set_hvac_mode
@@ -2308,21 +2308,21 @@
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: heat
   - alias: Changement d'état des climatiseurs à 'cool'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: cool
   - alias: Changement d'état des climatiseurs à 'fan_only'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
@@ -2354,7 +2354,7 @@
       sequence:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -2393,7 +2393,7 @@
       sequence:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -2401,7 +2401,7 @@
         action: climate.set_hvac_mode
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -2434,13 +2434,13 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -2502,7 +2502,7 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -2510,7 +2510,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -2574,13 +2574,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -2649,7 +2649,7 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -2657,7 +2657,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -2745,21 +2745,21 @@
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: heat
   - alias: Changement d'état des climatiseurs à 'cool'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: cool
   - alias: Changement d'état des climatiseurs à 'fan_only'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
@@ -2791,7 +2791,7 @@
       sequence:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -2830,7 +2830,7 @@
       sequence:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -2838,7 +2838,7 @@
         action: climate.set_hvac_mode
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -2891,13 +2891,13 @@
         state: heat
       then:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -2932,13 +2932,13 @@
         action: notify.mobile_app_poco_x7_pro
       else:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_cible'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -3011,13 +3011,13 @@
         state: heat
       then:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -3052,13 +3052,13 @@
         action: notify.mobile_app_poco_x7_pro
       else:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_cible'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -3129,7 +3129,7 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -3137,7 +3137,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -3213,7 +3213,7 @@
           }}'
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -3221,7 +3221,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -3294,13 +3294,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -3378,13 +3378,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -3462,7 +3462,7 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -3470,7 +3470,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -3538,21 +3538,21 @@
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: heat
   - alias: Changement d'état des climatiseurs à 'cool'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: cool
   - alias: Changement d'état des climatiseurs à 'fan_only'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
@@ -3595,13 +3595,13 @@
         state: heat
       then:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -3636,13 +3636,13 @@
         action: notify.mobile_app_poco_x7_pro
       else:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_cible'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -3704,13 +3704,13 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -3776,13 +3776,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -3851,13 +3851,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -4014,7 +4014,7 @@
         state: 'off'
       then:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           hvac_mode: 'off'
         alias: Éteindre clim salon
@@ -4168,21 +4168,21 @@
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: heat
   - alias: Changement d'état des climatiseurs à 'cool'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: cool
   - alias: Changement d'état des climatiseurs à 'fan_only'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
@@ -4214,7 +4214,7 @@
       sequence:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -4265,7 +4265,7 @@
           sequence:
           - target:
               entity_id:
-              - climate.clim
+              - climate.clim_salon_rm4_mini
               - climate.clim_bureau_rm4_mini
               - climate.clim_chambre_rm4_mini
             data:
@@ -4274,7 +4274,7 @@
             action: climate.set_temperature
           - target:
               entity_id:
-              - climate.clim
+              - climate.clim_salon_rm4_mini
               - climate.clim_bureau_rm4_mini
               - climate.clim_chambre_rm4_mini
             data:
@@ -4290,7 +4290,7 @@
           sequence:
           - target:
               entity_id:
-              - climate.clim
+              - climate.clim_salon_rm4_mini
               - climate.clim_bureau_rm4_mini
               - climate.clim_chambre_rm4_mini
             data:
@@ -4299,7 +4299,7 @@
             action: climate.set_temperature
           - target:
               entity_id:
-              - climate.clim
+              - climate.clim_salon_rm4_mini
               - climate.clim_bureau_rm4_mini
               - climate.clim_chambre_rm4_mini
             data:
@@ -4352,13 +4352,13 @@
         state: heat
       then:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -4393,13 +4393,13 @@
         action: notify.mobile_app_poco_x7_pro
       else:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_cible'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -4472,13 +4472,13 @@
         state: heat
       then:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -4513,13 +4513,13 @@
         action: notify.mobile_app_poco_x7_pro
       else:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_cible'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -4590,7 +4590,7 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -4598,7 +4598,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -4674,7 +4674,7 @@
           }}'
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -4682,7 +4682,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -4755,13 +4755,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -4839,13 +4839,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -4923,7 +4923,7 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ (states(''sensor.temperature_differentielle'') | float +
           (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
@@ -4931,7 +4931,7 @@
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -5178,21 +5178,21 @@
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: heat
   - alias: Changement d'état des climatiseurs à 'cool'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: cool
   - alias: Changement d'état des climatiseurs à 'fan_only'
     trigger: state
     entity_id:
-    - climate.clim
+    - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
@@ -5248,7 +5248,7 @@
       then:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -5257,7 +5257,7 @@
         action: climate.set_temperature
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -5272,13 +5272,13 @@
         action: notify.mobile_app_poco_x7_pro
       else:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_cible'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -5366,7 +5366,7 @@
       then:
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -5375,7 +5375,7 @@
         action: climate.set_temperature
       - target:
           entity_id:
-          - climate.clim
+          - climate.clim_salon_rm4_mini
           - climate.clim_bureau_rm4_mini
           - climate.clim_chambre_rm4_mini
         data:
@@ -5390,13 +5390,13 @@
         action: notify.mobile_app_poco_x7_pro
       else:
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           temperature: '{{ states(''sensor.temperature_cible'') | float }}'
           hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
         action: climate.set_temperature
       - target:
-          entity_id: climate.clim
+          entity_id: climate.clim_salon_rm4_mini
         data:
           fan_mode: auto
         action: climate.set_fan_mode
@@ -5475,13 +5475,13 @@
         state: cellular
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -5562,13 +5562,13 @@
           }}'
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -5646,13 +5646,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -5733,13 +5733,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
@@ -5820,13 +5820,13 @@
         state: Freebox_GG
     then:
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         temperature: '{{ states(''sensor.temperature_cible'') | float }}'
         hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
       action: climate.set_temperature
     - target:
-        entity_id: climate.clim
+        entity_id: climate.clim_salon_rm4_mini
       data:
         fan_mode: auto
       action: climate.set_fan_mode
