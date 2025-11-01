@@ -1,0 +1,130 @@
+- id: '1738168584976'
+  alias: Chauffage Cuisine (entre 4h45 & 7h LMMJ ou 5:45h & 8h VSD avec T° 19,9° <-> 20.5°)
+  description: Allume ou éteint le chauffage selon la température (19,9° <-> 20.5°) aux conditions (entre 4h45 et 7h LMMJ & 5h45 et 8h00 VSD / 19,9° <-> 20.5°) et si Eric at HOME
+  triggers:
+    - at: 04:45:00
+      trigger: time
+    - at: 05:45:00
+      trigger: time
+    - at: 07:00:00
+      trigger: time
+    - at: 08:00:00
+      trigger: time
+    - entity_id: sensor.th_cuisine_temperature
+      below: 19.9
+      trigger: numeric_state
+  conditions:
+    - condition: and
+      conditions:
+        - condition: zone
+          entity_id: person.eric
+          zone: zone.home
+        - condition: or
+          conditions:
+            - condition: and
+              conditions:
+                - condition: time
+                  after: 04:45:00
+                  before: 07:00:00
+                  weekday:
+                    - mon
+                    - tue
+                    - wed
+                    - thu
+            - condition: and
+              conditions:
+                - condition: time
+                  after: 05:45:00
+                  before: 08:00:00
+                  weekday:
+                    - fri
+                    - sat
+                    - sun
+  actions:
+    - choose:
+        - conditions:
+            - condition: time
+              after: 07:00:00
+              weekday:
+                - mon
+                - tue
+                - wed
+                - thu
+          sequence:
+            - type: turn_off
+              device_id: 2fbb8bc530fc3e526a8cf5e808de76a2
+              entity_id: 66a2c8ea314f57c47f4accdc5d611779
+              domain: switch
+            - data:
+                message: /!\ RADIATEUR est "OFF"  FORCE /!\
+              action: notify.mobile_app_poco_x7_pro
+            - action: notify.mobile_app_poco_x7_pro
+              data:
+                message: /!\ RADIATEUR est "OFF" FORCE  /!\
+            - data:
+                message: Le chauffage de la Cuisine est éteint en mode forcé
+              action: notify.alexa_media_echo_dot_cuisine
+              enabled: false
+        - conditions:
+            - condition: time
+              after: 08:00:00
+              weekday:
+                - fri
+                - sat
+                - sun
+          sequence:
+            - type: turn_off
+              device_id: 2fbb8bc530fc3e526a8cf5e808de76a2
+              entity_id: 66a2c8ea314f57c47f4accdc5d611779
+              domain: switch
+            - data:
+                message: /!\ RADIATEUR est "OFF" FORCE /!\
+              action: notify.mobile_app_poco_x7_pro
+            - action: notify.mobile_app_poco_x7_pro
+              data:
+                message: /!\ RADIATEUR est "OFF" FORCE  /!\
+            - data:
+                message: Le chauffage de la Cuisine est éteint en mode forcé
+              action: notify.alexa_media_echo_dot_cuisine
+              enabled: false
+        - conditions:
+            - condition: numeric_state
+              entity_id: sensor.th_cuisine_temperature
+              below: 19.9
+          sequence:
+            - data:
+                hvac_mode: heat
+              action: climate.set_hvac_mode
+              target:
+                entity_id: climate.radiateur_cuisine
+            - data:
+                message: /!\ RADIATEUR est "ON" /!\
+              action: notify.mobile_app_poco_x7_pro
+            - action: notify.mobile_app_poco_x7_pro
+              data:
+                message: /!\ RADIATEUR est "ON" /!\
+            - data:
+                message: Le chauffage de la Cuisine est en Fonctionnement.
+              action: notify.alexa_media_echo_dot_cuisine
+              enabled: false
+        - conditions:
+            - condition: numeric_state
+              entity_id: sensor.th_cuisine_temperature
+              above: 20.5
+          sequence:
+            - data:
+                hvac_mode: 'off'
+              action: climate.set_hvac_mode
+              target:
+                entity_id: climate.radiateur_cuisine
+            - data:
+                message: /!\ RADIATEUR est "OFF" /!\
+              action: notify.mobile_app_poco_x7_pro
+            - action: notify.mobile_app_poco_x7_pro
+              data:
+                message: /!\ RADIATEUR est "OFF" /!\
+            - data:
+                message: Le chauffage de la Cuisine est éteint.
+              action: notify.alexa_media_echo_dot_cuisine
+              enabled: false
+  mode: single
