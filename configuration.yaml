@@ -168,7 +168,7 @@ climate:
   - platform: smartir
     name: Clim Salon RM4-Mini
     unique_id: clim_salon_rm4_mini
-    device_code: 1084
+    device_code: 1082
     controller_data: remote.clim_salon
     temperature_sensor: sensor.rm4_mini_temperature
     humidity_sensor: sensor.rm4_mini_humidity
