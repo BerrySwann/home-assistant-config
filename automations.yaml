@@ -843,7 +843,6 @@
   description: Automation basée sur le type de réseau [Wifi et Cellular] des deux
     portables
   triggers:
-  - triggers:
     - entity_id:
       - sensor.ne2213_mamour_network_type
       - sensor.poco_x7_pro_network_type
