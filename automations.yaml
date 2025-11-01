@@ -1626,7 +1626,8 @@
       - condition: and
         conditions:
         - condition: template
-          value_template: '{{ trigger.entity_id == ''climate.clim_salon_rm4_mini'' }}'
+          value_template: '{{ trigger.entity_id == ''climate.clim_salon_rm4_mini''
+            }}'
         - condition: state
           entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
           state: 'off'
@@ -1648,7 +1649,8 @@
       - condition: and
         conditions:
         - condition: template
-          value_template: '{{ trigger.entity_id == ''climate.clim_bureau_rm4_mini'' }}'
+          value_template: '{{ trigger.entity_id == ''climate.clim_bureau_rm4_mini''
+            }}'
         - condition: state
           entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
           state: 'off'
@@ -5507,7 +5509,7 @@
     - target:
         entity_id: climate.clim_chambre_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - data:
         title: Clim-N [MAMOUR] en [WIFI]
@@ -5594,7 +5596,7 @@
     - target:
         entity_id: climate.clim_chambre_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - data:
         title: Clim-N [MAMOUR & ERIC WIFI/?!]
@@ -5678,7 +5680,7 @@
     - target:
         entity_id: climate.clim_chambre_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - data:
         title: Clim-N [ERIC] en [WIFI]
@@ -5765,7 +5767,7 @@
     - target:
         entity_id: climate.clim_chambre_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - data:
         title: Clim-N [ERIC & MAMOUR WIFI/?!]
@@ -5852,7 +5854,7 @@
     - target:
         entity_id: climate.clim_chambre_rm4_mini
       data:
-        fan_mode: auto
+        fan_mode: breeze
       action: climate.set_fan_mode
     - data:
         title: Clim-N [2] en [WIFI]
