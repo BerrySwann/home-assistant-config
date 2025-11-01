@@ -1,0 +1,88 @@
+- id: '1740857967163'
+  alias: Gestion Optimisée du Store Salon
+  description: 'Gère l''ouverture et la fermeture du store du salon en fonction de
+    la température et de l''heure, avec des conditions spécifiques pour le contact
+    de la fenêtre et la position du store.
+
+    '
+  triggers:
+  - minutes: /5
+    trigger: time_pattern
+  - entity_id: sensor.th_balcon_nord_temperature
+    trigger: state
+  - event: sunrise
+    trigger: sun
+  - event: sunset
+    trigger: sun
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - alias: OUVERTURE DU STORE AU LEVER DU SOLEIL  & 2 CONDITIONS
+        condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: state
+        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: sun
+        after: sunrise
+        before: sunset
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        below: 34
+      - condition: numeric_state
+        entity_id: cover.store_salon
+        above: 50
+      sequence:
+      - target:
+          entity_id: cover.store_salon
+        action: cover.open_cover
+        data: {}
+    - conditions:
+      - alias: FERMETURE DU STORE A 50% SI T° >34°  & 3 CONDITIONS
+        condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        above: 34
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: sun
+        after: sunrise
+        before: sunset
+      sequence:
+      - target:
+          entity_id: cover.store_salon
+        data:
+          position: 50
+        action: cover.set_cover_position
+    - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL  & 1 CONDITION
+      conditions:
+      - condition: sun
+        after: sunset
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      sequence:
+      - target:
+          entity_id: cover.store_salon
+        action: cover.close_cover
+        data: {}
+    default: []
+  mode: single

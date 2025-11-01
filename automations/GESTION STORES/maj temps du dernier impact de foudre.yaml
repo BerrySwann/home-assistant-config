@@ -13,7 +13,7 @@
       data:
         datetime: '{{ now().isoformat() }}'
       action: input_datetime.set_datetime
-  mode: single
+  mode: singleautomations/GESTION STORES/maj temps du dernier impact de foudre.yaml
 
 - id: '1742992851566'
   alias: Mettre à jour le texte du temps écoulé
