@@ -1,0 +1,132 @@
+- id: '1760723744000'
+  alias: (K) [CLIM OFF] SI [PRISES] EXTÉRIEURES SONT [OFF]
+  description: Éteint chaque climatiseur intérieur 1 minute après que sa prise extérieure
+    associée soit coupée. Envoie des notifications uniquement entre 6h00 et 20h00,
+    avec un délai d'1 heure entre chaque notification.
+  triggers:
+  - entity_id:
+    - switch.clim_salon_nous
+    - switch.clim_du_bureau_nous
+    - switch.clim_chambre_nous
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    trigger: state
+  - minutes: /1
+    trigger: time_pattern
+  conditions: []
+  actions:
+  - alias: SI UNE DES 3 CLIM SONT COUPEE
+    sequence:
+    - if:
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'off'
+      then:
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          hvac_mode: 'off'
+        alias: Éteindre clim salon
+        action: climate.set_hvac_mode
+      - if:
+        - condition: and
+          conditions:
+          - condition: time
+            after: 06:00:00
+            before: '20:00:00'
+          - condition: template
+            value_template: '{% set last_notif = state_attr(''automation.k_clim_off_si_prise_clim_exterieur_off'',
+              ''last_notification_salon'') | default(0) %} {{ (as_timestamp(now())
+              - as_timestamp(last_notif)) > 3600 }}
+
+              '
+        then:
+        - data:
+            title: '[CLIM] SALON [OFF]'
+            message: '[PRISE CLIM] ext. [SALON] est [OFF] depuis 1 min.'
+          alias: Notification clim salon éteinte
+          action: notify.mobile_app_poco_x7_pro
+        - target:
+            entity_id: automation.k_clim_off_si_prise_clim_exterieur_off
+          data:
+            variable: last_notification_salon
+            value: '{{ now().isoformat() }}'
+          action: automation.set_value
+      alias: PRISE CLIM SALON
+    - if:
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'off'
+      then:
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          hvac_mode: 'off'
+        alias: Éteindre clim bureau
+        action: climate.set_hvac_mode
+      - if:
+        - condition: and
+          conditions:
+          - condition: time
+            after: 06:00:00
+            before: '20:00:00'
+          - condition: template
+            value_template: '{% set last_notif = state_attr(''automation.k_clim_off_si_prise_clim_exterieur_off'',
+              ''last_notification_bureau'') | default(0) %} {{ (as_timestamp(now())
+              - as_timestamp(last_notif)) > 3600 }}
+
+              '
+        then:
+        - data:
+            title: '[CLIM] BUREAU [OFF]'
+            message: '[PRISE CLIM] ext. [BUREAU] est [OFF] depuis 1 min.'
+          alias: Notification clim bureau éteinte
+          action: notify.mobile_app_poco_x7_pro
+        - target:
+            entity_id: automation.k_clim_off_si_prise_clim_exterieur_off
+          data:
+            variable: last_notification_bureau
+            value: '{{ now().isoformat() }}'
+          action: automation.set_value
+      alias: PRISE CLIM BUREAU
+    - if:
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'off'
+      then:
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          hvac_mode: 'off'
+        alias: Éteindre clim chambre
+        action: climate.set_hvac_mode
+      - if:
+        - condition: and
+          conditions:
+          - condition: time
+            after: 06:00:00
+            before: '20:00:00'
+          - condition: template
+            value_template: '{% set last_notif = state_attr(''automation.k_clim_off_si_prise_clim_exterieur_off'',
+              ''last_notification_chambre'') | default(0) %} {{ (as_timestamp(now())
+              - as_timestamp(last_notif)) > 3600 }}
+
+              '
+        then:
+        - data:
+            title: '[CLIM] CHAMBRE [OFF]'
+            message: '[PRISE CLIM] ext. [CHAMBRE] est [OFF] depuis 1 min.'
+          alias: Notification clim chambre éteinte
+          action: notify.mobile_app_poco_x7_pro
+        - target:
+            entity_id: automation.k_clim_off_si_prise_clim_exterieur_off
+          data:
+            variable: last_notification_chambre
+            value: '{{ now().isoformat() }}'
+          action: automation.set_value
+      alias: PRISE CLIM CHAMBRE
+  mode: queued

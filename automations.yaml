@@ -772,7 +772,7 @@
   alias: Update previous humidity
   description: Update previous humidity
   triggers:
-  - minutes: /30
+  - minutes: /1
     trigger: time_pattern
   conditions: []
   actions:
