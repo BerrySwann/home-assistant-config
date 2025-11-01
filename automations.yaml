@@ -843,10 +843,10 @@
   description: Automation basée sur le type de réseau [Wifi et Cellular] des deux
     portables
   triggers:
-    - entity_id:
-      - sensor.ne2213_mamour_network_type
-      - sensor.poco_x7_pro_network_type
-      trigger: state
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_network_type
+    trigger: state
   conditions: []
   actions:
   - choose:
@@ -4322,6 +4322,23 @@
               - climate.clim_chambre_rm4_mini
             data:
               fan_mode: auto
+            action: climate.set_fan_mode
+        - conditions:
+          - condition: state
+            entity_id: sensor.mode_ete_hiver
+            state: fan_only
+          sequence:
+          - target:
+              entity_id: climate.clim_salon_rm4_mini
+            data:
+              fan_mode: quiet
+            action: climate.set_fan_mode
+          - target:
+              entity_id:
+              - climate.clim_bureau_rm4_mini
+              - climate.clim_chambre_rm4_mini
+            data:
+              fan_mode: breeze
             action: climate.set_fan_mode
   - alias: SI 2 PORTABLES EN WIFI_?! / IDEM 2 EN CELLULAR
     if:
