@@ -1,0 +1,79 @@
+alias: Notification de la foudre
+description: ""
+triggers:
+  - entity_id:
+      - sensor.blitzortung_lightning_counter
+    trigger: state
+conditions:
+  - condition: numeric_state
+    entity_id: sensor.blitzortung_lightning_counter
+    above: 0
+actions:
+  - target:
+      entity_id: sensor.blitzortung_lightning_localisation
+    action: homeassistant.update_entity
+    data: {}
+  - action: notify.mobile_app_poco_x7_pro
+    metadata: {}
+    data:
+      title: /!\ Attention foudre /!\
+      message: >-
+        {% set distance = states('sensor.blitzortung_lightning_distance') |
+        float %} {% set localisation =
+        states('sensor.blitzortung_lightning_localisation') %} {% set azimuth =
+        states('sensor.blitzortung_lightning_azimuth') | float %} {% set
+        impactCount = states('sensor.blitzortung_lightning_counter') | int %} {%
+        set timeSinceLastLightning =
+        states('input_text.dernier_impact_de_foudre_temps_ecoule') %} {% set
+        city = None %} {% if localisation and localisation != '0' %}   {% set
+        location = state_attr('sensor.blitzortung_lightning_localisation',
+        'features') %}   {% if location and location[0] and
+        location[0].properties and location[0].properties.geocoding and
+        location[0].properties.geocoding.city %}     {% set city =
+        location[0].properties.geocoding.city %}   {% endif %} {% endif %} {% if
+        distance > 0 %}   {% if city %}     {% set message = 'Un éclair a été
+        détecté à ' ~ distance ~ ' Km de la maison à ' ~ city ~ '.' %}   {% elif
+        azimuth is not none %}     {% if 348.75 <= azimuth or azimuth < 11.25
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km
+        de la maison au nord.' %}     {% elif 11.25 <= azimuth < 33.75 %}      
+        {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km de la
+        maison au nord-nord-est.' %}     {% elif 33.75 <= azimuth < 56.25
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km
+        de la maison au nord-est.' %}     {% elif 56.25 <= azimuth < 78.75
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ " Km
+        de la maison à l'est-nord-est." %}     {% elif 78.75 <= azimuth < 101.25
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ " Km
+        de la maison à l'est." %}     {% elif 101.25 <= azimuth < 123.75
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ " Km
+        de la maison à l'est-sud-est." %}     {% elif 123.75 <= azimuth < 146.25
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km
+        de la maison au sud-est.' %}     {% elif 146.25 <= azimuth < 168.75
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km
+        de la maison au sud-sud-est.' %}     {% elif 168.75 <= azimuth < 191.25
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km
+        de la maison au sud.' %}     {% elif 191.25 <= azimuth < 213.75 %}      
+        {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km de la
+        maison au sud-sud-ouest.' %}     {% elif 213.75 <= azimuth < 236.25
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ ' Km
+        de la maison au sud-ouest.' %}     {% elif 236.25 <= azimuth < 258.75
+        %}       {% set message = 'Un éclair a été détecté à ' ~ distance ~ " Km
+        de la maison à l'ouest-sud-ouest." %}     {% elif 258.75 <= azimuth <
+        281.25 %}       {% set message = 'Un éclair a été détecté à ' ~ distance
+        ~ " Km de la maison à l'\ouest." %}     {% elif 281.25 <= azimuth <
+        303.75 %}       {% set message = 'Un éclair a été détecté à ' ~ distance
+        ~ " Km de la maison à l'ouest-nord-ouest." %}     {% elif 303.75 <=
+        azimuth < 326.25 %}       {% set message = 'Un éclair a été détecté à '
+        ~ distance ~ ' Km de la maison au nord-ouest.' %}     {% elif 326.25 <=
+        azimuth < 348.75 %}       {% set message = 'Un éclair a été détecté à '
+        ~ distance ~ ' Km de la maison au nord-nord-ouest.' %}     {% endif %}  
+        {% else %}     {% set message = 'Un éclair a été détecté à ' ~ distance
+        ~ ' Km de la maison.' %}   {% endif %} {% else %}   {% set message =
+        'Pas d\'impact de foudre détecté.' %} {% endif %} {{ message }}<br>{{
+        timeSinceLastLightning }}. {% if impactCount > 0 %}   <strong>{{
+        impactCount }}</strong> impact(s) détecté(s) {% endif %}
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+mode: single

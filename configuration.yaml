@@ -39,7 +39,7 @@ http:
 automation: !include automations.yaml
 
 #renvoi au fichier répertoire automations/
-#automation: !include_dir_merge_list automations/
+automation: !include_dir_merge_list automations/
 
 #renvoi au fichier répertoire template/
 template: !include_dir_merge_list templates/

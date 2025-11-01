@@ -1,0 +1,32 @@
+alias: Mettre à jour le texte du temps écoulé
+description: >-
+  Met à jour le texte du temps écoulé depuis le dernier impact de foudre toutes
+  les minutes.
+triggers:
+  - trigger: time_pattern
+    seconds: /30
+actions:
+  - target:
+      entity_id: input_text.dernier_impact_de_foudre_temps_ecoule
+    data:
+      value: >-
+        {% set last_lightning = states('input_datetime.dernier_eclair') %} {% if
+        last_lightning not in ['unknown', 'unavailable', 'none', ''] %}
+          {% set last_lightning_ts = as_timestamp(last_lightning) %}
+          {% set now = as_timestamp(now()) %}
+          {% set time_since_last = now - last_lightning_ts %}
+          {% set minutes = ((time_since_last % 3600) // 60) | int %}
+          {% set hours = ((time_since_last // 3600) % 24) | int %}
+          {% set days = (time_since_last // 86400) | int %}
+          {% if days > 0 %}
+            Dernier impact de foudre il y a {{ days }} jours, {{ hours }} heures et {{ minutes }} minutes
+          {% elif hours > 0 %}
+            Dernier impact de foudre il y a {{ hours }} heures et {{ minutes }} minutes
+          {% else %}
+            Dernier impact de foudre il y a {{ minutes }} minutes
+          {% endif %}
+        {% else %}
+          Dernier impact de foudre : Inconnu
+        {% endif %}
+    action: input_text.set_value
+mode: single

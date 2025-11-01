@@ -1,0 +1,459 @@
+alias: >-
+  (A) (6h00 -> 20h00) [TEST 2025-08-03] Automatisation pour contrôler de
+  [06h00 <-> 20h00] les climatiseurs en fonction de la température
+  intérieure/extérieure [DELTA] et du type de réseau des portables
+  [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)] qui sont
+  contrôlées 24h sur 24.
+description: >-
+  Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs en
+  fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+  des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres
+  [OUVERTE(S)/FERMÉE(S)] qui sont contrôlées 24h sur 24.
+triggers:
+  - alias: Changement d'état des fenêtres 'off' -> 'on'
+    entity_id:
+      - binary_sensor.contact_fenetre_salon_ikea_contact
+      - binary_sensor.contact_fenetre_cuisine_ikea_contact
+      - binary_sensor.contact_fenetre_bureau_ikea_contact
+      - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: "off"
+    to: "on"
+    trigger: state
+  - alias: Changement d'état des fenêtres 'on' -> 'off'
+    entity_id:
+      - binary_sensor.contact_fenetre_salon_ikea_contact
+      - binary_sensor.contact_fenetre_cuisine_ikea_contact
+      - binary_sensor.contact_fenetre_bureau_ikea_contact
+      - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: "on"
+    to: "off"
+    trigger: state
+  - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement de réseau d'Eric 'wifi' -> 'cellular'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau d'Eric 'cellular' -> 'wifi'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement d'état des climatiseurs à 'heat'
+    trigger: state
+    entity_id:
+      - climate.clim_salon_rm4_mini
+      - climate.clim_bureau_rm4_mini
+      - climate.clim_chambre_rm4_mini
+    to: heat
+  - alias: Changement d'état des climatiseurs à 'cool'
+    trigger: state
+    entity_id:
+      - climate.clim_salon_rm4_mini
+      - climate.clim_bureau_rm4_mini
+      - climate.clim_chambre_rm4_mini
+    to: cool
+  - alias: Changement d'état des climatiseurs à 'fan_only'
+    trigger: state
+    entity_id:
+      - climate.clim_salon_rm4_mini
+      - climate.clim_bureau_rm4_mini
+      - climate.clim_chambre_rm4_mini
+    to: fan_only
+  - trigger: state
+    entity_id:
+      - sensor.temperature_cible
+  - trigger: time
+    at: "06:00:00"
+conditions: []
+actions:
+  - alias: SI UNE FENÊTRES EST OUVERTES OU TOUTES FERMÉES
+    choose:
+      - alias: SI UNE OU PLUSIEURS FENÊTRES SONT OUVERTES (condition OR)
+        conditions:
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+                state: "on"
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+                state: "on"
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+                state: "on"
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+                state: "on"
+        sequence:
+          - target:
+              entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+            data:
+              hvac_mode: "off"
+            action: climate.set_hvac_mode
+          - action: notify.mobile_app_poco_x7_pro
+            data:
+              title: Clim. DÉSACTIVÉES
+              message: >
+                {% if trigger.entity_id ==
+                'binary_sensor.contact_fenetre_salon_ikea_contact' and
+                is_state('binary_sensor.contact_fenetre_salon_ikea_contact',
+                'on') %}
+                  La fenêtre du Salon a été ouverte.
+                {% elif trigger.entity_id ==
+                'binary_sensor.contact_fenetre_cuisine_ikea_contact' and
+                is_state('binary_sensor.contact_fenetre_cuisine_ikea_contact',
+                'on') %}
+                  La fenêtre de la Cuisine a été ouverte.
+                {% elif trigger.entity_id ==
+                'binary_sensor.contact_fenetre_bureau_ikea_contact' and
+                is_state('binary_sensor.contact_fenetre_bureau_ikea_contact',
+                'on') %}
+                  La fenêtre du Bureau a été ouverte.
+                {% elif trigger.entity_id ==
+                'binary_sensor.contact_fenetre_chambre_ikea_contact' and
+                is_state('binary_sensor.contact_fenetre_chambre_ikea_contact',
+                'on') %}
+                  La fenêtre de la Chambre a été ouverte.
+                {% endif %}
+                  {% if states('sensor.nbre_de_fenetres_ouvertes') == '4' %}
+                    Toutes les fenêtres sont ouvertes.
+                  {% endif %}
+      - alias: SI TOUTES LES FENÊTRES SONT FERMÉES (condition AND)
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+                state: "off"
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+                state: "off"
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+                state: "off"
+              - condition: state
+                entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+                state: "off"
+        sequence:
+          - target:
+              entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+            data:
+              hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+            action: climate.set_hvac_mode
+          - target:
+              entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+            data:
+              fan_mode: auto
+            action: climate.set_fan_mode
+  - alias: SI 2 PORTABLES EN CELLULAR
+    if:
+      - condition: and
+        conditions:
+          - condition: time
+            after: "06:00:00"
+            before: "20:00:00"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: sensor.ne2213_mamour_network_type
+            state: cellular
+          - condition: state
+            entity_id: sensor.poco_x7_pro_network_type
+            state: cellular
+    then:
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: Clim [2] en [CELLULAR]
+          message: >-
+            {% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+            trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}
+              Les 3 Clim {{ states('sensor.temperature_cible') | float }}°
+            {% endif %}
+        action: notify.mobile_app_poco_x7_pro
+  - alias: SI MAMOUR EN WIFI
+    if:
+      - condition: and
+        conditions:
+          - condition: time
+            after: "06:00:00"
+            before: "20:00:00"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: sensor.ne2213_mamour_network_type
+            state: wifi
+          - condition: state
+            entity_id: sensor.ne2213_mamour_wi_fi_connection
+            state: Freebox_GG
+          - condition: state
+            entity_id: sensor.poco_x7_pro_network_type
+            state: cellular
+    then:
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          temperature: >-
+            {{ (states('sensor.temperature_differentielle') | float +
+            (states('sensor.temperature_cible') | float -
+            states('sensor.consigne_de_base') | float)) | round(1) }}
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: Clim [MAMOUR] en [WIFI]
+          message: >-
+            {% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+            trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}
+              Salon {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible') | float }}°
+            {% endif %}
+        action: notify.mobile_app_poco_x7_pro
+  - alias: SI ERIC EN WIFI
+    if:
+      - condition: and
+        conditions:
+          - condition: time
+            after: "06:00:00"
+            before: "20:00:00"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: sensor.ne2213_mamour_network_type
+            state: cellular
+          - condition: state
+            entity_id: sensor.poco_x7_pro_network_type
+            state: wifi
+          - condition: state
+            entity_id: sensor.poco_x7_pro_wi_fi_connection
+            state: Freebox_GG
+    then:
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          temperature: >-
+            {{ (states('sensor.temperature_differentielle') | float +
+            (states('sensor.temperature_cible') | float -
+            states('sensor.consigne_de_base') | float)) | round(1) }}
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: clim [ERIC] en [WIFI]
+          message: >-
+            {% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+            trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}
+              Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible') | float }}°
+            {% endif %}
+        action: notify.mobile_app_poco_x7_pro
+  - alias: SI 2 PORTABLES EN WIFI
+    if:
+      - condition: and
+        conditions:
+          - condition: time
+            after: "06:00:00"
+            before: "20:00:00"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+            state: "off"
+          - condition: state
+            entity_id: sensor.ne2213_mamour_network_type
+            state: wifi
+          - condition: state
+            entity_id: sensor.ne2213_mamour_wi_fi_connection
+            state: Freebox_GG
+          - condition: state
+            entity_id: sensor.poco_x7_pro_network_type
+            state: wifi
+          - condition: state
+            entity_id: sensor.poco_x7_pro_wi_fi_connection
+            state: Freebox_GG
+    then:
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          temperature: >-
+            {{ (states('sensor.temperature_differentielle') | float +
+            (states('sensor.temperature_cible') | float -
+            states('sensor.consigne_de_base') | float)) | round(1) }}
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_salon_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          temperature: >-
+            {{ (states('sensor.temperature_differentielle') | float +
+            (states('sensor.temperature_cible') | float -
+            states('sensor.consigne_de_base') | float)) | round(1) }}
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_bureau_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          temperature: "{{ states('sensor.temperature_cible') | float }}"
+          hvac_mode: "{{ states('sensor.mode_ete_hiver') }}"
+        action: climate.set_temperature
+      - target:
+          entity_id: climate.clim_chambre_rm4_mini
+        data:
+          fan_mode: auto
+        action: climate.set_fan_mode
+      - data:
+          title: clim [2] en [WIFI]
+          message: >-
+            {% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
+            trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}
+              Salon & Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre {{ states('sensor.temperature_cible') | float }}°
+            {% endif %}
+        action: notify.mobile_app_poco_x7_pro
+mode: queued

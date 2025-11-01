@@ -1,0 +1,122 @@
+alias: Raspberry CPU Fan PWM 6 States
+description: >-
+  Règle la vitesse du ventilateur du Raspberry en fonction de la température du
+  CPU
+triggers:
+  - event: start
+    id: HomeAssistant_Start
+    trigger: homeassistant
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    above: 30
+    id: above_30
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    above: 40
+    id: above_40
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    above: 50
+    id: above_50
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    above: 60
+    id: above_60
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    above: 70
+    id: above_70
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    below: 30
+    id: below_30
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    below: 40
+    id: below_40
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    below: 50
+    id: below_50
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    below: 60
+    id: below_60
+    trigger: numeric_state
+  - entity_id: sensor.system_monitor_temperature_du_processeur
+    below: 70
+    id: below_70
+    trigger: numeric_state
+conditions: []
+actions:
+  - alias: Régler la vitesse du ventilateur de l'unité centrale au démarrage
+    if:
+      - condition: trigger
+        id: HomeAssistant_Start
+    then:
+      - data:
+          percentage: 100
+        target:
+          entity_id: fan.rpi_cooling_fan
+        action: fan.turn_on
+  - alias: Régler la vitesse du ventilateur en fonction de la température
+    if:
+      - condition: numeric_state
+        entity_id: sensor.system_monitor_temperature_du_processeur
+        below: 30
+    then:
+      - data:
+          percentage: 30
+        target:
+          entity_id: fan.rpi_cooling_fan
+        action: fan.set_percentage
+    else:
+      - if:
+          - condition: numeric_state
+            entity_id: sensor.system_monitor_temperature_du_processeur
+            below: 40
+        then:
+          - data:
+              percentage: 40
+            target:
+              entity_id: fan.rpi_cooling_fan
+            action: fan.set_percentage
+        else:
+          - if:
+              - condition: numeric_state
+                entity_id: sensor.system_monitor_temperature_du_processeur
+                below: 50
+            then:
+              - data:
+                  percentage: 50
+                target:
+                  entity_id: fan.rpi_cooling_fan
+                action: fan.set_percentage
+            else:
+              - if:
+                  - condition: numeric_state
+                    entity_id: sensor.system_monitor_temperature_du_processeur
+                    below: 60
+                then:
+                  - data:
+                      percentage: 65
+                    target:
+                      entity_id: fan.rpi_cooling_fan
+                    action: fan.set_percentage
+                else:
+                  - if:
+                      - condition: numeric_state
+                        entity_id: sensor.system_monitor_temperature_du_processeur
+                        below: 70
+                    then:
+                      - data:
+                          percentage: 85
+                        target:
+                          entity_id: fan.rpi_cooling_fan
+                        action: fan.set_percentage
+                    else:
+                      - data:
+                          percentage: 100
+                        target:
+                          entity_id: fan.rpi_cooling_fan
+                        action: fan.set_percentage
+mode: single

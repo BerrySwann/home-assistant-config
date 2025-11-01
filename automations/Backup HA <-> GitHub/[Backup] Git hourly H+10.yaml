@@ -1,0 +1,13 @@
+alias: "[Backup] Git hourly H+10"
+description: Push Git toutes les heures à H+10
+triggers:
+  - minutes: "10"
+    trigger: time_pattern
+conditions: []
+actions:
+  - action: shell_command.git_backup_push
+  - data:
+      level: info
+      message: "[Backup] H+10 exécuté"
+    action: system_log.write
+mode: single

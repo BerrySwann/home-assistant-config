@@ -4005,7 +4005,7 @@
           message: '[Mode] Ventilation activée'
         action: notify.mobile_app_poco_x7_pro
 - id: '1760723744000'
-  alias: (K) [CLIM OFF] SI [PRISES] EXTÉRIEURES SONT [OFF]
+  alias: (J) [CLIM OFF] SI [PRISES] EXTÉRIEURES SONT [OFF]
   description: Éteint chaque climatiseur intérieur 1 minute après que sa prise extérieure
     associée soit coupée. Envoie des notifications uniquement entre 6h00 et 20h00,
     avec un délai d'1 heure entre chaque notification.
@@ -5167,9 +5167,9 @@
     default: []
   mode: single
 - id: '1761246384091'
-  alias: (B) [TEST 2025-10-30] Automatisation pour contrôler de [20h00 <-> 06h00]
-    les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
-    du type de réseau des portables [WIFI/CELLULAR].
+  alias: (B) (20h00 <-> 06h00) [TEST 2025-10-30] Automatisation pour contrôler les
+    climatiseurs en fonction de la température intérieure/extérieure [DELTA] et du
+    type de réseau des portables [WIFI/CELLULAR].
   description: Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR].

@@ -1,0 +1,10 @@
+alias: Redémarrage quotidien Studio Code Server
+description: ""
+triggers:
+  - at: "22:00:00"
+    trigger: time
+actions:
+  - data:
+      addon: a0d7b954_vscode
+    action: hassio.addon_restart
+mode: single

@@ -1,0 +1,32 @@
+alias: (E) [CLIM] Notification de fermeture des fenêtres
+description: Envoie une notification lorsqu'une fenêtre est fermée.
+triggers:
+  - entity_id:
+      - binary_sensor.contact_fenetre_salon_ikea_contact
+      - binary_sensor.contact_fenetre_cuisine_ikea_contact
+      - binary_sensor.contact_fenetre_bureau_ikea_contact
+      - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: "on"
+    to: "off"
+    trigger: state
+actions:
+  - data:
+      title: Fermeture en cours
+      message: >-
+        {% if trigger.entity_id ==
+        'binary_sensor.contact_fenetre_salon_ikea_contact' %}
+          La fenêtre du Salon a été fermée.
+        {% elif trigger.entity_id ==
+        'binary_sensor.contact_fenetre_cuisine_ikea_contact' %}
+          La fenêtre de la Cuisine a été fermée.
+        {% elif trigger.entity_id ==
+        'binary_sensor.contact_fenetre_bureau_ikea_contact' %}
+          La fenêtre du Bureau a été fermée.
+        {% elif trigger.entity_id ==
+        'binary_sensor.contact_fenetre_chambre_ikea_contact' %}
+          La fenêtre de la Chambre a été fermée.
+        {% endif %} {% if states('sensor.nbre_de_fenetres_fermees') == '4' %}
+          Toutes les fenêtres sont maintenant fermées.
+        {% endif %}
+    action: notify.mobile_app_poco_x7_pro
+mode: queued

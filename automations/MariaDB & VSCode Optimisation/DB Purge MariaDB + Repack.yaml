@@ -1,0 +1,13 @@
+alias: DB Purge MariaDB + Repack
+description: ""
+triggers:
+  - at: "03:30:00"
+    trigger: time
+conditions: []
+actions:
+  - data:
+      keep_days: 32
+      repack: true
+      apply_filter: true
+    action: recorder.purge
+mode: single
