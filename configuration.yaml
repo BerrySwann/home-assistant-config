@@ -12,7 +12,7 @@ default_config:
 # Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
-automation: !include automations.yaml
+
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
@@ -35,8 +35,10 @@ http:
   #ssl_certificate: /ssl/local.crt
   #ssl_key: /ssl/local.key
 
-#renvoi au fichier template.yaml
-#template: !include template.yaml
+#renvoi au fichier répertoire automations/
+automation: !include_dir_merge_list automations/
+
+#renvoi au fichier répertoire template/
 template: !include_dir_merge_list templates/
 
 # renvoi au fichier commad_line.yaml

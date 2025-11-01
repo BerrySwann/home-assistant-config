@@ -1089,47 +1089,55 @@
           title: éCO Prises [2] en [WIFI]"
   mode: queued
 - id: '1750309185567'
-  alias: (H) [ CLIM DEBUG ] Debug clim en auto -> sensor.mode_ete_hiver
-  description: Vérifie toutes les minutes si les clims sont bien en mode 'sensor.mode_ete_hiver',
-    sinon renvoie 'sensor.mode_ete_hiver' si en mode 'auto'.
+  alias: (H) [ CLIM DEBUG ] Force clims -> sensor.mode_ete_hiver
+  description: 'Vérifie toutes les minutes si les clims sont alignées avec ''sensor.mode_ete_hiver''
+    et que leurs interrupteurs associés sont allumés. Si non, force le mode HVAC à
+    ''sensor.mode_ete_hiver'' et notifie uniquement les changements.
+
+    '
   triggers:
   - minutes: /1
     trigger: time_pattern
   - entity_id:
     - climate.clim_salon_rm4_mini
-    - climate.clim_chambre_rm4_mini
+    - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     trigger: state
-  conditions:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: climate.clim_salon_rm4_mini
-      state: auto
-    - condition: state
-      entity_id: climate.clim_chambre_rm4_mini
-      state: auto
-    - condition: state
-      entity_id: climate.clim_chambre_rm4_mini
-      state: auto
+  conditions: []
   actions:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 2
-      milliseconds: 0
-  - target:
-      entity_id:
-      - climate.clim_salon_rm4_mini
-      - climate.clim_bureau_rm4_mini
-      - climate.clim_chambre_rm4_mini
-    data:
-      hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
-    action: climate.set_hvac_mode
-  - data:
-      title: DEBUG CLIM
-      message: Force -> {{ states('sensor.mode_ete_hiver_etat') }}
-    action: notify.mobile_app_poco_x7_pro
+  - delay: 00:00:05
+  - variables:
+      target_clims: "{% set target_clims = [] %} {% if states('climate.clim_salon_rm4_mini')
+        != states('sensor.mode_ete_hiver')\n      and states('switch.clim_salon_nous')
+        == 'on' %}\n  {% set target_clims = target_clims + ['climate.clim_salon_rm4_mini']
+        %}\n{% endif %} {% if states('climate.clim_bureau_rm4_mini') != states('sensor.mode_ete_hiver')\n
+        \     and states('switch.clim_du_bureau_nous') == 'on' %}\n  {% set target_clims
+        = target_clims + ['climate.clim_bureau_rm4_mini'] %}\n{% endif %} {% if states('climate.clim_chambre_rm4_mini')
+        != states('sensor.mode_ete_hiver')\n      and states('switch.clim_chambre_nous')
+        == 'on' %}\n  {% set target_clims = target_clims + ['climate.clim_chambre_rm4_mini']
+        %}\n{% endif %} {{ target_clims }}\n"
+      target_clims_names: "{% set names = [] %} {% if 'climate.clim_salon_rm4_mini'
+        in target_clims %}\n  {% set names = names + ['Salon'] %}\n{% endif %} {%
+        if 'climate.clim_bureau_rm4_mini' in target_clims %}\n  {% set names = names
+        + ['Bureau'] %}\n{% endif %} {% if 'climate.clim_chambre_rm4_mini' in target_clims
+        %}\n  {% set names = names + ['Chambre'] %}\n{% endif %} {{ names | join(',
+        ') }}\n"
+  - if:
+    - condition: template
+      value_template: '{{ target_clims | length > 0 }}'
+    then:
+    - target:
+        entity_id: '{{ target_clims }}'
+      data:
+        hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      action: climate.set_hvac_mode
+    - data:
+        title: DEBUG CLIM
+        message: 'Force -> {{ states(''sensor.mode_ete_hiver'') }} pour : {{ target_clims_names
+          }}
+
+          '
+      action: notify.mobile_app_poco_x7_pro
 - id: '1751912898399'
   alias: (A) (6h00 -> 20h00) [ TEST 2025-08-03 ] Automatisation pour contrôler de
     [06h00 <-> 20h00] les climatiseurs en fonction de la température intérieure/extérieure
@@ -1628,6 +1636,15 @@
         - condition: template
           value_template: '{{ trigger.entity_id == ''climate.clim_salon_rm4_mini''
             }}'
+        - condition: state
+          entity_id: switch.clim_salon_nous
+          state: 'on'
+        - condition: state
+          entity_id: switch.clim_du_bureau_nous
+          state: 'on'
+        - condition: state
+          entity_id: switch.clim_chambre_nous
+          state: 'on'
         - condition: state
           entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
           state: 'off'

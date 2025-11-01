@@ -1,0 +1,108 @@
+- id: '1754214931347'
+  alias: (E) [CLIM] Notification de fermeture des fenêtres
+  description: Envoie une notification lorsqu'une fenêtre est fermée.
+  triggers:
+    - entity_id:
+        - binary_sensor.contact_fenetre_salon_ikea_contact
+        - binary_sensor.contact_fenetre_cuisine_ikea_contact
+        - binary_sensor.contact_fenetre_bureau_ikea_contact
+        - binary_sensor.contact_fenetre_chambre_ikea_contact
+      from: 'on'
+      to: 'off'
+      trigger: state
+  actions:
+    - data:
+        title: Fermeture en cours
+        message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact' %} La fenêtre du Salon a été fermée. {% elif trigger.entity_id == 'binary_sensor.contact_fenetre_cuisine_ikea_contact' %} La fenêtre de la Cuisine a été fermée. {% elif trigger.entity_id == 'binary_sensor.contact_fenetre_bureau_ikea_contact' %} La fenêtre du Bureau a été fermée. {% elif trigger.entity_id == 'binary_sensor.contact_fenetre_chambre_ikea_contact' %} La fenêtre de la Chambre a été fermée. {% endif %} {% if states('sensor.nbre_de_fenetres_fermees') == '4' %} Toutes les fenêtres sont maintenant fermées. {% endif %}"
+      action: notify.mobile_app_poco_x7_pro
+  mode: queued
+
+- id: '1754230309244'
+  alias: (F) [ CLIM ] Automatisation qui détecte quand un climatiseur est désactivé et envoie une notification
+  description: Automatisation pour détecter quand un climatiseur est désactivé manuellement et envoyer une notification, uniquement si toutes les fenêtres sont fermées.
+  triggers:
+    - entity_id:
+        - climate.clim_salon_rm4_mini
+        - climate.clim_bureau_rm4_mini
+        - climate.clim_chambre_rm4_mini
+      trigger: state
+      from:
+      to: 'off'
+  actions:
+    - choose:
+        - conditions:
+            - condition: and
+              conditions:
+                - condition: template
+                  value_template: '{{ trigger.entity_id == ''climate.clim_salon_rm4_mini'' }}'
+                - condition: state
+                  entity_id: switch.clim_salon_nous
+                  state: 'on'
+                - condition: state
+                  entity_id: switch.clim_du_bureau_nous
+                  state: 'on'
+                - condition: state
+                  entity_id: switch.clim_chambre_nous
+                  state: 'on'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+                  state: 'off'
+          sequence:
+            - action: notify.mobile_app_poco_x7_pro
+              data:
+                title: ARRÊT CLIM
+                message: La clim. du Salon a été coupée manuellement.
+        - conditions:
+            - condition: and
+              conditions:
+                - condition: template
+                  value_template: '{{ trigger.entity_id == ''climate.clim_bureau_rm4_mini'' }}'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+                  state: 'off'
+          sequence:
+            - action: notify.mobile_app_poco_x7_pro
+              data:
+                title: ARRÊT CLIM
+                message: La clim. du Bureau a été coupée manuellement.
+        - conditions:
+            - condition: and
+              conditions:
+                - condition: template
+                  value_template: '{{ trigger.entity_id == ''climate.clim_chambre_rm4_mini'' }}'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+                  state: 'off'
+                - condition: state
+                  entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+                  state: 'off'
+          sequence:
+            - action: notify.mobile_app_poco_x7_pro
+              data:
+                title: ARRÊT CLIM
+                message: La clim. de la Chambre a été coupée manuellement.
+  mode: queued
