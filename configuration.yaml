@@ -35,7 +35,7 @@ http:
   #ssl_certificate: /ssl/local.crt
   #ssl_key: /ssl/local.key
 
-# renvoi au fichier automations.yaml
+#renvoi au fichier automations.yaml
 automation: !include automations.yaml
 
 #renvoi au fichier répertoire automations/
