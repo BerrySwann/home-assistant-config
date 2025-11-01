@@ -1,0 +1,30 @@
+- id: '1742931674050'
+  alias: Mettre à jour le temps du dernier impact de foudre
+  description: Met à jour le temps du dernier impact de foudre lorsque le capteur change.
+  triggers:
+    - entity_id: sensor.blitzortung_lightning_counter
+      trigger: state
+  conditions:
+    - condition: template
+      value_template: '{{ states(''sensor.blitzortung_lightning_counter'') | int > 0 }}'
+  actions:
+    - target:
+        entity_id: input_datetime.dernier_eclair
+      data:
+        datetime: '{{ now().isoformat() }}'
+      action: input_datetime.set_datetime
+  mode: single
+
+- id: '1742992851566'
+  alias: Mettre à jour le texte du temps écoulé
+  description: Met à jour le texte du temps écoulé depuis le dernier impact de foudre toutes les minutes.
+  triggers:
+    - trigger: time_pattern
+      seconds: /30
+  actions:
+    - target:
+        entity_id: input_text.dernier_impact_de_foudre_temps_ecoule
+      data:
+        value: "{% set last_lightning = states('input_datetime.dernier_eclair') %} {% if last_lightning not in ['unknown', 'unavailable', 'none', ''] %}\n  {% set last_lightning_ts = as_timestamp(last_lightning) %}\n  {% set now = as_timestamp(now()) %}\n  {% set time_since_last = now - last_lightning_ts %}\n  {% set minutes = ((time_since_last % 3600) // 60) | int %}\n  {% set hours = ((time_since_last // 3600) % 24) | int %}\n  {% set days = (time_since_last // 86400) | int %}\n  {% if days > 0 %}\n    Dernier impact de foudre il y a {{ days }} jours, {{ hours }} heures et {{ minutes }} minutes\n  {% elif hours > 0 %}\n    Dernier impact de foudre il y a {{ hours }} heures et {{ minutes }} minutes\n  {% else %}\n    Dernier impact de foudre il y a {{ minutes }} minutes\n  {% endif %}\n{% else %}\n  Dernier impact de foudre : Inconnu\n{% endif %}"
+      action: input_text.set_value
+  mode: single
