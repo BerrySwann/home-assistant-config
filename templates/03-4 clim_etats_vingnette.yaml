@@ -17,13 +17,13 @@
   - name: "Clim Salon État"
     unique_id: clim_salon_etat
     state: >
-      {% if is_state('climate.clim', 'off') %}
+      {% if is_state('climate.clim_salon_rm4_mini', 'off') %}
         Off
-      {% elif is_state('climate.clim', 'cool') %}
+      {% elif is_state('climate.clim_salon_rm4_mini', 'cool') %}
         Cool
-      {% elif is_state('climate.clim', 'heat') %}
+      {% elif is_state('climate.clim_salon_rm4_mini', 'heat') %}
         Heat
-      {% elif is_state('climate.clim', 'fan_only') %}
+      {% elif is_state('climate.clim_salon_rm4_mini', 'fan_only') %}
         Fan
       {% else %}
         erreur
