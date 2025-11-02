@@ -1,3 +1,4 @@
+id: "1723884947865"
 alias: Raspberry CPU Fan PWM 6 States
 description: >-
   Règle la vitesse du ventilateur du Raspberry en fonction de la température du

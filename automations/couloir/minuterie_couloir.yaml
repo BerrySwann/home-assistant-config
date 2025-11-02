@@ -1,3 +1,4 @@
+id: "1724936827963"
 alias: Minuterie Couloir
 description: Allume le couloir depuis un detecteur et pendant 30 secondes
 triggers:

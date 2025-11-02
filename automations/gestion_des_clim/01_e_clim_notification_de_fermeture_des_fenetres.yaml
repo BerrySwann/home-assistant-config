@@ -1,3 +1,4 @@
+id: "1754214931347"
 alias: (E) [CLIM] Notification de fermeture des fenêtres
 description: Envoie une notification lorsqu'une fenêtre est fermée.
 triggers:
