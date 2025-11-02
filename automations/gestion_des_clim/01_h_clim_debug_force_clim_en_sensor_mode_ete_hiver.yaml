@@ -1,3 +1,4 @@
+id: "1750309185567"
 alias: (H) [ CLIM DEBUG ] Force clims -> sensor.mode_ete_hiver
 description: >
   Vérifie toutes les minutes si les clims sont alignées avec

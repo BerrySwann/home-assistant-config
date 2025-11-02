@@ -1,3 +1,4 @@
+id: "1758298361594"
 alias: (D) Notification température Up ou Down de [20h00 -> 6h00]
 description: >
   Notification température Up ou Down en fonction des présences et réseaux
@@ -20,9 +21,9 @@ actions:
         value_template: >
           {{ states('sensor.message_clim_personnalise_20h_6h') in ['unknown',
           'unavailable'] or
-             states('sensor.ne2213_mamour_wi_fi_connection') in ['unknown', 'unavailable'] or
-             states('sensor.poco_x7_pro_wi_fi_connection') in ['unknown', 'unavailable'] or
-             states('sensor.th_balcon_nord_temperature') in ['unknown', 'unavailable'] }}
+            states('sensor.ne2213_mamour_wi_fi_connection') in ['unknown', 'unavailable'] or
+            states('sensor.poco_x7_pro_wi_fi_connection') in ['unknown', 'unavailable'] or
+            states('sensor.th_balcon_nord_temperature') in ['unknown', 'unavailable'] }}
     then:
       - data:
           message: >-

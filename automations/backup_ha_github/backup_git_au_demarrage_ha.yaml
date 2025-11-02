@@ -1,3 +1,4 @@
+id: "1757248648416"
 alias: "[Backup] Git au démarrage HA"
 description: Push Git immédiatement au boot de Home Assistant
 triggers:

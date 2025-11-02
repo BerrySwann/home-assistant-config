@@ -1,3 +1,4 @@
+id: "1757248630379"
 alias: "[Backup] Git weekly (dim 03:40)"
 description: Push + tag weekly chaque dimanche à 03:40
 triggers:

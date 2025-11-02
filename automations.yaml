@@ -431,9 +431,7 @@
   alias: Gestion Optimisée du Store Bureau
   description: 'Gère l''ouverture et la fermeture du store du bureau en fonction de
     la température et de l''heure, avec des conditions spécifiques pour le contact
-    de la fenêtre et la position du store.
-
-    '
+    de la fenêtre et la position du store.'
   triggers:
   - at: 07:00:00
     trigger: time
@@ -642,9 +640,7 @@
   alias: Gestion Optimisée du Store Salon
   description: 'Gère l''ouverture et la fermeture du store du salon en fonction de
     la température et de l''heure, avec des conditions spécifiques pour le contact
-    de la fenêtre et la position du store.
-
-    '
+    de la fenêtre et la position du store.'
   triggers:
   - minutes: /5
     trigger: time_pattern
@@ -1091,9 +1087,7 @@
   alias: (H) [ CLIM DEBUG ] Force clims -> sensor.mode_ete_hiver
   description: 'Vérifie toutes les minutes si les clims sont alignées avec ''sensor.mode_ete_hiver''
     et que leurs interrupteurs associés sont allumés. Si non, force le mode HVAC à
-    ''sensor.mode_ete_hiver'' et notifie uniquement les changements.
-
-    '
+    ''sensor.mode_ete_hiver'' et notifie uniquement les changements.'
   triggers:
   - minutes: /1
     trigger: time_pattern

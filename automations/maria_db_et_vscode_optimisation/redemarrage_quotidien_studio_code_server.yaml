@@ -1,3 +1,4 @@
+id: "restart_studio_code_server_daily"
 alias: Redémarrage quotidien Studio Code Server
 description: ""
 triggers:

@@ -1,3 +1,4 @@
+id: "1748450913123"
 alias: Automation éCO. (Prise) selon le réseau [Wifi et/ou Cellular] des 2 portables
 description: Automation basée sur le type de réseau [Wifi et Cellular] des deux portables
 triggers:

@@ -1,3 +1,4 @@
+id: "1742931674050"
 alias: Mettre à jour le temps du dernier impact de foudre
 description: Met à jour le temps du dernier impact de foudre lorsque le capteur change.
 triggers:
