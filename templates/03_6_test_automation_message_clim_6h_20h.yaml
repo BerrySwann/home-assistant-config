@@ -37,7 +37,7 @@
           {%- elif tendance == 'decreasing' %}
             {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
           {%- else %}
-            {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
+            {%- set message_tendance = "T°Ext stable " ~ temp_ext ~ "°" %}
           {%- endif %}
           {# --- Logique principale pour 6h-20h --- #}
           {%- if both_cellular %}
