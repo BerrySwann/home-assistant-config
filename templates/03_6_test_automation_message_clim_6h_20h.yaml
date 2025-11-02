@@ -1,136 +1,146 @@
 - sensor:
-      - name: "Message Clim personnalisé 6h <-> 20h"
-        unique_id: message_clim_personnalise_6h_20h
-        state: >
-          {# --- Vérification des dépendances critiques --- #}
-          {%- if states('sensor.ne2213_mamour_network_type') in ['unknown', 'unavailable'] or
-                states('sensor.poco_x7_pro_network_type') in ['unknown', 'unavailable'] or
-                states('sensor.th_balcon_nord_temperature') in ['unknown', 'unavailable'] %}
-            "En attente des capteurs..."
+    - name: "Message Clim personnalisé 6h <-> 20h"
+      unique_id: message_clim_personnalise_6h_20h
+      state: >
+        {# --- Vérification des dépendances critiques --- #}
+        {%- if states('sensor.ne2213_mamour_network_type') in ['unknown', 'unavailable'] or
+              states('sensor.poco_x7_pro_network_type') in ['unknown', 'unavailable'] or
+              states('sensor.th_balcon_nord_temperature') in ['unknown', 'unavailable'] %}
+          "En attente des capteurs..."
+        {%- else %}
+          {# --- Définition des variables --- #}
+          {%- set home_ssid = "Freebox_GG" %}
+          {%- set mamour_network = states('sensor.ne2213_mamour_network_type') %}
+          {%- set mamour_wifi = states('sensor.ne2213_mamour_wi_fi_connection') %}
+          {%- set eric_network = states('sensor.poco_x7_pro_network_type') %}
+          {%- set eric_wifi = states('sensor.poco_x7_pro_wi_fi_connection') %}
+          {%- set tendance = states('sensor.th_balcon_nord_temperature_trend') %}
+          {%- set temp_ext = states('sensor.th_balcon_nord_temperature') | float %}
+          {%- set temp_cible = states('sensor.temperature_cible') | float %}
+          {%- set temp_diff = states('sensor.temperature_differentielle') | float %}
+          {%- set temp_eco = states('sensor.temperature_eco_hiver') | float %}
+          {%- set mode = states('sensor.mode_ete_hiver') %}
+          {%- set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
+          {%- set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
+          {%- set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
+          {%- set clims_alimentees = prise_salon or prise_bureau or prise_chambre %}
+          {# --- Détermination des scénarios de présence --- #}
+          {%- set both_cellular = (mamour_network == 'cellular' and eric_network == 'cellular') %}
+          {%- set both_wifi_not_home = (mamour_network == 'wifi' and mamour_wifi != home_ssid and eric_network == 'wifi' and eric_wifi != home_ssid) %}
+          {%- set mamour_wifi_home = (mamour_network == 'wifi' and mamour_wifi == home_ssid) %}
+          {%- set eric_wifi_home = (eric_network == 'wifi' and eric_wifi == home_ssid) %}
+          {%- set mamour_wifi_not_home = (mamour_network == 'wifi' and mamour_wifi != home_ssid) %}
+          {%- set eric_wifi_not_home = (eric_network == 'wifi' and eric_wifi != home_ssid) %}
+          {# --- Message de tendance --- #}
+          {%- if tendance == 'increasing' %}
+            {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
+          {%- elif tendance == 'decreasing' %}
+            {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
           {%- else %}
-            {# --- Définition des variables --- #}
-            {%- set home_ssid = "Freebox_GG" %}
-            {%- set mamour_network = states('sensor.ne2213_mamour_network_type') %}
-            {%- set mamour_wifi = states('sensor.ne2213_mamour_wi_fi_connection') %}
-            {%- set eric_network = states('sensor.poco_x7_pro_network_type') %}
-            {%- set eric_wifi = states('sensor.poco_x7_pro_wi_fi_connection') %}
-            {%- set tendance = states('sensor.th_balcon_nord_temperature_trend') %}
-            {%- set temp_ext = states('sensor.th_balcon_nord_temperature') | float %}
-            {%- set temp_cible = states('sensor.temperature_cible') | float %}
-            {%- set temp_diff = states('sensor.temperature_differentielle') | float %}
-            {%- set temp_eco = states('sensor.temperature_eco_hiver') | float %}
-            {%- set mode = states('sensor.mode_ete_hiver') %}
-            {%- set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
-            {%- set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
-            {%- set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
-            {%- set clims_alimentees = prise_salon or prise_bureau or prise_chambre %}
-
-            {# --- Détermination des scénarios de présence --- #}
-            {%- set both_cellular = (mamour_network == 'cellular' and eric_network == 'cellular') %}
-            {%- set both_wifi_not_home = (mamour_network == 'wifi' and mamour_wifi != home_ssid and eric_network == 'wifi' and eric_wifi != home_ssid) %}
-            {%- set mamour_wifi_home = (mamour_network == 'wifi' and mamour_wifi == home_ssid) %}
-            {%- set eric_wifi_home = (eric_network == 'wifi' and eric_wifi == home_ssid) %}
-            {%- set mamour_wifi_not_home = (mamour_network == 'wifi' and mamour_wifi != home_ssid) %}
-            {%- set eric_wifi_not_home = (eric_network == 'wifi' and eric_wifi != home_ssid) %}
-
-            {# --- Message de tendance --- #}
-            {%- if tendance == 'increasing' %}
-              {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
-            {%- elif tendance == 'decreasing' %}
-              {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
-            {%- else %}
-              {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
-            {%- endif %}
-
-            {# --- Logique principale pour 6h-20h --- #}
-            {%- if both_cellular %}
-              {%- set message_header = "Clim [2] en [CELLULAR]" %}
-              {%- if clims_alimentees %}
-                {%- if mode == 'heat' %}
-                  {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
-                {%- else %}
-                  {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° [COOL]" %}
-                {%- endif %}
-              {%- else %}
-                {%- set message_mode = "[UNITS OFF]" %}
-              {%- endif %}
-            {%- elif both_wifi_not_home %}
-              {%- set message_header = "Clim [2] en [WIFI_?!]" %}
-              {%- if clims_alimentees %}
-                {%- if mode == 'heat' %}
-                  {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
-                {%- else %}
-                  {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° [COOL]" %}
-                {%- endif %}
-              {%- else %}
-                {%- set message_mode = "[UNITS OFF]" %}
-              {%- endif %}
-            {%- elif mamour_wifi_home and eric_network == 'cellular' %}
-              {%- set message_header = "Clim [MAMOUR] en [WIFI/CELL]" %}
-              {%- if clims_alimentees %}
-                {%- if mode == 'heat' %}
-                  {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
-                {%- else %}
-                  {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [COOL]" %}
-                {%- endif %}
-              {%- else %}
-                {%- set message_mode = "[UNITS OFF]" %}
-              {%- endif %}
-            {%- elif mamour_wifi_home and eric_wifi_not_home %}
-              {%- set message_header = "Clim [MAMOUR] en [WIFI/!?]" %}
-              {%- if clims_alimentees %}
-                {%- if mode == 'heat' %}
-                  {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
-                {%- else %}
-                  {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [COOL]" %}
-                {%- endif %}
-              {%- else %}
-                {%- set message_mode = "[UNITS OFF]" %}
-              {%- endif %}
-            {%- elif eric_wifi_home and mamour_network == 'cellular' %}
-              {%- set message_header = "Clim [ERIC] en [WIFI/CELL]" %}
-              {%- if clims_alimentees %}
-                {%- if mode == 'heat' %}
-                  {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
-                {%- else %}
-                  {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [COOL]" %}
-                {%- endif %}
-              {%- else %}
-                {%- set message_mode = "[UNITS OFF]" %}
-              {%- endif %}
-            {%- elif eric_wifi_home and mamour_wifi_not_home %}
-              {%- set message_header = "Clim [ERIC] en [WIFI/!?]" %}
-              {%- if clims_alimentees %}
-                {%- if mode == 'heat' %}
-                  {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
-                {%- else %}
-                  {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [COOL]" %}
-                {%- endif %}
-              {%- else %}
-                {%- set message_mode = "[UNITS OFF]" %}
-              {%- endif %}
-            {%- elif mamour_wifi_home and eric_wifi_home %}
-              {%- set message_header = "Clim [2] en [WIFI]" %}
-              {%- if clims_alimentees %}
-                {%- if mode == 'heat' %}
-                  {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [HEAT]" %}
-                {%- else %}
-                  {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [COOL]" %}
-                {%- endif %}
-              {%- else %}
-                {%- set message_mode = "[UNITS OFF]" %}
-              {%- endif %}
-            {%- else %}
-              {%- set message_header = "Scénario non géré" %}
-              {%- set message_mode = "Vérifiez les capteurs de présence" %}
-            {%- endif %}
-
-            {# --- Construction du message final --- #}
-            {{ message_header }}
-            {{ message_tendance }}
-            {{ message_mode }}
+            {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
           {%- endif %}
-        availability: >
-          {{ states('sensor.ne2213_mamour_network_type') not in ['unknown', 'unavailable'] and
-              states('sensor.poco_x7_pro_network_type') not in ['unknown', 'unavailable'] and
-              states('sensor.th_balcon_nord_temperature') not in ['unknown', 'unavailable'] }}
+          {# --- Logique principale pour 6h-20h --- #}
+          {%- if both_cellular %}
+            {%- set message_header = "Clim [2] en [CELLULAR]" %}
+            {%- if clims_alimentees %}
+              {%- if mode == 'heat' %}
+                {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
+              {%- elif mode == 'cool' %}
+                {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° [COOL]" %}
+              {%- elif mode == 'fan_only' %}
+                {%- set message_mode = "Les 3 Clim [FAN ONLY]" %}
+              {%- endif %}
+            {%- else %}
+              {%- set message_mode = "[UNITS OFF]" %}
+            {%- endif %}
+          {%- elif both_wifi_not_home %}
+            {%- set message_header = "Clim [2] en [WIFI_?!]" %}
+            {%- if clims_alimentees %}
+              {%- if mode == 'heat' %}
+                {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
+              {%- elif mode == 'cool' %}
+                {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° [COOL]" %}
+              {%- elif mode == 'fan_only' %}
+                {%- set message_mode = "Les 3 Clim [FAN ONLY]" %}
+              {%- endif %}
+            {%- else %}
+              {%- set message_mode = "[UNITS OFF]" %}
+            {%- endif %}
+          {%- elif mamour_wifi_home and eric_network == 'cellular' %}
+            {%- set message_header = "Clim [MAMOUR] en [WIFI/CELL]" %}
+            {%- if clims_alimentees %}
+              {%- if mode == 'heat' %}
+                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+              {%- elif mode == 'cool' %}
+                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [COOL]" %}
+              {%- elif mode == 'fan_only' %}
+                {%- set message_mode = "Salon [FAN ONLY] - Bureau & Chambre [FAN ONLY]" %}
+              {%- endif %}
+            {%- else %}
+              {%- set message_mode = "[UNITS OFF]" %}
+            {%- endif %}
+          {%- elif mamour_wifi_home and eric_wifi_not_home %}
+            {%- set message_header = "Clim [MAMOUR] en [WIFI/!?]" %}
+            {%- if clims_alimentees %}
+              {%- if mode == 'heat' %}
+                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+              {%- elif mode == 'cool' %}
+                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [COOL]" %}
+              {%- elif mode == 'fan_only' %}
+                {%- set message_mode = "Salon [FAN ONLY] - Bureau & Chambre [FAN ONLY]" %}
+              {%- endif %}
+            {%- else %}
+              {%- set message_mode = "[UNITS OFF]" %}
+            {%- endif %}
+          {%- elif eric_wifi_home and mamour_network == 'cellular' %}
+            {%- set message_header = "Clim [ERIC] en [WIFI/CELL]" %}
+            {%- if clims_alimentees %}
+              {%- if mode == 'heat' %}
+                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+              {%- elif mode == 'cool' %}
+                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [COOL]" %}
+              {%- elif mode == 'fan_only' %}
+                {%- set message_mode = "Bureau [FAN ONLY] - Salon & Chambre [FAN ONLY]" %}
+              {%- endif %}
+            {%- else %}
+              {%- set message_mode = "[UNITS OFF]" %}
+            {%- endif %}
+          {%- elif eric_wifi_home and mamour_wifi_not_home %}
+            {%- set message_header = "Clim [ERIC] en [WIFI/!?]" %}
+            {%- if clims_alimentees %}
+              {%- if mode == 'heat' %}
+                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+              {%- elif mode == 'cool' %}
+                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [COOL]" %}
+              {%- elif mode == 'fan_only' %}
+                {%- set message_mode = "Bureau [FAN ONLY] - Salon & Chambre [FAN ONLY]" %}
+              {%- endif %}
+            {%- else %}
+              {%- set message_mode = "[UNITS OFF]" %}
+            {%- endif %}
+          {%- elif mamour_wifi_home and eric_wifi_home %}
+            {%- set message_header = "Clim [2] en [WIFI]" %}
+            {%- if clims_alimentees %}
+              {%- if mode == 'heat' %}
+                {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [HEAT]" %}
+              {%- elif mode == 'cool' %}
+                {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [COOL]" %}
+              {%- elif mode == 'fan_only' %}
+                {%- set message_mode = "Salon & Bureau [FAN ONLY] - Chambre [FAN ONLY]" %}
+              {%- endif %}
+            {%- else %}
+              {%- set message_mode = "[UNITS OFF]" %}
+            {%- endif %}
+          {%- else %}
+            {%- set message_header = "Scénario non géré" %}
+            {%- set message_mode = "Vérifiez les capteurs de présence" %}
+          {%- endif %}
+          {# --- Construction du message final --- #}
+          {{ message_header }}
+          {{ message_tendance }}
+          {{ message_mode }}
+        {%- endif %}
+      availability: >
+        {{ states('sensor.ne2213_mamour_network_type') not in ['unknown', 'unavailable'] and
+            states('sensor.poco_x7_pro_network_type') not in ['unknown', 'unavailable'] and
+            states('sensor.th_balcon_nord_temperature') not in ['unknown', 'unavailable'] }}

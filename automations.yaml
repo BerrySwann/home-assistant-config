@@ -4351,6 +4351,7 @@
           - action: climate.set_hvac_mode
             metadata: {}
             data:
+              temperature: '{{ states(''sensor.temperature_cible'') | float }}'
               hvac_mode: 'off'
             target:
               entity_id:
@@ -4497,16 +4498,19 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             fan_mode: quiet
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             fan_mode: breeze
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             fan_mode: breeze
           action: climate.set_fan_mode
         - data:
@@ -4651,16 +4655,19 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             fan_mode: quiet
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             fan_mode: breeze
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             fan_mode: breeze
           action: climate.set_fan_mode
         - data:
@@ -4816,16 +4823,21 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - data:
@@ -4986,16 +4998,21 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - data:
@@ -5088,7 +5105,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: clim [ERIC] en [WIFI/CELL]
+            title: Clim [ERIC] en [WIFI/CELL]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Bureau {{ (states('sensor.temperature_differentielle')
@@ -5137,7 +5154,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: clim [ERIC] en [WIFI/CELL]
+            title: Clim [ERIC] en [WIFI/CELL]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Bureau {{ (states('sensor.temperature_differentielle')
@@ -5153,20 +5170,25 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - data:
-            title: clim [ERIC] en [WIFI/CELL]
+            title: Clim [ERIC] en [WIFI/CELL]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Bureau {{ (states('sensor.temperature_differentielle')
@@ -5258,7 +5280,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: clim [ERIC] en [WIFI/!?]
+            title: Clim [ERIC] en [WIFI/!?]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Bureau {{ (states('sensor.temperature_differentielle')
@@ -5307,7 +5329,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: clim [ERIC] en [WIFI/!?]
+            title: Clim [ERIC] en [WIFI/!?]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Bureau {{ (states('sensor.temperature_differentielle')
@@ -5323,20 +5345,25 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_hvac_mode
         - data:
-            title: clim [ERIC] en [WIFI/!?]
+            title: Clim [ERIC] en [WIFI/!?]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Bureau {{ (states('sensor.temperature_differentielle')
@@ -5430,7 +5457,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: clim [2] en [WIFI]
+            title: Clim [2] en [WIFI]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Salon & Bureau
@@ -5482,7 +5509,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: clim [2] en [WIFI]
+            title: Clim [2] en [WIFI]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Salon & Bureau
@@ -5534,7 +5561,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: clim [2] en [WIFI]
+            title: Clim [2] en [WIFI]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
               or trigger.entity_id == 'sensor.poco_x7_pro_network_type') %}\n  mode:
               \"{{ states('sensor.mode_ete_hiver') | upper }}\" -> Salon & Bureau
