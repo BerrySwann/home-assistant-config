@@ -2106,7 +2106,7 @@
       - fri
       - sat
       - sun
-      enabled: false
+      enabled: true
   actions:
   - data:
       hvac_mode: 'off'
@@ -4203,6 +4203,9 @@
     from: cellular
     to: wifi
     trigger: state
+  - trigger: state
+    entity_id:
+    - sensor.mode_ete_hiver
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
@@ -5779,6 +5782,9 @@
     from: cellular
     to: wifi
     trigger: state
+  - trigger: state
+    entity_id:
+    - sensor.mode_ete_hiver
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
