@@ -4221,6 +4221,10 @@
   - trigger: state
     entity_id:
     - sensor.mode_ete_hiver
+  - trigger: numeric_state
+    entity_id: sensor.temperature_delta_valeur
+    below: -1
+    for: 00:10:00
   - trigger: time
     at: 06:00:00
   conditions: []
@@ -4505,18 +4509,33 @@
             entity_id: climate.clim_salon_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: fan_only
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
             fan_mode: quiet
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: fan_only
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
             fan_mode: breeze
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: fan_only
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
             fan_mode: breeze
           action: climate.set_fan_mode
         - data:
@@ -4662,18 +4681,33 @@
             entity_id: climate.clim_salon_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: fan_only
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
             fan_mode: quiet
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: fan_only
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
             fan_mode: breeze
           action: climate.set_fan_mode
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: fan_only
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
             fan_mode: breeze
           action: climate.set_fan_mode
         - data:
@@ -4833,19 +4867,19 @@
               + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
               | float)) | round(1) }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - data:
             title: Clim [MAMOUR] en [WIFI/CELL]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
@@ -5008,19 +5042,19 @@
               + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
               | float)) | round(1) }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - data:
             title: Clim [MAMOUR] en [WIFI/!?]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
@@ -5178,7 +5212,7 @@
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
@@ -5186,13 +5220,13 @@
               + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
               | float)) | round(1) }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - data:
             title: Clim [ERIC] en [WIFI/CELL]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
@@ -5353,7 +5387,7 @@
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
@@ -5361,7 +5395,7 @@
               + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
               | float)) | round(1) }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
@@ -5541,7 +5575,7 @@
             entity_id: climate.clim_salon_rm4_mini
           data:
             fan_mode: auto
-          action: climate.set_fan_mode
+          action: climate.set_temperature
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
