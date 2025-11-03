@@ -4203,9 +4203,6 @@
     from: cellular
     to: wifi
     trigger: state
-  - trigger: state
-    entity_id:
-    - sensor.mode_ete_hiver
   - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
     entity_id:
@@ -4230,6 +4227,9 @@
   - trigger: state
     entity_id:
     - sensor.temperature_cible
+  - trigger: state
+    entity_id:
+    - sensor.mode_ete_hiver
   - trigger: time
     at: 06:00:00
   conditions: []
@@ -4298,8 +4298,8 @@
             entity_id: sensor.mode_ete_hiver
             state: heat
           - condition: template
-            value_template: '{{ states(''sensor.th_balcon_nord_temperature'') | float
-              > states(''sensor.temperature_hors_gel_hiver'') | float }}'
+            value_template: "{{ states('sensor.th_balcon_nord_temperature') | float
+              <\n   states('sensor.temperature_hors_gel_hiver') | float }}"
           - condition: numeric_state
             entity_id: sensor.temperature_delta_valeur
             below: -1
@@ -4350,17 +4350,26 @@
           - condition: state
             entity_id: sensor.mode_ete_hiver
             state: fan_only
+          - condition: template
+            value_template: '{{ 15 < states(''sensor.th_balcon_nord_temperature'')
+              | float < 25 }}'
           sequence:
-          - action: climate.set_hvac_mode
-            metadata: {}
-            data:
-              temperature: '{{ states(''sensor.temperature_cible'') | float }}'
-              hvac_mode: 'off'
-            target:
+          - target:
               entity_id:
               - climate.clim_salon_rm4_mini
               - climate.clim_bureau_rm4_mini
               - climate.clim_chambre_rm4_mini
+            data:
+              hvac_mode: 'off'
+            action: climate.set_hvac_mode
+          - target:
+              entity_id:
+              - climate.clim_salon_rm4_mini
+              - climate.clim_bureau_rm4_mini
+              - climate.clim_chambre_rm4_mini
+            data:
+              fan_mode: auto
+            action: climate.set_fan_mode
   - alias: SI 2 PORTABLES EN WIFI_!? / IDEM 2 EN CELLULAR
     if:
     - condition: and
@@ -5364,7 +5373,7 @@
           data:
             temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
-          action: climate.set_hvac_mode
+          action: climate.set_temperature
         - data:
             title: Clim [ERIC] en [WIFI/!?]
             message: "{% if trigger is defined and (trigger.entity_id == 'sensor.ne2213_mamour_network_type'
