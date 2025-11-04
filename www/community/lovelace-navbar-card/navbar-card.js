@@ -1234,13 +1234,14 @@ var init_action_handler = __esm(() => {
 });
 
 // src/styles.ts
-var HOST_STYLES, NAVBAR_CONTAINER_STYLES, MEDIA_PLAYER_STYLES, ROUTE_STYLES, POPUP_STYLES, EDITOR_STYLES, ROUTES_EDITOR_DND_STYLES, getDefaultStyles = () => {
+var HOST_STYLES, NAVBAR_CONTAINER_STYLES, MEDIA_PLAYER_STYLES, ROUTE_STYLES, POPUP_STYLES, EDITOR_STYLES, ROUTES_EDITOR_DND_STYLES, COMPONENTS_STYLES, getDefaultStyles = () => {
   return i`
     ${HOST_STYLES}
     ${NAVBAR_CONTAINER_STYLES}
     ${MEDIA_PLAYER_STYLES}
     ${ROUTE_STYLES}
     ${POPUP_STYLES}
+    ${COMPONENTS_STYLES}
   `;
 }, getEditorStyles = () => {
   return i`
@@ -1459,10 +1460,6 @@ var init_styles = __esm(() => {
   }
 
   .media-player .media-player-button {
-    width: 38px;
-    flex-shrink: 0;
-    --ha-button-height: 38px;
-    --ha-button-border-radius: 999px;
   }
 
   .media-player .media-player-button.media-player-button-play-pause {
@@ -2015,6 +2012,28 @@ var init_styles = __esm(() => {
   }
   .delete-btn ha-icon {
     color: var(--error-color, #db4437) !important;
+  }
+`;
+  COMPONENTS_STYLES = i`
+  .navbar-icon-button {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--primary-text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+  }
+
+  .navbar-icon-button.primary {
+    background-color: var(--navbar-primary-color);
+    color: var(--text-primary-color, #fff);
   }
 `;
 });
@@ -3207,7 +3226,7 @@ var init_navbar_card_editor = __esm(() => {
   ], NavbarCardEditor);
 });
 // package.json
-var version = "1.2.0";
+var version = "1.2.1";
 
 // src/navbar-card.ts
 init_lit();
@@ -3737,11 +3756,12 @@ class EventDetectionDirective extends i5 {
     }) : undefined;
     if (this.boundHandlers.hold) {
       const startHold = (ev) => {
+        const targetElement = ev.currentTarget;
         this.holdTriggered = false;
         clearTimeout(this.holdTimeout);
         this.holdTimeout = window.setTimeout(() => {
           this.holdTriggered = true;
-          this.boundHandlers.hold?.(ev);
+          this.boundHandlers.hold?.(ev, targetElement);
         }, LONG_PRESS_DELAY);
       };
       const cancelHold = () => {
@@ -4181,8 +4201,8 @@ class MediaPlayer {
             >${mediaPlayerState.attributes.media_artist}</span
           >
         </div>
-        <ha-button
-          class="media-player-button media-player-button-play-pause"
+        <button
+          class="navbar-icon-button media-player-button media-player-button-play-pause primary"
           appearance="accent"
           variant="brand"
           @click=${this._handleMediaPlayerPlayPauseClick}
@@ -4190,16 +4210,16 @@ class MediaPlayer {
           @pointerup=${preventEventDefault}>
           <ha-icon
             icon=${mediaPlayerState.state === "playing" ? "mdi:pause" : "mdi:play"}></ha-icon>
-        </ha-button>
-        <ha-button
-          class="media-player-button media-player-button-skip"
+        </button>
+        <button
+          class="navbar-icon-button media-player-button media-player-button-skip"
           appearance="plain"
           variant="neutral"
           @click=${this._handleMediaPlayerSkipNextClick}
           @pointerdown=${preventEventDefault}
           @pointerup=${preventEventDefault}>
           <ha-icon icon="mdi:skip-next"></ha-icon>
-        </ha-button>
+        </button>
       </ha-card>
     `;
   };
