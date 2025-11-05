@@ -2083,8 +2083,8 @@
   - condition: and
     conditions:
     - condition: time
-      after: 08:00:00
-      before: '17:00:00'
+      after: 06:00:00
+      before: '20:00:00'
       weekday:
       - mon
       - tue
@@ -2105,6 +2105,12 @@
     - condition: state
       entity_id: switch.clim_chambre_nous
       state: 'on'
+    - condition: template
+      value_template: '{{ states(''climate.clim_salon_rm4_mini'') != ''off''}}'
+    - condition: template
+      value_template: '{{ states(''climate.clim_bureau_rm4_mini'') != ''off''}}'
+    - condition: template
+      value_template: '{{ states(''climate.clim_chambre_rm4_mini'') != ''off''}} '
   actions:
   - data:
       hvac_mode: 'off'
@@ -4150,7 +4156,7 @@
       alias: PRISE CLIM CHAMBRE
   mode: queued
 - id: '1760805587570'
-  alias: (A) [TEST 2025-11-02] Automatisation pour contrôler de [06h00 <-> 20h00]
+  alias: (A) [TEST 2025-11-05] Automatisation pour contrôler de [06h00 <-> 20h00]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24.
@@ -4371,6 +4377,165 @@
             data:
               fan_mode: auto
             action: climate.set_fan_mode
+          - data:
+              title: Delta T° < -1°C
+              message: Les clim ont été éteinte. ({{ states('sensor.temperature_delta_valeur')
+                }}°C)
+            action: notify.mobile_app_poco_x7_pro
+  - alias: SI 2 PORTABLES EN CELLULAR
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: heat
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [2] en [CELLULAR]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_eco_hiver'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: cool
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [2] en [CELLULAR]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: fan_only
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: quiet
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [2] en [CELLULAR]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°. (Salon: quiet,
+              Bureau & Chambre: breeze)
+
+              '
+          action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI_!? / IDEM 2 EN CELLULAR
     if:
     - condition: and
@@ -4531,7 +4696,7 @@
 
               '
           action: notify.mobile_app_poco_x7_pro
-  - alias: SI 2 PORTABLES EN CELLULAR
+  - alias: SI MAMOUR EN CELLULAR & ERIC EN WIFI_!? / IDEM 2 EN CELLULAR
     if:
     - condition: and
       conditions:
@@ -4564,7 +4729,10 @@
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
-        state: cellular
+        state: wifi
+      - condition: template
+        value_template: '{{ states(''sensor.poco_x7_pro_wi_fi_connection'') != ''Freebox_GG''
+          }}'
     then:
     - choose:
       - conditions:
@@ -4606,7 +4774,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: Clim [2] en [CELLULAR]
+            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_eco_hiver'') | float }}°.
 
@@ -4651,7 +4819,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: Clim [2] en [CELLULAR]
+            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_cible'') | float }}°.
 
@@ -4678,14 +4846,171 @@
             fan_mode: breeze
           action: climate.set_fan_mode
         - data:
-            title: Clim [2] en [CELLULAR]
+            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_cible'') | float }}°. (Salon: quiet,
               Bureau & Chambre: breeze)
 
               '
           action: notify.mobile_app_poco_x7_pro
-  - alias: SI MAMOUR EN WIFI / CELLULAR
+  - alias: SI ERIC EN CELLULAR & MAMOUR EN WIFI_!? / IDEM 2 EN CELLULAR
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: template
+        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
+          }}'
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: heat
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_eco_hiver'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: cool
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: fan_only
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: quiet
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°. (Salon: quiet,
+              Bureau & Chambre: breeze)
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+  - alias: SI MAMOUR EN WIFI / ERIC EN CELLULAR
     if:
     - condition: and
       conditions:
@@ -5950,6 +6275,320 @@
           action: climate.set_fan_mode
         - data:
             title: Clim-N [2] en [CELLULAR]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°. (Salon: quiet,
+              Bureau & Chambre: breeze)
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+  - alias: SI MAMOUR EN CELLULAR & ERIC EN WIFI_!? / IDEM 2 EN CELLULAR
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: cellular
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+      - condition: template
+        value_template: '{{ states(''sensor.poco_x7_pro_wi_fi_connection'') != ''Freebox_GG''
+          }}'
+    then:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: heat
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_eco_hiver'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: cool
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: fan_only
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: quiet
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°. (Salon: quiet,
+              Bureau & Chambre: breeze)
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+  - alias: SI ERIC EN CELLULAR & MAMOUR EN WIFI_!? / IDEM 2 EN CELLULAR
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: template
+        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
+          }}'
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: cellular
+    then:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: heat
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_eco_hiver'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: cool
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [CELLULAR/WIFI-!?]
+            message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
+              }} -> {{ states(''sensor.temperature_cible'') | float }}°.
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: fan_only
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: quiet
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: breeze
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [CELLULAR/WIFI-!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_cible'') | float }}°. (Salon: quiet,
               Bureau & Chambre: breeze)
