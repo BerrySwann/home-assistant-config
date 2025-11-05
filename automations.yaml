@@ -2076,9 +2076,23 @@
     below: -1
     for: 00:10:00
     trigger: numeric_state
+  - trigger: state
+    entity_id:
+    - sensor.th_balcon_nord_temperature
   conditions:
   - condition: and
     conditions:
+    - condition: time
+      after: 08:00:00
+      before: '17:00:00'
+      weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+      - sun
     - condition: template
       value_template: '{{ states(''sensor.th_balcon_nord_temperature'') | float >
         states(''sensor.temperature_hors_gel_hiver'') | float }}'
@@ -2091,17 +2105,6 @@
     - condition: state
       entity_id: switch.clim_chambre_nous
       state: 'on'
-    - condition: time
-      after: 08:00:00
-      before: '17:00:00'
-      weekday:
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
-      - sat
-      - sun
   actions:
   - data:
       hvac_mode: 'off'
