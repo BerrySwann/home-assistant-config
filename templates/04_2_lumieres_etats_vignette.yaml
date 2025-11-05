@@ -49,9 +49,9 @@
         {% if is_state('light.bureau_z2m', 'on') %}
           Bureau
         {% elif is_state('light.bureau', 'on') %}
-          Éco. 1
+          Éco.
         {% elif is_state('light.bureau', 'off') %}
-          Éco. 2
+          Éco.
         {% else %}
           Éco. 3
         {% endif %}
