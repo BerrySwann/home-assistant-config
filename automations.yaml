@@ -794,10 +794,10 @@
   mode: single
 - id: '1746961812704'
   alias: Z2M last_seen
-  description: ''
+  description: Surveillance des capteurs Zigbee injoignables
   triggers:
-  - at: 06:00:00
-    trigger: time
+  - trigger: time
+    at: 06:00:00
   - trigger: time_pattern
     minutes: /15
   conditions:
@@ -805,34 +805,24 @@
     value_template: '{{ sensors != '''' and (day | int == 0 or day | int == now().isoweekday())
       }}'
   actions:
-  - choose: []
-    default:
-    - action: notify.mobile_app_poco_x7_pro
-      metadata: {}
-      data:
-        message: 'Des capteurs Zigbee ne sont plus joignables : {% set result = namespace(sensors=[])
-          %} {% for state in states.sensor | selectattr(''attributes.device_class'',
-          ''=='', ''timestamp'') %} {% if ''last_seen'' in state.entity_id and (states(state.entity_id)
-          == ''unavailable'' or ((as_timestamp(now()) - as_timestamp(states(state.entity_id)))
-          > ((24 | int) * 60 * 60))) %} {% set result.sensors = [state.name | regex_replace(find=''_last_seen'',
-          replace='''') ~ '' ('' ~ relative_time(strptime(states(state.entity_id),
-          ''%Y-%m-%dT%H:%M:%S%z'', ''unavailable'')) ~ '')''] %} {{ "*" }}{{ result.sensors
-          | join('', '') }}{{ "*" }} {% endif %} {% endfor %}'
-        title: Problème capteur Zigbee
+  - action: notify.mobile_app_poco_x7_pro
+    data:
+      title: Problème capteur Zigbee
+      message: 'Des capteurs Zigbee ne sont plus joignables : {{ sensors }}'
   variables:
     day: 0
-    hours: 24
+    hours: 4
     exclude:
       entity_id: []
-    sensors: '{% set result = namespace(sensors=[]) %} {% for state in states.sensor
-      | rejectattr(''attributes.device_class'', ''undefined'') | selectattr(''attributes.device_class'',
-      ''=='', ''timestamp'') %}   {% if ''last_seen'' in state.entity_id and not state.entity_id
-      in exclude.entity_id and (states(state.entity_id) == ''unavailable'' or ((as_timestamp(now())
-      - as_timestamp(states(state.entity_id))) > ((hours | int) * 60 * 60))) %}     {%
-      set result.sensors = result.sensors + [state.name | regex_replace(find='' last
-      seen'', replace='''') ~ '' ('' ~ relative_time(strptime(states(state.entity_id),
-      ''%Y-%m-%dT%H:%M:%S%z'', ''unavailable'')) ~ '')''] %}   {% endif %} {% endfor
-      %} {{ result.sensors | join('', '') }}'
+    sensors: "{% set result = namespace(sensors=[]) %} {% for state in states.sensor
+      | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class',
+      '==', 'timestamp') %}\n  {% if 'last_seen' in state.entity_id and state.entity_id
+      not in exclude.entity_id and (states(state.entity_id) == 'unavailable' or ((as_timestamp(now())
+      - as_timestamp(states(state.entity_id))) > ((hours | int) * 60 * 60))) %}\n
+      \   {% set result.sensors = result.sensors + [state.name | regex_replace(find='(_|
+      )last seen', replace='', ignorecase=true) ~ ' (' ~ relative_time(strptime(states(state.entity_id),
+      '%Y-%m-%dT%H:%M:%S%z', 'unavailable')) ~ ')'] %}\n  {% endif %}\n{% endfor %}
+      {{ result.sensors | join(', ') }}"
   mode: single
 - id: '1748450913123'
   alias: Automation éCO. (Prise) selon le réseau [Wifi et/ou Cellular] des 2 portables
