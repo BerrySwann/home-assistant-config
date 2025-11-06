@@ -1,18 +1,17 @@
 
-#========================================================================
-#
-# Verifie si les portables sont en Wifi ou en Cellular
-#
-# TÉLÉPHONES — État Wi-Fi + Synthèse
-#
-#========================================================================
-
+# ========================================================================
+# TÉLÉPHONES — État Wi-Fi + Synthèse (avec wifi_!?)
+# ========================================================================
 - sensor:
   - name: "Condition Mamour Wifi"
     unique_id: condition_mamour_wifi
     state: >-
       {% if is_state('sensor.ne2213_mamour_network_type', 'wifi') %}
-        true
+        {% if is_state('sensor.ne2213_mamour_wifi_ssid', 'Freebox_GG') %}
+          true
+        {% else %}
+          wifi_!?
+        {% endif %}
       {% else %}
         false
       {% endif %}
@@ -21,7 +20,11 @@
     unique_id: condition_eric_wifi
     state: >-
       {% if is_state('sensor.poco_x7_pro_network_type', 'wifi') %}
-        true
+        {% if is_state('sensor.poco_x7_pro_wifi_ssid', 'Freebox_GG') %}
+          true
+        {% else %}
+          wifi_!?
+        {% endif %}
       {% else %}
         false
       {% endif %}
