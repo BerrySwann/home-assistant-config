@@ -28,13 +28,13 @@
   - name: "Consigne de Base"
     unique_id: consigne_de_Base
     unit_of_measurement: "°C"
-    state: "19"
+    state: "18"
 
 - sensor: #(19° confort hiver / 27° l'été)
   - name: "Temperature différentielle"
     unique_id: temperature_différentielle
     unit_of_measurement: "°C"
-    state: "20"
+    state: "19"
 
 - sensor: #(éco hiver 17°)
   - name: "Temperature éCO. Hiver"
