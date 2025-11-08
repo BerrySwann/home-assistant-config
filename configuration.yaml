@@ -160,20 +160,20 @@ climate:
     device_code: 1108
     controller_data: remote.clim_bureau
     temperature_sensor: sensor.rm4_mini_bureau_temperature
-    humidity_sensor: sensor.rm4_mini_humidity
+    humidity_sensor: sensor.rm4_mini_bureau_humidity
 
   - platform: smartir
     name: Clim Chambre RM4-Mini
     unique_id: clim_chambre_rm4_mini
     device_code: 1108
     controller_data: remote.clim_chambre
-    temperature_sensor: sensor.rm4_mini_temperature
-    humidity_sensor: sensor.rm4_mini_humidity
+    temperature_sensor: sensor.rm4_mini_chambre_temperature
+    humidity_sensor: sensor.rm4_mini_chambre_humidity
 
   - platform: smartir
     name: Clim Salon RM4-Mini
     unique_id: clim_salon_rm4_mini
     device_code: 1082
     controller_data: remote.clim_salon
-    temperature_sensor: sensor.rm4_mini_temperature
-    humidity_sensor: sensor.rm4_mini_humidity
+    temperature_sensor: sensor.rm4_mini_salon_temperature
+    humidity_sensor: sensor.rm4_mini_salon_humidity
