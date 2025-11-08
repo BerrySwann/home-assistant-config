@@ -152,3 +152,28 @@ bluetooth:
     - download
     - upload
 
+#smartIR
+climate:
+  - platform: smartir
+    name: Clim Bureau RM4-Mini
+    unique_id: clim_bureau_rm4_mini
+    device_code: 1108
+    controller_data: remote.clim_bureau
+    temperature_sensor: sensor.th_bureau_temperature
+    humidity_sensor: sensor.bureau_humidity_rm4_mini
+
+  - platform: smartir
+    name: Clim Chambre RM4-Mini
+    unique_id: clim_chambre_rm4_mini
+    device_code: 1108
+    controller_data: remote.clim_chambre
+    temperature_sensor: sensor.th_chambre_temperature
+    humidity_sensor: sensor.chambre_humidity_rm4_mini
+
+  - platform: smartir
+    name: Clim Salon RM4-Mini
+    unique_id: clim_salon_rm4_mini
+    device_code: 1082
+    controller_data: remote.clim_salon
+    temperature_sensor: sensor.th_salon_temperature
+    humidity_sensor: sensor.salon_humidity_rm4_mini
