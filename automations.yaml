@@ -7359,7 +7359,7 @@
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
-            fan_mode: auto
+            fan_mode: breeze
           action: climate.set_fan_mode
         - data:
             title: Clim-N [2] en [WIFI]
