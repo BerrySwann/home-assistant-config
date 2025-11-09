@@ -4146,7 +4146,7 @@
       alias: PRISE CLIM CHAMBRE
   mode: queued
 - id: '1760805587570'
-  alias: (A) [TEST 2025-11-05] Automatisation pour contrôler de [06h00 <-> 20h00]
+  alias: (A) [TEST 2025-11-09] Automatisation pour contrôler de [06h00 <-> 20h00]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24.
@@ -4764,7 +4764,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
+            title: Clim [MAOMOUR] en [CELLULAR/!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_eco_hiver'') | float }}°.
 
@@ -4809,7 +4809,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
+            title: Clim [MAOMOUR] en [CELLULAR/!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_cible'') | float }}°.
 
@@ -4836,7 +4836,7 @@
             fan_mode: breeze
           action: climate.set_fan_mode
         - data:
-            title: Clim [MAOMOUR] en [CELLULAR/WIFI-!?]
+            title: Clim [MAOMOUR] en [CELLULAR/!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_cible'') | float }}°. (Salon: quiet,
               Bureau & Chambre: breeze)
@@ -4966,7 +4966,7 @@
             fan_mode: auto
           action: climate.set_fan_mode
         - data:
-            title: Clim [ERIC] en [CELLULAR/WIFI-!?]
+            title: Clim [ERIC] en [CELLULAR/!?]
             message: 'Les 3 Clim en mode: {{ states(''sensor.mode_ete_hiver'') | upper
               }} -> {{ states(''sensor.temperature_cible'') | float }}°.
 
@@ -5222,7 +5222,9 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
-            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
             hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
           action: climate.set_temperature
         - target:
@@ -5233,9 +5235,7 @@
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
-            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
-              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
-              | float)) | round(1) }}'
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
           action: climate.set_temperature
         - target:
@@ -5256,10 +5256,10 @@
           action: climate.set_fan_mode
         - data:
             title: Clim [MAMOUR] en [WIFI/!?]
-            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Bureau
+            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Salon
               {{ (states(''sensor.temperature_differentielle'') | float + (states(''sensor.temperature_cible'')
               | float - states(''sensor.consigne_de_base'') | float)) | round(1) }}°
-              - Salon & Chambre {{ states(''sensor.temperature_cible'') | float }}°
+              - Bureau & Chambre {{ states(''sensor.temperature_cible'') | float }}°
 
               '
           action: notify.mobile_app_poco_x7_pro
@@ -5271,7 +5271,9 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
-            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
             hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
           action: climate.set_temperature
         - target:
@@ -5282,9 +5284,7 @@
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
-            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
-              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
-              | float)) | round(1) }}'
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
           action: climate.set_temperature
         - target:
@@ -5305,10 +5305,10 @@
           action: climate.set_fan_mode
         - data:
             title: Clim [MAMOUR] en [WIFI/!?]
-            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Bureau
+            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Salon
               {{ (states(''sensor.temperature_differentielle'') | float + (states(''sensor.temperature_cible'')
               | float - states(''sensor.consigne_de_base'') | float)) | round(1) }}°
-              - Salon & Chambre {{ states(''sensor.temperature_cible'') | float }}°
+              - Bureau & Chambre {{ states(''sensor.temperature_cible'') | float }}°
 
               '
           action: notify.mobile_app_poco_x7_pro
@@ -5320,15 +5320,15 @@
         - target:
             entity_id: climate.clim_salon_rm4_mini
           data:
-            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
             hvac_mode: 'off'
           action: climate.set_temperature
         - target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
-            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
-              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
-              | float)) | round(1) }}'
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
             hvac_mode: 'off'
           action: climate.set_temperature
         - target:
@@ -5339,10 +5339,10 @@
           action: climate.set_temperature
         - data:
             title: Clim [MAMOUR] en [WIFI/!?]
-            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Bureau
+            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Salon
               {{ (states(''sensor.temperature_differentielle'') | float + (states(''sensor.temperature_cible'')
               | float - states(''sensor.consigne_de_base'') | float)) | round(1) }}°
-              - Salon & Chambre {{ states(''sensor.temperature_cible'') | float }}°
+              - Bureau & Chambre {{ states(''sensor.temperature_cible'') | float }}°
               Mode ventilation : Climatiseurs éteints (Salon, Bureau, Chambre)
 
               '
@@ -5511,6 +5511,181 @@
           action: climate.set_temperature
         - data:
             title: Clim [ERIC] en [WIFI/CELL]
+            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Bureau
+              {{ (states(''sensor.temperature_differentielle'') | float + (states(''sensor.temperature_cible'')
+              | float - states(''sensor.consigne_de_base'') | float)) | round(1) }}°
+              - Salon & Chambre {{ states(''sensor.temperature_cible'') | float }}°
+              Mode ventilation : Climatiseurs éteints (Salon, Bureau, Chambre)
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+  - alias: SI ERIC EN WIFI & MAMOUR EN WIFI_!?
+    if:
+    - condition: and
+      conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+        state: 'off'
+      - condition: state
+        entity_id: sensor.ne2213_mamour_network_type
+        state: wifi
+      - condition: template
+        value_template: '{{ states(''sensor.poco_x7_pro_wi_fi_connection'') != ''Freebox_GG''
+          }}'
+      - condition: state
+        entity_id: sensor.poco_x7_pro_wi_fi_connection
+        state: Freebox_GG
+      - condition: state
+        entity_id: sensor.poco_x7_pro_network_type
+        state: wifi
+    then:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: heat
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [WIFI/!?]
+            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Bureau
+              {{ (states(''sensor.temperature_differentielle'') | float + (states(''sensor.temperature_cible'')
+              | float - states(''sensor.consigne_de_base'') | float)) | round(1) }}°
+              - Salon & Chambre {{ states(''sensor.temperature_cible'') | float }}°
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: cool
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
+          action: climate.set_fan_mode
+        - data:
+            title: Clim [ERIC] en [WIFI/!?]
+            message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Bureau
+              {{ (states(''sensor.temperature_differentielle'') | float + (states(''sensor.temperature_cible'')
+              | float - states(''sensor.consigne_de_base'') | float)) | round(1) }}°
+              - Salon & Chambre {{ states(''sensor.temperature_cible'') | float }}°
+
+              '
+          action: notify.mobile_app_poco_x7_pro
+      - conditions:
+        - condition: state
+          entity_id: sensor.mode_ete_hiver
+          state: fan_only
+        sequence:
+        - target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: 'off'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            temperature: '{{ (states(''sensor.temperature_differentielle'') | float
+              + (states(''sensor.temperature_cible'') | float - states(''sensor.consigne_de_base'')
+              | float)) | round(1) }}'
+            hvac_mode: 'off'
+          action: climate.set_temperature
+        - target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            temperature: '{{ states(''sensor.temperature_cible'') | float }}'
+            hvac_mode: 'off'
+          action: climate.set_temperature
+        - data:
+            title: Clim [ERIC] en [WIFI/!?]
             message: 'mode: "{{ states(''sensor.mode_ete_hiver'') | upper }}" -> Bureau
               {{ (states(''sensor.temperature_differentielle'') | float + (states(''sensor.temperature_cible'')
               | float - states(''sensor.consigne_de_base'') | float)) | round(1) }}°
@@ -5899,7 +6074,7 @@
     default: []
   mode: single
 - id: '1761246384091'
-  alias: (B) (20h00 <-> 06h00) [TEST 2025-11-02] Automatisation pour contrôler les
+  alias: (B) (20h00 <-> 06h00) [TEST 2025-11-09] Automatisation pour contrôler les
     climatiseurs en fonction de la température intérieure/extérieure [DELTA] et du
     type de réseau des portables [WIFI/CELLULAR].
   description: Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
@@ -7408,7 +7583,7 @@
         - target:
             entity_id: climate.clim_chambre_rm4_mini
           data:
-            fan_mode: auto
+            fan_mode: breeze
           action: climate.set_fan_mode
         - data:
             title: Clim-N [2] en [WIFI]
