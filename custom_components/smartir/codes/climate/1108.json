@@ -15,9 +15,6 @@
         "heat",
         "fan_only"
     ],
-    "presetModes": [
-        "comfort"
-    ],
     "fanModes": [
         "auto",
         "breeze",
