@@ -40,7 +40,7 @@
   - name: "Temperature éCO. Hiver"
     unique_id: temperature_eco_hiver
     unit_of_measurement: "°C"
-    state: "17"
+    state: "19"
 
 - sensor: #(hors gel hiver 15°)
   - name: "Temperature Hors-Gel Hiver"
