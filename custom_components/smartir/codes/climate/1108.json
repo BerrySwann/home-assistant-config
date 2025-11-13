@@ -15,7 +15,7 @@
         "heat",
         "fan_only"
     ],
-    "preset_modes": [
+    "presetmodes": [
         "comfort"
     ],
     "fanModes": [
