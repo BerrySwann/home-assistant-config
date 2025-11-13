@@ -160,7 +160,7 @@ climate:
     device_code: 1108
     controller_data: remote.clim_bureau
     temperature_sensor: sensor.th_bureau_temperature
-    humidity_sensor: sensor.th_chambre_humidity
+    humidity_sensor: sensor.th_bureau_humidity
 
   - platform: smartir
     name: Clim Chambre RM4-Mini
@@ -176,4 +176,4 @@ climate:
     device_code: 1082
     controller_data: remote.clim_salon
     temperature_sensor: sensor.th_salon_temperature
-    humidity_sensor: sensor.th_chambre_humidity
+    humidity_sensor: sensor.th_salon_humidity

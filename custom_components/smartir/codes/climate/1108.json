@@ -1,9 +1,7 @@
 {
     "manufacturer": "Daikin",
     "supportedModels": [
-        "FTXG25EV1BS",
-        "FTXG35EV1BS",
-        "FTXG35EV1BW"
+        "FTX35KNV1B"
     ],
     "commandsEncoding": "Base64",
     "supportedController": "Broadlink",
