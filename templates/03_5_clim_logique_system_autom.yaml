@@ -46,7 +46,7 @@
   - name: "Temperature Hors-Gel Hiver"
     unique_id: temperature_hors_gel_hiver
     unit_of_measurement: "°C"
-    state: "17"
+    state: "18"
 
 - sensor: #mode Cool si T° exterieur est > +32°
   - name: "Delta_5"
