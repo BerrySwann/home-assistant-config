@@ -1,0 +1,84 @@
+
+  - sensor:
+      - name: "Présence combinée Mamour & Eric"
+        state: >-
+          {% set ssid_home = "Freebox_GG" %}
+          {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') %}
+          {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') %}
+          {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') %}
+          {% set eric_net_type = states('sensor.poco_x7_pro_network_type') %}
+
+          {% macro etat_personne(nom, net_type, wifi_ssid) %}
+            {% if net_type == "wifi" %}
+              {% if wifi_ssid == ssid_home %}
+                {{ nom }} en wifi Home
+              {% elif wifi_ssid not in ["", "unknown", "None", null] %}
+                {{ nom }} en wifi non Home
+              {% else %}
+                {{ nom }} absent wifi
+              {% endif %}
+            {% elif net_type == "cellular" %}
+              {{ nom }} en cellular
+            {% else %}
+              {{ nom }} absent
+            {% endif %}
+          {% endmacro %}
+
+          {% set mamour = etat_personne("Mamour", mamour_net_type, mamour_wifi_ssid) %}
+          {% set eric = etat_personne("Eric", eric_net_type, eric_wifi_ssid) %}
+
+          {{ mamour }} + {{ eric }}
+
+
+  - sensor:
+      - name: "Groupe clim avec horaires et mode"
+        state: >-
+          {% set ssid_home = "Freebox_GG" %}
+          {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') %}
+          {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') %}
+          {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') %}
+          {% set eric_net_type = states('sensor.poco_x7_pro_network_type') %}
+          {% set mode = states('sensor.mode_ete_hiver') %}
+          {% set heure = now().hour %}
+
+          {% macro etat_personne(nom, net_type, wifi_ssid) %}
+            {% if net_type == "wifi" %}
+              {% if wifi_ssid == ssid_home %}
+                {{ nom }} wifi Home
+              {% elif wifi_ssid not in ["", "unknown", "None", null] %}
+                {{ nom }} wifi non Home
+              {% else %}
+                {{ nom }} absent wifi
+              {% endif %}
+            {% elif net_type == "cellular" %}
+              {{ nom }} cellular
+            {% else %}
+              {{ nom }} absent
+            {% endif %}
+          {% endmacro %}
+
+          {% set mamour = etat_personne("Mamour", mamour_net_type, mamour_wifi_ssid) %}
+          {% set eric = etat_personne("Eric", eric_net_type, eric_wifi_ssid) %}
+
+          {% if 6 <= heure < 20 %}
+            {% set plage = "6h-20h" %}
+          {% else %}
+            {% set plage = "20h-6h" %}
+          {% endif %}
+
+          {% set groupe = namespace(value="Indéfini") %}
+
+          {% if "wifi Home" in mamour and "wifi Home" in eric %}
+            {% set groupe.value = "Groupe 4 : 2 en wifi Freebox GG" %}
+          {% elif "wifi" in mamour and ("cellular" in eric or "wifi non Home" in eric) %}
+            {% set groupe.value = "Groupe 2 : Mamour wifi, Eric cellular ou wifi non Freebox GG" %}
+          {% elif "wifi" in eric and ("cellular" in mamour or "wifi non Home" in mamour) %}
+            {% set groupe.value = "Groupe 3 : Eric wifi, Mamour cellular ou wifi non Freebox GG" %}
+          {% elif ("cellular" in mamour or "absent" in mamour) and ("cellular" in eric or "absent" in eric) %}
+            {% set groupe.value = "Groupe 1 : 2 en cellular ou wifi non Freebox GG" %}
+          {% else %}
+            {% set groupe.value = "Indéfini" %}
+          {% endif %}
+
+
+          {{ groupe.value }} + plage {{ plage }} + mode {{ mode }}

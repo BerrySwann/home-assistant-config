@@ -7692,3 +7692,204 @@
               '
           action: notify.mobile_app_poco_x7_pro
   mode: queued
+- id: '1763131222107'
+  alias: Contrôle climatisation avec groupes, plages et fenêtres
+  description: 'Gestion des climatisations selon groupes de présence, plages horaires
+    et mode clim. Activation uniquement si toutes fenêtres sont fermées et prises
+    clims activées.
+
+    '
+  triggers:
+  - entity_id:
+    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_network_type
+    - sensor.mode_ete_hiver
+    - sensor.temperature_delta_value
+    - sensor.groupe_presence_clim
+    - sensor.nbre_de_fenetres_fermees
+    - switch.clim_salon_nous
+    - switch.clim_du_bureau_nous
+    - switch.clim_chambre_nous
+    trigger: state
+  - at: 06:00:00
+    trigger: time
+  conditions: []
+  actions:
+  - variables:
+      groupe: '{{ states(''sensor.groupe_presence_clim'') }}'
+      mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      temp_eco: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+      temp_cible: '{{ states(''sensor.temperature_cible'') | float }}'
+      temp_diff: '{{ states(''sensor.temperature_delta_value'') | float }}'
+      consigne_base: '{{ states(''sensor.consigne_de_base'') | float }}'
+      fenetres_fermees: '{{ states(''sensor.nbre_de_fenetres_fermees'') | int }}'
+      pris_clim: "{{ is_state('switch.clim_salon_nous', 'on') and\n   is_state('switch.clim_du_bureau_nous',
+        'on') and\n   is_state('switch.clim_chambre_nous', 'on') }}\n"
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.nbre_de_fenetres_fermees
+        above: 3.9
+      - condition: template
+        value_template: '{{ pris_clim }}'
+      - condition: state
+        entity_id: switch.clim_salon_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_du_bureau_nous
+        state: 'on'
+      - condition: state
+        entity_id: switch.clim_chambre_nous
+        state: 'on'
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ ''Groupe 1'' in groupe }}'
+          sequence:
+          - choose:
+            - conditions:
+              - condition: state
+                entity_id: sensor.mode_ete_hiver
+                state: heat
+              sequence:
+              - target:
+                  entity_id:
+                  - climate.clim_salon_rm4_mini
+                  - climate.clim_bureau_rm4_mini
+                  - climate.clim_chambre_rm4_mini
+                data:
+                  hvac_mode: heat
+                  temperature: '{{ temp_eco }}'
+                action: climate.set_temperature
+              - target:
+                  entity_id:
+                  - climate.clim_salon_rm4_mini
+                  - climate.clim_bureau_rm4_mini
+                  - climate.clim_chambre_rm4_mini
+                data:
+                  fan_mode: auto
+                action: climate.set_fan_mode
+            - conditions:
+              - condition: state
+                entity_id: sensor.mode_ete_hiver
+                state: cool
+              sequence:
+              - target:
+                  entity_id:
+                  - climate.clim_salon_rm4_mini
+                  - climate.clim_bureau_rm4_mini
+                  - climate.clim_chambre_rm4_mini
+                data:
+                  hvac_mode: cool
+                  temperature: '{{ temp_cible }}'
+                action: climate.set_temperature
+              - target:
+                  entity_id:
+                  - climate.clim_salon_rm4_mini
+                  - climate.clim_bureau_rm4_mini
+                  - climate.clim_chambre_rm4_mini
+                data:
+                  fan_mode: auto
+                action: climate.set_fan_mode
+            - conditions:
+              - condition: state
+                entity_id: sensor.mode_ete_hiver
+                state: fan_only
+              sequence:
+              - target:
+                  entity_id:
+                  - climate.clim_salon_rm4_mini
+                  - climate.clim_bureau_rm4_mini
+                  - climate.clim_chambre_rm4_mini
+                data:
+                  fan_mode: auto
+                action: climate.set_fan_mode
+          alias: GROUPE 1 - (ABSENT)
+        - conditions:
+          - condition: template
+            value_template: '{{ ''Groupe 2'' in groupe }}'
+          sequence:
+          - target:
+              entity_id:
+              - climate.clim_bureau_rm4_mini
+              - climate.clim_chambre_rm4_mini
+            data:
+              hvac_mode: '{{ mode }}'
+              temperature: '{{ temp_cible }}'
+            action: climate.set_temperature
+          - target:
+              entity_id: climate.clim_salon_rm4_mini
+            data:
+              hvac_mode: '{{ mode }}'
+              temperature: '{{ temp_diff }}'
+            action: climate.set_temperature
+          - target:
+              entity_id:
+              - climate.clim_salon_rm4_mini
+              - climate.clim_bureau_rm4_mini
+              - climate.clim_chambre_rm4_mini
+            data:
+              fan_mode: auto
+            action: climate.set_fan_mode
+          alias: GROUPE 2 - MAMOUR AT HOME
+        - conditions:
+          - condition: template
+            value_template: '{{ ''Groupe 3'' in groupe }}'
+          sequence:
+          - target:
+              entity_id:
+              - climate.clim_salon_rm4_mini
+              - climate.clim_chambre_rm4_mini
+            data:
+              hvac_mode: '{{ mode }}'
+              temperature: '{{ temp_cible }}'
+            action: climate.set_temperature
+          - target:
+              entity_id: climate.clim_bureau_rm4_mini
+            data:
+              hvac_mode: '{{ mode }}'
+              temperature: '{{ temp_diff }}'
+            action: climate.set_temperature
+          - target:
+              entity_id:
+              - climate.clim_salon_rm4_mini
+              - climate.clim_bureau_rm4_mini
+              - climate.clim_chambre_rm4_mini
+            data:
+              fan_mode: auto
+            action: climate.set_fan_mode
+          alias: GROUPE 3  - ERIC AT HOME
+        - conditions:
+          - condition: template
+            value_template: '{{ ''Groupe 4'' in groupe }}'
+          sequence:
+          - target:
+              entity_id:
+              - climate.clim_salon_rm4_mini
+              - climate.clim_bureau_rm4_mini
+            data:
+              hvac_mode: '{{ mode }}'
+              temperature: '{{ temp_diff }}'
+            action: climate.set_temperature
+          - target:
+              entity_id: climate.clim_chambre_rm4_mini
+            data:
+              hvac_mode: '{{ mode }}'
+              temperature: '{{ temp_cible }}'
+            action: climate.set_temperature
+          - target:
+              entity_id:
+              - climate.clim_salon_rm4_mini
+              - climate.clim_bureau_rm4_mini
+              - climate.clim_chambre_rm4_mini
+            data:
+              fan_mode: "{% if mode == 'fan_only' %}\n  {% if 'clim_salon_rm4_mini'
+                in target.entity_id %}\n    quiet\n  {% else %}\n    breeze\n  {%
+                endif %}\n{% else %}\n  auto\n{% endif %}\n"
+            action: climate.set_fan_mode
+          alias: GROUPE 4 - MAMOUR & ERIC AT HOME
+  mode: queued
