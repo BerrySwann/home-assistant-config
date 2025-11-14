@@ -1177,8 +1177,8 @@
           '
       action: notify.mobile_app_poco_x7_pro
 - id: '1751912898399'
-  alias: (A) (6h00 -> 20h00) [ TEST 2025-08-03 ] Automatisation pour contrôler de
-    [06h00 <-> 20h00] les climatiseurs en fonction de la température intérieure/extérieure
+  alias: (A - 3) (6h00 -> 20h00) [ TEST 2025-08-03 ] Automatisation pour contrôler
+    de [06h00 <-> 20h00] les climatiseurs en fonction de la température intérieure/extérieure
     [DELTA] et du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des
     fenêtres [OUVERTE(S)/FERMÉE(S)] qui sont contrôlées 24h sur 24.
   description: Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
@@ -2770,7 +2770,7 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1759744373014'
-  alias: (A) [GOOD] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
+  alias: (A - 2) [GOOD] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24.
@@ -4193,7 +4193,7 @@
       alias: PRISE CLIM CHAMBRE
   mode: queued
 - id: '1760805587570'
-  alias: (A) [TEST 2025-11-09] Automatisation pour contrôler de [06h00 <-> 20h00]
+  alias: (A - 1) [ARRET 2025-11-09] Automatisation pour contrôler de [06h00 <-> 20h00]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24.
@@ -7693,30 +7693,86 @@
           action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763131222107'
-  alias: CONTRÔLE CLIMATISATION AVEC GROUPES, PLAGES ET FENÊTRES
-  description: 'Gestion des climatiseurs selon groupes de présence, plages horaires
-    et mode clim. Activation uniquement si toutes fenêtres sont fermées et prises
-    clims activées.
-
-    '
+  alias: (A - 0) [TEST 2025-11-14] Automatisation pour contrôler de [06h00 <-> 20h00]
+    les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
+    du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
+    qui sont contrôlées 24h sur 24.
+  description: '[TEST] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
+    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+    des portables [WIFI/CELLULAR]. (SAUF) L''état des fenêtres [OUVERTE(S)/FERMÉE(S)]
+    qui sont contrôlées 24h sur 24.'
   triggers:
-  - entity_id:
-    - sensor.ne2213_mamour_network_type
-    - sensor.poco_x7_pro_network_type
-    - sensor.mode_ete_hiver
-    - sensor.temperature_delta_valeur
-    - sensor.groupe_presence_clim
-    - sensor.nbre_de_fenetres_fermees
-    - switch.clim_salon_nous
-    - switch.clim_du_bureau_nous
-    - switch.clim_chambre_nous
+  - alias: Changement d'état des fenêtres 'off' -> 'on'
+    entity_id:
     - binary_sensor.contact_fenetre_salon_ikea_contact
     - binary_sensor.contact_fenetre_cuisine_ikea_contact
     - binary_sensor.contact_fenetre_bureau_ikea_contact
     - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'off'
+    to: 'on'
     trigger: state
-  - at: 06:00:00
-    trigger: time
+  - alias: Changement d'état des fenêtres 'on' -> 'off'
+    entity_id:
+    - binary_sensor.contact_fenetre_salon_ikea_contact
+    - binary_sensor.contact_fenetre_cuisine_ikea_contact
+    - binary_sensor.contact_fenetre_bureau_ikea_contact
+    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'on'
+    to: 'off'
+    trigger: state
+  - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement de réseau d'Eric 'wifi' -> 'cellular'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: wifi
+    to: cellular
+    trigger: state
+  - alias: Changement de réseau d'Eric 'cellular' -> 'wifi'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: cellular
+    to: wifi
+    trigger: state
+  - alias: Changement d'état des climatiseurs à 'heat'
+    trigger: state
+    entity_id:
+    - climate.clim_salon_rm4_mini
+    - climate.clim_bureau_rm4_mini
+    - climate.clim_chambre_rm4_mini
+    to: heat
+  - alias: Changement d'état des climatiseurs à 'cool'
+    trigger: state
+    entity_id:
+    - climate.clim_salon_rm4_mini
+    - climate.clim_bureau_rm4_mini
+    - climate.clim_chambre_rm4_mini
+    to: cool
+  - alias: Changement d'état des climatiseurs à 'fan_only'
+    trigger: state
+    entity_id:
+    - climate.clim_salon_rm4_mini
+    - climate.clim_bureau_rm4_mini
+    - climate.clim_chambre_rm4_mini
+    to: fan_only
+  - trigger: state
+    entity_id:
+    - sensor.temperature_cible
+  - trigger: state
+    entity_id:
+    - sensor.mode_ete_hiver
+  - trigger: numeric_state
+    entity_id: sensor.temperature_delta_valeur
+    below: -1
+    for: 00:10:00
+  - trigger: time
+    at: 06:00:00
   conditions: []
   actions:
   - alias: SI UNE FENÊTRES EST OUVERTES OU TOUTES FERMÉES
@@ -7781,7 +7837,11 @@
       sequence:
       - alias: INITIALISATION VARIABLES
         variables:
-          groupe: '{{ states(''sensor.groupe_presence_clim'') }}'
+          groupe: '{% set val = states(''sensor.groupe_clim_avec_horaires_et_mode'')
+            %} {{ val.split('':'')[0].strip() if '':'' in val else ''GROUPE INCONNU''
+            }}
+
+            '
           mode: '{{ states(''sensor.mode_ete_hiver'') }}'
           temp_eco: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
           temp_cible: '{{ states(''sensor.temperature_cible'') | float }}'
@@ -7791,11 +7851,9 @@
             }}'
           pris_clim: "{{ is_state('switch.clim_salon_nous', 'on') and\n   is_state('switch.clim_du_bureau_nous',
             'on') and\n   is_state('switch.clim_chambre_nous', 'on') }}\n"
-          extrait_groupe: '{% set match = states(''sensor.groupe_clim_avec_horaires_et_mode'')
-            | regex_findall(''\\[(.*?)\\]'') %} {{ match[0] if match | length > 0
-            else ''Groupe inconnu'' }}
-
-            '
+          extrait_groupe: "{% set val = states('sensor.groupe_clim_avec_horaires_et_mode')
+            %} {% if ':' in val %}\n  {{ val.split(':')[1].split('+')[0] | trim }}\n{%
+            else %}\n  GROUPE INCONNU\n{% endif %}\n"
       - alias: CONDITIONS PRINCIPALES
         choose:
         - alias: ETAPES VERIF FENÊTRES, PRISES ET HORAIRES
@@ -7990,12 +8048,12 @@
                 data:
                   fan_mode: auto
               - alias: NOTIFICATION GROUPE 3
-                action: notify.mobile_app_poco_x7_pro
                 data:
                   title: '[{{ extrait_groupe }}]'
                   message: 'mode: {{ mode | upper }} -> Bureau {{ (temp_diff + (temp_cible
                     - consigne_base)) | round(1) }}° - Salon & Chambre {{ temp_cible
                     }}°'
+                action: notify.mobile_app_poco_x7_pro
             - alias: GROUPE 4 - MAMOUR & ERIC AT HOME
               conditions:
               - alias: GROUPE 4 DÉTECTÉ
@@ -8030,10 +8088,10 @@
                     in target.entity_id %}\n    quiet\n  {% else %}\n    breeze\n
                     \ {% endif %}\n{% else %}\n  auto\n{% endif %}\n"
               - alias: NOTIFICATION GROUPE 4
-                action: notify.mobile_app_poco_x7_pro
                 data:
                   title: '[{{ extrait_groupe }}]'
                   message: 'mode: {{ mode | upper }} -> Salon & Bureau {{ (temp_diff
                     + (temp_cible - consigne_base)) | round(1) }}° & Chambre {{ temp_cible
                     }}°'
+                action: notify.mobile_app_poco_x7_pro
   mode: queued
