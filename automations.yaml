@@ -782,7 +782,7 @@
   alias: Update previous temperature
   description: Update previous temperature
   triggers:
-  - minutes: /30
+  - minutes: /1
     trigger: time_pattern
   conditions: []
   actions:
@@ -846,6 +846,53 @@
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
           state: cellular
+      sequence:
+      - type: turn_off
+        device_id: 953354483097f440ca3b80ee31579839
+        entity_id: 2cd1f3631cffd872644e94b82911bd1c
+        domain: switch
+      - type: turn_off
+        device_id: a1e1e27131bc91a248ad196be29ae36f
+        entity_id: 35b638346b45f3b344173066dab03737
+        domain: light
+      - type: turn_off
+        device_id: 164b6aa99caaca04f27355e5f1f79cb1
+        entity_id: b37c2b271812bf3539f85ecae964b296
+        domain: switch
+      - type: turn_off
+        device_id: e98e8d5cfad976eba0bc72068c8ce8f0
+        entity_id: 112f9a3e7fdbef3de9b8c3ffe84e3827
+        domain: switch
+      - type: turn_off
+        device_id: 4bbf9eb35f3608d21edb0da3052f8e1d
+        entity_id: fdb008a5af2652bb414838d475af4b94
+        domain: switch
+      - action: notify.mobile_app_poco_x7_pro
+        metadata: {}
+        data:
+          message: '[5] prises [OFF]'
+          title: éCO Prises [2] en [Cellular]
+    - alias: '[2] en [WIFI_!?]'
+      conditions:
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: sensor.ne2213_mamour_network_type
+          state:
+          - wifi
+        - condition: template
+          value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') !=
+            ''Freebox_GG'' }}
+
+            '
+        - condition: state
+          entity_id: sensor.poco_x7_pro_network_type
+          state: wifi
+        - condition: template
+          value_template: '{{ states(''sensor.poco_x7_pro_wi_fi_connection'') != ''Freebox_GG''
+            }}
+
+            '
       sequence:
       - type: turn_off
         device_id: 953354483097f440ca3b80ee31579839
