@@ -7910,7 +7910,7 @@
                       fan_mode: auto
                   - alias: NOTIFICATION GROUPE 1 - HEAT
                     data:
-                      title: '[{{ presence }}]'
+                      title: '{{ presence }}'
                       message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_eco
                         }}°.'
                     action: notify.mobile_app_poco_x7_pro
@@ -7943,7 +7943,7 @@
                   - alias: NOTIFICATION GROUPE 1 COOL/FAN
                     action: notify.mobile_app_poco_x7_pro
                     data:
-                      title: '[{{ presence }}]'
+                      title: '{{ presence }}'
                       message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_cible
                         }}°.'
                 - alias: MODE FAN ONLY
@@ -7965,7 +7965,7 @@
                   - alias: NOTIFICATION GROUPE 1 COOL/FAN
                     action: notify.mobile_app_poco_x7_pro
                     data:
-                      title: '[{{ presence }}]'
+                      title: '{{ presence }}'
                       message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_cible
                         }}°.'
             - alias: GROUPE 2 - MAMOUR AT HOME
@@ -8002,7 +8002,7 @@
               - alias: NOTIFICATION GROUPE 2
                 action: notify.mobile_app_poco_x7_pro
                 data:
-                  title: '[{{ presence }}]'
+                  title: '{{ presence }}'
                   message: 'mode: {{ mode | upper }} -> Salon {{ (temp_diff + (temp_cible
                     - consigne_base)) | round(1) }}° - Bureau & Chambre {{ temp_cible
                     }}°'
@@ -8039,7 +8039,7 @@
                   fan_mode: auto
               - alias: NOTIFICATION GROUPE 3
                 data:
-                  title: '[{{ presence }}]'
+                  title: '{{ presence }}'
                   message: 'mode: {{ mode | upper }} -> Bureau {{ (temp_diff + (temp_cible
                     - consigne_base)) | round(1) }}° - Salon & Chambre {{ temp_cible
                     }}°'
@@ -8079,7 +8079,7 @@
                     \ {% endif %}\n{% else %}\n  auto\n{% endif %}\n"
               - alias: NOTIFICATION GROUPE 4
                 data:
-                  title: '[{{ presence }}]'
+                  title: '{{ presence }}'
                   message: 'mode: {{ mode | upper }} -> Salon & Bureau {{ (temp_diff
                     + (temp_cible - consigne_base)) | round(1) }}° & Chambre {{ temp_cible
                     }}°'
@@ -8226,7 +8226,7 @@
               action: climate.set_fan_mode
             - alias: NOTIFICATION GROUPE 1 - HEAT
               data:
-                title: '[{{ presence }}]'
+                title: '{{ presence }}'
                 message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_eco }}°.'
               action: notify.mobile_app_poco_x7_pro
           - alias: MODE COOL
@@ -8256,7 +8256,7 @@
               action: climate.set_fan_mode
             - alias: NOTIFICATION GROUPE 1 COOL/FAN
               data:
-                title: '[{{ presence }}]'
+                title: '{{ presence }}'
                 message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_cible
                   }}°.'
               action: notify.mobile_app_poco_x7_pro
@@ -8277,7 +8277,7 @@
               action: climate.set_fan_mode
             - alias: NOTIFICATION GROUPE 1 COOL/FAN
               data:
-                title: '[{{ presence }}]'
+                title: '{{ presence }}'
                 message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_cible
                   }}°.'
               action: notify.mobile_app_poco_x7_pro

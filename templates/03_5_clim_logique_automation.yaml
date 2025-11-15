@@ -16,35 +16,35 @@
         {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
           groupe_1
 
-        {# Cas 3: Mamour en wifi (pas Freebox_GG) et Eric en cellular #}
+        {# Cas 3: [Mamour] en wifi (pas Freebox_GG) et [Eric] en cellular #}
         {% elif mamour_net_type == "wifi" and mamour_ssid != ssid and eric_net_type == "cellular" %}
           groupe_1
 
-        {# Cas 4: Mamour en cellular et Eric en wifi (pas Freebox_GG) #}
+        {# Cas 4: [Mamour] en cellular et [Eric] en wifi (pas Freebox_GG) #}
         {% elif mamour_net_type == "cellular" and eric_net_type == "wifi" and eric_ssid != ssid %}
           groupe_1
 
-        {# Cas 5: Eric en wifi (pas Freebox_GG) et Mamour en cellular #}
+        {# Cas 5: [Eric] en wifi (pas Freebox_GG) et [Mamour] en cellular #}
         {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "cellular" %}
           groupe_1
 
-        {# Cas 6: Eric en cellular et Mamour en wifi (pas Freebox_GG) #}
+        {# Cas 6: [Eric] en cellular et [Mamour] en wifi (pas Freebox_GG) #}
         {% elif eric_net_type == "cellular" and mamour_net_type == "wifi" and mamour_ssid != ssid %}
           groupe_1
 
-        {# Cas 7: Mamour en wifi (Freebox_GG) et Eric en wifi (pas Freebox_GG) #}
+        {# Cas 7: [Mamour] en wifi (Freebox_GG) et [Eric] en wifi (pas Freebox_GG) #}
         {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "wifi" and eric_ssid != ssid %}
           groupe_2
 
-        {# Cas 8: Mamour en wifi (Freebox_GG) et Eric en cellular #}
+        {# Cas 8: [Mamour] en wifi (Freebox_GG) et [Eric] en cellular #}
         {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "cellular" %}
           groupe_2
 
-        {# Cas 9: Eric en wifi (Freebox_GG) et Mamour en wifi (pas Freebox_GG) #}
+        {# Cas 9: [Eric] en wifi (Freebox_GG) et [Mamour] en wifi (pas Freebox_GG) #}
         {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
           groupe_3
 
-        {# Cas 10: Eric en wifi (Freebox_GG) et Mamour en cellular #}
+        {# Cas 10: [Eric] en wifi (Freebox_GG) et [Mamour] en cellular #}
         {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "cellular" %}
           groupe_3
 
@@ -69,47 +69,47 @@
 
         {# Cas 1: Les deux en cellular #}
         {% if eric_net_type == "cellular" and mamour_net_type == "cellular" %}
-          2 en [CELL]
+          [2] en [CELL]
 
         {# Cas 2: Les deux en wifi mais pas sur Freebox_GG #}
         {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
-          2 en [WIFI_!?]
+          [2] en [WIFI_!?]
 
-        {# Cas 3: Mamour en wifi (pas Freebox_GG) et Eric en cellular #}
+        {# Cas 3: [Mamour] en wifi (pas Freebox_GG) et [Eric] en cellular #}
         {% elif mamour_net_type == "wifi" and mamour_ssid != ssid and eric_net_type == "cellular" %}
-          Mamour en [WIFI_!?/CELL]
+          [Mamour] en [WIFI_!?/CELL]
 
-        {# Cas 4: Mamour en cellular et Eric en wifi (pas Freebox_GG) #}
+        {# Cas 4: [Mamour] en cellular et [Eric] en wifi (pas Freebox_GG) #}
         {% elif mamour_net_type == "cellular" and eric_net_type == "wifi" and eric_ssid != ssid %}
-          Mamour en [CELL/!?]
+          [Mamour] en [CELL/!?]
 
-        {# Cas 5: Eric en wifi (pas Freebox_GG) et Mamour en cellular #}
+        {# Cas 5: [Eric] en wifi (pas Freebox_GG) et [Mamour] en cellular #}
         {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "cellular" %}
-          Eric en [WIFI_!?/CELL]
+          [Eric] en [WIFI_!?/CELL]
 
-        {# Cas 6: Eric en cellular et Mamour en wifi (pas Freebox_GG) #}
+        {# Cas 6: [Eric] en cellular et [Mamour] en wifi (pas Freebox_GG) #}
         {% elif eric_net_type == "cellular" and mamour_net_type == "wifi" and mamour_ssid != ssid %}
-          Eric en [CELL/!?]
+          [Eric] en [CELL/!?]
 
-        {# Cas 7: Mamour en wifi (Freebox_GG) et Eric en wifi (pas Freebox_GG) #}
+        {# Cas 7: [Mamour] en wifi (Freebox_GG) et [Eric] en wifi (pas Freebox_GG) #}
         {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "wifi" and eric_ssid != ssid %}
-          Mamour en [WIFI/!?]
+          [Mamour] en [WIFI/!?]
 
-        {# Cas 8: Mamour en wifi (Freebox_GG) et Eric en cellular #}
+        {# Cas 8: [Mamour] en wifi (Freebox_GG) et [Eric] en cellular #}
         {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "cellular" %}
-          Mamour en [WIFI/CELL]
+          [Mamour] en [WIFI/CELL]
 
-        {# Cas 9: Eric en wifi (Freebox_GG) et Mamour en wifi (pas Freebox_GG) #}
+        {# Cas 9: [Eric] en wifi (Freebox_GG) et [Mamour] en wifi (pas Freebox_GG) #}
         {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
-          Eric en [WIFI/!?]
+          [Eric] en [WIFI/!?]
 
-        {# Cas 10: Eric en wifi (Freebox_GG) et Mamour en cellular #}
+        {# Cas 10: [Eric] en wifi (Freebox_GG) et [Mamour] en cellular #}
         {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "cellular" %}
-          Eric en [WIF/CELL]
+          [Eric] en [WIF/CELL]
 
         {# Cas 11: Les deux en wifi (Freebox_GG) #}
         {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "wifi" and eric_ssid == ssid %}
-          2 en [WIFI]
+          [2] en [WIFI]
 
         {# Cas par défaut #}
         {% else %}
