@@ -6,14 +6,16 @@
         {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') %}
         {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') %}
 
-        {# Afficher les valeurs dans les logs pour le débogage #}
+        {# Log des valeurs des capteurs #}
         {% do log('Mamour Wi-Fi SSID: ' ~ mamour_wifi_ssid, level='info') %}
         {% do log('Eric Wi-Fi SSID: ' ~ eric_wifi_ssid, level='info') %}
 
         {# Vérifier si les valeurs sont disponibles #}
-        {% if mamour_wifi_ssid in ['unavailable', 'unknown', none] or eric_wifi_ssid in ['unavailable', 'unknown', none] %}
-          {# Si une des valeurs est indisponible, retourner un état par défaut #}
-          {% do log('Une des valeurs est indisponible.', level='error') %}
+        {% if mamour_wifi_ssid in ['unavailable', 'unknown', none] %}
+          {% do log('Mamour Wi-Fi SSID est unavailable ou unknown.', level='error') %}
+          groupe_indisponible
+        {% elif eric_wifi_ssid in ['unavailable', 'unknown', none] %}
+          {% do log('Eric Wi-Fi SSID est unavailable ou unknown.', level='error') %}
           groupe_indisponible
         {% else %}
           {# Logique simplifiée pour déterminer le groupe #}

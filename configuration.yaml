@@ -182,3 +182,5 @@ logger:
   default: info
   logs:
     homeassistant.components.sensor: debug
+    homeassistant.helpers.template: debug
+
