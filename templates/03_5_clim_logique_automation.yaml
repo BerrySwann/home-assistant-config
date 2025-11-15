@@ -2,47 +2,116 @@
     - name: "Groupe Clim"
       unique_id: groupe_clim
       state: >
-        {# Récupérer les valeurs des capteurs #}
-        {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | default('') | string | strip %}
-        {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | default('') | string | strip | lower %}
-        {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | default('') | string | strip %}
-        {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | default('') | string | strip | lower %}
+        {% set ssid = "Freebox_GG" %}
+        {% set mamour_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | string %}
+        {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | string %}
+        {% set eric_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | string %}
+        {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | string %}
 
-        {# Définir le SSID du réseau domestique #}
-        {% set ssid_home = "Freebox_GG" %}
+        {# Cas 1: Les deux en cellular #}
+        {% if eric_net_type == "cellular" and mamour_net_type == "cellular" %}
+          groupe_1
 
-        {# Déterminer l'état de Mamour et Eric #}
-        {% set mamour_wifi_home = mamour_wifi_ssid == ssid_home and mamour_net_type == "wifi" %}
-        {% set mamour_wifi_non_home = mamour_wifi_ssid != ssid_home and mamour_net_type == "wifi" %}
-        {% set mamour_cell = mamour_net_type == "cellular" %}
+        {# Cas 2: Les deux en wifi mais pas sur Freebox_GG #}
+        {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
+          groupe_1
 
-        {% set eric_wifi_home = eric_wifi_ssid == ssid_home and eric_net_type == "wifi" %}
-        {% set eric_wifi_non_home = eric_wifi_ssid != ssid_home and eric_net_type == "wifi" %}
-        {% set eric_cell = eric_net_type == "cellular" %}
+        {# Cas 3: Mamour en wifi (pas Freebox_GG) et Eric en cellular #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid != ssid and eric_net_type == "cellular" %}
+          groupe_1
 
-        {# Logique pour déterminer le groupe #}
-        {% if mamour_cell and eric_cell %}
-          groupe_1  {# 2 en cell #}
-        {% elif mamour_wifi_non_home and eric_wifi_non_home %}
-          groupe_1  {# 2 en wifi_!? #}
-        {% elif mamour_wifi_non_home and eric_cell %}
-          groupe_1  {# Mamour wifi_!?/cell #}
-        {% elif mamour_cell and eric_wifi_non_home %}
-          groupe_1  {# Mamour cell/wifi_!? #}
-        {% elif eric_wifi_non_home and mamour_cell %}
-          groupe_1  {# Eric wifi_!?/cell #}
-        {% elif eric_cell and mamour_wifi_non_home %}
-          groupe_1  {# Eric cell/wifi_!? #}
-        {% elif mamour_wifi_home and eric_wifi_non_home %}
-          groupe_2  {# Mamour wifi/!? #}
-        {% elif mamour_wifi_home and eric_cell %}
-          groupe_2  {# Mamour wifi/cell #}
-        {% elif eric_wifi_home and mamour_wifi_non_home %}
-          groupe_3  {# Eric wifi/!? #}
-        {% elif eric_wifi_home and mamour_cell %}
-          groupe_3  {# Eric wifi/cell #}
-        {% elif mamour_wifi_home and eric_wifi_home %}
-          groupe_4  {# 2 en wifi #}
+        {# Cas 4: Mamour en cellular et Eric en wifi (pas Freebox_GG) #}
+        {% elif mamour_net_type == "cellular" and eric_net_type == "wifi" and eric_ssid != ssid %}
+          groupe_1
+
+        {# Cas 5: Eric en wifi (pas Freebox_GG) et Mamour en cellular #}
+        {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "cellular" %}
+          groupe_1
+
+        {# Cas 6: Eric en cellular et Mamour en wifi (pas Freebox_GG) #}
+        {% elif eric_net_type == "cellular" and mamour_net_type == "wifi" and mamour_ssid != ssid %}
+          groupe_1
+
+        {# Cas 7: Mamour en wifi (Freebox_GG) et Eric en wifi (pas Freebox_GG) #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "wifi" and eric_ssid != ssid %}
+          groupe_2
+
+        {# Cas 8: Mamour en wifi (Freebox_GG) et Eric en cellular #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "cellular" %}
+          groupe_2
+
+        {# Cas 9: Eric en wifi (Freebox_GG) et Mamour en wifi (pas Freebox_GG) #}
+        {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
+          groupe_3
+
+        {# Cas 10: Eric en wifi (Freebox_GG) et Mamour en cellular #}
+        {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "cellular" %}
+          groupe_3
+
+        {# Cas 11: Les deux en wifi (Freebox_GG) #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "wifi" and eric_ssid == ssid %}
+          groupe_4
+
+        {# Cas par défaut #}
         {% else %}
-          groupe_1  {# Cas par défaut #}
+          groupe_1
+        {% endif %}
+
+- sensor:
+    - name: "Presence Clim"
+      unique_id: presence_clim
+      state: >
+        {% set ssid = "Freebox_GG" %}
+        {% set mamour_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | string %}
+        {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | string %}
+        {% set eric_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | string %}
+        {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | string %}
+
+        {# Cas 1: Les deux en cellular #}
+        {% if eric_net_type == "cellular" and mamour_net_type == "cellular" %}
+          2 en [CELL]
+
+        {# Cas 2: Les deux en wifi mais pas sur Freebox_GG #}
+        {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
+          2 en [WIFI_!?]
+
+        {# Cas 3: Mamour en wifi (pas Freebox_GG) et Eric en cellular #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid != ssid and eric_net_type == "cellular" %}
+          Mamour en [WIFI_!?/CELL]
+
+        {# Cas 4: Mamour en cellular et Eric en wifi (pas Freebox_GG) #}
+        {% elif mamour_net_type == "cellular" and eric_net_type == "wifi" and eric_ssid != ssid %}
+          Mamour en [CELL/!?]
+
+        {# Cas 5: Eric en wifi (pas Freebox_GG) et Mamour en cellular #}
+        {% elif eric_net_type == "wifi" and eric_ssid != ssid and mamour_net_type == "cellular" %}
+          Eric en [WIFI_!?/CELL]
+
+        {# Cas 6: Eric en cellular et Mamour en wifi (pas Freebox_GG) #}
+        {% elif eric_net_type == "cellular" and mamour_net_type == "wifi" and mamour_ssid != ssid %}
+          Eric en [CELL/!?]
+
+        {# Cas 7: Mamour en wifi (Freebox_GG) et Eric en wifi (pas Freebox_GG) #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "wifi" and eric_ssid != ssid %}
+          Mamour en [WIFI/!?]
+
+        {# Cas 8: Mamour en wifi (Freebox_GG) et Eric en cellular #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "cellular" %}
+          Mamour en [WIFI/CELL]
+
+        {# Cas 9: Eric en wifi (Freebox_GG) et Mamour en wifi (pas Freebox_GG) #}
+        {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "wifi" and mamour_ssid != ssid %}
+          Eric en [WIFI/!?]
+
+        {# Cas 10: Eric en wifi (Freebox_GG) et Mamour en cellular #}
+        {% elif eric_net_type == "wifi" and eric_ssid == ssid and mamour_net_type == "cellular" %}
+          Eric en [WIF/CELL]
+
+        {# Cas 11: Les deux en wifi (Freebox_GG) #}
+        {% elif mamour_net_type == "wifi" and mamour_ssid == ssid and eric_net_type == "wifi" and eric_ssid == ssid %}
+          2 en [WIFI]
+
+        {# Cas par défaut #}
+        {% else %}
+          État indéfini
         {% endif %}
