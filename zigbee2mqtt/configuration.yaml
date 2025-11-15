@@ -401,6 +401,8 @@ devices:
     icon: device_icons/0e5620d0686df0cf2acef54f6efff171.png
   '0x1cc089fffe4e04f6':
     friendly_name: Ecran P.C. 3 PLAY HUE
+  '0x880f62fffee3aeee':
+    friendly_name: Inter Radiateur Salle de Bain (IKEA RODRET)
 groups:
   '1':
     friendly_name: Bureau z2m
