@@ -7767,10 +7767,6 @@
   - trigger: state
     entity_id:
     - sensor.mode_ete_hiver
-  - trigger: numeric_state
-    entity_id: sensor.temperature_delta_valeur
-    below: -1
-    for: 00:10:00
   - trigger: time
     at: 06:00:00
   conditions: []
@@ -8096,13 +8092,15 @@
                 action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763214110999'
-  alias: (A - 1) [TEST 2025-11-15] Automatisation nocturne clim 20h-6h selon présence
-    réseaux, températures, fenêtres fermées
-  description: Automatisation nocturne 20h-6h gérant climatiseurs avec logique WiFi/Cellular,
-    températures différenciées, ventilation fan_only spécifique, et vérification que
-    toutes les fenêtres sont fermées (sans gestion fenêtres ouvertes ici)
+  alias: (B - 1) [ TEST 2025-08-03 ] Automatisation pour contrôler de [20h00 <-> 06h00]
+    les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
+    du type de réseau des portables [WIFI/CELLULAR].
+  description: 'Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
+    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
+    des portables [WIFI/CELLULAR]. '
   triggers:
-  - entity_id:
+  - alias: Changement d'état des fenêtres 'on' -> 'off'
+    entity_id:
     - binary_sensor.contact_fenetre_salon_ikea_contact
     - binary_sensor.contact_fenetre_cuisine_ikea_contact
     - binary_sensor.contact_fenetre_bureau_ikea_contact
@@ -8110,93 +8108,242 @@
     from: 'on'
     to: 'off'
     trigger: state
-  - entity_id:
-    - sensor.ne2213_mamour_network_type
-    - sensor.poco_x7_pro_network_type
+  - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: wifi
+    to: cellular
     trigger: state
-  - entity_id: sensor.mode_ete_hiver
+  - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
+    entity_id: sensor.ne2213_mamour_network_type
+    from: cellular
+    to: wifi
     trigger: state
-  - entity_id: sensor.temperature_cible
+  - alias: Changement de réseau d'Eric 'wifi' -> 'cellular'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: wifi
+    to: cellular
     trigger: state
-  - entity_id: sensor.temperature_differentielle
+  - alias: Changement de réseau d'Eric 'cellular' -> 'wifi'
+    entity_id: sensor.poco_x7_pro_network_type
+    from: cellular
+    to: wifi
     trigger: state
-  - entity_id: sensor.groupe_presence_clim
+  - alias: Changement d'état des climatiseurs à 'heat'
     trigger: state
-  conditions:
-  - condition: time
-    after: '20:00:00'
-    before: 06:00:00
+    entity_id:
+    - climate.clim_salon_rm4_mini
+    - climate.clim_bureau_rm4_mini
+    - climate.clim_chambre_rm4_mini
+    to: heat
+  - alias: Changement d'état des climatiseurs à 'cool'
+    trigger: state
+    entity_id:
+    - climate.clim_salon_rm4_mini
+    - climate.clim_bureau_rm4_mini
+    - climate.clim_chambre_rm4_mini
+    to: cool
+  - alias: Changement d'état des climatiseurs à 'fan_only'
+    trigger: state
+    entity_id:
+    - climate.clim_salon_rm4_mini
+    - climate.clim_bureau_rm4_mini
+    - climate.clim_chambre_rm4_mini
+    to: fan_only
+  - trigger: state
+    entity_id:
+    - sensor.temperature_cible
+  - trigger: state
+    entity_id:
+    - sensor.mode_ete_hiver
+  - trigger: time
+    at: '20:00:00'
   actions:
-  - alias: Vérifier toutes fenêtres fermées
-    condition: and
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
-      state: 'off'
-    - condition: state
-      entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
-      state: 'off'
-    - condition: state
-      entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
-      state: 'off'
-    - condition: state
-      entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
-      state: 'off'
-  - alias: Actions selon présence réseau et mode clim
+  - alias: INITIALISATION VARIABLES
+    variables:
+      groupe: '{% set val = states(''sensor.groupe_clim_avec_horaires_et_mode'') %}
+        {{ val.split('':'')[0].strip() if '':'' in val else ''GROUPE INCONNU'' }}
+
+        '
+      mode: '{{ states(''sensor.mode_ete_hiver'') }}'
+      temp_eco: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+      temp_cible: '{{ states(''sensor.temperature_cible'') | float }}'
+      temp_diff: '{{ states(''sensor.temperature_differentielle'') | float }}'
+      consigne_base: '{{ states(''sensor.consigne_de_base'') | float }}'
+      fenetres_fermees: '{{ states(''sensor.nbre_de_fenetres_fermees'') | int }}'
+      pris_clim: "{{ is_state('switch.clim_salon_nous', 'on') and\n   is_state('switch.clim_du_bureau_nous',
+        'on') and\n   is_state('switch.clim_chambre_nous', 'on') }}\n"
+      extrait_groupe: "{% set val = states('sensor.groupe_clim_avec_horaires_et_mode')
+        %} {% if ':' in val %}\n  {{ val.split(':')[1].split('+')[0] | trim }}\n{%
+        else %}\n  GROUPE INCONNU\n{% endif %}\n"
+  - alias: CONDITIONS PRINCIPALES
     choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ ''Groupe 1'' in states(''sensor.groupe_presence_clim'')
-          }}'
+    - alias: ETAPES VERIF FENÊTRES, PRISES ET HORAIRES
+      conditions:
+      - alias: FENÊTRES FERMÉES
+        condition: numeric_state
+        entity_id: sensor.nbre_de_fenetres_fermees
+        above: 3.9
+      - alias: PRISES CLIM ALLUMÉES
+        condition: template
+        value_template: '{{ pris_clim }}'
+      - alias: PRISES TOUS "ON"
+        condition: and
+        conditions:
+        - condition: state
+          entity_id: switch.clim_salon_nous
+          state: 'on'
+        - condition: state
+          entity_id: switch.clim_du_bureau_nous
+          state: 'on'
+        - condition: state
+          entity_id: switch.clim_chambre_nous
+          state: 'on'
+      - alias: PLAGE HORAIRE 20H-6H
+        condition: time
+        after: '20:00:00'
+        before: 06:00:00
       sequence:
-      - alias: Appliquer mode et température groupe 1 (absent)
-        target:
-          entity_id:
-          - climate.clim_salon_rm4_mini
-          - climate.clim_bureau_rm4_mini
-          - climate.clim_chambre_rm4_mini
-        data:
-          hvac_mode: 'off'
-        action: climate.set_hvac_mode
-      - alias: Notification groupe 1
-        data:
-          title: '[Groupe 1] Clim éteinte'
-          message: Absence détectée, clim éteinte.
-        action: notify.mobile_app_poco_x7_pro
-    - conditions:
-      - condition: template
-        value_template: "{{ 'Groupe 2' in states('sensor.groupe_presence_clim') or\n
-          \  'Groupe 3' in states('sensor.groupe_presence_clim') or\n   'Groupe 4'
-          in states('sensor.groupe_presence_clim') }}"
-      sequence:
-      - alias: Réglage température selon présence (salon, bureau, chambre)
-        target:
-          entity_id: climate.clim_salon_rm4_mini
-        data:
-          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
-          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
-        action: climate.set_temperature
-      - target:
-          entity_id: climate.clim_bureau_rm4_mini
-        data:
-          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
-          temperature: '{{ states(''sensor.temperature_cible'') | float }}'
-        action: climate.set_temperature
-      - target:
-          entity_id: climate.clim_chambre_rm4_mini
-        data:
-          hvac_mode: '{{ states(''sensor.mode_ete_hiver'') }}'
-          temperature: '{{ states(''sensor.temperature_differentielle'') | float }}'
-        action: climate.set_temperature
-      - alias: Gestion ventilation fan_only spécifique
-        choose:
-        - conditions:
-          - condition: state
-            entity_id: sensor.mode_ete_hiver
-            state: fan_only
-          sequence:
-          - target:
-              entity_id: climate.clim_salon_rm4_mini
-            data: fan
-            action: climate.set_fan_mode
+      - alias: GROUPE 1 (ABSENT)
+        if:
+        - condition: template
+          value_template: '{{ ''Groupe 1'' in groupe }}'
+        then:
+        - alias: MODES DE SAISON GROUPE 1
+          choose:
+          - alias: MODE HEAT
+            conditions:
+            - condition: state
+              entity_id: sensor.mode_ete_hiver
+              state: heat
+            sequence:
+            - alias: RÉGLER TEMPÉRATURE HEATING
+              target:
+                entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+              data:
+                hvac_mode: heat
+                temperature: '{{ temp_eco }}'
+              action: climate.set_temperature
+            - alias: RÉGLER MODE VENTILATION AUTO
+              target:
+                entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+              data:
+                fan_mode: auto
+              action: climate.set_fan_mode
+            - alias: NOTIFICATION GROUPE 1 - HEAT
+              data:
+                title: '[{{ extrait_groupe }}]'
+                message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_eco }}°.'
+              action: notify.mobile_app_poco_x7_pro
+          - alias: MODE COOL
+            conditions:
+            - condition: state
+              entity_id: sensor.mode_ete_hiver
+              state: cool
+            sequence:
+            - alias: RÉGLER TEMPÉRATURE COOLING
+              target:
+                entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+              data:
+                hvac_mode: cool
+                temperature: '{{ temp_cible }}'
+              action: climate.set_temperature
+            - alias: RÉGLER MODE VENTILATION AUTO
+              target:
+                entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+              data:
+                fan_mode: auto
+              action: climate.set_fan_mode
+            - alias: NOTIFICATION GROUPE 1 COOL/FAN
+              data:
+                title: '[{{ extrait_groupe }}]'
+                message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_cible
+                  }}°.'
+              action: notify.mobile_app_poco_x7_pro
+          - alias: MODE FAN ONLY
+            conditions:
+            - condition: state
+              entity_id: sensor.mode_ete_hiver
+              state: fan_only
+            sequence:
+            - alias: RÉGLER MODE VENTILATION FAN_ONLY
+              target:
+                entity_id:
+                - climate.clim_salon_rm4_mini
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+              data:
+                fan_mode: auto
+              action: climate.set_fan_mode
+            - alias: NOTIFICATION GROUPE 1 COOL/FAN
+              data:
+                title: '[{{ extrait_groupe }}]'
+                message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_cible
+                  }}°.'
+              action: notify.mobile_app_poco_x7_pro
+      - alias: GROUPE 2, 3, 4 (PRÉSENCE)
+        if:
+        - condition: template
+          value_template: '{{ ''Groupe 2'' in groupe or ''Groupe 3'' in groupe or
+            ''Groupe 4'' in groupe }}'
+        then:
+        - alias: RÉGLAGE TEMPÉRATURE SELON PRÉSENCE (SALON, BUREAU, CHAMBRE)
+          target:
+            entity_id: climate.clim_salon_rm4_mini
+          data:
+            hvac_mode: '{{ mode }}'
+            temperature: '{{ temp_cible }}'
+          action: climate.set_temperature
+        - alias: RÉGLAGE TEMPÉRATURE BUREAU
+          target:
+            entity_id: climate.clim_bureau_rm4_mini
+          data:
+            hvac_mode: '{{ mode }}'
+            temperature: '{{ temp_cible }}'
+          action: climate.set_temperature
+        - alias: RÉGLAGE TEMPÉRATURE CHAMBRE
+          target:
+            entity_id: climate.clim_chambre_rm4_mini
+          data:
+            hvac_mode: '{{ mode }}'
+            temperature: '{{ temp_diff }}'
+          action: climate.set_temperature
+        - alias: GESTION VENTILATION FAN_ONLY SPÉCIFIQUE
+          choose:
+          - conditions:
+            - condition: state
+              entity_id: sensor.mode_ete_hiver
+              state: fan_only
+            sequence:
+            - alias: VENTILATION SALON QUIET
+              target:
+                entity_id: climate.clim_salon_rm4_mini
+              data:
+                fan_mode: quiet
+              action: climate.set_fan_mode
+            - alias: VENTILATION BUREAU ET CHAMBRE BREEZE
+              target:
+                entity_id:
+                - climate.clim_bureau_rm4_mini
+                - climate.clim_chambre_rm4_mini
+              data:
+                fan_mode: breeze
+              action: climate.set_fan_mode
+        - alias: NOTIFICATION PRÉSENCE ET RÉGLAGES APPLIQUÉS
+          data:
+            title: CLIM NOCTURNE ACTIVE
+            message: 'mode: {{ mode | upper }} -> Chambre {{ (temp_diff + (temp_cible
+              - consigne_base)) | round(1) }}° & Salon & Bureau {{ temp_cible }}°'
+          action: notify.mobile_app_poco_x7_pro
   mode: queued
