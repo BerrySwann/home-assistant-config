@@ -1,0 +1,102 @@
+sensor:
+  - name: "Groupe Clim"
+    unique_id: groupe_clim
+    state: >
+      {% set ssid_home = "freebox_gg" %}
+      {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | lower %}
+      {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | lower %}
+      {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | lower %}
+      {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | lower %}
+
+      {% macro etat_personne(net_type, wifi_ssid) %}
+        {% if net_type == "wifi" %}
+          {% if wifi_ssid == ssid_home %}
+            wifi_home
+          {% elif wifi_ssid not in ["", "unknown", "none", none] %}
+            wifi_non_home
+          {% else %}
+            absent_wifi
+          {% endif %}
+        {% elif net_type == "cellular" %}
+          cellular
+        {% else %}
+          absent
+        {% endif %}
+      {% endmacro %}
+
+      {% set mamour = etat_personne(mamour_net_type, mamour_wifi_ssid) %}
+      {% set eric = etat_personne(eric_net_type, eric_wifi_ssid) %}
+
+      {% if mamour == "cellular" and eric == "cellular" %}
+        groupe_1
+      {% elif mamour == "wifi_non_home" and eric == "wifi_non_home" %}
+        groupe_1
+      {% elif (mamour == "wifi_non_home" and eric == "cellular") or (mamour == "cellular" and eric == "wifi_non_home") %}
+        groupe_1
+      {% elif (eric == "wifi_non_home" and mamour == "cellular") or (eric == "cellular" and mamour == "wifi_non_home") %}
+        groupe_1
+      {% elif mamour == "wifi_home" and (eric == "wifi_non_home" or eric == "cellular") %}
+        groupe_2
+      {% elif eric == "wifi_home" and (mamour == "wifi_non_home" or mamour == "cellular") %}
+        groupe_3
+      {% elif mamour == "wifi_home" and eric == "wifi_home" %}
+        groupe_4
+      {% else %}
+        groupe_indefini
+      {% endif %}
+
+
+  - name: "Presence Clim"
+    unique_id: presence_clim
+    state: >
+      {% set ssid_home = "Freebox_GG" %}
+      {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | lower %}
+      {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | lower %}
+      {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | lower %}
+      {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | lower %}
+
+      {% macro etat_personne(net_type, wifi_ssid) %}
+        {% if net_type == "wifi" %}
+          {% if wifi_ssid == ssid_home | lower %}
+            wifi_home
+          {% elif wifi_ssid not in ["", "unknown", "none", none] %}
+            wifi_nonhome
+          {% else %}
+            absent_wifi
+          {% endif %}
+        {% elif net_type == "cellular" %}
+          cellular
+        {% else %}
+          absent
+        {% endif %}
+      {% endmacro %}
+
+      {% set mamour = etat_personne(mamour_net_type, mamour_wifi_ssid) %}
+      {% set eric = etat_personne(eric_net_type, eric_wifi_ssid) %}
+
+      {% if mamour == "cellular" and eric == "cellular" %}
+        2 en cell
+      {% elif mamour == "wifi_nonhome" and eric == "wifi_nonhome" %}
+        2 en wifi_!?
+      {% elif (mamour == "wifi_nonhome" and eric == "cellular") %}
+        Mamour wifi_!?/cell
+      {% elif (mamour == "cellular" and eric == "wifi_nonhome") %}
+        Mamour cell/wifi_!?
+      {% elif (eric == "wifi_nonhome" and mamour == "cellular") %}
+        Eric wifi_!?/cell
+      {% elif (eric == "cellular" and mamour == "wifi_nonhome") %}
+        Eric cell/wifi_!?
+      {% elif mamour == "wifi_home" and (eric == "wifi_nonhome" or eric == "cellular") %}
+        Mamour wifi/!?
+      {% elif mamour == "wifi_home" and eric == "cellular" %}
+        Mamour wifi/cell
+      {% elif eric == "wifi_home" and (mamour == "wifi_nonhome" or mamour == "cellular") %}
+        Eric wifi/!?
+      {% elif eric == "wifi_home" and mamour == "cellular" %}
+        Eric wifi/cell
+      {% elif mamour == "wifi_home" and eric == "wifi_home" %}
+        2 en wifi
+      {% else %}
+        indéfini
+      {% endif %}
+
