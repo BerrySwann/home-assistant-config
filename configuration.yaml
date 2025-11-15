@@ -177,3 +177,8 @@ climate:
     controller_data: remote.clim_salon
     temperature_sensor: sensor.th_salon_temperature
     humidity_sensor: sensor.th_salon_humidity
+
+logger:
+  default: info
+  logs:
+    homeassistant.components.sensor: debug

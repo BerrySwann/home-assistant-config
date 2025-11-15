@@ -1,102 +1,86 @@
-sensor:
-  - name: "Groupe Clim"
-    unique_id: groupe_clim
-    state: >
-      {% set ssid_home = "freebox_gg" %}
-      {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | lower %}
-      {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | lower %}
-      {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | lower %}
-      {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | lower %}
+- sensor:
+    - name: "Groupe Clim (Debug)"
+      unique_id: groupe_clim_debug
+      state: >
+        {# Vérifier que les entités existent et ont des valeurs valides #}
+        {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') %}
+        {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') %}
 
-      {% macro etat_personne(net_type, wifi_ssid) %}
-        {% if net_type == "wifi" %}
-          {% if wifi_ssid == ssid_home %}
-            wifi_home
-          {% elif wifi_ssid not in ["", "unknown", "none", none] %}
-            wifi_non_home
-          {% else %}
-            absent_wifi
-          {% endif %}
-        {% elif net_type == "cellular" %}
-          cellular
+        {# Afficher les valeurs dans les logs pour le débogage #}
+        {% do log('Mamour Wi-Fi SSID: ' ~ mamour_wifi_ssid, level='info') %}
+        {% do log('Eric Wi-Fi SSID: ' ~ eric_wifi_ssid, level='info') %}
+
+        {# Vérifier si les valeurs sont disponibles #}
+        {% if mamour_wifi_ssid in ['unavailable', 'unknown', none] or eric_wifi_ssid in ['unavailable', 'unknown', none] %}
+          {# Si une des valeurs est indisponible, retourner un état par défaut #}
+          {% do log('Une des valeurs est indisponible.', level='error') %}
+          groupe_indisponible
         {% else %}
-          absent
-        {% endif %}
-      {% endmacro %}
-
-      {% set mamour = etat_personne(mamour_net_type, mamour_wifi_ssid) %}
-      {% set eric = etat_personne(eric_net_type, eric_wifi_ssid) %}
-
-      {% if mamour == "cellular" and eric == "cellular" %}
-        groupe_1
-      {% elif mamour == "wifi_non_home" and eric == "wifi_non_home" %}
-        groupe_1
-      {% elif (mamour == "wifi_non_home" and eric == "cellular") or (mamour == "cellular" and eric == "wifi_non_home") %}
-        groupe_1
-      {% elif (eric == "wifi_non_home" and mamour == "cellular") or (eric == "cellular" and mamour == "wifi_non_home") %}
-        groupe_1
-      {% elif mamour == "wifi_home" and (eric == "wifi_non_home" or eric == "cellular") %}
-        groupe_2
-      {% elif eric == "wifi_home" and (mamour == "wifi_non_home" or mamour == "cellular") %}
-        groupe_3
-      {% elif mamour == "wifi_home" and eric == "wifi_home" %}
-        groupe_4
-      {% else %}
-        groupe_indefini
-      {% endif %}
-
-
-  - name: "Presence Clim"
-    unique_id: presence_clim
-    state: >
-      {% set ssid_home = "Freebox_GG" %}
-      {% set mamour_wifi_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | lower %}
-      {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | lower %}
-      {% set eric_wifi_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | lower %}
-      {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | lower %}
-
-      {% macro etat_personne(net_type, wifi_ssid) %}
-        {% if net_type == "wifi" %}
-          {% if wifi_ssid == ssid_home | lower %}
-            wifi_home
-          {% elif wifi_ssid not in ["", "unknown", "none", none] %}
-            wifi_nonhome
+          {# Logique simplifiée pour déterminer le groupe #}
+          {% if mamour_wifi_ssid == "Freebox_GG" and eric_wifi_ssid == "Freebox_GG" %}
+            {% do log('Les deux appareils sont connectés à Freebox_GG. Retourne groupe_4.', level='info') %}
+            groupe_4
           {% else %}
-            absent_wifi
+            {% do log('Au moins un appareil n\'est pas connecté à Freebox_GG. Retourne groupe_1.', level='info') %}
+            groupe_1
           {% endif %}
-        {% elif net_type == "cellular" %}
-          cellular
-        {% else %}
-          absent
         {% endif %}
-      {% endmacro %}
 
-      {% set mamour = etat_personne(mamour_net_type, mamour_wifi_ssid) %}
-      {% set eric = etat_personne(eric_net_type, eric_wifi_ssid) %}
 
-      {% if mamour == "cellular" and eric == "cellular" %}
-        2 en cell
-      {% elif mamour == "wifi_nonhome" and eric == "wifi_nonhome" %}
-        2 en wifi_!?
-      {% elif (mamour == "wifi_nonhome" and eric == "cellular") %}
-        Mamour wifi_!?/cell
-      {% elif (mamour == "cellular" and eric == "wifi_nonhome") %}
-        Mamour cell/wifi_!?
-      {% elif (eric == "wifi_nonhome" and mamour == "cellular") %}
-        Eric wifi_!?/cell
-      {% elif (eric == "cellular" and mamour == "wifi_nonhome") %}
-        Eric cell/wifi_!?
-      {% elif mamour == "wifi_home" and (eric == "wifi_nonhome" or eric == "cellular") %}
-        Mamour wifi/!?
-      {% elif mamour == "wifi_home" and eric == "cellular" %}
-        Mamour wifi/cell
-      {% elif eric == "wifi_home" and (mamour == "wifi_nonhome" or mamour == "cellular") %}
-        Eric wifi/!?
-      {% elif eric == "wifi_home" and mamour == "cellular" %}
-        Eric wifi/cell
-      {% elif mamour == "wifi_home" and eric == "wifi_home" %}
-        2 en wifi
-      {% else %}
-        indéfini
-      {% endif %}
 
+
+
+- sensor:
+      - name: "Presence Clim"
+        unique_id: presence_clim
+        state: >
+          {% set ssid_home = "freebox_gg" %}
+          {% set mamour_wifi_ssid = (states('sensor.ne2213_mamour_wi_fi_connection') or '').lower() %}
+          {% set mamour_net_type = (states('sensor.ne2213_mamour_network_type') or '').lower() %}
+          {% set eric_wifi_ssid = (states('sensor.poco_x7_pro_wi_fi_connection') or '').lower() %}
+          {% set eric_net_type = (states('sensor.poco_x7_pro_network_type') or '').lower() %}
+
+          {% macro etat_personne(net_type, wifi_ssid) %}
+            {% if net_type == "wifi" %}
+              {% if wifi_ssid == ssid_home %}
+                wifi_home
+              {% elif wifi_ssid not in ["", "unknown", "none", none] %}
+                wifi_nonhome
+              {% else %}
+                absent_wifi
+              {% endif %}
+            {% elif net_type == "cellular" %}
+              cellular
+            {% else %}
+              absent
+            {% endif %}
+          {% endmacro %}
+
+          {% set mamour = etat_personne(mamour_net_type, mamour_wifi_ssid) %}
+          {% set eric = etat_personne(eric_net_type, eric_wifi_ssid) %}
+
+          {% if mamour == "cellular" and eric == "cellular" %}
+            2 en cell
+          {% elif mamour == "wifi_nonhome" and eric == "wifi_nonhome" %}
+            2 en wifi_!?
+          {% elif mamour == "wifi_nonhome" and eric == "cellular" %}
+            Mamour wifi_!?/cell
+          {% elif mamour == "cellular" and eric == "wifi_nonhome" %}
+            Mamour cell/wifi_!?
+          {% elif eric == "wifi_nonhome" and mamour == "cellular" %}
+            Eric wifi_!?/cell
+          {% elif eric == "cellular" and mamour == "wifi_nonhome" %}
+            Eric cell/wifi_!?
+          {% elif mamour == "wifi_home" and (eric == "wifi_nonhome" or eric == "cellular") %}
+            Mamour wifi/!?
+          {% elif mamour == "wifi_home" and eric == "cellular" %}
+            Mamour wifi/cell
+          {% elif eric == "wifi_home" and (mamour == "wifi_nonhome" or mamour == "cellular") %}
+            Eric wifi/!?
+          {% elif eric == "wifi_home" and mamour == "cellular" %}
+            Eric wifi/cell
+          {% elif mamour == "wifi_home" and eric == "wifi_home" %}
+            2 en wifi
+          {% else %}
+            indéfini
+          {% endif %}
