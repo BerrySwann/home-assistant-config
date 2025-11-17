@@ -768,7 +768,7 @@
   alias: Update previous humidity
   description: Update previous humidity
   triggers:
-  - minutes: /1
+  - minutes: /30
     trigger: time_pattern
   conditions: []
   actions:
@@ -782,7 +782,7 @@
   alias: Update previous temperature
   description: Update previous temperature
   triggers:
-  - minutes: /1
+  - minutes: /30
     trigger: time_pattern
   conditions: []
   actions:
