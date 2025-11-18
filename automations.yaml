@@ -7702,6 +7702,24 @@
     des portables [WIFI/CELLULAR]. (SAUF) L''état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24.'
   triggers:
+  - alias: Prises clim Ext. de "ON" à "OFF"
+    trigger: state
+    entity_id:
+    - switch.clim_salon_nous
+    - switch.clim_du_bureau_nous
+    - switch.clim_chambre_nous
+    from:
+    - 'on'
+    - 'off'
+  - alias: Prises clim Ext. de "OFF" à "ON"
+    trigger: state
+    entity_id:
+    - switch.clim_salon_nous
+    - switch.clim_du_bureau_nous
+    - switch.clim_chambre_nous
+    from:
+    - 'off'
+    - 'on'
   - alias: Changement d'état des fenêtres 'off' -> 'on'
     entity_id:
     - binary_sensor.contact_fenetre_salon_ikea_contact
@@ -7860,25 +7878,9 @@
         choose:
         - alias: ETAPES VERIF FENÊTRES, PRISES ET HORAIRES
           conditions:
-          - alias: FENÊTRES FERMÉES
-            condition: numeric_state
-            entity_id: sensor.nbre_de_fenetres_fermees
-            above: 3.9
           - alias: PRISES CLIM ALLUMÉES
             condition: template
             value_template: '{{ pris_clim }}'
-          - alias: PRISES TOUS "ON"
-            condition: and
-            conditions:
-            - condition: state
-              entity_id: switch.clim_salon_nous
-              state: 'on'
-            - condition: state
-              entity_id: switch.clim_du_bureau_nous
-              state: 'on'
-            - condition: state
-              entity_id: switch.clim_chambre_nous
-              state: 'on'
           - alias: PLAGE HORAIRE 6H-20H
             condition: time
             after: 06:00:00
@@ -7992,7 +7994,8 @@
                   entity_id: climate.clim_salon_rm4_mini
                 data:
                   hvac_mode: '{{ mode }}'
-                  temperature: '{{ temp_diff }}'
+                  temperature: '{{ (temp_diff + (temp_cible - consigne_base)) | round(1)
+                    }}'
               - alias: RÉGLAGE TEMP CIBLE SUR BUREAU ET CHAMBRE
                 action: climate.set_temperature
                 target:
@@ -8015,8 +8018,8 @@
                 action: notify.mobile_app_poco_x7_pro
                 data:
                   title: '{{ presence }}'
-                  message: 'mode: {{ mode | upper }} -> Salon {{ (temp_diff + (temp_cible
-                    - consigne_base)) | round(1) }}° - Bureau & Chambre {{ temp_cible
+                  message: 'Mode: {{ mode | upper }}<br> Salon: {{ (temp_diff + (temp_cible
+                    - consigne_base)) | round(1) }}°<br> Bureau & Chambre: {{ temp_cible
                     }}°'
             - alias: GROUPE 3 - ERIC AT HOME
               conditions:
@@ -8030,7 +8033,8 @@
                   entity_id: climate.clim_bureau_rm4_mini
                 data:
                   hvac_mode: '{{ mode }}'
-                  temperature: '{{ temp_diff }}'
+                  temperature: '{{ (temp_diff + (temp_cible - consigne_base)) | round(1)
+                    }}'
               - alias: RÉGLAGE TEMP CIBLE SUR SALON ET CHAMBRE
                 action: climate.set_temperature
                 target:
@@ -8052,8 +8056,8 @@
               - alias: NOTIFICATION GROUPE 3
                 data:
                   title: '{{ presence }}'
-                  message: 'mode: {{ mode | upper }} -> Bureau {{ (temp_diff + (temp_cible
-                    - consigne_base)) | round(1) }}° - Salon & Chambre {{ temp_cible
+                  message: 'Mode: {{ mode | upper }}<br> Bureau: {{ (temp_diff + (temp_cible
+                    - consigne_base)) | round(1) }}°<br> Salon & Chambre: {{ temp_cible
                     }}°'
                 action: notify.mobile_app_poco_x7_pro
             - alias: GROUPE 4 - MAMOUR & ERIC AT HOME
@@ -8070,7 +8074,8 @@
                   - climate.clim_bureau_rm4_mini
                 data:
                   hvac_mode: '{{ mode }}'
-                  temperature: '{{ temp_diff }}'
+                  temperature: '{{ (temp_diff + (temp_cible - consigne_base)) | round(1)
+                    }}'
               - alias: RÉGLER TEMPÉRATURE CIBLE CHAMBRE
                 action: climate.set_temperature
                 target:
@@ -8078,7 +8083,7 @@
                 data:
                   hvac_mode: '{{ mode }}'
                   temperature: '{{ temp_cible }}'
-              - alias: MODE VENTILATION SPÉCIFIQUE
+              - alias: MODE VENTILATION AUTO
                 action: climate.set_fan_mode
                 target:
                   entity_id:
@@ -8086,15 +8091,13 @@
                   - climate.clim_bureau_rm4_mini
                   - climate.clim_chambre_rm4_mini
                 data:
-                  fan_mode: "{% if mode == 'fan_only' %}\n  {% if 'clim_salon_rm4_mini'
-                    in target.entity_id %}\n    quiet\n  {% else %}\n    breeze\n
-                    \ {% endif %}\n{% else %}\n  auto\n{% endif %}\n"
+                  fan_mode: auto
               - alias: NOTIFICATION GROUPE 4
                 data:
                   title: '{{ presence }}'
-                  message: 'mode: {{ mode | upper }} -> Salon & Bureau {{ (temp_diff
-                    + (temp_cible - consigne_base)) | round(1) }}° & Chambre {{ temp_cible
-                    }}°'
+                  message: 'Mode: {{ mode | upper }}<br> Salon & Bureau: {{ (temp_diff
+                    + (temp_cible - consigne_base)) | round(1) }}°<br> Chambre: {{
+                    temp_cible }}°'
                 action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763214110999'
@@ -8105,6 +8108,24 @@
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. '
   triggers:
+  - alias: Prises clim Ext. de "ON" à "OFF"
+    trigger: state
+    entity_id:
+    - switch.clim_salon_nous
+    - switch.clim_du_bureau_nous
+    - switch.clim_chambre_nous
+    from:
+    - 'on'
+    - 'off'
+  - alias: Prises clim Ext. de "OFF" à "ON"
+    trigger: state
+    entity_id:
+    - switch.clim_salon_nous
+    - switch.clim_du_bureau_nous
+    - switch.clim_chambre_nous
+    from:
+    - 'off'
+    - 'on'
   - alias: Changement d'état des fenêtres 'on' -> 'off'
     entity_id:
     - binary_sensor.contact_fenetre_salon_ikea_contact
@@ -8193,18 +8214,6 @@
       - alias: PRISES CLIM ALLUMÉES
         condition: template
         value_template: '{{ pris_clim }}'
-      - alias: PRISES TOUS "ON"
-        condition: and
-        conditions:
-        - condition: state
-          entity_id: switch.clim_salon_nous
-          state: 'on'
-        - condition: state
-          entity_id: switch.clim_du_bureau_nous
-          state: 'on'
-        - condition: state
-          entity_id: switch.clim_chambre_nous
-          state: 'on'
       - alias: PLAGE HORAIRE 20H-6H
         condition: time
         after: '20:00:00'
@@ -8324,7 +8333,8 @@
             entity_id: climate.clim_chambre_rm4_mini
           data:
             hvac_mode: '{{ mode }}'
-            temperature: '{{ temp_diff }}'
+            temperature: '{{ (temp_diff + (temp_cible - consigne_base)) | round(1)
+              }}'
           action: climate.set_temperature
         - alias: GESTION VENTILATION FAN_ONLY SPÉCIFIQUE
           choose:
@@ -8349,8 +8359,8 @@
               action: climate.set_fan_mode
         - alias: NOTIFICATION PRÉSENCE ET RÉGLAGES APPLIQUÉS
           data:
-            title: CLIM NOCTURNE ACTIVE
-            message: 'mode: {{ mode | upper }} -> Chambre {{ (temp_diff + (temp_cible
-              - consigne_base)) | round(1) }}°  Salon & Bureau {{ temp_cible }}°'
+            title: '[N]-> {{ presence }}'
+            message: 'Mode: {{ mode | upper }}<br> Chambre: {{ (temp_diff + (temp_cible
+              - consigne_base)) | round(1) }}°<br> Salon & Bureau: {{ temp_cible }}°'
           action: notify.mobile_app_poco_x7_pro
   mode: queued
