@@ -7708,18 +7708,30 @@
     - binary_sensor.contact_fenetre_cuisine_ikea_contact
     - binary_sensor.contact_fenetre_bureau_ikea_contact
     - binary_sensor.contact_fenetre_chambre_ikea_contact
-    from: 'off'
-    to: 'on'
+    from:
+    - 'off'
+    to:
+    - 'on'
     trigger: state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
   - alias: Changement d'état des fenêtres 'on' -> 'off'
     entity_id:
     - binary_sensor.contact_fenetre_salon_ikea_contact
     - binary_sensor.contact_fenetre_cuisine_ikea_contact
     - binary_sensor.contact_fenetre_bureau_ikea_contact
     - binary_sensor.contact_fenetre_chambre_ikea_contact
-    from: 'on'
-    to: 'off'
+    from:
+    - 'on'
+    to:
+    - 'off'
     trigger: state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
     entity_id: sensor.ne2213_mamour_network_type
     from: wifi
@@ -8099,9 +8111,15 @@
     - binary_sensor.contact_fenetre_cuisine_ikea_contact
     - binary_sensor.contact_fenetre_bureau_ikea_contact
     - binary_sensor.contact_fenetre_chambre_ikea_contact
-    from: 'on'
-    to: 'off'
+    from:
+    - 'on'
+    to:
+    - 'off'
     trigger: state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
     entity_id: sensor.ne2213_mamour_network_type
     from: wifi
@@ -8333,6 +8351,6 @@
           data:
             title: CLIM NOCTURNE ACTIVE
             message: 'mode: {{ mode | upper }} -> Chambre {{ (temp_diff + (temp_cible
-              - consigne_base)) | round(1) }}° & Salon & Bureau {{ temp_cible }}°'
+              - consigne_base)) | round(1) }}°  Salon & Bureau {{ temp_cible }}°'
           action: notify.mobile_app_poco_x7_pro
   mode: queued
