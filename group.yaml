@@ -13,6 +13,7 @@
         - sensor.inter_somrig_battery
         - sensor.inter_bureau_rodret_battery
         - sensor.poussoir_ikea_tradfri_battery
+        - sensor.inter_radiateur_salle_de_bain_ikea_rodret_battery
 
   hue_devices:
     name: "HUE Devices"
