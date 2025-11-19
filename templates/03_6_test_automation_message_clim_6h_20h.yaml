@@ -41,7 +41,7 @@
           {%- endif %}
           {# --- Logique principale pour 6h-20h --- #}
           {%- if both_cellular %}
-            {%- set message_header = "Clim [2] en [CELLULAR]" %}
+            {%- set message_header = "T° [2] en [CELLULAR]" %}
             {%- if clims_alimentees %}
               {%- if mode == 'heat' %}
                 {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
@@ -54,7 +54,7 @@
               {%- set message_mode = "[UNITS OFF]" %}
             {%- endif %}
           {%- elif both_wifi_not_home %}
-            {%- set message_header = "Clim [2] en [WIFI_?!]" %}
+            {%- set message_header = "T° [2] en [WIFI_?!]" %}
             {%- if clims_alimentees %}
               {%- if mode == 'heat' %}
                 {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
@@ -67,7 +67,7 @@
               {%- set message_mode = "[UNITS OFF]" %}
             {%- endif %}
           {%- elif mamour_wifi_home and eric_network == 'cellular' %}
-            {%- set message_header = "Clim [MAMOUR] en [WIFI/CELL]" %}
+            {%- set message_header = "T° [MAMOUR] en [WIFI/CELL]" %}
             {%- if clims_alimentees %}
               {%- if mode == 'heat' %}
                 {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
@@ -80,7 +80,7 @@
               {%- set message_mode = "[UNITS OFF]" %}
             {%- endif %}
           {%- elif mamour_wifi_home and eric_wifi_not_home %}
-            {%- set message_header = "Clim [MAMOUR] en [WIFI/!?]" %}
+            {%- set message_header = "T° [MAMOUR] en [WIFI/!?]" %}
             {%- if clims_alimentees %}
               {%- if mode == 'heat' %}
                 {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
@@ -93,7 +93,7 @@
               {%- set message_mode = "[UNITS OFF]" %}
             {%- endif %}
           {%- elif eric_wifi_home and mamour_network == 'cellular' %}
-            {%- set message_header = "Clim [ERIC] en [WIFI/CELL]" %}
+            {%- set message_header = "T° [ERIC] en [WIFI/CELL]" %}
             {%- if clims_alimentees %}
               {%- if mode == 'heat' %}
                 {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
@@ -106,7 +106,7 @@
               {%- set message_mode = "[UNITS OFF]" %}
             {%- endif %}
           {%- elif eric_wifi_home and mamour_wifi_not_home %}
-            {%- set message_header = "Clim [ERIC] en [WIFI/!?]" %}
+            {%- set message_header = "T° [ERIC] en [WIFI/!?]" %}
             {%- if clims_alimentees %}
               {%- if mode == 'heat' %}
                 {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
@@ -119,7 +119,7 @@
               {%- set message_mode = "[UNITS OFF]" %}
             {%- endif %}
           {%- elif mamour_wifi_home and eric_wifi_home %}
-            {%- set message_header = "Clim [2] en [WIFI]" %}
+            {%- set message_header = "T° [2] en [WIFI]" %}
             {%- if clims_alimentees %}
               {%- if mode == 'heat' %}
                 {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [HEAT]" %}
@@ -132,7 +132,7 @@
               {%- set message_mode = "[UNITS OFF]" %}
             {%- endif %}
           {%- else %}
-            {%- set message_header = "Scénario non géré" %}
+            {%- set message_header = "T° [Scénario non géré]" %}
             {%- set message_mode = "Vérifiez les capteurs de présence" %}
           {%- endif %}
           {# --- Construction du message final --- #}
