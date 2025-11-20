@@ -8385,3 +8385,50 @@
       - target:
           entity_id: input_boolean.inter_radiateur_salle_de_bain
         action: input_boolean.turn_off
+- id: '1763661737799'
+  alias: Gestion Radiateur Salle de Bain - Activation
+  description: ''
+  triggers:
+  - entity_id: input_boolean.inter_radiateur_salle_de_bain
+    to: 'on'
+    trigger: state
+  actions:
+  - target:
+      entity_id: switch.prise_radiateur_salle_de_bain_nous
+    action: switch.turn_on
+  - target:
+      entity_id: remote.radiateur_sdb_r4_mini
+    data:
+      command: on_off
+      device: Radiateur SDB
+      num_repeats: 1
+    action: remote.send_command
+  - delay: 00:00:01
+  - target:
+      entity_id: remote.radiateur_sdb_r4_mini
+    data:
+      command: 1000w
+      device: Radiateur SDB
+      num_repeats: 1
+    action: remote.send_command
+  - delay: 00:00:01
+  - target:
+      entity_id: remote.radiateur_sdb_r4_mini
+    data:
+      command: oscillation
+      device: Radiateur SDB
+      num_repeats: 1
+    action: remote.send_command
+  - delay: 00:30:00
+  - target:
+      entity_id: remote.radiateur_sdb_r4_mini
+    data:
+      command: on_off
+      device: Radiateur SDB
+      num_repeats: 1
+    action: remote.send_command
+  - delay: 00:30:00
+  - target:
+      entity_id: switch.prise_radiateur_salle_de_bain_nous
+    action: switch.turn_off
+  mode: restart
