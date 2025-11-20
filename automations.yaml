@@ -8364,29 +8364,8 @@
               - consigne_base)) | round(1) }}°<br> Salon & Bureau: {{ temp_cible }}°'
           action: notify.mobile_app_poco_x7_pro
   mode: queued
-- id: '1763658920420'
-  alias: Inter Radiateur Salle de Bain (IKEA RODRET)
-  triggers:
-  - topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)/action
-    trigger: mqtt
-  actions:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload == ''on'' }}'
-      sequence:
-      - target:
-          entity_id: input_boolean.inter_radiateur_salle_de_bain
-        action: input_boolean.turn_on
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.payload == ''off'' }}'
-      sequence:
-      - target:
-          entity_id: input_boolean.inter_radiateur_salle_de_bain
-        action: input_boolean.turn_off
 - id: '1763661737799'
-  alias: Gestion Radiateur Salle de Bain - Activation
+  alias: Gestion Radiateur Salle de Bain - Activation avec Thermostat
   description: ''
   triggers:
   - entity_id: input_boolean.inter_radiateur_salle_de_bain
@@ -8394,18 +8373,11 @@
     trigger: state
   actions:
   - delay:
-      hours: 0
-      minutes: 0
-      seconds: 0
       milliseconds: 400
   - target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
     action: switch.turn_on
-    data: {}
   - delay:
-      hours: 0
-      minutes: 0
-      seconds: 0
       milliseconds: 400
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
@@ -8415,9 +8387,6 @@
       num_repeats: 1
     action: remote.send_command
   - delay:
-      hours: 0
-      minutes: 0
-      seconds: 0
       milliseconds: 400
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
@@ -8425,12 +8394,8 @@
       command: 1000w
       device: radiateur_sdb
       num_repeats: 2
-      delay_secs: 0.5
     action: remote.send_command
   - delay:
-      hours: 0
-      minutes: 0
-      seconds: 0
       milliseconds: 400
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
@@ -8439,11 +8404,9 @@
       device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - delay:
-      hours: 0
-      minutes: 30
-      seconds: 0
-      milliseconds: 0
+  - wait_template: '{{ states(''sensor.th_salle_de_bain_temperature'') | float >=
+      25 }}'
+    timeout: 01:00:00
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
@@ -8451,12 +8414,28 @@
       device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - delay:
-      hours: 0
-      minutes: 10
-      seconds: 0
-      milliseconds: 0
-  - target:
-      entity_id: switch.prise_radiateur_salle_de_bain_nous
-    action: switch.turn_off
+  - wait_for_trigger:
+    - entity_id: input_boolean.inter_radiateur_salle_de_bain
+      to: 'off'
+      trigger: state
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.inter_radiateur_salle_de_bain
+        state: 'off'
+      sequence:
+      - target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: on_off
+          device: radiateur_sdb
+          num_repeats: 1
+        action: remote.send_command
+      - delay: 00:30:00
+      - target:
+          entity_id: switch.prise_radiateur_salle_de_bain_nous
+        action: switch.turn_off
+      - target:
+          entity_id: input_boolean.inter_radiateur_salle_de_bain
+        action: input_boolean.turn_off
   mode: restart
