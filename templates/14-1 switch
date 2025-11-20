@@ -1,12 +1,13 @@
-- switches:
+- platform: template
+  switches:
     inter_radiateur_sdb:
       friendly_name: "Inter Radiateur Salle de Bain"
-      value_template: "{{ is_state('input_boolean.inter_radiateur_sdb', 'on') }}"
+      value_template: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
       turn_on:
         service: input_boolean.turn_on
         target:
-          entity_id: input_boolean.inter_radiateur_sdb
+          entity_id: input_boolean.inter_radiateur_salle_de_bain
       turn_off:
         service: input_boolean.turn_off
         target:
-          entity_id: input_boolean.inter_radiateur_sdb
+          entity_id: input_boolean.inter_radiateur_salle_de_bain

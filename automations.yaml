@@ -8364,3 +8364,14 @@
               - consigne_base)) | round(1) }}°<br> Salon & Bureau: {{ temp_cible }}°'
           action: notify.mobile_app_poco_x7_pro
   mode: queued
+- id: '1763658920420'
+  alias: Bouton IKEA RODRET → Toggle Switch
+  description: ''
+  triggers:
+  - topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)/action
+    payload: 'on'
+    trigger: mqtt
+  actions:
+  - target:
+      entity_id: input_boolean.inter_radiateur_salle_de_bain
+    action: input_boolean.toggle
