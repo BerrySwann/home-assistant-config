@@ -8393,43 +8393,70 @@
     to: 'on'
     trigger: state
   actions:
-  - delay: 00:00:02
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 400
   - target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
     action: switch.turn_on
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 400
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: on_off
-      device: Radiateur SDB
+      device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - delay: 00:00:05
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 400
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: 1000w
-      device: Radiateur SDB
-      num_repeats: 1
+      device: radiateur_sdb
+      num_repeats: 2
+      delay_secs: 0.5
     action: remote.send_command
-  - delay: 00:00:05
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 400
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
-      command: oscillation
-      device: Radiateur SDB
+      command: swing
+      device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - delay: 00:00:05
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: on_off
-      device: Radiateur SDB
+      device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - delay: 00:00:10
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
   - target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
     action: switch.turn_off
-  mode: single
+  mode: restart
