@@ -8439,3 +8439,25 @@
           entity_id: input_boolean.inter_radiateur_salle_de_bain
         action: input_boolean.turn_off
   mode: restart
+- id: '1763755093414'
+  alias: Bouton IKEA RODRET - Gestion ON/OFF (JSON)
+  description: ''
+  triggers:
+  - topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
+    trigger: mqtt
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload_json.action == ''on'' }}'
+      sequence:
+      - target:
+          entity_id: input_boolean.inter_radiateur_salle_de_bain
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload_json.action == ''off'' }}'
+      sequence:
+      - target:
+          entity_id: input_boolean.inter_radiateur_salle_de_bain
+        action: input_boolean.turn_off
