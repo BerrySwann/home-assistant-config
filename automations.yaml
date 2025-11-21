@@ -8365,20 +8365,18 @@
           action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763661737799'
-  alias: Gestion Radiateur Salle de Bain - Activation avec Thermostat
-  description: ''
+  alias: Demarrage Radiateur Salle de Bain
+  description: Allumage prise + radiateur quand input_boolean passe à ON
   triggers:
   - entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'on'
     trigger: state
   actions:
-  - delay:
-      milliseconds: 400
+  - delay: '00:00:00.4'
   - target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
     action: switch.turn_on
-  - delay:
-      milliseconds: 400
+  - delay: '00:00:00.4'
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
@@ -8386,8 +8384,7 @@
       device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - delay:
-      milliseconds: 400
+  - delay: '00:00:00.4'
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
@@ -8395,8 +8392,7 @@
       device: radiateur_sdb
       num_repeats: 2
     action: remote.send_command
-  - delay:
-      milliseconds: 400
+  - delay: '00:00:00.4'
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
@@ -8414,31 +8410,7 @@
       device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - wait_for_trigger:
-    - entity_id: input_boolean.inter_radiateur_salle_de_bain
-      to: 'off'
-      trigger: state
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_boolean.inter_radiateur_salle_de_bain
-        state: 'off'
-      sequence:
-      - target:
-          entity_id: remote.radiateur_sdb_rm4_mini
-        data:
-          command: on_off
-          device: radiateur_sdb
-          num_repeats: 1
-        action: remote.send_command
-      - delay: 00:30:00
-      - target:
-          entity_id: switch.prise_radiateur_salle_de_bain_nous
-        action: switch.turn_off
-      - target:
-          entity_id: input_boolean.inter_radiateur_salle_de_bain
-        action: input_boolean.turn_off
-  mode: restart
+  mode: single
 - id: '1763755093414'
   alias: Bouton IKEA RODRET - Gestion ON/OFF (JSON)
   description: ''
@@ -8461,3 +8433,26 @@
       - target:
           entity_id: input_boolean.inter_radiateur_salle_de_bain
         action: input_boolean.turn_off
+- id: '1763755874751'
+  alias: Arret Radiateur Salle de Bain
+  description: Extinction radiateur + prise 30 min après mise à OFF du boolean
+  triggers:
+  - entity_id: input_boolean.inter_radiateur_salle_de_bain
+    to: 'off'
+    trigger: state
+  actions:
+  - target:
+      entity_id: remote.radiateur_sdb_rm4_mini
+    data:
+      command: on_off
+      device: radiateur_sdb
+      num_repeats: 1
+    action: remote.send_command
+  - delay: 00:30:00
+  - target:
+      entity_id: switch.prise_radiateur_salle_de_bain_nous
+    action: switch.turn_off
+  - target:
+      entity_id: input_boolean.inter_radiateur_salle_de_bain
+    action: input_boolean.turn_off
+  mode: single
