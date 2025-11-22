@@ -178,9 +178,12 @@ climate:
     temperature_sensor: sensor.th_salon_temperature
     humidity_sensor: sensor.th_salon_humidity
 
-logger:
-  default: info
-  logs:
-    homeassistant.components.sensor: debug
-    homeassistant.helpers.template: debug
+  - platform: smartir
+    name: Radiateur SdB rm4-mini
+    unique_id: radiateur_sdb_rm4_mini
+    device_code: 0000
+    controller_data: remote.radiateur_sdb_rm4_mini
+    temperature_sensor: sensor.th_salle_de_bain_temperature
+    humidity_sensor: ssensor.th_salle_de_bain_humidity
+
 
