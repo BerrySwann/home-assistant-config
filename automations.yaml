@@ -503,7 +503,6 @@
       alias: FERMETURE DU STORE AU COUCHE DU SOLEIL  & 1 CONDITION
     default: []
   mode: single
-- *id001
 - id: '1740857967163'
   alias: Gestion Optimisée du Store Salon
   description: Gère l'ouverture et la fermeture du store du salon en fonction de la
