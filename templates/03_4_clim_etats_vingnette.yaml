@@ -36,7 +36,7 @@
       {% if is_state('climate.radiateur_cuisine', 'off') %}
         Off
       {% elif is_state('climate.radiateur_cuisine', 'on') %}
-        On
+        Heat
       {% else %}
         erreur
       {% endif %}
@@ -60,7 +60,14 @@
 - sensor:
   - name: "Radiateur Sdb État"
     unique_id: radiateur_sdb_etat
-    state: "XXX"
+    state: >
+      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float < 50 %}
+        off
+      {% elif states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 50 %}
+        Heat
+      {% else %}
+        erreur
+      {% endif %}
 
 - sensor:
   - name: "Clim Chambre État"
