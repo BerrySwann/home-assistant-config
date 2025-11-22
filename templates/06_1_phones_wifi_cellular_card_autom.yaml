@@ -6,8 +6,8 @@
   - name: "Condition Mamour Wifi"
     unique_id: condition_mamour_wifi
     state: >-
-      {% if is_state('sensor.ne2213_mamour_network_type', 'wifi') %}
-        {% if is_state('sensor.ne2213_mamour_wi_fi_connection', 'Freebox_GG') %}
+      {% if is_state('sensor.poco_x7_pro_mamour_network_type', 'wifi') %}
+        {% if is_state('sensor.poco_x7_pro_mamour_wi_fi_connection', 'Freebox_GG') %}
           true
         {% else %}
           wifi_!?

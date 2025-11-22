@@ -3,15 +3,15 @@
       unique_id: message_clim_personnalise_6h_20h
       state: >
         {# --- Vérification des dépendances critiques --- #}
-        {%- if states('sensor.ne2213_mamour_network_type') in ['unknown', 'unavailable'] or
+        {%- if states('sensor.poco_x7_pro_mamour_network_type') in ['unknown', 'unavailable'] or
               states('sensor.poco_x7_pro_network_type') in ['unknown', 'unavailable'] or
               states('sensor.th_balcon_nord_temperature') in ['unknown', 'unavailable'] %}
           "En attente des capteurs..."
         {%- else %}
           {# --- Définition des variables --- #}
           {%- set home_ssid = "Freebox_GG" %}
-          {%- set mamour_network = states('sensor.ne2213_mamour_network_type') %}
-          {%- set mamour_wifi = states('sensor.ne2213_mamour_wi_fi_connection') %}
+          {%- set mamour_network = states('sensor.poco_x7_pro_mamour_network_type') %}
+          {%- set mamour_wifi = states('sensor.poco_x7_pro_mamour_wi_fi_connection') %}
           {%- set eric_network = states('sensor.poco_x7_pro_network_type') %}
           {%- set eric_wifi = states('sensor.poco_x7_pro_wi_fi_connection') %}
           {%- set tendance = states('sensor.th_balcon_nord_temperature_trend') %}
@@ -141,6 +141,6 @@
           {{ message_mode }}
         {%- endif %}
       availability: >
-        {{ states('sensor.ne2213_mamour_network_type') not in ['unknown', 'unavailable'] and
+        {{ states('sensor.poco_x7_pro_mamour_network_type') not in ['unknown', 'unavailable'] and
             states('sensor.poco_x7_pro_network_type') not in ['unknown', 'unavailable'] and
             states('sensor.th_balcon_nord_temperature') not in ['unknown', 'unavailable'] }}

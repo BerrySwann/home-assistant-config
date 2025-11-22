@@ -3,8 +3,8 @@
       unique_id: groupe_clim
       state: >
         {% set ssid = "Freebox_GG" %}
-        {% set mamour_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | string %}
-        {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | string %}
+        {% set mamour_ssid = states('sensor.poco_x7_pro_mamour_wi_fi_connection') | string %}
+        {% set mamour_net_type = states('sensor.poco_x7_pro_mamour_network_type') | string %}
         {% set eric_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | string %}
         {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | string %}
 
@@ -62,8 +62,8 @@
       unique_id: presence_clim
       state: >
         {% set ssid = "Freebox_GG" %}
-        {% set mamour_ssid = states('sensor.ne2213_mamour_wi_fi_connection') | string %}
-        {% set mamour_net_type = states('sensor.ne2213_mamour_network_type') | string %}
+        {% set mamour_ssid = states('sensor.poco_x7_pro_mamour_wi_fi_connection') | string %}
+        {% set mamour_net_type = states('sensor.poco_x7_pro_mamour_network_type') | string %}
         {% set eric_ssid = states('sensor.poco_x7_pro_wi_fi_connection') | string %}
         {% set eric_net_type = states('sensor.poco_x7_pro_network_type') | string %}
 

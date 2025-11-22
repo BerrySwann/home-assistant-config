@@ -503,7 +503,7 @@
       alias: FERMETURE DU STORE AU COUCHE DU SOLEIL  & 1 CONDITION
     default: []
   mode: single
-- id: '1738168584976'
+- id: '1736451378006'
   alias: Chauffage Cuisine (entre 4h45 & 7h LMMJ ou 5:45h & 8h VSD avec T° 19,9° <->
     20.5°)
   description: Allume ou éteint le chauffage selon la température (19,9° <-> 20.5°)
@@ -651,12 +651,12 @@
   - event: sunset
     trigger: sun
   - entity_id:
-    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
   - entity_id:
-    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
@@ -666,10 +666,10 @@
     - conditions:
       - alias: OUVERTURE DU STORE AU LEVER DU SOLEIL  & 2 CONDITIONS
         condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
@@ -694,7 +694,7 @@
         entity_id: sensor.th_balcon_nord_temperature
         above: 34
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
@@ -830,7 +830,7 @@
     portables
   triggers:
   - entity_id:
-    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_mamour_network_type
     - sensor.poco_x7_pro_network_type
     trigger: state
   conditions: []
@@ -841,7 +841,7 @@
       - condition: and
         conditions:
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: cellular
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
@@ -877,12 +877,12 @@
       - condition: and
         conditions:
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state:
           - wifi
         - condition: template
-          value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') !=
-            ''Freebox_GG'' }}
+          value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+            != ''Freebox_GG'' }}
 
             '
         - condition: state
@@ -924,10 +924,10 @@
       - condition: and
         conditions:
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: wifi
         - condition: state
-          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
           state: Freebox_GG
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
@@ -959,10 +959,10 @@
       - condition: and
         conditions:
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: wifi
         - condition: state
-          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
           state: Freebox_GG
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
@@ -1005,7 +1005,7 @@
           entity_id: sensor.poco_x7_pro_wi_fi_connection
           state: Freebox_GG
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: cellular
       sequence:
       - type: turn_off
@@ -1044,11 +1044,11 @@
           entity_id: sensor.poco_x7_pro_wi_fi_connection
           state: Freebox_GG
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: wifi
         - condition: template
-          value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') !=
-            ''Freebox_GG'' }}
+          value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+            != ''Freebox_GG'' }}
 
             '
       sequence:
@@ -1082,10 +1082,10 @@
       - condition: and
         conditions:
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: wifi
         - condition: state
-          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
           state: Freebox_GG
         - condition: state
           entity_id: sensor.poco_x7_pro_network_type
@@ -1205,12 +1205,12 @@
     to: 'off'
     trigger: state
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -1346,7 +1346,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -1387,8 +1387,8 @@
       action: climate.set_fan_mode
     - data:
         title: Clim [2] en [CELLULAR]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
           {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
@@ -1411,10 +1411,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -1457,11 +1457,11 @@
       action: climate.set_fan_mode
     - data:
         title: Clim [MAMOUR] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
@@ -1483,7 +1483,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -1529,11 +1529,11 @@
       action: climate.set_fan_mode
     - data:
         title: clim [ERIC] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
@@ -1555,10 +1555,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -1606,9 +1606,9 @@
       action: climate.set_fan_mode
     - data:
         title: clim [2] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon & Bureau
-          {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon &
+          Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre
           {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -1774,12 +1774,12 @@
     des portables [WIFI/CELLULAR]. '
   triggers:
   - alias: Changement de réseau de Mamour
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -1841,7 +1841,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -1882,8 +1882,8 @@
       action: climate.set_fan_mode
     - data:
         title: Clim-N [2] en [CELLULAR]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
           à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
@@ -1906,7 +1906,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -1949,9 +1949,9 @@
       action: climate.set_fan_mode
     - data:
         title: Clim-N [MAMOUR] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
-          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre
+          à {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -1975,7 +1975,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -2021,9 +2021,9 @@
       action: climate.set_fan_mode
     - data:
         title: Clim-N [ERIC] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
-          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre
+          à {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -2047,7 +2047,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -2093,9 +2093,9 @@
       action: climate.set_fan_mode
     - data:
         title: Clim-N [2] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
-          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre
+          à {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -2254,7 +2254,7 @@
     '
   triggers:
   - entity_id:
-    - sensor.ne2213_mamour_wi_fi_connection
+    - sensor.poco_x7_pro_mamour_wi_fi_connection
     - sensor.poco_x7_pro_wi_fi_connection
     - sensor.th_balcon_nord_temperature
     to:
@@ -2268,10 +2268,10 @@
   - if:
     - condition: template
       value_template: "{{ states('sensor.message_clim_personnalise_6h_20h') in ['unknown',
-        'unavailable'] or\n   states('sensor.ne2213_mamour_wi_fi_connection') in ['unknown',
-        'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection') in ['unknown',
-        'unavailable'] or\n   states('sensor.th_balcon_nord_temperature') in ['unknown',
-        'unavailable'] }}\n"
+        'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
+        in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
+        in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
+        in ['unknown', 'unavailable'] }}\n"
     then:
     - data:
         message: '⚠️ Erreur : Un capteur critique est indisponible ! Vérifiez les
@@ -2290,7 +2290,7 @@
     '
   triggers:
   - entity_id:
-    - sensor.ne2213_mamour_wi_fi_connection
+    - sensor.poco_x7_pro_mamour_wi_fi_connection
     - sensor.poco_x7_pro_wi_fi_connection
     - sensor.th_balcon_nord_temperature
     to:
@@ -2304,10 +2304,10 @@
   - if:
     - condition: template
       value_template: "{{ states('sensor.message_clim_personnalise_20h_6h') in ['unknown',
-        'unavailable'] or\n   states('sensor.ne2213_mamour_wi_fi_connection') in ['unknown',
-        'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection') in ['unknown',
-        'unavailable'] or\n   states('sensor.th_balcon_nord_temperature') in ['unknown',
-        'unavailable'] }}\n"
+        'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
+        in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
+        in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
+        in ['unknown', 'unavailable'] }}\n"
     then:
     - data:
         message: '⚠️ Erreur : Un capteur critique est indisponible ! Vérifiez les
@@ -2361,12 +2361,12 @@
     to: 'off'
     trigger: state
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -2502,7 +2502,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -2543,8 +2543,8 @@
       action: climate.set_fan_mode
     - data:
         title: Clim [2] en [CELLULAR]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3 Clim
           {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI
@@ -2567,10 +2567,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -2613,11 +2613,11 @@
       action: climate.set_fan_mode
     - data:
         title: Clim [MAMOUR] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
@@ -2639,7 +2639,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -2685,11 +2685,11 @@
       action: climate.set_fan_mode
     - data:
         title: clim [ERIC] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
@@ -2711,10 +2711,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -2762,9 +2762,9 @@
       action: climate.set_fan_mode
     - data:
         title: clim [2] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon & Bureau
-          {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon &
+          Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre
           {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -2798,12 +2798,12 @@
     to: 'off'
     trigger: state
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -2948,11 +2948,11 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
-        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
-          }}'
+        value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+          != ''Freebox_GG'' }}'
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: wifi
@@ -3000,7 +3000,7 @@
         action: climate.set_fan_mode
       - data:
           title: Clim [2] en [WIFI_?!]
-          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+          message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
             or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
             Clim {{ states('sensor.temperature_eco_hiver') | float }}° (mode hiver).\n{%
             endif %}"
@@ -3041,7 +3041,7 @@
         action: climate.set_fan_mode
       - data:
           title: Clim [2] en [CELLULAR]
-          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+          message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
             or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
             Clim {{ states('sensor.temperature_cible') | float }}°.\n{% endif %}"
         action: notify.mobile_app_poco_x7_pro
@@ -3074,7 +3074,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3120,7 +3120,7 @@
         action: climate.set_fan_mode
       - data:
           title: Clim [2] en [CELLULAR]
-          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+          message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
             or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
             Clim {{ states('sensor.temperature_eco_hiver') | float }}° (mode hiver).\n{%
             endif %}"
@@ -3161,7 +3161,7 @@
         action: climate.set_fan_mode
       - data:
           title: Clim [2] en [CELLULAR]
-          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+          message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
             or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
             Clim {{ states('sensor.temperature_cible') | float }}°.\n{% endif %}"
         action: notify.mobile_app_poco_x7_pro
@@ -3194,10 +3194,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3240,11 +3240,11 @@
       action: climate.set_fan_mode
     - data:
         title: Clim [MAMOUR] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI MAMOUR EN WIFI & ERIC EN WIFI_?!
     if:
@@ -3275,10 +3275,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3324,11 +3324,11 @@
       action: climate.set_fan_mode
     - data:
         title: Clim [MAMOUR] en [WIFI & ?!]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Bureau & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Bureau
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI
     if:
@@ -3359,7 +3359,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3405,11 +3405,11 @@
       action: climate.set_fan_mode
     - data:
         title: clim [ERIC] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI ERIC EN WIFI & MAMOUR EN WIFI_?!
     if:
@@ -3440,11 +3440,11 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
-        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
-          }}'
+        value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+          != ''Freebox_GG'' }}'
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: wifi
@@ -3489,11 +3489,11 @@
       action: climate.set_fan_mode
     - data:
         title: clim [ERIC] en [WIFI & ?!]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{ (states('sensor.temperature_differentielle')
-          | float + (states('sensor.temperature_cible') | float - states('sensor.consigne_de_base')
-          | float)) | round(1) }}° - Salon & Chambre {{ states('sensor.temperature_cible')
-          | float }}°\n{% endif %}"
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Bureau {{
+          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+          | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
+          & Chambre {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
   - alias: SI 2 PORTABLES EN WIFI
     if:
@@ -3524,10 +3524,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3575,9 +3575,9 @@
       action: climate.set_fan_mode
     - data:
         title: clim [2] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon & Bureau
-          {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Salon &
+          Bureau {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° & chambre
           {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -3591,12 +3591,12 @@
     des portables [WIFI/CELLULAR]. '
   triggers:
   - alias: Changement de réseau de Mamour
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -3658,7 +3658,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3704,7 +3704,7 @@
         action: climate.set_fan_mode
       - data:
           title: Clim-N [2] en [CELLULAR]
-          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+          message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
             or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
             Clim à {{ states('sensor.temperature_eco_hiver') | float }}° (mode hiver).\n{%
             endif %}"
@@ -3745,7 +3745,7 @@
         action: climate.set_fan_mode
       - data:
           title: Clim-N [2] en [CELLULAR]
-          message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type'
+          message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
             or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Les 3
             Clim à {{ states('sensor.temperature_cible') | float }}°.\n{% endif %}"
         action: notify.mobile_app_poco_x7_pro
@@ -3769,10 +3769,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3815,9 +3815,9 @@
       action: climate.set_fan_mode
     - data:
         title: Clim-N [MAMOUR] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
-          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre
+          à {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -3841,7 +3841,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3887,9 +3887,9 @@
       action: climate.set_fan_mode
     - data:
         title: Clim-N [ERIC] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
-          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre
+          à {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -3913,10 +3913,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -3962,9 +3962,9 @@
       action: climate.set_fan_mode
     - data:
         title: Clim-N [2] en [WIFI]
-        message: "{% if trigger.entity_id == 'sensor.ne2213_mamour_network_type' or
-          trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre à {{
-          (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
+        message: "{% if trigger.entity_id == 'sensor.poco_x7_pro_mamour_network_type'
+          or trigger.entity_id == 'sensor.poco_x7_pro_network_type' %}\n  Chambre
+          à {{ (states('sensor.temperature_differentielle') | float + (states('sensor.temperature_cible')
           | float - states('sensor.consigne_de_base') | float)) | round(1) }}° - Salon
           & Bureau à {{ states('sensor.temperature_cible') | float }}°\n{% endif %}"
       action: notify.mobile_app_poco_x7_pro
@@ -4221,12 +4221,12 @@
     to: 'off'
     trigger: state
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -4448,7 +4448,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -4602,11 +4602,11 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
-        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
-          }}'
+        value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+          != ''Freebox_GG'' }}'
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: wifi
@@ -4762,7 +4762,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -4919,11 +4919,11 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
-        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
-          }}'
+        value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+          != ''Freebox_GG'' }}'
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: cellular
@@ -5076,10 +5076,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -5248,10 +5248,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -5423,7 +5423,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -5595,7 +5595,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
         value_template: '{{ states(''sensor.poco_x7_pro_wi_fi_connection'') != ''Freebox_GG''
@@ -5770,10 +5770,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -6039,12 +6039,12 @@
   - event: sunset
     trigger: sun
   - entity_id:
-    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
   - entity_id:
-    - sensor.ne2213_mamour_network_type
+    - sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
@@ -6056,10 +6056,10 @@
       - condition: and
         conditions:
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: wifi
         - condition: state
-          entity_id: sensor.ne2213_mamour_wi_fi_connection
+          entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
           state: Freebox_GG
         - condition: state
           entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
@@ -6088,7 +6088,7 @@
           entity_id: sensor.th_balcon_nord_temperature
           above: 32
         - condition: state
-          entity_id: sensor.ne2213_mamour_network_type
+          entity_id: sensor.poco_x7_pro_mamour_network_type
           state: cellular
         - condition: state
           entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
@@ -6129,12 +6129,12 @@
     des portables [WIFI/CELLULAR].
   triggers:
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -6208,7 +6208,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -6362,11 +6362,11 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
-        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
-          }}'
+        value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+          != ''Freebox_GG'' }}'
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: wifi
@@ -6522,7 +6522,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -6679,11 +6679,11 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
-        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
-          }}'
+        value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+          != ''Freebox_GG'' }}'
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: cellular
@@ -6836,10 +6836,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -7008,10 +7008,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -7183,7 +7183,7 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -7355,11 +7355,11 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: template
-        value_template: '{{ states(''sensor.ne2213_mamour_wi_fi_connection'') != ''Freebox_GG''
-          }}'
+        value_template: '{{ states(''sensor.poco_x7_pro_mamour_wi_fi_connection'')
+          != ''Freebox_GG'' }}'
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
         state: wifi
@@ -7530,10 +7530,10 @@
         entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
         state: 'off'
       - condition: state
-        entity_id: sensor.ne2213_mamour_network_type
+        entity_id: sensor.poco_x7_pro_mamour_network_type
         state: wifi
       - condition: state
-        entity_id: sensor.ne2213_mamour_wi_fi_connection
+        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
         entity_id: sensor.poco_x7_pro_network_type
@@ -7751,12 +7751,12 @@
       minutes: 0
       seconds: 2
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -8142,12 +8142,12 @@
       minutes: 0
       seconds: 2
   - alias: Changement de réseau de Mamour 'wifi' -> 'cellular'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: wifi
     to: cellular
     trigger: state
   - alias: Changement de réseau de Mamour 'cellular' -> 'wifi'
-    entity_id: sensor.ne2213_mamour_network_type
+    entity_id: sensor.poco_x7_pro_mamour_network_type
     from: cellular
     to: wifi
     trigger: state
@@ -8365,7 +8365,7 @@
           action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763661737799'
-  alias: Demarrage Radiateur Salle de Bain
+  alias: A - Demarrage Radiateur Salle de Bain
   description: Allumage prise + radiateur quand input_boolean passe à ON
   triggers:
   - entity_id: input_boolean.inter_radiateur_salle_de_bain
@@ -8402,7 +8402,7 @@
     action: remote.send_command
   - wait_template: '{{ states(''sensor.th_salle_de_bain_temperature'') | float >=
       25 }}'
-    timeout: 01:00:00
+    timeout: 00:01:00
   - target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
@@ -8434,7 +8434,7 @@
           entity_id: input_boolean.inter_radiateur_salle_de_bain
         action: input_boolean.turn_off
 - id: '1763755874751'
-  alias: Arret Radiateur Salle de Bain
+  alias: B - Arret Radiateur Salle de Bain
   description: Extinction radiateur + prise 30 min après mise à OFF du boolean
   triggers:
   - entity_id: input_boolean.inter_radiateur_salle_de_bain
@@ -8448,7 +8448,7 @@
       device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - delay: 00:30:00
+  - delay: 00:01:00
   - target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
     action: switch.turn_off
