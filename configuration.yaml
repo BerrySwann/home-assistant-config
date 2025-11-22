@@ -179,7 +179,7 @@ climate:
     humidity_sensor: sensor.th_salon_humidity
 
   - platform: smartir
-    name: Radiateur SdB rm4-mini
+    name: Radiateur SdB RM4-Mini
     unique_id: radiateur_sdb_rm4_mini
     device_code: 0000
     controller_data: remote.radiateur_sdb_rm4_mini
