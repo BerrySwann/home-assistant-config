@@ -298,51 +298,7 @@
       - camera.mf_alerte_tomorrow
     action: homeassistant.update_entity
   mode: single
-- id: '1724936827963'
-  alias: Minuterie Couloir
-  description: Allume le couloir depuis un detecteur et pendant 30 secondes
-  triggers:
-  - type: occupied
-    device_id: be1d6095f8bcc550bf9afce5691a397d
-    entity_id: b9625a0f507a90ad1d8809616c2357f9
-    domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
-    trigger: device
-  conditions: []
-  actions:
-  - condition: time
-    before: '22:00:00'
-    after: 04:00:00
-  - action: light.turn_on
-    metadata: {}
-    data:
-      transition: 3
-    target:
-      device_id: 6c4a0b33cd79dd5ebadb9746d2d04651
-  - delay:
-      hours: 0
-      minutes: 1
-      seconds: 0
-      milliseconds: 0
-  - type: turn_off
-    device_id: 6c4a0b33cd79dd5ebadb9746d2d04651
-    entity_id: b27b0090627e7fd36842f50284f20ba7
-    domain: light
-  - condition: time
-    before: 04:00:00
-    after: '22:00:00'
-  - action: light.turn_on
-    target:
-      device_id:
-      - 376be133aa4232c6206d78f0c58bdb71
-    data:
-      brightness_pct: 20
-      transition: 5
-  mode: single
-  id: '1736451378096'
+- id: '1736451378096'
   alias: B - Chauffage Cuisine Vacances
   description: 'Allume ou éteint le chauffage selon la température entre 6h00 et 8h30
     la semaine '
@@ -2090,7 +2046,7 @@
       message: Échec ou pas de commit depuis 15 min. Vérifie /config/.logs/ha_git_backup.log
     action: persistent_notification.create
   mode: single
-- &id002
+- &id001
   id: restart_studio_code_server_daily
   alias: Redémarrage quotidien Studio Code Server
   description: ''
@@ -2102,17 +2058,17 @@
       addon: a0d7b954_vscode
     action: hassio.addon_restart
   mode: single
-- *id002
-- *id002
-- *id002
-- *id002
-- *id002
-- *id002
-- *id002
-- *id002
-- *id002
-- *id002
-- *id002
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
 - id: '1758129997644'
   alias: (C) Notification température Up ou Down de [6h00 -> 20h00]
   description: 'Notification température Up ou Down en fonction des présences et réseaux
@@ -8232,7 +8188,7 @@
           action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763661737799'
-  alias: A - Demarrage Radiateur Salle de Bain
+  alias: A - Démarrage Radiateur Salle de Bain
   description: Allumage prise + radiateur quand input_boolean passe à ON
   triggers:
   - entity_id: input_boolean.inter_radiateur_salle_de_bain
@@ -8267,16 +8223,6 @@
       device: radiateur_sdb
       num_repeats: 1
     action: remote.send_command
-  - wait_template: '{{ states(''sensor.th_salle_de_bain_temperature'') | float >=
-      25 }}'
-    timeout: 00:01:00
-  - target:
-      entity_id: remote.radiateur_sdb_rm4_mini
-    data:
-      command: on_off
-      device: radiateur_sdb
-      num_repeats: 1
-    action: remote.send_command
   mode: single
 - id: '1763755093414'
   alias: Bouton IKEA RODRET - Gestion ON/OFF (JSON)
@@ -8301,27 +8247,58 @@
           entity_id: input_boolean.inter_radiateur_salle_de_bain
         action: input_boolean.turn_off
 - id: '1763755874751'
-  alias: B - Arret Radiateur Salle de Bain
-  description: Extinction radiateur + prise 30 min après mise à OFF du boolean
+  alias: B - Gestion Résistances Radiateur SDB
+  description: Gestion des résistances selon la température, uniquement si le chauffage
+    est activé
   triggers:
-  - entity_id: input_boolean.inter_radiateur_salle_de_bain
-    to: 'off'
-    trigger: state
+  - entity_id: sensor.th_salle_de_bain_temperature
+    above: 22.5
+    for:
+      minutes: 1
+    id: temp_23
+    trigger: numeric_state
+  - entity_id: sensor.th_salle_de_bain_temperature
+    below: 20.5
+    for:
+      minutes: 1
+    id: temp_21
+    trigger: numeric_state
+  conditions:
+  - condition: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    state: 'on'
   actions:
-  - target:
-      entity_id: remote.radiateur_sdb_rm4_mini
-    data:
-      command: on_off
-      device: radiateur_sdb
-      num_repeats: 1
-    action: remote.send_command
-  - delay: 00:01:00
-  - target:
-      entity_id: switch.prise_radiateur_salle_de_bain_nous
-    action: switch.turn_off
-  - target:
-      entity_id: input_boolean.inter_radiateur_salle_de_bain
-    action: input_boolean.turn_off
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: temp_23
+      sequence:
+      - target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+          num_repeats: 1
+        action: remote.send_command
+    - conditions:
+      - condition: trigger
+        id: temp_21
+      sequence:
+      - target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+          num_repeats: 2
+        action: remote.send_command
+      - delay: '00:00:00.4'
+      - target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: swing
+          device: radiateur_sdb
+          num_repeats: 1
+        action: remote.send_command
   mode: single
 - id: '1763827578680'
   alias: A - Chauffage Cuisine (entre 4h45 & 7h LMMJ ou 5:45h & 8h VSD avec T° 19,9°
@@ -8455,4 +8432,38 @@
           message: Le chauffage de la Cuisine est éteint.
         action: notify.alexa_media_echo_dot_cuisine
         enabled: false
+  mode: single
+- id: '1763927002568'
+  alias: C - Arrêt Radiateur Salle de Bain
+  description: 'Extinction du radiateur (commande on_off) puis coupure de la prise
+    après 1 minute, uniquement si le chauffage est activé et la prise allumée.
+
+    '
+  triggers:
+  - entity_id: input_boolean.inter_radiateur_salle_de_bain
+    to: 'off'
+    trigger: state
+  conditions:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.inter_radiateur_salle_de_bain
+      state: 'on'
+      for:
+        seconds: 1
+    - condition: state
+      entity_id: switch.prise_radiateur_salle_de_bain_nous
+      state: 'on'
+  actions:
+  - target:
+      entity_id: remote.radiateur_sdb_rm4_mini
+    data:
+      command: on_off
+      device: radiateur_sdb
+      num_repeats: 1
+    action: remote.send_command
+  - delay: 00:01:00
+  - target:
+      entity_id: switch.prise_radiateur_salle_de_bain_nous
+    action: switch.turn_off
   mode: single
