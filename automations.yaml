@@ -8252,13 +8252,13 @@
     est activé
   triggers:
   - entity_id: sensor.th_salle_de_bain_temperature
-    above: 22.5
+    above: 22.9
     for:
       minutes: 1
     id: temp_23
     trigger: numeric_state
   - entity_id: sensor.th_salle_de_bain_temperature
-    below: 20.5
+    below: 20.9
     for:
       minutes: 1
     id: temp_21
@@ -8446,11 +8446,6 @@
   conditions:
   - condition: and
     conditions:
-    - condition: state
-      entity_id: input_boolean.inter_radiateur_salle_de_bain
-      state: 'on'
-      for:
-        seconds: 1
     - condition: state
       entity_id: switch.prise_radiateur_salle_de_bain_nous
       state: 'on'
