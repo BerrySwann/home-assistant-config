@@ -34,7 +34,7 @@
   - name: "Temperature différentielle"
     unique_id: temperature_différentielle
     unit_of_measurement: "°C"
-    state: "19"
+    state: "20"
 
 - sensor: #(éco hiver 17°)
   - name: "Temperature éCO. Hiver"
