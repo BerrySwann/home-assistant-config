@@ -5,7 +5,7 @@
 import math
 import logging
 from typing import Any, Generic
-from collections.abc import Callable, Coroutine
+from collections.abc import Callable
 
 from homeassistant.core import (
     HomeAssistant,
@@ -541,11 +541,6 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         # check initial state should be done after the current state has been calculated and so after the manager has been updated
         await self._check_initial_state()
         self.reset_last_change_time_from_vtherm()
-
-        # force the first cycle
-        # if changed:
-        #     _LOGGER.info("%s - Changes has been detected during startup, forcing first cycle", self)
-        #     await self.async_control_heating(force=True)
 
     def init_underlyings(self):
         """Initialize all underlyings. Should be overridden if necessary"""
@@ -1252,6 +1247,51 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         self._state_manager.requested_state.set_preset(VThermPreset.NONE)
         await self.update_states(force=True)
 
+    async def set_preset_temperature(
+        self,
+        preset: str,
+        temperature: float | None = None,
+        temperature_away: float | None = None,
+    ):
+        """Called by a service call:
+        service: versatile_thermostat.set_preset_temperature
+        data:
+            preset: boost
+            temperature: 17.8
+            temperature_away: 15
+        target:
+            entity_id: climate.thermostat_2
+        """
+        write_event_log(_LOGGER, self, f"Calling SERVICE_SET_PRESET_TEMPERATURE, preset: {preset}, temperature: {temperature}, temperature_away: {temperature_away}")
+
+        if preset in self._presets:
+            if temperature is not None:
+                self._presets[preset] = temperature
+            if self._presence_manager.is_configured and temperature_away is not None:
+                self._presets_away[self.get_preset_away_name(preset)] = temperature_away
+        else:
+            _LOGGER.warning("%s - No preset %s configured for this thermostat. ", self, preset)
+
+        if preset in self._presets:
+            if temperature is not None:
+                self._presets[preset] = temperature
+            if self._presence_manager.is_configured and temperature_away is not None:
+                self._presets_away[self.get_preset_away_name(preset)] = temperature_away
+        else:
+            _LOGGER.warning(
+                "%s - No preset %s configured for this thermostat. " "Ignoring set_preset_temperature call",
+                self,
+                preset,
+            )
+
+        # If the changed preset is active, change the current temperature
+        # Issue #119 - reload new preset temperature also in ac mode
+        if preset.startswith(self.preset_mode):
+            self.requested_state.force_changed()
+            await self.update_states(force=True)
+            # await self.async_set_preset_mode_internal(preset.rstrip(PRESET_AC_SUFFIX))
+            # await self.async_control_heating(force=True)
+
     ##
     ## Calculation and utility functions
     ##
@@ -1522,6 +1562,7 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
             "hvac_action": self.hvac_action,
             "hvac_mode": self.hvac_mode,
             "preset_mode": self.preset_mode,
+            "ema_temp": self._ema_temp,
             "specific_states": {
                 "is_on": self.is_on,
                 "last_central_mode": self.last_central_mode,
@@ -1746,52 +1787,6 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         write_event_log(_LOGGER, self, f"Calling SERVICE_SET_PRESENCE, presence: {presence}")
         await self._presence_manager.update_presence(presence)
         await self.async_control_heating(force=True)
-
-    async def service_set_preset_temperature(
-        self,
-        preset: str,
-        temperature: float | None = None,
-        temperature_away: float | None = None,
-    ):
-        """Called by a service call:
-        service: versatile_thermostat.set_preset_temperature
-        data:
-            preset: boost
-            temperature: 17.8
-            temperature_away: 15
-        target:
-            entity_id: climate.thermostat_2
-        """
-        write_event_log(_LOGGER, self, f"Calling SERVICE_SET_PRESET_TEMPERATURE, preset: {preset}, temperature: {temperature}, temperature_away: {temperature_away}")
-
-        if preset in self._presets:
-            if temperature is not None:
-                self._presets[preset] = temperature
-            if self._presence_manager.is_configured and temperature_away is not None:
-                self._presets_away[self.get_preset_away_name(preset)] = temperature_away
-        else:
-            _LOGGER.warning("%s - No preset %s configured for this thermostat. ", self, preset)
-
-        if preset in self._presets:
-            if temperature is not None:
-                self._presets[preset] = temperature
-            if self._presence_manager.is_configured and temperature_away is not None:
-                self._presets_away[self.get_preset_away_name(preset)] = temperature_away
-        else:
-            _LOGGER.warning(
-                "%s - No preset %s configured for this thermostat. "
-                "Ignoring set_preset_temperature call",
-                self,
-                preset,
-            )
-
-        # If the changed preset is active, change the current temperature
-        # Issue #119 - reload new preset temperature also in ac mode
-        if preset.startswith(self.preset_mode):
-            self.requested_state.force_changed()
-            await self.update_states(force=True)
-            # await self.async_set_preset_mode_internal(preset.rstrip(PRESET_AC_SUFFIX))
-            # await self.async_control_heating(force=True)
 
     async def service_set_safety(
         self,

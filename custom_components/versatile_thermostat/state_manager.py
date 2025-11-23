@@ -107,7 +107,7 @@ class StateManager:
         # if vtherm.power_manager.is_overpowering_detected:
 
         # First check safety
-        if vtherm.last_central_mode is CENTRAL_MODE_STOPPED:
+        if vtherm.last_central_mode == CENTRAL_MODE_STOPPED:
             self._current_state.set_hvac_mode(VThermHvacMode_OFF)
             vtherm.set_hvac_off_reason(HVAC_OFF_REASON_CENTRAL_MODE)
 
@@ -237,7 +237,7 @@ class StateManager:
             updated = True
 
         elif vtherm.presence_manager.is_absence_detected:
-            if vtherm.vtherm_preset_mode is not None:
+            if vtherm.vtherm_preset_mode != VThermPreset.NONE:
                 new_temp = vtherm.find_preset_temp(vtherm.vtherm_preset_mode)
                 _LOGGER.debug("%s - presence will set new target temperature: %.2f", self, new_temp)
                 self._current_state.set_target_temperature(new_temp)
