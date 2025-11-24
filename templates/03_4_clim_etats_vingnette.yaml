@@ -61,9 +61,9 @@
   - name: "Radiateur Sdb État"
     unique_id: radiateur_sdb_etat
     state: >
-      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float < 50 %}
+      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float < 20 %}
         off
-      {% elif states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 50 %}
+      {% elif states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 20 %}
         Heat
       {% else %}
         erreur

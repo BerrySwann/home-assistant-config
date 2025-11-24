@@ -75,12 +75,12 @@
       {% endif %}
 
 #========================================================================
-# Radiateur Salle de Bain (ON) si (_power) superieur a 50 Watts
+# Radiateur Salle de Bain (ON) si (_power) superieur a 20 Watts
 #========================================================================
   - name: "SdB Power Status"
     unique_id: sdb_power_status
     state: >
-      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 50 %}
+      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 20 %}
         on
       {% else %}
         off
