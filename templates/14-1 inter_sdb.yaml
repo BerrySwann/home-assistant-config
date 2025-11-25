@@ -1,0 +1,3 @@
+- binary_sensor:
+      - name: "Radiateur Salle de Bain Actif"
+        state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
