@@ -119,7 +119,8 @@ streamline_templates:
             {% set temp_ext = states('sensor.th_balcon_nord_temperature') |
             float %} {% set consigne_de_base = states('sensor.consigne_de_base')
             | int %} {% set temp_eco = states('sensor.temperature_eco_hiver') |
-            int %} {% set temp_diff =
+            int %} {% set temp_hg = states('sensor.temperature_hors_gel_hiver')
+            | int %} {% set temp_diff =
             states('sensor.temperature_differentielle') | int %} {% set delta_7
             = states('sensor.delta_7') | int %} {% set delta_5 =
             states('sensor.delta_5') | int %} {% set temp_cible =
@@ -129,7 +130,7 @@ streamline_templates:
               - Consigne de Base : {{ consigne_de_base }}°C
               - Consigne différentielle : {{ temp_diff }}°C
               
-              **- Calcul T°Ext. < 15°C = T°éCO [ {{ consigne_de_base }} - 1 = {{ temp_eco }} ]**
+              **- Calcul T°Ext. < {{ temp_hg }}°C = T°éCO [ {{ consigne_de_base }} - 1 = {{ temp_eco }} ]**
             {% elif temp_ext >= 40 %}
               {% set temp_cible = temp_ext - delta_7 %}
               - Consigne de Base : {{ consigne_de_base }}°C
@@ -207,13 +208,13 @@ streamline_templates:
                       - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
                       - Climatiseur Chambre : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
+                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                     {% else %}
-                      - Climatiseur Salon : Fan Only
-                      - Climatiseur Bureau : Fan Only
-                      - Climatiseur Chambre : Fan Only
+                      - Climatiseur Salon : Quiet (Fan Only)
+                      - Climatiseur Bureau : Quiet (Fan Only)
+                      - Climatiseur Chambre : Breeze (Fan Only)
                     {% endif %}
                   card_mod:
                     style: |
@@ -239,14 +240,14 @@ streamline_templates:
                     (6h ⟷ 20h)** {% if states('sensor.mode_ete_hiver') == 'heat'
                     %}
                       - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
+                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
                       - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
+                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                     {% else %}
-                      - Climatiseur Salon : Fan Only
+                      - Climatiseur Salon : Off
                       - Climatiseur Bureau : Off
                       - Climatiseur Chambre : Off
                     {% endif %}
@@ -273,78 +274,16 @@ streamline_templates:
                     **Eric en Wi-Fi domestique, Mamour en Cellular ou wifi_!?
                     (6h ⟷ 20h)** {% if states('sensor.mode_ete_hiver') == 'heat'
                     %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
+                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
                       - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
+                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
+                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                       - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
+                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                     {% else %}
                       - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Fan Only
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Mamour en Wi-Fi domestique, Eric en Wi-Fi non domestique
-                    (6h ⟷ 20h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Fan Only
                       - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                  - entity: sensor.condition_mamour_wifi
-                    state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Eric en Wi-Fi domestique, Mamour en Wi-Fi non domestique
-                    (6h ⟷ 20h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Fan Only
                       - Climatiseur Chambre : Off
                     {% endif %}
                   card_mod:
@@ -367,14 +306,14 @@ streamline_templates:
                     states('sensor.mode_ete_hiver') == 'heat' %}
                       - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
                       - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
+                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
                       - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
                       - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Cool)
+                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                     {% else %}
-                      - Climatiseur Salon : Fan Only
-                      - Climatiseur Bureau : Fan Only
+                      - Climatiseur Salon : Off
+                      - Climatiseur Bureau : Off
                       - Climatiseur Chambre : Off
                     {% endif %}
                   card_mod:
@@ -430,13 +369,13 @@ streamline_templates:
                       - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
                       - Climatiseur Chambre : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
+                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                     {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
+                      - Climatiseur Salon : Quiet (Fan Only)
+                      - Climatiseur Bureau : Breeze (Fan Only)
+                      - Climatiseur Chambre : Breeze (Fan Only)
                     {% endif %}
                   card_mod:
                     style: |
@@ -447,12 +386,8 @@ streamline_templates:
                       }
               - type: conditional
                 conditions:
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_mamour_wifi
-                        state: 'false'
-                      - entity: sensor.condition_mamour_wifi
-                        state: wifi_!?
+                  - entity: sensor.condition_mamour_wifi
+                    state: 'true'
                   - condition: or
                     conditions:
                       - entity: sensor.condition_eric_wifi
@@ -462,15 +397,16 @@ streamline_templates:
                 card:
                   type: markdown
                   content: >
-                    **Les deux en mode Cellular ou wifi_!? (20h ⟷ 6h) →
-                    Absence** {% if states('sensor.mode_ete_hiver') == 'heat' %}
-                      - Climatiseur Salon : 15°C (Anti-gel)  # Au lieu de 17°C
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
+                    **Mamour en Wi-Fi domestique, Eric en Cellular ou wifi_!?
+                    (20h ⟷ 6h)** {% if states('sensor.mode_ete_hiver') == 'heat'
+                    %}
+                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
+                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
                     {% else %}
                       - Climatiseur Salon : Off
                       - Climatiseur Bureau : Off
@@ -499,78 +435,16 @@ streamline_templates:
                     **Eric en Wi-Fi domestique, Mamour en Cellular ou wifi_!?
                     (20h ⟷ 6h)** {% if states('sensor.mode_ete_hiver') == 'heat'
                     %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Chambre : Off
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Fan Only
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Mamour en Wi-Fi domestique, Eric en Wi-Fi non domestique
-                    (20h ⟷ 6h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                      - Climatiseur Bureau : Off
+                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
                       - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
+                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                       - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
                     {% else %}
                       - Climatiseur Salon : Off
                       - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Fan Only
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                  - entity: sensor.condition_mamour_wifi
-                    state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Eric en Wi-Fi domestique, Mamour en Wi-Fi non domestique
-                    (20h ⟷ 6h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Chambre : Off
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Fan Only
                       - Climatiseur Chambre : Off
                     {% endif %}
                   card_mod:
@@ -591,17 +465,17 @@ streamline_templates:
                   content: >
                     **Les deux en Wi-Fi domestique (20h ⟷ 6h)** {% if
                     states('sensor.mode_ete_hiver') == 'heat' %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (éCO)
+                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
                       - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
                     {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
+                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                       - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
                     {% else %}
                       - Climatiseur Salon : Off
                       - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Fan Only
+                      - Climatiseur Chambre : Off
                     {% endif %}
                   card_mod:
                     style: |
@@ -726,7 +600,7 @@ streamline_templates:
           card_mod:
             style: |
               ha-card {
-                margin-top: -30px;
+                 margin-top: -30px;
                 margin-bottom: 30px;   
                 font-size: 11px;
                 background: none !important;
@@ -1456,11 +1330,7 @@ views:
           - type: vertical-stack
             cards:
               - type: conditional
-                conditions:
-                  - condition: numeric_state
-                    entity: sensor.blitzortung_lightning_counter
-                    above: 1
-                    below: 0
+                conditions: []
                 card:
                   type: custom:button-card
                   entity: sensor.blitzortung_lightning_counter
@@ -1586,7 +1456,6 @@ views:
               - condition: numeric_state
                 entity: sensor.blitzortung_lightning_counter
                 above: 1
-                below: 0
           - type: custom:bubble-card
             card_type: separator
             name: Personne(s)
@@ -2068,13 +1937,7 @@ views:
 
                       return [
                         '<span style="display: block; text-align: left; line-height: 1.2; color: transparent;">.</span>',
-                        ...modes.map(mode =>
-                          mode.label === '.' ?
-                          formatMode(safeState(mode.entity)) :
-                          (mode.entity === 'sensor.radiateur_sdb_etat' ?
-                          '<span style="display: block; text-align: left; line-height: 1.2; color: grey;">XXX</span>' :
-                          formatMode(safeState(mode.entity)))
-                        )
+                        ...modes.map(mode => formatMode(safeState(mode.entity)))
                       ].join('');
                     ]]]
                   consigne: |
@@ -2082,29 +1945,30 @@ views:
                       function safeState(entityId, attribute = 'temperature') {
                         const entity = states[entityId];
                         if (!entity) return 'N/A';
+                        if (entity.state && !isNaN(parseFloat(entity.state))) {
+                          return parseFloat(entity.state).toFixed(1);
+                        }
                         if (entity.attributes && entity.attributes[attribute] !== undefined) {
-                          return entity.attributes[attribute];
+                          return parseFloat(entity.attributes[attribute]).toFixed(1);
                         }
                         return 'N/A';
                       }
 
-                      const tempMoyenne = states['sensor.temperature_moyenne_interieure']
-                        ? parseFloat(states['sensor.temperature_moyenne_interieure'].state).toFixed(1)
-                        : 'N/A';
-
+                      const tempMoyenne = safeState('sensor.temperature_moyenne_interieure');
                       const consigneSalon = safeState('climate.clim_salon_rm4_mini');
                       const consigneCuisine = safeState('climate.radiateur_cuisine');
                       const consigneBureau = safeState('climate.clim_bureau_rm4_mini');
+                      const consigneSdB = safeState('sensor.th_salle_de_bain_temperature');
                       const consigneChambre = safeState('climate.clim_chambre_rm4_mini');
 
                       return [
                         `<span style="display: block; text-align: right; line-height: 1.2; color: #00FF00;">${tempMoyenne}°C</span>`,
                         '<span style="display: block; text-align: right; line-height: 1.2;">.</span>',
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneSalon}°C</span>`,
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneCuisine}°C</span>`,
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneBureau}°C</span>`,
-                        '<span style="display: block; text-align: right; line-height: 1.2; color: grey;">XX°C</span>',
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneChambre}°C</span>`
+                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneSalon !== 'N/A' ? consigneSalon + '°C' : 'N/A'}</span>`,
+                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneCuisine !== 'N/A' ? consigneCuisine + '°C' : 'N/A'}</span>`,
+                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneBureau !== 'N/A' ? consigneBureau + '°C' : 'N/A'}</span>`,
+                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneSdB !== 'N/A' ? consigneSdB + '°C' : 'N/A'}</span>`,
+                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneChambre !== 'N/A' ? consigneChambre + '°C' : 'N/A'}</span>`
                       ].join('');
                     ]]]
               - type: custom:button-card
@@ -2336,14 +2200,15 @@ views:
                       }
 
                       function safeState(entityId) {
-                        return states[entityId]?.state || 'off';
+                        const state = states[entityId]?.state;
+                        return state ? state.toLowerCase() : 'off';
                       }
 
                       const pieces = [
                         { name: 'Salon', power: safeState('sensor.salon_power_status'), mode: safeState('climate.clim_salon_rm4_mini') },
                         { name: 'Cuisine', power: safeState('sensor.cuisine_power_status'), mode: safeState('climate.radiateur_cuisine') },
                         { name: 'Bureau', power: safeState('sensor.bureau_power_status'), mode: safeState('climate.clim_bureau_rm4_mini') },
-                        { name: 'SdB', power: safeState('sensor.sdb_power_status'), mode: 'XXX' },
+                        { name: 'SdB', power: safeState('sensor.sdb_power_status'), mode: safeState('sensor.radiateur_sdb_etat') },
                         { name: 'Chambre', power: safeState('sensor.chambre_power_status'), mode: safeState('climate.clim_chambre_rm4_mini') },
                         { name: 'TOTAL', color: 'lightgreen' }
                       ];
@@ -2888,7 +2753,7 @@ views:
                     - line-height: 1.2
                   icon:
                     - transform: rotate(340deg)
-                    - left: 25%
+                    - left: 20%
                     - top: 20%
                     - color: rgb(244,67,54)
                     - opacity: 1
@@ -4290,8 +4155,6 @@ views:
                       margin: 0;
                       padding: 0;
                     }
-              - type: vertical-stack
-                cards: []
               - type: custom:bubble-card
                 card_type: separator
                 name: Baromètre
@@ -4513,8 +4376,6 @@ views:
                                   background: none !important;
                                   border: none !important;
                                 }
-              - type: vertical-stack
-                cards: []
           - type: heading
             heading_style: title
           - type: vertical-stack
@@ -8561,7 +8422,7 @@ views:
             all_series_config:
               group_by:
                 func: last
-                duration: 30m
+                duration: 60m
               show:
                 legend_value: false
                 extremas: true
@@ -8569,22 +8430,35 @@ views:
               - entity: sensor.temperature_moyenne_interieure
                 name: T° moyenne intèrieur
                 yaxis_id: temperature
-                stroke_width: 2
+                stroke_width: 4
                 fill_raw: last
                 color: orange
               - entity: sensor.th_balcon_nord_temperature
                 name: T° Bal.Nrd
                 yaxis_id: temperature
-                stroke_width: 2
+                stroke_width: 4
                 fill_raw: last
                 color: green
               - entity: sensor.conso_clim_rad_total
                 name: Conso. Total
                 yaxis_id: conso_clim
-                stroke_width: 2
+                type: column
+                opacity: 0.6
                 fill_raw: last
-                color: blue
-                curve: stepline
+                color: rgb(68,115,158)
+              - entity: sensor.conso_clim_rad_total
+                name: Avg(24h)
+                yaxis_id: conso_clim
+                type: line
+                color: '#F44336'
+                unit: W
+                fill_raw: last
+                group_by:
+                  func: avg
+                  duration: 24h
+                show:
+                  in_brush: false
+                  in_chart: false
             card_mod:
               style: |
                 ha-card {
@@ -9436,6 +9310,28 @@ views:
                     action: none
               - type: conditional
                 conditions:
+                  - entity: sensor.radiateur_sdb_etat
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heating-coil
+                  icon_color: |
+                    {% if is_state('sensor.radiateur_sdb_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.radiateur_sdb_etat', 'off') %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Salle de Bain: {% if is_state('sensor.radiateur_sdb_etat',
+                    'Heat') %}
+                      Heat
+                    {% else %}
+                      Off
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
                   - entity: sensor.chambre_power_status
                     state_not: 'off'
                 chip:
@@ -9620,7 +9516,7 @@ views:
                   - fan_only
                   - heat
                   - cool
-              - style: icons
+              - style: dropdown
                 type: climate-fan-modes
                 fan_modes:
                   - auto
@@ -9947,11 +9843,18 @@ views:
                   - fan_only
                   - heat
                   - cool
-              - style: icons
+              - style: dropdown
                 type: climate-fan-modes
                 fan_modes:
                   - auto
+                  - comfort
                   - breeze
+                  - level1
+                  - level2
+                  - level3
+                  - level4
+                  - level5
+                  - powerful
             name: Clim du BUREAU
             card_mod:
               style: |
@@ -10061,6 +9964,241 @@ views:
                           }
                     card:
                       type: custom:text-divider-row
+                      text: Chauffage Salle de Bain
+          - type: heading
+            icon: mdi:bathtub
+            heading: Radiateur SdB
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: remote.radiateur_sdb_rm4_mini
+                color: state
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.prise_radiateur_salle_de_bain_nous_power
+                color: amber
+              - type: entity
+                show_state: false
+                show_icon: true
+                entity: switch.prise_radiateur_salle_de_bain_nous
+                color: state
+                icon: mdi:power
+                tap_action:
+                  action: toggle
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-tablette/prog-clim-chambre
+          - type: vertical-stack
+            cards:
+              - type: custom:ring-tile
+                name: Salle de Bain
+                entity: sensor.th_salle_de_bain_temperature
+                ring_entity: sensor.th_salle_de_bain_humidity
+                ring_type: open
+                ring_size: 5
+                scale: ticks_with_labels
+                top_element: icon
+                middle_element: value_with_unit
+                bottom_element: name
+                colorize_icon: true
+                indicator: dot
+                marker2: sensor.th_salle_de_bain_temperature
+                marker2_colour: '#FFA500'
+                min: 0
+                max: 100
+                colour:
+                  '0': '#00FF00'
+                  '50': '#00FF00'
+                  '55': '#FFA500'
+                  '60': '#FFA500'
+                  '75': '#F44336'
+                card_mod:
+                  style: |
+                    ha-card {
+                      margin-top: -30px;
+                      background: none !important;
+                      border: none !important;
+                      box-shadow: none !important;
+                    }
+            grid_options:
+              columns: full
+              rows: 4
+          - type: custom:mushroom-template-card
+            entity: input_boolean.inter_radiateur_salle_de_bain
+            primary: Radiateur Salle de Bain
+            secondary: >
+              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
+              'on') %}
+                Activé
+              {% else %}
+                Désactivé
+              {% endif %}
+            icon: >
+              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
+              'on') %}
+                mdi:radiator
+              {% else %}
+                mdi:radiator-disabled
+              {% endif %}
+            badge_icon: >
+              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
+              'on') %}
+                mdi:power
+              {% else %}
+                mdi:power-off
+              {% endif %}
+            badge_color: >
+              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
+              'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            tap_action:
+              action: toggle
+            grid_options:
+              columns: 12
+              rows: 1
+            color: >
+              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
+              'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            features_position: bottom
+            card_mod:
+              style:
+                mushroom-state-info$: |
+                  .primary {
+                    position: relative;
+                    top: -5px;
+                    left: 10px;
+                    font-size: 20px !important;
+                    font-weight: bold;
+                  }
+                  .secondary {
+                    position: relative;
+                    top: 5px;
+                    left: 10px;
+                    font-size: 12px !important;
+                  }
+                .: |
+                  :host {
+                    --mush-icon-size: 60px;
+                  }
+                style: |
+                  ha-card {
+                    border: 1px solid {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %} orange {% else %} grey {% endif %};
+                    background-color: {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %} rgba(255, 140, 0, 0.1) {% else %} transparent {% endif %};
+                  }
+          - type: vertical-stack
+            cards:
+              - type: custom:auto-entities
+                card:
+                  type: custom:bar-card
+                  icon: mdi:lightning-bolt
+                  title_position: inside
+                  height: 38
+                  positions:
+                    icon: inside
+                    indicator: inside
+                    name: inside
+                    value: inside
+                  show_icon: true
+                  align: split
+                  columns: '1'
+                  unit_of_measurement: W
+                  severity:
+                    - color: gainsboro
+                      from: 0
+                      to: 5
+                    - color: rgb(102, 255, 102)
+                      from: 5
+                      to: 49
+                    - color: rgb(0, 102, 0)
+                      from: 50
+                      to: 249
+                    - color: orange
+                      from: 250
+                      to: 499
+                    - color: darkorange
+                      from: 500
+                      to: 749
+                    - color: red
+                      from: 750
+                      to: 999
+                    - color: darkred
+                      from: 1000
+                      to: 6000
+                  card_mod:
+                    style: |
+                      :host {
+                        --ha-card-border-color: none !important;
+                        --card-background-color: none !important;
+                        }
+                      ha-card {
+                        border: none !important;
+                        box-shadow: none !important;
+                        background: none !important;
+                        font-weight: bold;
+                        --mdc-icon-size: 25px;
+                        --paper-item-icon-color: white;
+                      }
+                      bar-card-currentbar, bar-card-backgroundbar {
+                        height: 6px !important;
+                        margin-top: 35px;
+                      }
+                filter:
+                  include:
+                    - options: {}
+                      entity_id: sensor.prise_radiateur_salle_de_bain_nous_power
+                sort:
+                  numeric: true
+                  reverse: true
+                  ip: false
+                  ignore_case: false
+                  method: state
+                  show_empty: false
+                  entity_row: true
+            visibility:
+              - condition: numeric_state
+                entity: sensor.prise_radiateur_salle_de_bain_nous_power
+                above: 0.1
+          - card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                }
+            type: custom:stack-in-card
+            mode: vertical
+            keep:
+              box_shadow: false
+              margin: false
+              border_radius: false
+              background: false
+              outer_padding: false
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mod-card
+                    card_mod:
+                      style:
+                        .: |
+                          :host {
+                            --text-divider-color: white;
+                            --text-divider-line-size: 5px;
+                          }
+                    card:
+                      type: custom:text-divider-row
                       text: Climatiseur de la CHAMBRE
           - type: heading
             icon: mdi:bed
@@ -10115,14 +10253,17 @@ views:
                   - fan_only
                   - heat
                   - cool
-              - style: icons
+              - style: dropdown
                 type: climate-fan-modes
                 fan_modes:
                   - auto
-                  - low
-                  - medium
-                  - high
                   - breeze
+                  - powerful
+                  - level1
+                  - level2
+                  - level3
+                  - level4
+                  - level5
             name: Clim de la CHAMBRE
             show_current_as_primary: false
             card_mod:
@@ -13782,6 +13923,190 @@ views:
                   margin-left: auto;
                   margin-right: auto;
                 }
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: conditional
+                conditions:
+                  - entity: sensor.salon_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:air-conditioner
+                  icon_color: |
+                    {% if is_state('sensor.clim_salon_etat', 'Cool') %}
+                      #87CEEB
+                    {% elif is_state('sensor.clim_salon_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
+                      #40E0D0
+                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: |
+                    Salon: {% if is_state('sensor.clim_salon_etat', 'Heat') %}
+                      Heat
+                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
+                      Fan
+                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
+                      Off
+                    {% else %}
+                      Cool
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.cuisine_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heating-coil
+                  icon_color: |
+                    {% if is_state('sensor.radiateur_cuisine_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Cuisine: {% if is_state('sensor.radiateur_cuisine_etat',
+                    'Heat') %}
+                      Heat
+                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
+                      Off
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.bureau_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:air-conditioner
+                  icon_color: |
+                    {% if is_state('sensor.clim_bureau_etat', 'Cool') %}
+                      #87CEEB
+                    {% elif is_state('sensor.clim_bureau_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
+                      #40E0D0
+                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: |
+                    Bureau: {% if is_state('sensor.clim_bureau_etat', 'Heat') %}
+                      Heat
+                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
+                      Fan
+                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
+                      Off
+                    {% else %}
+                      Cool
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.chambre_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:air-conditioner
+                  icon_color: |
+                    {% if is_state('sensor.clim_chambre_etat', 'Cool') %}
+                      #87CEEB
+                    {% elif is_state('sensor.clim_chambre_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
+                      #40E0D0
+                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Chambre: {% if is_state('sensor.clim_chambre_etat', 'Heat')
+                    %}
+                      Heat
+                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
+                      Fan
+                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
+                      Off
+                    {% else %}
+                      Cool
+                    {% endif %}
+                  tap_action:
+                    action: none
+            alignment: center
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            apex_config:
+              chart:
+                height: 400px
+            header:
+              show: true
+              title: ' '
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temperature
+                min: ~10
+                max: ~32
+                decimals: 0
+                apex_config:
+                  tickAmount: 10
+              - id: conso_clim
+                min: ~150
+                max: auto
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 10
+            all_series_config:
+              group_by:
+                func: last
+                duration: 60m
+              show:
+                legend_value: false
+                extremas: true
+            series:
+              - entity: sensor.temperature_moyenne_interieure
+                name: T° moyenne intèrieur
+                yaxis_id: temperature
+                stroke_width: 4
+                fill_raw: last
+                color: orange
+              - entity: sensor.th_balcon_nord_temperature
+                name: T° Bal.Nrd
+                yaxis_id: temperature
+                stroke_width: 4
+                fill_raw: last
+                color: green
+              - entity: sensor.conso_clim_rad_total
+                name: Conso. Total
+                yaxis_id: conso_clim
+                type: column
+                opacity: 0.6
+                fill_raw: last
+                color: rgb(68,115,158)
+              - entity: sensor.conso_clim_rad_total
+                name: Avg(24h)
+                yaxis_id: conso_clim
+                type: line
+                color: '#F44336'
+                unit: W
+                fill_raw: last
+                group_by:
+                  func: avg
+                  duration: 24h
+                show:
+                  in_brush: false
+                  in_chart: false
+            card_mod:
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: heading
             icon: mdi:sofa
             heading_style: title
@@ -16631,6 +16956,7 @@ views:
                   - sensor.detecteur_de_fuite_ikea_battery
                   - sensor.detecteur_vallhorn_battery
                   - sensor.poussoir_ikea_tradfri_battery
+                  - sensor.inter_radiateur_salle_de_bain_ikea_rodret_battery
             sort:
               by: state
             bulk_rename:
@@ -20286,6 +20612,11 @@ views:
               tap_action:
                 action: navigate
                 navigation_path: '#spm25'
+            card_mod:
+              style: |
+                ha-card {
+                  margin-top:-30px;     
+                }
           - type: custom:bubble-card
             card_type: button
             button_type: state
@@ -20311,6 +20642,11 @@ views:
               tap_action:
                 action: navigate
                 navigation_path: '#scov'
+            card_mod:
+              style: |
+                ha-card {
+                  margin-top:-30px;     
+                }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -20412,6 +20748,11 @@ views:
               tap_action:
                 action: navigate
                 navigation_path: '#bpm25'
+            card_mod:
+              style: |
+                ha-card {
+                  margin-top:-30px;     
+                }
           - type: custom:bubble-card
             card_type: button
             button_type: state
@@ -20436,6 +20777,11 @@ views:
               tap_action:
                 action: navigate
                 navigation_path: '#bcov'
+            card_mod:
+              style: |
+                ha-card {
+                  margin-top:-30px;     
+                }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -20537,6 +20883,11 @@ views:
               tap_action:
                 action: navigate
                 navigation_path: '#cpm25'
+            card_mod:
+              style: |
+                ha-card {
+                  margin-top:-30px;     
+                }
           - type: custom:bubble-card
             card_type: button
             button_type: state
@@ -20561,6 +20912,11 @@ views:
               tap_action:
                 action: navigate
                 navigation_path: '#ccov'
+            card_mod:
+              style: |
+                ha-card {
+                  margin-top:-30px;     
+                }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
