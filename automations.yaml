@@ -1447,7 +1447,8 @@
   actions:
   - delay: 00:00:03
   - data:
-      message: 'Le mode a changé pour: {{ states(''sensor.mode_ete_hiver_etat'') }}'
+      message: 'Le mode a changé pour: {{ states(''sensor.mode_ete_hiver_etat'') |
+        upper }}'
       title: CHANGEMENT DE MODE
     action: notify.mobile_app_poco_x7_pro
   mode: single
@@ -2080,7 +2081,6 @@
     - sensor.poco_x7_pro_mamour_wi_fi_connection
     - sensor.poco_x7_pro_wi_fi_connection
     - sensor.th_balcon_nord_temperature
-    to:
     trigger: state
   conditions:
   - condition: time
@@ -2097,7 +2097,7 @@
         in ['unknown', 'unavailable'] }}\n"
     then:
     - data:
-        message: '⚠️ Erreur : Un capteur critique est indisponible ! Vérifiez les
+        message: '⚠️ Erreur : Un capteur TENDANCE est indisponible ! Vérifiez les
           dépendances.'
       action: notify.mobile_app_poco_x7_pro
     else:
@@ -2133,7 +2133,7 @@
         in ['unknown', 'unavailable'] }}\n"
     then:
     - data:
-        message: '⚠️ Erreur : Un capteur critique est indisponible ! Vérifiez les
+        message: '⚠️ Erreur : Un capteur TENDANCE est indisponible ! Vérifiez les
           dépendances.'
       action: notify.mobile_app_poco_x7_pro
     else:

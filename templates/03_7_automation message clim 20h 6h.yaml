@@ -1,6 +1,6 @@
 - sensor:
-    - name: "Message Clim personnalisé 6h <-> 20h"
-      unique_id: message_clim_personnalise_6h_20h
+    - name: "Message Clim personnalisé 20h <-> 6h"
+      unique_id: message_clim_personnalise_20h_6h
       state: >
         {# --- Vérification des dépendances critiques --- #}
         {%- if states('sensor.poco_x7_pro_mamour_network_type') in ['unknown', 'unavailable'] or
@@ -30,61 +30,61 @@
           {%- elif tendance == 'decreasing' %}
             {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
           {%- else %}
-            {%- set message_tendance = "T°Ext stable " ~ temp_ext ~ "°" %}
+            {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
           {%- endif %}
 
           {# --- Header basé sur Presence Clim --- #}
           {%- set message_header = "T° " ~ presence %}
 
-          {# --- Logique principale pour 6h-20h --- #}
+          {# --- Logique principale pour 20h-6h (priorité à la chambre) --- #}
           {%- if not clims_alimentees %}
             {%- set message_mode = "[UNITS OFF]" %}
 
           {%- else %}
             {%- if 'groupe_1' in groupe %}
-              {# ABSENT => 3 clims en éco ou cible selon mode #}
+              {# ABSENT (les 2 en CELL ou WIFI_!?), on reste en éco sur les 3 clims #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
+                {%- set message_mode = "3 clim " ~ temp_eco ~ "° [éCO HEAT]" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "3 clim " ~ temp_cible ~ "° [COOL]" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Les 3 Clim [FAN ONLY]" %}
+                {%- set message_mode = "3 clim [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_2' in groupe %}
-              {# MAMOUR AT HOME => Salon prioritaire, Bureau & Chambre en cible #}
+              {# MAMOUR AT HOME => Chambre prioritaire #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [HEAT]" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [COOL]" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Salon [FAN ONLY] - Bureau & Chambre [FAN ONLY]" %}
+                {%- set message_mode = "Chambre [FAN ONLY] - Salon/Bureau [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_3' in groupe %}
-              {# ERIC AT HOME => Bureau prioritaire, Salon & Chambre en cible #}
+              {# ERIC AT HOME => Chambre prioritaire aussi la nuit #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [HEAT]" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [COOL]" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Bureau [FAN ONLY] - Salon & Chambre [FAN ONLY]" %}
+                {%- set message_mode = "Chambre [FAN ONLY] - Salon/Bureau [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_4' in groupe %}
-              {# MAMOUR & ERIC AT HOME => Salon & Bureau prioritaires, Chambre en cible #}
+              {# MAMOUR & ERIC AT HOME => Chambre prioritaire, salon/bureau en cible #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [HEAT]" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [COOL]" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Salon & Bureau [FAN ONLY] - Chambre [FAN ONLY]" %}
+                {%- set message_mode = "Chambre [FAN ONLY] - Salon/Bureau [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
