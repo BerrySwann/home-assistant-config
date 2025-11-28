@@ -3,7 +3,7 @@
 # Logique système (mode, consigne, deltas, cibles, moyennes, delta)
 #========================================================================
 
-- sensor:
+- sensor: #
   - name: "Mode Été/Hiver"
     unique_id: mode_ete_hiver
     state: >
@@ -19,49 +19,49 @@
         cool
       {% endif %}
 
-- sensor:
+- sensor: #(18° coonsigne de base hiver / 28° l'été)
   - name: "Consigne de Base"
     unique_id: consigne_de_base
     unit_of_measurement: "°C"
     state: "18"
 
-- sensor:
+- sensor: #(19° confort hiver / 27° l'été)
   - name: "Temperature différentielle"
     unique_id: temperature_differentielle
     unit_of_measurement: "°C"
     state: "19"
 
-- sensor:
+- sensor:  #(éco hiver 17°)
   - name: "Temperature éCO. Hiver"
     unique_id: temperature_eco_hiver
     unit_of_measurement: "°C"
     state: "17"
 
-- sensor:
+- sensor: #(hors gel hiver 15°)
   - name: "Temperature Hors-Gel Hiver"
     unique_id: temperature_hors_gel_hiver
     unit_of_measurement: "°C"
     state: "15"
 
-- sensor:
+- sensor: #(mode HEAT si T° exterieur est < +12°)
   - name: "Delta_1"
     unique_id: delta_1
     unit_of_measurement: "°C"
     state: "1"
 
-- sensor:
+- sensor: #(mode HAET si T° exterieur est < +10°)
   - name: "Delta_2"
     unique_id: delta_2
     unit_of_measurement: "°C"
     state: "2"
 
-- sensor:
+- sensor: #(mode COOL si T° exterieur est > +32°)
   - name: "Delta_5"
     unique_id: delta_5
     unit_of_measurement: "°C"
     state: "5"
 
-- sensor:
+- sensor: #(mode COOL si T° exterieur est > +40°)
   - name: "Delta_7"
     unique_id: delta_7
     unit_of_measurement: "°C"
