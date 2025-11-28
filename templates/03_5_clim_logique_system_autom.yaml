@@ -47,13 +47,13 @@
   - name: "Delta_1"
     unique_id: delta_1
     unit_of_measurement: "°C"
-    state: "1"
+    state: "0"
 
 - sensor: #(mode HAET si T° exterieur est < +10°)
   - name: "Delta_2"
     unique_id: delta_2
     unit_of_measurement: "°C"
-    state: "2"
+    state: "0"
 
 - sensor: #(mode COOL si T° exterieur est > +32°)
   - name: "Delta_5"
