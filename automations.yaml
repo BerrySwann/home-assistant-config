@@ -8142,19 +8142,19 @@
           value_template: '{{ groupe in [''groupe_2'', ''groupe_3'', ''groupe_4'']
             }}'
         then:
-        - alias: RÉGLAGE TEMPÉRATURE SELON PRÉSENCE (SALON, BUREAU, CHAMBRE)
+        - alias: RÉGLAGE TEMPÉRATURE SALON
           target:
             entity_id: climate.clim_salon_rm4_mini
           data:
             hvac_mode: '{{ mode }}'
-            temperature: '{{ temp_cible }}'
+            temperature: '{{ temp_confort_n }}'
           action: climate.set_temperature
         - alias: RÉGLAGE TEMPÉRATURE BUREAU
           target:
             entity_id: climate.clim_bureau_rm4_mini
           data:
             hvac_mode: '{{ mode }}'
-            temperature: '{{ temp_cible }}'
+            temperature: '{{ temp_confort_n }}'
           action: climate.set_temperature
         - alias: RÉGLAGE TEMPÉRATURE CHAMBRE
           target:
