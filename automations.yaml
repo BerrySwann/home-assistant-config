@@ -8016,7 +8016,11 @@
       temp_cible: '{{ states(''sensor.temperature_cible'') | float }}'
       temp_diff: '{{ states(''sensor.temperature_differentielle'') | float }}'
       consigne_base: '{{ states(''sensor.consigne_de_base'') | float }}'
-      fenetres_fermees: '{{ states(''sensor.nbre_de_fenetres_fermees'') | int }}'
+      fenetres_fermees: "{{ is_state('binary_sensor.contact_fenetre_salon_ikea_contact',
+        'off') and\n   is_state('binary_sensor.contact_fenetre_cuisine_ikea_contact',
+        'off') and\n   is_state('binary_sensor.contact_fenetre_bureau_ikea_contact',
+        'off') and\n   is_state('binary_sensor.contact_fenetre_chambre_ikea_contact',
+        'off') }}\n"
       pris_clim: "{{ is_state('switch.clim_salon_nous', 'on') and\n   is_state('switch.clim_du_bureau_nous',
         'on') and\n   is_state('switch.clim_chambre_nous', 'on') }}\n"
       presence: '{{ states(''sensor.presence_clim'') }}'
@@ -8025,9 +8029,8 @@
     - alias: ETAPES VERIF FENÊTRES, PRISES ET HORAIRES
       conditions:
       - alias: FENÊTRES FERMÉES
-        condition: numeric_state
-        entity_id: sensor.nbre_de_fenetres_fermees
-        above: 3.9
+        condition: template
+        value_template: '{{ fenetres_fermees }}'
       - alias: PRISES CLIM ALLUMÉES
         condition: template
         value_template: '{{ pris_clim }}'
