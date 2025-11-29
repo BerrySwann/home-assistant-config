@@ -43,17 +43,17 @@
     unit_of_measurement: "°C"
     state: "15"
 
-- sensor: #(mode HEAT si T° exterieur est < +12°)
+- sensor: #(mode HEAT si T° exterieur est < ou = +12°)
   - name: "Delta_1"
     unique_id: delta_1
     unit_of_measurement: "°C"
-    state: "0"
+    state: "1"
 
-- sensor: #(mode HAET si T° exterieur est < +10°)
+- sensor: #(mode HAET si T° exterieur est < ou = +10°)
   - name: "Delta_2"
     unique_id: delta_2
     unit_of_measurement: "°C"
-    state: "0"
+    state: "2"
 
 - sensor: #(mode COOL si T° exterieur est > +32°)
   - name: "Delta_5"
@@ -67,10 +67,34 @@
     unit_of_measurement: "°C"
     state: "7"
 
-# CALCUL - Temperature Cible Mode cool/heat CORRIGÉ
+# CALCUL - Temperature Cible Mode cool/heat 
 - sensor:
   - name: "Temperature Cible"
     unique_id: temperature_cible
+    unit_of_measurement: "°C"
+    state: >
+      {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float | round(0) | int %}
+      {% set consigne_de_base = states('sensor.consigne_de_base') | int %}
+      {% set delta_1 = states('sensor.delta_1') | int %}
+      {% set delta_2 = states('sensor.delta_2') | int %}
+      {% set delta_5 = states('sensor.delta_5') | int %}
+      {% set delta_7 = states('sensor.delta_7') | int %}
+      {% if temp_ext <= 10 %}
+        {{ consigne_de_base + delta_2 }}
+      {% elif temp_ext <= 12 %}
+        {{ consigne_de_base + delta_1 }}
+      {% elif temp_ext >= 40 %}
+        {{ temp_ext - delta_7 }}
+      {% elif temp_ext >= 32 %}
+        {{ temp_ext - delta_5 }}
+      {% else %}
+        {{ consigne_de_base }}
+      {% endif %}
+
+# CALCUL - Temperature différentielle Mode cool/heat (CONFORT)
+- sensor:
+  - name: "Temperature différentielle"
+    unique_id: Temperature différentielle
     unit_of_measurement: "°C"
     state: >
       {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float | round(0) | int %}
