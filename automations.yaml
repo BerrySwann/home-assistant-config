@@ -7688,7 +7688,8 @@
         variables:
           groupe: '{{ states(''sensor.groupe_clim'') }}'
           mode: '{{ states(''sensor.mode_ete_hiver'') }}'
-          temp_eco: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+          temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float
+            }}'
           temp_cible: '{{ states(''sensor.temperature_cible'') | float }}'
           temp_confort: '{{ states(''sensor.temperature_confort'') | float }}'
           consigne_base: '{{ states(''sensor.consigne_de_base'') | float }}'
@@ -7735,7 +7736,7 @@
                       - climate.clim_chambre_rm4_mini
                     data:
                       hvac_mode: heat
-                      temperature: '{{ temp_eco }}'
+                      temperature: '{{ temp_eco_c }}'
                   - alias: RÉGLER MODE VENTILATION AUTO
                     action: climate.set_fan_mode
                     target:
@@ -8012,9 +8013,9 @@
     variables:
       groupe: '{{ states(''sensor.groupe_clim'') }}'
       mode: '{{ states(''sensor.mode_ete_hiver'') }}'
-      temp_eco: '{{ states(''sensor.temperature_eco_hiver'') | float }}'
+      temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float }}'
-      temp_diff: '{{ states(''sensor.temperature_differentielle'') | float }}'
+      temp_confort_n: '{{ states(''sensor.temperature_confort_nuit'') | float }}'
       consigne_base: '{{ states(''sensor.consigne_de_base'') | float }}'
       fenetres_fermees: "{{ is_state('binary_sensor.contact_fenetre_salon_ikea_contact',
         'off') and\n   is_state('binary_sensor.contact_fenetre_cuisine_ikea_contact',
@@ -8060,7 +8061,7 @@
                 - climate.clim_chambre_rm4_mini
               data:
                 hvac_mode: heat
-                temperature: '{{ temp_eco }}'
+                temperature: '{{ temp_eco_c }}'
               action: climate.set_temperature
             - alias: RÉGLER MODE VENTILATION AUTO
               target:
@@ -8074,7 +8075,8 @@
             - alias: NOTIFICATION GROUPE 1 - HEAT
               data:
                 title: '{{ presence }}'
-                message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_eco }}°.'
+                message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_eco_c
+                  }}°.'
               action: notify.mobile_app_poco_x7_pro
           - alias: MODE COOL
             conditions:
@@ -8153,8 +8155,7 @@
             entity_id: climate.clim_chambre_rm4_mini
           data:
             hvac_mode: '{{ mode }}'
-            temperature: '{{ (temp_diff + (temp_cible - consigne_base)) | round(1)
-              }}'
+            temperature: '{{ temp_confort_n }}'
           action: climate.set_temperature
         - alias: GESTION VENTILATION FAN_ONLY SPÉCIFIQUE
           choose:
