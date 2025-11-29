@@ -7616,6 +7616,9 @@
     to: fan_only
   - trigger: state
     entity_id:
+    - sensor.th_balcon_nord_temperature
+  - trigger: state
+    entity_id:
     - sensor.temperature_cible
   - trigger: state
     entity_id:
@@ -8000,6 +8003,9 @@
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
     to: fan_only
+  - trigger: state
+    entity_id:
+    - sensor.th_balcon_nord_temperature
   - trigger: state
     entity_id:
     - sensor.temperature_cible
