@@ -25,7 +25,7 @@
     unit_of_measurement: "°C"
     state: "18"
 
-- sensor: #(19° confort hiver / 27° l'été)
+- sensor: #(19° confort hiver / 27° l'été -> CONFORT)
   - name: "Temperature différentielle"
     unique_id: temperature_differentielle
     unit_of_measurement: "°C"
@@ -91,29 +91,16 @@
         {{ consigne_de_base }}
       {% endif %}
 
-# CALCUL - Temperature différentielle Mode cool/heat (CONFORT)
+# CALCUL - Temperature confort Mode cool/heat (différentielle) 
 - sensor:
-  - name: "Temperature différentielle"
-    unique_id: Temperature différentielle
+  - name: "Temperature confort"
+    unique_id: temperature_confort
     unit_of_measurement: "°C"
     state: >
-      {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float | round(0) | int %}
-      {% set consigne_de_base = states('sensor.consigne_de_base') | int %}
-      {% set delta_1 = states('sensor.delta_1') | int %}
-      {% set delta_2 = states('sensor.delta_2') | int %}
-      {% set delta_5 = states('sensor.delta_5') | int %}
-      {% set delta_7 = states('sensor.delta_7') | int %}
-      {% if temp_ext <= 10 %}
-        {{ consigne_de_base + delta_2 }}
-      {% elif temp_ext <= 12 %}
-        {{ consigne_de_base + delta_1 }}
-      {% elif temp_ext >= 40 %}
-        {{ temp_ext - delta_7 }}
-      {% elif temp_ext >= 32 %}
-        {{ temp_ext - delta_5 }}
-      {% else %}
-        {{ consigne_de_base }}
-      {% endif %}
+      {% set temp_diff = states('sensor.temperature_differentielle') | float(0) %}
+      {% set consigne_de_base = states('sensor.consigne_de_base') | float(20) %}
+      {% set temp_cible = states('sensor.temperature_cible') | float(22) %}
+      {{ (temp_diff + (temp_cible - consigne_de_base)) | round(1) }}
 
 - sensor:
   - name: "Température moyenne intérieure"
