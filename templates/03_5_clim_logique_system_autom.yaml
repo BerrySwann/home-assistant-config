@@ -98,8 +98,8 @@
     unit_of_measurement: "°C"
     state: >
       {% set temp_diff = states('sensor.temperature_differentielle') | float(0) %}
-      {% set consigne_de_base = states('sensor.consigne_de_base') | float(20) %}
-      {% set temp_cible = states('sensor.temperature_cible') | float(22) %}
+      {% set consigne_de_base = states('sensor.consigne_de_base') | float(0) %}
+      {% set temp_cible = states('sensor.temperature_cible') | float(0) %}
       {{ (temp_diff + (temp_cible - consigne_de_base)) | round(1) }}
 
 - sensor:
