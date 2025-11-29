@@ -115,55 +115,71 @@ streamline_templates:
           content: >
             **<<< CALCUL DE LA TEMPERATURE CIBLE >>>**
 
-              **Température Extérieure: {{ states('sensor.th_balcon_nord_temperature') | float | round(2) }}°C**
             {% set temp_ext = states('sensor.th_balcon_nord_temperature') |
-            float %} {% set consigne_de_base = states('sensor.consigne_de_base')
-            | int %} {% set temp_eco = states('sensor.temperature_eco_hiver') |
-            int %} {% set temp_hg = states('sensor.temperature_hors_gel_hiver')
-            | int %} {% set temp_diff =
-            states('sensor.temperature_differentielle') | int %} {% set delta_7
-            = states('sensor.delta_7') | int %} {% set delta_5 =
-            states('sensor.delta_5') | int %} {% set temp_cible =
-            states('sensor.temperature_cible') | int %}
+            float(-999) %} {% set consigne_de_base =
+            states('sensor.consigne_de_base') | int(0) %} {% set mode =
+            states('sensor.mode_ete_hiver') %} {% set temp_eco =
+            states('sensor.temperature_eco_hiver') | int(0) %} {% set temp_eco_c
+            = states('sensor.temperature_eco_hiver_corrige') | int(0) %} {% set
+            temp_hg = states('sensor.temperature_hors_gel_hiver') | int(0) %} {%
+            set temp_diff = states('sensor.temperature_differentielle') | int(0)
+            %} {% set delta_1 = states('sensor.delta_1') | int(0) %} {% set
+            delta_2 = states('sensor.delta_2') | int(0) %} {% set delta_5 =
+            states('sensor.delta_5') | int(0) %} {% set delta_7 =
+            states('sensor.delta_7') | int(0) %} {% set temp_cible =
+            states('sensor.temperature_cible') | int(0) %} {% set temp_confort =
+            states('sensor.temperature_confort') | int(0) %} {% set
+            temp_confort_n = states('sensor.temperature_confort_nuit') | int(0)
+            %}
 
-            {% if temp_ext < 15 %}
-              - Consigne de Base : {{ consigne_de_base }}°C
-              - Consigne différentielle : {{ temp_diff }}°C
-              
-              **- Calcul T°Ext. < {{ temp_hg }}°C = T°éCO [ {{ consigne_de_base }} - 1 = {{ temp_eco }} ]**
-            {% elif temp_ext >= 40 %}
-              {% set temp_cible = temp_ext - delta_7 %}
-              - Consigne de Base : {{ consigne_de_base }}°C
-              - Consigne différentielle : {{ temp_diff }}°C
-              **- Calcul si T°Ext. > 40°C [ {{ temp_ext | round(0) }} - {{ delta_7 }} = {{ temp_cible | round(0) }} ]**
+            **Température Extérieure: {{ temp_ext | round(2) }}°C**
+
+             **Résumé des valeurs actuel :**
+
+            {% if temp_ext <= 10 %}
+              **- Calcul T°cible si T°Ext. ≤ 10°C [ {{ consigne_de_base }} + {{ delta_2 }} = {{ (consigne_de_base + delta_2) | round(0) }}°C ]**
+              **- Température cible [ {{ temp_cible | round(0) }}°C ]**
+              **- Température confort [ {{ temp_confort | round(0) }}°C ]**
+              **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**
+              **- Température éCO corrigé: {{ temp_eco_c }}°C (éCO. si absents)**
+            {% elif temp_ext <= 12 %}
+              **- Calcul T°cible si T°Ext. ≤ 12°C [ {{ consigne_de_base }} + {{ delta_1 }} = {{ (consigne_de_base + delta_1) | round(0) }}°C ]**
+              **- Température cible [ {{ temp_cible | round(0) }}°C ]**
+              **- Température confort [ {{ temp_confort | round(0) }}°C ]**
+              **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**
+              **- Température éCO. : {{ temp_eco | round(0) }}°C -> (éCO. si absents)**
+            {% elif temp_ext > 40 %}
+              **- Calcul T°cible si T°Ext. ≥ 40°C [ {{ temp_ext | round(0) }} - {{ delta_7 }} = {{ (temp_ext - delta_7) | round(0) }}°C ]**
+              **- Température cible [ {{ temp_cible | round(0) }}°C ]**
+              **- Température confort [ {{ temp_confort | round(0) }}°C ]**
             {% elif temp_ext > 32 %}
-              {% set temp_cible = temp_ext - delta_5 %}
-              - Consigne de Base : {{ consigne_de_base }}°C
-              - Consigne différentielle : {{ temp_diff }}°C
-              **- Calcul T°Ext. > 32°C [ {{ temp_ext | round(0) }} - {{ delta_5 }} = {{ temp_cible | round(0) }} ]**
+              **- Calcul T°cible si T°Ext. ≥ 32°C [ {{ temp_ext | round(0) }} - {{ delta_5 }} = {{ (temp_ext - delta_5) | round(0) }}°C ]**
+              **- Température cible [ {{ temp_cible | round(0) }}°C ]**
+              **- Température confort [ {{ temp_confort | round(0) }}°C ]**
             {% else %}
-              - Consigne de Base : {{ consigne_de_base }}°C
-              - Consigne différentielle : {{ temp_diff }}°C
+              **- Température cible [ {{ temp_cible | round(0) }}°C ]**
+              **- Température confort [ {{ temp_confort | round(0) }}°C ]**
+              {% if mode == "heat" %} **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**  {% endif %}
+              {% if temp_ext <= 17 %} **- Température éCO. : {{ temp_eco | round(0) }}°C -> (éCO. si absents)** {% endif %}
             {% endif %}
 
-            {% if temp_ext < 15 %}
-              - Température éCO : {{ temp_eco }}°C (Si absents)
-              - Température Cible : {{ temp_cible | round(0) }}°C
-              - Température différentielle : {{ (temp_diff + (temp_cible - consigne_de_base)) | round(0) }}°C
-            {% elif temp_ext >= 40 %}
-              - Température Cible : {{ temp_cible | round(0) }}°C
-              - Température différentielle : {{ (temp_diff + (temp_cible - consigne_de_base)) | round(0) }}°C
-            {% elif temp_ext > 32 %}
-              - Température Cible : {{ temp_cible | round(0) }}°C
-              - Température différentielle : {{ (temp_diff + (temp_cible - consigne_de_base)) | round(0) }}°C
-            {% else %}
-              - Température Cible : {{ consigne_de_base | round(0) }}°C
-              - Température différentielle : {{ temp_diff | round(0) }}°C
-            {% endif %}
+            **Résumé des valeurs de base :**
 
-            **DELTA: {{ states('sensor.temperature_delta') }}**
+            - Consigne de Base : {{ consigne_de_base }}°C
 
-              **MODE: {{ states('sensor.mode_ete_hiver_etat') | upper }}**
+            - Température Cible : {{ temp_cible | round(0) }}°C
+
+            - Température différentielle : {{ temp_diff | round(0) }}°C ->
+            (Confort)
+
+            - Température éCO. : {{ temp_eco | round(0) }}°C -> (éCO. si
+            absents)
+
+
+            **DELTA: {{ states('sensor.temperature_delta') | default('N/A') }}**
+
+            **MODE: {{ states('sensor.mode_ete_hiver') | upper | default('N/A')
+            }}**
           card_mod:
             style: |
               ha-card {
@@ -173,317 +189,172 @@ streamline_templates:
               }
         - type: conditional
           conditions:
-            - condition: and
-              conditions:
-                - condition: state
-                  entity: sensor.current_hour
-                  state_not: unavailable
-                - condition: numeric_state
-                  entity: sensor.current_hour
-                  above: 5
-                  below: 20
+            - condition: numeric_state
+              entity: sensor.current_hour
+              below: 20
+              above: 5
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_1
           card:
-            type: vertical-stack
-            cards:
-              - type: conditional
-                conditions:
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_mamour_wifi
-                        state: 'false'
-                      - entity: sensor.condition_mamour_wifi
-                        state: wifi_!?
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_eric_wifi
-                        state: 'false'
-                      - entity: sensor.condition_eric_wifi
-                        state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Les deux en mode Cellular ou wifi_!? (6h ⟷ 20h)** {% if
-                    states('sensor.mode_ete_hiver') == 'heat' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Quiet (Fan Only)
-                      - Climatiseur Bureau : Quiet (Fan Only)
-                      - Climatiseur Chambre : Breeze (Fan Only)
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_eric_wifi
-                        state: 'false'
-                      - entity: sensor.condition_eric_wifi
-                        state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Mamour en Wi-Fi domestique, Eric en Cellular ou wifi_!?
-                    (6h ⟷ 20h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_mamour_wifi
-                        state: 'false'
-                      - entity: sensor.condition_mamour_wifi
-                        state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Eric en Wi-Fi domestique, Mamour en Cellular ou wifi_!?
-                    (6h ⟷ 20h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                card:
-                  type: markdown
-                  content: >
-                    **Les deux en Wi-Fi domestique (6h ⟷ 20h)** {% if
-                    states('sensor.mode_ete_hiver') == 'heat' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
+            type: markdown
+            content: >
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)** {% if
+              is_state('sensor.mode_ete_hiver', 'heat') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
+                - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
+                - Climatiseur Chambre : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
+              {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+              {% else %}
+                - Climatiseur Salon : Fan Only
+                - Climatiseur Bureau : Fan Only
+                - Climatiseur Chambre : Fan Only
+              {% endif %}
+            text_only: true
         - type: conditional
           conditions:
-            - condition: or
-              conditions:
-                - condition: and
-                  conditions:
-                    - condition: state
-                      entity: sensor.current_hour
-                      state_not: unavailable
-                    - condition: numeric_state
-                      entity: sensor.current_hour
-                      below: 6
-                - condition: and
-                  conditions:
-                    - condition: state
-                      entity: sensor.current_hour
-                      state_not: unavailable
-                    - condition: numeric_state
-                      entity: sensor.current_hour
-                      above: 19
+            - condition: numeric_state
+              entity: sensor.current_hour
+              below: 20
+              above: 5
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_2
           card:
-            type: vertical-stack
-            cards:
-              - type: conditional
-                conditions:
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_mamour_wifi
-                        state: 'false'
-                      - entity: sensor.condition_mamour_wifi
-                        state: wifi_!?
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_eric_wifi
-                        state: 'false'
-                      - entity: sensor.condition_eric_wifi
-                        state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Les deux en mode Cellular ou wifi_!? (20h ⟷ 6h)** {% if
-                    states('sensor.mode_ete_hiver') == 'heat' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_eco_hiver') | int }}°C (éCO Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Quiet (Fan Only)
-                      - Climatiseur Bureau : Breeze (Fan Only)
-                      - Climatiseur Chambre : Breeze (Fan Only)
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_eric_wifi
-                        state: 'false'
-                      - entity: sensor.condition_eric_wifi
-                        state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Mamour en Wi-Fi domestique, Eric en Cellular ou wifi_!?
-                    (20h ⟷ 6h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                  - condition: or
-                    conditions:
-                      - entity: sensor.condition_mamour_wifi
-                        state: 'false'
-                      - entity: sensor.condition_mamour_wifi
-                        state: wifi_!?
-                card:
-                  type: markdown
-                  content: >
-                    **Eric en Wi-Fi domestique, Mamour en Cellular ou wifi_!?
-                    (20h ⟷ 6h)** {% if states('sensor.mode_ete_hiver') == 'heat'
-                    %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
-              - type: conditional
-                conditions:
-                  - entity: sensor.condition_mamour_wifi
-                    state: 'true'
-                  - entity: sensor.condition_eric_wifi
-                    state: 'true'
-                card:
-                  type: markdown
-                  content: >
-                    **Les deux en Wi-Fi domestique (20h ⟷ 6h)** {% if
-                    states('sensor.mode_ete_hiver') == 'heat' %}
-                      - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Heat)
-                    {% elif states('sensor.mode_ete_hiver') == 'cool' %}
-                      - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
-                      - Climatiseur Chambre : {{ states('sensor.temperature_differentielle') | int }}°C (Cool)
-                    {% else %}
-                      - Climatiseur Salon : Off
-                      - Climatiseur Bureau : Off
-                      - Climatiseur Chambre : Off
-                    {% endif %}
-                  card_mod:
-                    style: |
-                      ha-card {
-                        border: none !important;
-                        box-shadow: none !important;
-                        background: transparent;
-                      }
+            type: markdown
+            content: >
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)**  {% if
+              is_state('sensor.mode_ete_hiver', 'heat') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Heat)
+                - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+              {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Cool)
+                - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+              {% else %}
+                - Climatiseur Salon : Off
+                - Climatiseur Bureau : Off
+                - Climatiseur Chambre : Off
+              {% endif %}
+            text_only: true
+        - type: conditional
+          conditions:
+            - condition: numeric_state
+              entity: sensor.current_hour
+              below: 20
+              above: 5
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_3
+          card:
+            type: markdown
+            content: >
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)** {% if
+              is_state('sensor.mode_ete_hiver', 'heat') %}
+                - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Heat)
+                - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+              {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Cool)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+              {% else %}
+                - Climatiseur Salon : Off
+                - Climatiseur Bureau : Off
+                - Climatiseur Chambre : Off
+              {% endif %}    
+            text_only: true
+        - type: conditional
+          conditions:
+            - condition: numeric_state
+              entity: sensor.current_hour
+              below: 20
+              above: 5
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_4
+          card:
+            type: markdown
+            content: |
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)**
+              {% if is_state('sensor.mode_ete_hiver', 'heat') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Heat)
+                - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Heat)
+                - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+              {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Cool)
+                - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Cool)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+              {% else %}
+                - Climatiseur Salon : Off
+                - Climatiseur Bureau : Off
+                - Climatiseur Chambre : Off
+              {% endif %}
+            text_only: true
+        - type: conditional
+          conditions:
+            - condition: numeric_state
+              entity: sensor.current_hour
+              below: 6
+              above: 19
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_1
+          card:
+            type: markdown
+            content: >
+              **{{ states('sensor.presence_clim') }} (20h ⟷ 6h)** {% if
+              is_state('sensor.mode_ete_hiver', 'heat') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
+                - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
+                - Climatiseur Chambre : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
+              {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+              {% else %}
+                - Climatiseur Salon : Fan Only
+                - Climatiseur Bureau : Fan Only
+                - Climatiseur Chambre : Fan Only
+              {% endif %}
+            text_only: true
+        - type: conditional
+          conditions:
+            - condition: numeric_state
+              entity: sensor.current_hour
+              below: 6
+              above: 19
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_2
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_3
+            - condition: state
+              entity: sensor.groupe_clim
+              state: groupe_4
+          card:
+            type: markdown
+            content: >
+              **{{ states('sensor.presence_clim') }} (20h ⟷ 6h)** {% if
+              is_state('sensor.mode_ete_hiver', 'heat') %}
+                - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Chambre : {{ states('sensor.temperature_confort_nuit') | int }}°C (Heat)
+              {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
+                - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
+                - Climatiseur Chambre : {{ states('sensor.temperature_confort_nuit') | int }}°C (Cool)
+              {% else %}
+                - Climatiseur Salon : Off
+                - Climatiseur Bureau : Off
+                - Climatiseur Chambre : Off
+              {% endif %}
+            text_only: true
   carte_des_temperatures:
     card:
       type: custom:temperature-heatmap-card
@@ -10095,6 +9966,7 @@ views:
                   }
                 style: |
                   ha-card {
+                    margin-top: -10px;
                     border: 1px solid {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %} orange {% else %} grey {% endif %};
                     background-color: {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %} rgba(255, 140, 0, 0.1) {% else %} transparent {% endif %};
                   }
@@ -10174,6 +10046,7 @@ views:
           - card_mod:
               style: |
                 ha-card {
+                  margin-top: 25px;
                   border: none !important;
                   box-shadow: none !important;
                   background: none !important;
@@ -12874,6 +12747,12 @@ views:
                       entity_id: ^*device*$
                     - options: {}
                       entity_id: ^*relais*$
+                    - options: {}
+                      entity_id: sensor.entree_freebox_pop_power
+                    - options: {}
+                      entity_id: sensor.freebox_v8_r1_power
+                    - options: {}
+                      entity_id: sensor.nvidia_nvidia_geforce_rtx_3060_gpu_package_power
                     - options: {}
                       state: unavailable
                     - options: {}
