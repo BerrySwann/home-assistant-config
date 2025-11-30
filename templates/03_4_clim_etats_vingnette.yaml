@@ -35,8 +35,12 @@
     state: >
       {% if is_state('climate.radiateur_cuisine', 'off') %}
         Off
-      {% elif is_state('climate.radiateur_cuisine', 'on') %}
+      {% elif is_state('climate.radiateur_cuisine', 'off') and states('sensor.radiateur_elec_cuisine_power') | float(0) > 50 %}
         Heat
+      {% elif is_state('climate.radiateur_cuisine', 'heat') and states('sensor.radiateur_elec_cuisine_power') | float(0) > 50 %}
+        Heat
+      {% elif is_state('climate.radiateur_cuisine', 'heat') and states('sensor.radiateur_elec_cuisine_power') | float(0) == 0 %}
+        off
       {% else %}
         erreur
       {% endif %}
