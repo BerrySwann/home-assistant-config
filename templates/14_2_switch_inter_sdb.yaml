@@ -1,21 +1,25 @@
-- switch: # <--- NOUVEAU : Le tiret (-) devant 'switch:' est essentiel dans la structure liste moderne
+- switch:
       - name: "Interrupteur Radiateur Salle de Bain" 
         unique_id: switch_radiateur_sdb_inter
         
-        # CHANGEMENT CRUCIAL : Remplacement de 'value_template' par 'state'
+        # Le plus sûr est d'utiliser 'state' comme un Template Sensor
         state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}" 
         
         turn_on:
-          service: input_boolean.turn_on
-          target:
-            entity_id: input_boolean.inter_radiateur_salle_de_bain
-            
+          # CORRECTION CLÉ : Ajout de la clé 'sequence:' pour encapsuler l'action.
+          sequence:
+            - service: input_boolean.turn_on
+              target:
+                entity_id: input_boolean.inter_radiateur_salle_de_bain
+              
         turn_off:
-          service: input_boolean.turn_off
-          target:
-            entity_id: input_boolean.inter_radiateur_salle_de_bain
+          # CORRECTION CLÉ : Ajout de la clé 'sequence:'
+          sequence:
+            - service: input_boolean.turn_off
+              target:
+                entity_id: input_boolean.inter_radiateur_salle_de_bain
             
-        icon: > # On garde 'icon:' (sans _template)
+        icon: > 
           {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %}
             mdi:radiator
           {% else %}
