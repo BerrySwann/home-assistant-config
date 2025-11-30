@@ -1,3 +1,4 @@
 - binary_sensor:
       - name: "Radiateur Salle de Bain Actif"
+        unique_id: radiateur_salle_de_bain_actif
         state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
