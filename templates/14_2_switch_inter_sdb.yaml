@@ -1,0 +1,27 @@
+- switch: # 2. Liste des entités switch (il ne doit pas y avoir de tiret (-) devant 'switch:')
+      - name: "Interrupteur Radiateur Salle de Bain" 
+        unique_id: switch_radiateur_sdb_inter
+        
+        # 3. CORRECTION DE LA PROPRIÉTÉ : 'value_template' est devenu 'value_template' (pour les switches)
+        value_template: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
+        
+        turn_on:
+          service: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.inter_radiateur_salle_de_bain
+            
+        turn_off:
+          service: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.inter_radiateur_salle_de_bain
+            
+        # 4. CORRECTION DE LA PROPRIÉTÉ : 'icon_template' doit être remplacé par 'icon'
+        icon: >
+          {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %}
+            mdi:radiator
+          {% else %}
+            mdi:radiator-off
+          {% endif %}
+          
+# NOTE IMPORTANTE : S'il y a d'autres switches dans ce package,
+# ils doivent être sous le même niveau d'indentation que le premier
