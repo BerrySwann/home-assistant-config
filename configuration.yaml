@@ -42,7 +42,7 @@ automation: !include automations.yaml
 #automation: !include_dir_merge_list automations/
 
 #renvoi au fichier répertoire template/
-template: !include_dir_merge_list templates/
+template: !include_dir_merge_list templates
 
 # renvoi au fichier commad_line.yaml
 command_line: !include command_line.yaml
@@ -177,17 +177,3 @@ climate:
     temperature_sensor: sensor.th_salon_temperature
     humidity_sensor: sensor.th_salon_humidity
 
-  - platform: generic_thermostat
-    name: Radiateur Salle de Bain
-    unique_id: radiateur_salle_de_bain
-    heater: input_boolean.inter_radiateur_salle_de_bain
-    target_sensor: sensor.th_salle_de_bain
-    min_temp: 18
-    max_temp: 26
-    ac_mode: false
-    target_temp: 22
-    cold_tolerance: 0.3
-    hot_tolerance: 0.3
-    min_cycle_duration:
-      minutes: 5
-    precision: 0.1
