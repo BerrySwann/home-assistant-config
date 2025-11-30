@@ -1,4 +1,4 @@
-switch:
+- switch:
     - name: "Interrupteur Radiateur Salle de Bain" 
       unique_id: switch_radiateur_sdb_inter
       
