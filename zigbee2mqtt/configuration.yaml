@@ -406,6 +406,9 @@ devices:
 groups:
   '1':
     friendly_name: Bureau z2m
+  '2':
+    friendly_name: Chauffage SdB Z2M
+    optimistic: false
   '3':
     friendly_name: Salle de Bain Z2M
 ota: {}
