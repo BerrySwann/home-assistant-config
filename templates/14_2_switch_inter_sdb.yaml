@@ -1,24 +1,23 @@
-- switch:
-    - name: "Interrupteur Radiateur Salle de Bain" 
-      unique_id: switch_radiateur_sdb_inter
-      
-      # 3. Utiliser 'value_template' pour le switch (pour refléter l'état)
-      value_template: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
-      
-      turn_on:
-        service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.inter_radiateur_salle_de_bain
-          
-      turn_off:
-        service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.inter_radiateur_salle_de_bain
-          
-      # 4. Utiliser 'icon:' SANS le suffixe '_template'
-      icon: >
-        {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %}
-          mdi:radiator
-        {% else %}
-          mdi:radiator-off
-        {% endif %}
+- switch: # <--- NOUVEAU : Le tiret (-) devant 'switch:' est essentiel dans la structure liste moderne
+      - name: "Interrupteur Radiateur Salle de Bain" 
+        unique_id: switch_radiateur_sdb_inter
+        
+        # CHANGEMENT CRUCIAL : Remplacement de 'value_template' par 'state'
+        state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}" 
+        
+        turn_on:
+          service: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.inter_radiateur_salle_de_bain
+            
+        turn_off:
+          service: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.inter_radiateur_salle_de_bain
+            
+        icon: > # On garde 'icon:' (sans _template)
+          {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %}
+            mdi:radiator
+          {% else %}
+            mdi:radiator-off
+          {% endif %}
