@@ -141,7 +141,7 @@
       {% if temp_ext < 10 %}
         {{ (temp_eco + delta_1) | int }}
       {% else %}
-        {{ temp_diff | int }}
+        {{ temp_eco | int }}
       {% endif %}
 
 - sensor:
