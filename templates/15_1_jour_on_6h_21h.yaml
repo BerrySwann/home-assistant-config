@@ -3,4 +3,4 @@
         unique_id: est_jour_6h_21h
         state: >
           {% set heure = now().hour %}
-          {{ heure >= 6 or heure < 21 }} 
+          {{ heure >= 6 and heure < 21 }}
