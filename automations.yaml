@@ -7516,7 +7516,7 @@
           action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763131222107'
-  alias: (A - 0) [TEST 2025-11-29] Automatisation pour contrôler de [06h00 <-> 20h00]
+  alias: (A - 0) [TEST 2025-12-01] Automatisation pour contrôler de [06h00 <-> 21h00]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24.
@@ -7711,7 +7711,7 @@
           - alias: PLAGE HORAIRE 6H-20H
             condition: time
             after: 06:00:00
-            before: '20:00:00'
+            before: '21:00:00'
           sequence:
           - alias: BRANCHES DE GROUPES de 1 à 4
             choose:
@@ -7922,10 +7922,10 @@
                 action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763214110999'
-  alias: (B - 0) [ TEST 2025-11-15 ] Automatisation pour contrôler de [20h00 <-> 06h00]
+  alias: (B - 0) [ TEST 2025-12-01 ] Automatisation pour contrôler de [21h00 <-> 06h00]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR].
-  description: 'Automatisation pour contrôler de [20h00 <-> 06h00] les climatiseurs
+  description: 'Automatisation pour contrôler de [21h00 <-> 06h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. '
   triggers:
@@ -8013,7 +8013,7 @@
     entity_id:
     - sensor.mode_ete_hiver
   - trigger: time
-    at: '20:00:00'
+    at: '21:00:00'
   actions:
   - alias: INITIALISATION VARIABLES
     variables:
@@ -8043,7 +8043,7 @@
         value_template: '{{ pris_clim }}'
       - alias: PLAGE HORAIRE 20H-6H
         condition: time
-        after: '20:00:00'
+        after: '21:00:00'
         before: 06:00:00
       sequence:
       - alias: GROUPE 1 (ABSENT)
