@@ -118,6 +118,8 @@
       {% set delta_7 = states('sensor.delta_7') | int %}
       {% if temp_ext < 10 %}
         {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int }}
+      {% if temp_ext < 12 %}
+        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int }}
       {% elif temp_ext > 32 %}
         {{ temp_ext - delta_5 | int }}
       {% elif temp_ext > 40 %}

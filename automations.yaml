@@ -8187,8 +8187,8 @@
         - alias: NOTIFICATION PRÉSENCE ET RÉGLAGES APPLIQUÉS
           data:
             title: '[N]-> {{ presence }}'
-            message: 'Mode: {{ mode | upper }}<br> Chambre: {{ (temp_diff + (temp_cible
-              - consigne_base)) | round(1) }}°<br> Salon & Bureau: {{ temp_cible }}°'
+            message: 'Mode: {{ mode | upper }}<br> Chambre: {{ temp_confort_n | round(1)
+              }}°<br> Salon & Bureau: {{ temp_confort_n }}°'
           action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1763661737799'
