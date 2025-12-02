@@ -7752,7 +7752,7 @@
                   - alias: NOTIFICATION GROUPE 1 - HEAT
                     data:
                       title: '{{ presence }}'
-                      message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ temp_eco
+                      message: 'Les 3 Clim en mode: {{ mode | upper }} -> {{ emp_eco_c
                         }}°.'
                     action: notify.mobile_app_poco_x7_pro
                 - alias: MODE COOL
