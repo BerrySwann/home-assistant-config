@@ -1,15 +1,14 @@
-import datetime as dt
 from typing import TYPE_CHECKING, override
 
 from homeassistant.components.climate import const as hacc
 
 from ...calendar import MtsSchedule
 from ...helpers import reverse_lookup
+from ...merossclient import merge_dicts
 from ...number import MLConfigNumber
 from ...sensor import MLEnumSensor
 from ...switch import MLEmulatedSwitch
 from .mtsthermostat import (
-    MtsCommonTemperatureNumber,
     MtsThermostatClimate,
     mc,
     mn_t,
@@ -19,7 +18,7 @@ if TYPE_CHECKING:
     from typing import ClassVar, Final
 
     from ...helpers.device import Device
-    from ...merossclient.protocol.types import thermostat as mt_t
+    from ...merossclient.protocol.types import MerossPayloadType, thermostat as mt_t
 
     """
     "Appliance.System.Ability",
@@ -330,7 +329,7 @@ class Mts300Climate(MtsThermostatClimate):
         return self._mts_onoff and self._mts_work == mc.MTS300_WORK_SCHEDULE
 
     # interface: self
-    async def _async_request_modeC(self, payload: dict):
+    async def _async_request_modeC(self, payload: "MerossPayloadType", /):
         ns = self.ns
         payload |= {"channel": self.channel}
         if response := await self.manager.async_request_ack(
@@ -342,7 +341,7 @@ class Mts300Climate(MtsThermostatClimate):
                 payload = response[mc.KEY_PAYLOAD][ns.key][0]
             except (KeyError, IndexError):
                 # optimistic update
-                payload = self._mts_payload | payload
+                payload = merge_dicts(self._mts_payload, payload)  # type: ignore
             self._parse_modeC(payload)  # type: ignore
 
     # message handlers

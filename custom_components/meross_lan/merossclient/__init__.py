@@ -8,7 +8,6 @@ import json
 import re
 from time import time
 from typing import TYPE_CHECKING
-from uuid import uuid4
 
 from .protocol import const as mc
 
@@ -16,7 +15,7 @@ if TYPE_CHECKING:
     from typing import Any, Callable, Final, Iterable, Mapping
 
     from protocol.message import MerossResponse
-    from protocol.types import MerossRequestType
+    from protocol.types import MerossPayloadType, MerossRequestType
 
 try:
     from random import randint
@@ -132,6 +131,21 @@ def delete_element_by_key(payload: list[dict], key: str, value):
             pass
 
 
+def merge_dicts(dict1: dict, dict2: dict):
+    """
+    Recursively merge two dictionaries.
+    """
+    result = dict1.copy()
+    for key, value in dict2.items():
+        if (type(value) is dict) and (key in result):
+            result_value = result[key]
+            if type(result_value) is dict:
+                result[key] = merge_dicts(result_value, value)
+                continue
+        result[key] = value
+    return result
+
+
 def update_dict_strict(dst_dict: dict, src_dict: dict):
     """Updates (merge) the dst_dict with values from src_dict checking
     their existence in dst_dict before applying. Used in emulators to update
@@ -143,18 +157,17 @@ def update_dict_strict(dst_dict: dict, src_dict: dict):
         if key in dst_dict:
             dst_value = dst_dict[key]
             dst_type = type(dst_value)
-            src_type = type(value)
             if dst_type is dict:
-                if src_type is dict:
+                if type(value) is dict:
                     update_dict_strict(dst_value, value)
             elif dst_type is list:
-                if src_type is list:
+                if type(value) is list:
                     dst_dict[key] = value  # lists ?!
             else:
                 dst_dict[key] = value
 
 
-def update_dict_strict_by_key[_T: "dict[str, Any]"](
+def update_dict_strict_by_key[_T: "MerossPayloadType"](
     dst_lst: "Iterable[_T]", src_dict: _T, key: str = mc.KEY_CHANNEL
 ) -> _T:
     """

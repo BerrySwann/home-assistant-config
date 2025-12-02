@@ -30,7 +30,7 @@ class LatestXRequest_C(SensorXRequest):
     pass
 
 
-class LatestXData(TypedDict, total=False):
+class LatestXData(TypedDict):
     value: int
     timestamp: int
 

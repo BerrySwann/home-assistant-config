@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, override
 
 from ... import const as mlc
 from ...binary_sensor import MLBinarySensor
@@ -29,12 +29,14 @@ from ...sensor import (
 from ...switch import MLSwitch
 
 if TYPE_CHECKING:
-    from typing import Any, Callable, Collection, Final
+    from typing import Any, Callable, Collection, Final, NotRequired, TypedDict
 
     from ...helpers.device import AsyncRequestFunc, DigestInitReturnType
     from ...helpers.entity import MLEntity
     from ...merossclient.cloudapi import SubDeviceInfoType
     from ...merossclient.protocol.namespaces import Namespace
+    from ...merossclient.protocol.types import sensor as mt_s
+    from ...merossclient.protocol import types as mt
     from .mts100 import Mts100Climate
 
     WELL_KNOWN_TYPE_MAP: Final[dict[str, Callable]]
@@ -48,7 +50,7 @@ WELL_KNOWN_TYPE_MAP = dict(
 )
 
 
-class MLHubSensorAdjustNumber(MLConfigNumber):
+class HubSensorAdjustNumber(MLConfigNumber):
     ns = mn_h.Appliance_Hub_Sensor_Adjust
 
     __slots__ = (
@@ -70,7 +72,8 @@ class MLHubSensorAdjustNumber(MLConfigNumber):
         self.native_min_value = min_value
         self.native_max_value = max_value
         self.native_step = step
-        super().__init__(
+        MLConfigNumber.__init__(
+            self,
             manager,
             manager.id,
             f"config_{self.ns.key}_{self.key_value}",
@@ -86,14 +89,105 @@ class MLHubSensorAdjustNumber(MLConfigNumber):
         # Since the native HA interface async_set_native_value wants to set
         # the 'new adjust value' we have to issue the difference against the
         # currently configured one
-        return await super().async_request_value(device_value - self.device_value)
+        return await MLConfigNumber.async_request_value(
+            self, device_value - self.device_value
+        )
 
 
-class MLHubToggle(me.MEListChannelMixin, MLSwitch):
+class HubToggleX(me.MEListChannelMixin, MLSwitch):
+    """Generic switch to map Appliance.Hub.ToggleX namespace."""
+
     ns = mn_h.Appliance_Hub_ToggleX
 
     # HA core entity attributes:
     entity_category = MLSwitch.EntityCategory.CONFIG
+
+
+class HubSubIdChannelMixin(MLEntity if TYPE_CHECKING else object):
+    """
+    Mixin implementation for protocol method 'SET' on hub entities/namespaces backed by a
+    subId/channel indexing key pair (see legacy implementations like 'me.MEListChannelMixin').
+    """
+
+    if TYPE_CHECKING:
+        manager: "SubDevice"
+
+    # interface: MLEntity
+    @override
+    async def async_request_value(self, device_value, /):
+        """sends the actual request to the device. this is likely to be overloaded"""
+        ns = self.ns
+        return await self.manager.async_request_ack(
+            ns.name,
+            mc.METHOD_SET,
+            {
+                ns.key: [
+                    {
+                        ns.key_channel: self.manager.id,  # subId
+                        mc.KEY_CHANNEL: self.channel,
+                        self.key_value: device_value,
+                    }
+                ]
+            },
+        )
+
+
+class HubSubIdDeviceCfgMixin(MLEntity if TYPE_CHECKING else object):
+    """
+    Mixin implementation for protocol method 'SET' on 'Appliance.Config.DeviceCfg'.
+    This namespace payload has this structure (example from ms130):
+    "config": [
+    {
+        "calibrateCfg": {
+        "temp": 0,
+        "humi": 0
+        },
+        "timeCfg": {
+        "am": 2
+        },
+        "ms130Cfg": {
+        "bl": {
+            "bri": 2,
+            "lv": 4,
+            "sleep": 10
+        }
+        },
+        "channel": 0,
+        "subId": "1A00694ACBC7",
+        "unitCfg": {
+        "tempUnit": 1
+        }
+    }
+    ]
+
+    """
+
+    if TYPE_CHECKING:
+        manager: "SubDevice"
+        key_group: str
+
+    ns = mn_h.Appliance_Config_DeviceCfg
+
+    # interface: MLEntity
+    @override
+    async def async_request_value(self, device_value, /):
+        """sends the actual request to the device. this is likely to be overloaded"""
+        ns = self.ns
+        return await self.manager.async_request_ack(
+            ns.name,
+            mc.METHOD_SET,
+            {
+                ns.key: [
+                    {
+                        ns.key_channel: self.manager.id,  # subId
+                        mc.KEY_CHANNEL: self.channel,
+                        self.key_group: {
+                            self.key_value: device_value,
+                        },
+                    }
+                ]
+            },
+        )
 
 
 class HubNamespaceHandler(NamespaceHandler):
@@ -283,11 +377,11 @@ class HubMixin(Device if TYPE_CHECKING else object):
                 ns,
                 handler=_handler,
             )
-        elif ns.is_hub_id or ns.is_hub_subid:
-            # This rule  states that the payload is a list of subdevices indexed by 'id' or 'subId'.
-            # TODO: For better design we should start getting away from hub parsing general
-            # mechanics and migrate to using the standard dispatching api in NamespaceHandler
-            # by registering subdevices (or directly subdevice entities) as sinks.
+        elif ns.is_hub_id:
+            # This rule states that the payload is a list of subdevices indexed by 'id'.
+            # Newer devices (2024) started using namespaces/payload indexed by 'subid'
+            # and 'channel'. These will be handled by the base class NamespaceHandler
+            # using SubDevice/Entity as NamespaceParser.
             return HubNamespaceHandler(self, ns)
         else:
             return super()._create_handler(ns)
@@ -648,19 +742,16 @@ class SubDevice(NamespaceParser, BaseDevice):
         self.p_digest = p_digest
         self._parse_online(p_digest)
         if self.online:
+            _excluded_keys = (
+                mc.KEY_ID,
+                mc.KEY_STATUS,
+                mc.KEY_ONOFF,
+                mc.KEY_LASTACTIVETIME,
+            )
             for _ in (
                 self._hub_parse(key, value)
                 for key, value in p_digest.items()
-                if (
-                    key
-                    not in {
-                        mc.KEY_ID,
-                        mc.KEY_STATUS,
-                        mc.KEY_ONOFF,
-                        mc.KEY_LASTACTIVETIME,
-                    }
-                )
-                and (type(value) is dict)
+                if (type(value) is dict) and (key not in _excluded_keys)
             ):
                 pass
             if mc.KEY_ONOFF in p_digest:
@@ -697,10 +788,11 @@ class SubDevice(NamespaceParser, BaseDevice):
         self._parse_online(p_all.get(mc.KEY_ONLINE, {}))
 
         if self.online:
+            _excluded_keys = (mc.KEY_ID, mc.KEY_ONLINE)
             for _ in (
                 self._hub_parse(key, value)
                 for key, value in p_all.items()
-                if (key not in {mc.KEY_ID, mc.KEY_ONLINE}) and (type(value) is dict)
+                if (type(value) is dict) and (key not in _excluded_keys)
             ):
                 pass
 
@@ -708,7 +800,7 @@ class SubDevice(NamespaceParser, BaseDevice):
         for p_key, p_value in p_adjust.items():
             if p_key == mc.KEY_ID:
                 continue
-            number: MLHubSensorAdjustNumber | None
+            number: HubSensorAdjustNumber | None
             if number := getattr(self, f"number_adjust_{p_key}", None):
                 number.update_device_value(p_value)
 
@@ -738,7 +830,7 @@ class SubDevice(NamespaceParser, BaseDevice):
         try:
             self.switch_togglex.update_onoff(p_togglex[mc.KEY_ONOFF])  # type: ignore
         except AttributeError:
-            self.switch_togglex = MLHubToggle(
+            self.switch_togglex = HubToggleX(
                 self,
                 self.id,
                 mc.KEY_TOGGLEX,
@@ -1003,18 +1095,18 @@ class MS100SubDevice(SubDevice):
         super().__init__(hub, p_digest, mc.TYPE_MS100)
         self.sensor_temperature = MLTemperatureSensor(self, self.id, device_scale=10)
         self.sensor_humidity = MLHumiditySensor(self, self.id)
-        self.number_adjust_temperature = MLHubSensorAdjustNumber(
+        self.number_adjust_temperature = HubSensorAdjustNumber(
             self,
             mc.KEY_TEMPERATURE,
-            MLHubSensorAdjustNumber.DeviceClass.TEMPERATURE,
+            HubSensorAdjustNumber.DeviceClass.TEMPERATURE,
             -5,
             5,
             0.1,
         )
-        self.number_adjust_humidity = MLHubSensorAdjustNumber(
+        self.number_adjust_humidity = HubSensorAdjustNumber(
             self,
             mc.KEY_HUMIDITY,
-            MLHubSensorAdjustNumber.DeviceClass.HUMIDITY,
+            HubSensorAdjustNumber.DeviceClass.HUMIDITY,
             -20,
             20,
             1,
@@ -1025,8 +1117,8 @@ class MS100SubDevice(SubDevice):
         await super().async_shutdown()
         self.sensor_temperature: MLNumericSensor = None  # type: ignore
         self.sensor_humidity: MLNumericSensor = None  # type: ignore
-        self.number_adjust_temperature: MLHubSensorAdjustNumber = None  # type: ignore
-        self.number_adjust_humidity: MLHubSensorAdjustNumber = None  # type: ignore
+        self.number_adjust_temperature: HubSensorAdjustNumber = None  # type: ignore
+        self.number_adjust_humidity: HubSensorAdjustNumber = None  # type: ignore
 
     def _parse_humidity(self, p_humidity: dict):
         if mc.KEY_LATEST in p_humidity:
@@ -1075,6 +1167,7 @@ WELL_KNOWN_TYPE_MAP[mc.KEY_TEMPHUM] = MS100SubDevice
 
 class MS130SubDevice(SubDevice):
     __slots__ = (
+        "subId",
         "sensor_humidity",
         "sensor_light",
         "sensor_temperature",
@@ -1082,22 +1175,16 @@ class MS130SubDevice(SubDevice):
 
     def __init__(self, hub: HubMixin, p_digest: dict):
         super().__init__(hub, p_digest, mc.TYPE_MS130)
+        self.subId = self.id
         self.sensor_humidity = MLHumiditySensor(self, self.id)
         self.sensor_temperature = MLTemperatureSensor(self, self.id, device_scale=100)
         self.sensor_light = MLLightSensor(self, self.id)
-        # This hybrid ns should have LIST_C structure in Hub(s)
-        ns = mn_h.Hub_Control_Sensor_LatestX
-        try:
-            handler = hub.namespace_handlers[ns.name]
-        except KeyError:
-            handler = (
-                HubNamespaceHandler(hub, ns)
-                if ns.name in hub.descriptor.ability
-                else None
-            )
-        if handler:
+        ns = mn_h.Appliance_Control_Sensor_LatestX
+        if ns.name in hub.descriptor.ability:
+            handler = hub.get_handler(ns)
+            handler.register_parser(self)
             handler.polling_request_add_channel(
-                self.id, {"channel": 0, "data": ["light", "temp", "humi"]}
+                self.subId, {"channel": 0, "data": ["light", "temp", "humi"]}
             )
 
     async def async_shutdown(self):
@@ -1146,7 +1233,7 @@ class MS130SubDevice(SubDevice):
         # since we're pretty sure ms130 doesn't have one
         pass
 
-    def _parse_latest(self, p_latest: dict):
+    def _parse_latestx(self, p_latest: "mt_s.LatestXResponse_C"):
         """parser for Appliance.Control.Sensor.LatestX:
         {
             "latest": [
@@ -1229,6 +1316,119 @@ WELL_KNOWN_TYPE_MAP[mc.TYPE_MS400] = MS400SubDevice
 WELL_KNOWN_TYPE_MAP[mc.KEY_WATERLEAK] = MS400SubDevice
 
 
+class MST100SubDevice(SubDevice):
+
+    class WateringDurationNumber(HubSubIdDeviceCfgMixin, MLConfigNumber):
+        """Number to set watering duration."""
+
+        key_group = "mstCfg"
+        key_value = "dura"
+
+        # HA core entity attributes:
+        native_max_value = 86400  # 1 day max duration (no real info just guessing)
+        native_min_value = 1
+
+        def __init__(self, manager: "MST100SubDevice"):
+            MLConfigNumber.__init__(
+                self,
+                manager,
+                0,
+                mc.KEY_DURATION,
+                MLConfigNumber.DEVICE_CLASS_DURATION,
+                name="Watering duration",
+                native_unit_of_measurement=MLConfigNumber.hac.UnitOfTime.SECONDS,
+            )
+
+    class OnOffSwitch(HubSubIdChannelMixin, MLSwitch):
+        """Switch to turn on/off watering."""
+
+        ns = mn_h.Appliance_Control_Water
+
+        def __init__(self, manager: "MST100SubDevice"):
+            MLSwitch.__init__(
+                self,
+                manager,
+                0,
+                mc.KEY_ONOFF,
+                MLSwitch.DeviceClass.SWITCH,
+                name="Watering",
+            )
+
+        @override
+        async def async_turn_on(self, **kwargs):
+            # setting 'dura' in payload will override the default configured duration (from DeviceCfg)
+            if await self.async_request_value(1):
+                self.update_onoff(True)
+
+        @override
+        async def async_turn_off(self, **kwargs):
+            if await self.async_request_value(2):
+                self.update_onoff(False)
+
+    if TYPE_CHECKING:
+        subId: str
+        number_duration: WateringDurationNumber
+        switch_water_onoff: OnOffSwitch
+
+        # Appliance.Config.DeviceCfg payload structure
+        class DeviceCfg_mstCfg_calibration(TypedDict):
+            waCon: int  # water consumption
+            onoff: int
+            lmTime: int
+
+        class DeviceCfg_mstCfg(TypedDict):
+            dura: int  # duration of watering in seconds
+            wfm: int  # water flow measurement
+            calibration: "MST100SubDevice.DeviceCfg_mstCfg_calibration"
+
+        class DeviceCfg(mt.HubSubIdPayload):
+            mstCfg: "MST100SubDevice.DeviceCfg_mstCfg"
+
+        # Appliance.Control.Water payload structure
+        class Water(mt.HubSubIdPayload):
+            dura: NotRequired[int]  # duration in seconds
+            onoff: int  # 1: on, 2: off
+
+    __slots__ = (
+        "subId",
+        "number_duration",
+        "switch_water_onoff",
+    )
+
+    def __init__(self, hub: HubMixin, p_digest: dict):
+        SubDevice.__init__(self, hub, p_digest, mc.TYPE_MST100)
+        self.subId = self.id
+        self.number_duration = MST100SubDevice.WateringDurationNumber(self)
+        self.switch_water_onoff = MST100SubDevice.OnOffSwitch(self)
+        for ns in (mn_h.Appliance_Config_DeviceCfg, mn_h.Appliance_Control_Water):
+            if ns.name not in hub.descriptor.ability:
+                continue
+            handler = hub.get_handler(ns)
+            handler.register_parser(self)
+            handler.polling_request_add_channel(self.subId, {"channel": 0})
+
+    async def async_shutdown(self):
+        await SubDevice.async_shutdown(self)
+        self.number_duration = None  # type: ignore
+        self.switch_water_onoff = None  # type: ignore
+
+    def _parse_deviceCfg(self, p_devicecfg: "DeviceCfg"):
+        self.number_duration.update_device_value(p_devicecfg["mstCfg"]["dura"])
+
+    def _parse_water(self, p_water: "Water"):
+        self.switch_water_onoff.update_onoff(p_water[mc.KEY_ONOFF] == 1)
+
+    @override
+    def _parse_togglex(self, p_togglex: dict):
+        # avoid the base class creating a toggle entity
+        # since we're pretty sure ms130 doesn't have one
+        pass
+
+
+WELL_KNOWN_TYPE_MAP[mc.TYPE_MST100] = MST100SubDevice
+WELL_KNOWN_TYPE_MAP[mc.KEY_MST] = MST100SubDevice
+
+
 def digest_init_hub(device: "HubMixin", digest) -> "DigestInitReturnType":
 
     # Check for unbinded subdevices which are 'still' in the device_registry
@@ -1278,26 +1478,40 @@ def digest_init_hub(device: "HubMixin", digest) -> "DigestInitReturnType":
 
 
 POLLING_STRATEGY_CONF |= {
-    mn_h.Hub_Control_Sensor_LatestX: (
+    mn_h.Appliance_Config_DeviceCfg: (
+        mlc.PARAM_CONFIG_UPDATE_PERIOD,
+        mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
+        mlc.PARAM_HEADER_SIZE,
+        100,
+        NamespaceHandler.async_poll_smart,
+    ),
+    mn_h.Appliance_Control_Sensor_LatestX: (
         mlc.PARAM_SENSOR_SLOW_UPDATE_PERIOD,
         mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
         mlc.PARAM_HEADER_SIZE,
         220,
-        NamespaceHandler.async_poll_lazy,
+        NamespaceHandler.async_poll_smart,
+    ),
+    mn_h.Appliance_Control_Water: (
+        0,
+        0,
+        mlc.PARAM_HEADER_SIZE,
+        50,
+        NamespaceHandler.async_poll_default,
     ),
     mn_h.Appliance_Hub_Battery: (
         3600,
         mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
         mlc.PARAM_HEADER_SIZE,
         40,
-        NamespaceHandler.async_poll_lazy,
+        NamespaceHandler.async_poll_smart,
     ),
     mn_h.Appliance_Hub_Mts100_Adjust: (
         mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
         mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
         mlc.PARAM_HEADER_SIZE,
         40,
-        NamespaceHandler.async_poll_lazy,
+        NamespaceHandler.async_poll_smart,
     ),
     mn_h.Appliance_Hub_Mts100_All: (
         mlc.PARAM_HEARTBEAT_PERIOD,
@@ -1318,7 +1532,7 @@ POLLING_STRATEGY_CONF |= {
         mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
         mlc.PARAM_HEADER_SIZE,
         60,
-        NamespaceHandler.async_poll_lazy,
+        NamespaceHandler.async_poll_smart,
     ),
     mn_h.Appliance_Hub_Sensor_All: (
         mlc.PARAM_HEARTBEAT_PERIOD,

@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from ...calendar import MtsSchedule
 from ...climate import MtsSetPointNumber
+from ...merossclient import merge_dicts
 from .mtsthermostat import MtsThermostatClimate, mc, mn_t
 
 if TYPE_CHECKING:
@@ -158,7 +159,7 @@ class Mts200Climate(MtsThermostatClimate):
                 payload = response[mc.KEY_PAYLOAD][mc.KEY_MODE][0]
             except (KeyError, IndexError):
                 # optimistic update
-                payload = self._mts_payload | p_mode
+                payload = merge_dicts(self._mts_payload, p_mode)
                 if mc.KEY_MODE in p_mode:
                     key_temp = mc.MTS200_MODE_TO_TARGETTEMP_MAP.get(p_mode[mc.KEY_MODE])
                     if key_temp in payload:

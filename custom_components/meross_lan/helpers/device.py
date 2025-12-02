@@ -253,7 +253,6 @@ class Device(BaseDevice, ConfigEntryManager):
         or simply crashes/hangs the device."""
 
         descriptor: Final[MerossDeviceDescriptor]
-        is_refoss: Final[bool]
         tz: tzinfo
 
         # these are set from ConfigEntry
@@ -278,7 +277,6 @@ class Device(BaseDevice, ConfigEntryManager):
         _http_lastrequest: float
         _http_lastresponse: float
         namespace_handlers: dict[str, NamespaceHandler]
-        namespace_pushes: dict[str, Mapping]
         digest_handlers: dict[str, DigestParseFunc]
         digest_pollers: set[NamespaceHandler]
         _lazypoll_requests: list[NamespaceHandler]
@@ -407,7 +405,6 @@ class Device(BaseDevice, ConfigEntryManager):
 
     __slots__ = (
         "descriptor",
-        "is_refoss",
         "tz",
         "polling_period",
         "_polling_delay",
@@ -439,7 +436,6 @@ class Device(BaseDevice, ConfigEntryManager):
         "_http_lastrequest",
         "_http_lastresponse",
         "namespace_handlers",
-        "namespace_pushes",
         "digest_handlers",
         "digest_pollers",
         "_lazypoll_requests",
@@ -466,7 +462,6 @@ class Device(BaseDevice, ConfigEntryManager):
         descriptor: "MerossDeviceDescriptor",
     ):
         self.descriptor = descriptor
-        self.is_refoss = descriptor.is_refoss
         self.tz = UTC
         self.needsave = False
         self._async_entry_update_unsub = None
@@ -499,7 +494,6 @@ class Device(BaseDevice, ConfigEntryManager):
         self._http_lastrequest = 0
         self._http_lastresponse = 0
         self.namespace_handlers = {}
-        self.namespace_pushes = {}
         self.digest_handlers = {}
         self.digest_pollers = set()
         self._lazypoll_requests = []
@@ -871,6 +865,11 @@ class Device(BaseDevice, ConfigEntryManager):
                 handler.ns.name: {
                     "lastrequest": handler.lastrequest,
                     "lastresponse": handler.lastresponse,
+                    "lastpush": (
+                        obfuscated_dict(handler.lastpush)
+                        if (handler.lastpush and self.obfuscate)
+                        else handler.lastpush
+                    ),
                     "polling_epoch_next": handler.polling_epoch_next,
                     "polling_strategy": (
                         handler.polling_strategy.__name__
@@ -880,11 +879,6 @@ class Device(BaseDevice, ConfigEntryManager):
                 }
                 for handler in self.namespace_handlers.values()
             },
-            "namespace_pushes": (
-                obfuscated_dict(self.namespace_pushes)
-                if self.obfuscate
-                else self.namespace_pushes
-            ),
             "device_info": (
                 obfuscated_dict(self.device_info)
                 if self.obfuscate and self.device_info
@@ -1694,14 +1688,6 @@ class Device(BaseDevice, ConfigEntryManager):
         await self.async_request_poll(handler)
         return True
 
-    def request_lazypoll(self, handler: NamespaceHandler):
-        """Insert into the lazypoll_requests ordering by least recently polled"""
-
-        def _lazypoll_key(_handler: NamespaceHandler):
-            return _handler.lastrequest - self._polling_epoch
-
-        bisect.insort(self._lazypoll_requests, handler, key=_lazypoll_key)
-
     async def _async_request_updates(self, namespace: str | None):
         """
         This is a 'versatile' polling strategy called on timer
@@ -2149,10 +2135,6 @@ class Device(BaseDevice, ConfigEntryManager):
             # no use parsing..moreover, our callbacks system is full
             # in place so we have no need to further process
             return
-        elif method == mc.METHOD_PUSH:
-            # we're saving for diagnostic purposes so we have knowledge of
-            # which data the device pushes asynchronously
-            self.namespace_pushes[namespace] = payload
         elif method == mc.METHOD_ERROR:
             if payload.get(mc.KEY_ERROR) == mc.ERROR_INVALIDKEY:
                 self.log(
@@ -2194,6 +2176,10 @@ class Device(BaseDevice, ConfigEntryManager):
 
         handler.lastresponse = self.lastresponse
         handler.polling_epoch_next = handler.lastresponse + handler.polling_period
+        if method == mc.METHOD_PUSH:
+            # we're saving for diagnostic purposes so we have knowledge of
+            # which data the device pushes asynchronously
+            handler.lastpush = payload
         try:
             handler.handler(header, payload)  # type: ignore
         except Exception as exception:

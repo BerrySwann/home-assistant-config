@@ -42,7 +42,7 @@ class MtsClimate(me.MLEntity, climate.ClimateEntity):
         ATTR_TARGET_TEMP_LOW: Final
 
         device_scale: ClassVar[float]
-        AdjustNumber: ClassVar[type["MtsTemperatureNumber"]]
+        AdjustNumber: ClassVar[type["MLConfigNumber"]]
         """The specific Adjust/Calibrate number class to instantiate."""
         SetPointNumber: ClassVar[type["MtsSetPointNumber"] | None]
         """The (optional) class for setting up a group of preset setpoints."""
@@ -58,7 +58,7 @@ class MtsClimate(me.MLEntity, climate.ClimateEntity):
         SET_TEMP_FORCE_MANUAL_MODE: Final[bool]
         """Determines the behavior of async_set_temperature."""
         manager: BaseDevice
-        number_adjust_temperature: Final["MtsTemperatureNumber"]
+        number_adjust_temperature: Final["MLConfigNumber"]
         number_preset_temperature: dict[str, "MtsSetPointNumber"]
         schedule: Final[MtsSchedule]
         select_tracked_sensor: Final[MtsTrackedSensor]
@@ -294,40 +294,11 @@ class MtsClimate(me.MLEntity, climate.ClimateEntity):
         self.flush_state()
 
 
-class MtsTemperatureNumber(MLConfigNumber):
-    """
-    Common number entity for representing MTS temperatures configuration
-    """
-
-    # HA core entity attributes:
-    _attr_suggested_display_precision = 1
-
-    __slots__ = ()
-
-    def __init__(
-        self,
-        climate: "MtsClimate",
-        entitykey: str,
-        **kwargs: "Unpack[MLConfigNumber.Args]",
-    ):
-        kwargs["device_scale"] = climate.device_scale
-        super().__init__(
-            climate.manager,
-            climate.channel,
-            entitykey,
-            MLConfigNumber.DeviceClass.TEMPERATURE,
-            **kwargs,
-        )
-
-
-class MtsSetPointNumber(MtsTemperatureNumber):
+class MtsSetPointNumber(MLConfigNumber):
     """
     Helper entity to configure MTS100/150/200 setpoints
     AKA: Heat(comfort) - Cool(sleep) - Eco(away)
     """
-
-    # HA core entity attributes:
-    icon: str
 
     __slots__ = (
         "climate",
@@ -346,9 +317,12 @@ class MtsSetPointNumber(MtsTemperatureNumber):
             reverse_lookup(climate.MTS_MODE_TO_PRESET_MAP, preset_mode)
         ]
         super().__init__(
-            climate,
+            climate.manager,
+            climate.channel,
             f"config_temperature_{self.key_value}",
+            MLConfigNumber.DeviceClass.TEMPERATURE,
             name=f"{preset_mode} temperature",
+            device_scale=climate.device_scale,
         )
 
     @property

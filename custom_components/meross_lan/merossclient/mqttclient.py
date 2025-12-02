@@ -50,14 +50,10 @@ class _MQTTRateLimiter:
     To ensure optimal performance and security,
     please limit your device's communication to no more than 200 messages every one hour."
 
-    TODO
-    Taking this into account, we should set the rate-limiting to 1 message every 18 seconds
-    on average but I guess the short term burst should be allowed (up to 6 messages in 60 seconds)
-    We should eventually setup also a long-term data rate-limiting (e.g. 200 messages in 1 hour)
     """
 
-    DURATION: typing.Final = 60
-    MAXQUEUE: typing.Final = 6
+    DURATION: typing.Final = 91
+    MAXQUEUE: typing.Final = 5
 
     __slots__ = (
         "dropped",

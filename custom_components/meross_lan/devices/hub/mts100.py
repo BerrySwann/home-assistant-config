@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING
 
 from ...calendar import MtsSchedule
-from ...climate import MtsClimate, MtsSetPointNumber, MtsTemperatureNumber
+from ...climate import MtsClimate, MtsSetPointNumber
 from ...merossclient.protocol import const as mc
 from ...merossclient.protocol.namespaces import hub as mn_h
+from ...number import MLConfigNumber
 from ...switch import MLEmulatedSwitch
 
 if TYPE_CHECKING:
@@ -19,7 +20,7 @@ class Mts100Climate(MtsClimate):
     # MtsClimate class attributes
     device_scale = mc.MTS100_TEMP_SCALE
 
-    class AdjustNumber(MtsTemperatureNumber):
+    class AdjustNumber(MLConfigNumber):
 
         ns = mn_h.Appliance_Hub_Mts100_Adjust
         key_value = mc.KEY_TEMPERATURE
@@ -30,13 +31,15 @@ class Mts100Climate(MtsClimate):
         native_step = 0.5
 
         def __init__(self, climate: "Mts100Climate"):
-            super().__init__(
-                climate,
+            MLConfigNumber.__init__(
+                self,
+                climate.manager,
+                climate.channel,
                 f"config_{self.ns.key}_{self.key_value}",
+                MLConfigNumber.DEVICE_CLASS_TEMPERATURE_DELTA,
                 name="Adjust temperature",
+                device_scale=100,
             )
-            # override the default climate.device_scale set in base cls
-            self.device_scale = 100
 
     class SetPointNumber(MtsSetPointNumber):
         """
