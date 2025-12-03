@@ -1465,6 +1465,7 @@
     to: 'off'
     trigger: state
   actions:
+  - delay: 00:00:02
   - data:
       title: Fermeture en cours
       message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
@@ -8474,11 +8475,13 @@
   description: '[TEST] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. (SAUF) L''état des fenêtres [OUVERTE(S)/FERMÉE(S)]
-    qui sont contrôlées 24h sur 24.'
+    qui sont contrôlées 24h sur 24. - 06h00 ou Arrivée : Force l''allumage. - Changement
+    Température : Ne met à jour que si déjà allumé. - Gestion différenciée par pièce
+    (Salon/Bureau) selon présence.'
   triggers:
-  - alias: 'HORAIRE : Démarrage 21h00'
+  - alias: 'HORAIRE : Démarrage 06h00'
     trigger: time
-    at: '21:00:00'
+    at: 06:00:00
     id: force_run
   - alias: 'RÉSEAU : Changement Wifi/Cellular'
     trigger: state
@@ -8523,9 +8526,13 @@
     - sensor.th_balcon_nord_temperature
     - sensor.temperature_cible
     - sensor.mode_ete_hiver
-    - sensor.temperature_confort_nuit
+    - sensor.temperature_confort
     id: sensor_update
-  conditions: []
+  conditions:
+  - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE JOUR'
+    condition: time
+    after: 06:00:00
+    before: '21:00:00'
   actions:
   - alias: 'INIT : CALCUL DES VARIABLES'
     variables:
@@ -8537,7 +8544,7 @@
         'eq', 'on') | list | count > 0 }}\n"
       temp_eco: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17) }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(25) }}'
-      temp_nuit: '{{ states(''sensor.temperature_confort_nuit'') | float(24) }}'
+      temp_confort: '{{ states(''sensor.temperature_confort'') | float(24) }}'
       prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and \n   is_state('switch.clim_du_bureau_nous',
         'on') and \n   is_state('switch.clim_chambre_nous', 'on') }}\n"
       t_salon_target: '{{ temp_cible }}'
@@ -8562,13 +8569,13 @@
       - alias: 'NOTIF : ALERTE FENÊTRE'
         action: notify.mobile_app_poco_x7_pro
         data:
-          title: ⚠️ CLIM COUPÉE (NUIT)
-          message: "Une fenêtre est ouverte. Arrêt des climatisations. {% set ouverts
-            = expand('binary_sensor.contact_fenetre_salon_ikea_contact', \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
+          title: ⚠️ CLIM COUPÉE
+          message: "Une fenêtre à été ouverte. {% set ouverts = expand('binary_sensor.contact_fenetre_salon_ikea_contact',
+            \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_bureau_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_chambre_ikea_contact')
             \n                 | selectattr('state', 'eq', 'on') | map(attribute='name')
-            | list %}\nSource: {{ ouverts | join(', ') }}\n"
+            | list %}\n{{ ouverts | join(', ') }}\n"
     default:
     - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
       choose:
@@ -8576,13 +8583,15 @@
         - condition: template
           value_template: '{{ prises_on }}'
         - condition: time
-          after: '21:00:00'
-          before: 06:00:00
+          after: 06:00:00
+          before: '21:00:00'
         sequence:
-        - alias: 'CALCUL : DÉFINITION CIBLES'
+        - alias: 'CALCUL : DÉFINITION CIBLES PAR PIÈCE'
           choose:
-          - alias: 'SCÉNARIO : ABSENT'
-            conditions: '{{ ''groupe_1'' in groupe_presence }}'
+          - alias: 'SCÉNARIO : ABSENT (ECO/CIBLE)'
+            conditions:
+            - condition: template
+              value_template: '{{ ''groupe_1'' in groupe_presence }}'
             sequence:
             - variables:
                 t_salon_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
@@ -8591,16 +8600,34 @@
                   }}'
                 t_chambre_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
                   }}'
-          default:
-          - alias: 'SCÉNARIO : PRÉSENCE NUIT'
-            variables:
-              t_salon_target: '{{ temp_nuit }}'
-              t_bureau_target: '{{ temp_nuit }}'
-              t_chambre_target: '{{ temp_nuit }}'
+          - alias: 'SCÉNARIO : MAMOUR (SALON CONFORT)'
+            conditions:
+            - condition: template
+              value_template: '{{ ''groupe_2'' in groupe_presence }}'
+            sequence:
+            - variables:
+                t_salon_target: '{{ temp_confort }}'
+          - alias: 'SCÉNARIO : ERIC (BUREAU CONFORT)'
+            conditions:
+            - condition: template
+              value_template: '{{ ''groupe_3'' in groupe_presence }}'
+            sequence:
+            - variables:
+                t_bureau_target: '{{ temp_confort }}'
+          - alias: 'SCÉNARIO : TOUS (SALON+BUREAU CONFORT)'
+            conditions:
+            - condition: template
+              value_template: '{{ ''groupe_4'' in groupe_presence }}'
+            sequence:
+            - variables:
+                t_salon_target: '{{ temp_confort }}'
+                t_bureau_target: '{{ temp_confort }}'
         - alias: 'ACTION : ENVOI COMMANDES'
           choose:
           - alias: 'MODE : FAN ONLY'
-            conditions: '{{ mode_saison == ''fan_only'' }}'
+            conditions:
+            - condition: template
+              value_template: '{{ mode_saison == ''fan_only'' }}'
             sequence:
             - alias: 'VENTILATION : AUTO'
               action: climate.set_fan_mode
@@ -8650,7 +8677,7 @@
         - alias: 'NOTIF : ETAT'
           action: notify.mobile_app_poco_x7_pro
           data:
-            title: '[NUIT] {{ states(''sensor.presence_clim'') }}'
+            title: '[JOUR] {{ states(''sensor.presence_clim'') }}'
             message: 'Mode : {{ mode_saison | upper }}
 
               Salon: {{ t_salon_target }}°
@@ -8718,7 +8745,11 @@
     - sensor.mode_ete_hiver
     - sensor.temperature_confort_nuit
     id: sensor_update
-  conditions: []
+  conditions:
+  - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE NUIT'
+    condition: time
+    after: '21:00:00'
+    before: 06:00:00
   actions:
   - alias: 'INIT : CALCUL DES VARIABLES'
     variables:
@@ -8755,13 +8786,13 @@
       - alias: 'NOTIF : ALERTE FENÊTRE'
         action: notify.mobile_app_poco_x7_pro
         data:
-          title: ⚠️ CLIM COUPÉE (NUIT)
-          message: "Une fenêtre est ouverte. Arrêt des climatisations. {% set ouverts
-            = expand('binary_sensor.contact_fenetre_salon_ikea_contact', \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
+          title: ⚠️ CLIM COUPÉE
+          message: "Une fenêtre a été ouverte. {% set ouverts = expand('binary_sensor.contact_fenetre_salon_ikea_contact',
+            \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_bureau_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_chambre_ikea_contact')
             \n                 | selectattr('state', 'eq', 'on') | map(attribute='name')
-            | list %}\nSource: {{ ouverts | join(', ') }}\n"
+            | list %}\n{{ ouverts | join(', ') }}\n"
     default:
     - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
       choose:
@@ -8775,7 +8806,9 @@
         - alias: 'CALCUL : DÉFINITION CIBLES'
           choose:
           - alias: 'SCÉNARIO : ABSENT'
-            conditions: '{{ ''groupe_1'' in groupe_presence }}'
+            conditions:
+            - condition: template
+              value_template: '{{ ''groupe_1'' in groupe_presence }}'
             sequence:
             - variables:
                 t_salon_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
@@ -8793,7 +8826,9 @@
         - alias: 'ACTION : ENVOI COMMANDES'
           choose:
           - alias: 'MODE : FAN ONLY'
-            conditions: '{{ mode_saison == ''fan_only'' }}'
+            conditions:
+            - condition: template
+              value_template: '{{ mode_saison == ''fan_only'' }}'
             sequence:
             - alias: 'VENTILATION : AUTO'
               action: climate.set_fan_mode
