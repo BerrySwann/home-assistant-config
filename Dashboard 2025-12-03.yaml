@@ -118,7 +118,7 @@ streamline_templates:
             {% set temp_ext = states('sensor.th_balcon_nord_temperature') |
             float(-999) %} {% set consigne_de_base =
             states('sensor.consigne_de_base') | int(0) %} {% set mode =
-            states('sensor.mode_ete_hiver') %} {% set temp_eco =
+            states('sensor.mode_ete_hiver') %}  {% set temp_eco =
             states('sensor.temperature_eco_hiver') | int(0) %} {% set temp_eco_c
             = states('sensor.temperature_eco_hiver_corrige') | int(0) %} {% set
             temp_hg = states('sensor.temperature_hors_gel_hiver') | int(0) %} {%
@@ -136,18 +136,20 @@ streamline_templates:
 
              **Résumé des valeurs actuel :**
 
-            {% if temp_ext <= 10 %}
+            {% if temp_ext < 10 %}
               **- Calcul T°cible si T°Ext. ≤ 10°C [ {{ consigne_de_base }} + {{ delta_2 }} = {{ (consigne_de_base + delta_2) | round(0) }}°C ]**
               **- Température cible [ {{ temp_cible | round(0) }}°C ]**
               **- Température confort [ {{ temp_confort | round(0) }}°C ]**
               **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**
+              
+              **- Calcul T°éCO si T°Ext. ≤ 10°C [ {{ temp_eco }} + {{ delta_1 }} = {{ (temp_eco + delta_1) | round(0) }}°C ]**
               **- Température éCO corrigé: {{ temp_eco_c }}°C (éCO. si absents)**
-            {% elif temp_ext <= 12 %}
+            {% elif temp_ext < 12 %}
               **- Calcul T°cible si T°Ext. ≤ 12°C [ {{ consigne_de_base }} + {{ delta_1 }} = {{ (consigne_de_base + delta_1) | round(0) }}°C ]**
               **- Température cible [ {{ temp_cible | round(0) }}°C ]**
               **- Température confort [ {{ temp_confort | round(0) }}°C ]**
               **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**
-              **- Température éCO. : {{ temp_eco | round(0) }}°C -> (éCO. si absents)**
+              **- Température éCO. : {{ temp_eco_c | round(0) }}°C -> (éCO. si absents)**
             {% elif temp_ext > 40 %}
               **- Calcul T°cible si T°Ext. ≥ 40°C [ {{ temp_ext | round(0) }} - {{ delta_7 }} = {{ (temp_ext - delta_7) | round(0) }}°C ]**
               **- Température cible [ {{ temp_cible | round(0) }}°C ]**
@@ -160,7 +162,7 @@ streamline_templates:
               **- Température cible [ {{ temp_cible | round(0) }}°C ]**
               **- Température confort [ {{ temp_confort | round(0) }}°C ]**
               {% if mode == "heat" %} **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**  {% endif %}
-              {% if temp_ext <= 17 %} **- Température éCO. : {{ temp_eco | round(0) }}°C -> (éCO. si absents)** {% endif %}
+              {% if temp_ext < 17 %} **- Température éCO. : {{ temp_eco_c | round(0) }}°C -> (éCO. si absents)** {% endif %}
             {% endif %}
 
             **Résumé des valeurs de base :**
@@ -189,17 +191,16 @@ streamline_templates:
               }
         - type: conditional
           conditions:
-            - condition: numeric_state
-              entity: sensor.current_hour
-              below: 20
-              above: 5
+            - condition: state
+              entity: binary_sensor.est_jour_6h_21h
+              state: 'on'
             - condition: state
               entity: sensor.groupe_clim
               state: groupe_1
           card:
             type: markdown
             content: >
-              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)** {% if
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 21h)** {% if
               is_state('sensor.mode_ete_hiver', 'heat') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
                 - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
@@ -216,21 +217,20 @@ streamline_templates:
             text_only: true
         - type: conditional
           conditions:
-            - condition: numeric_state
-              entity: sensor.current_hour
-              below: 20
-              above: 5
+            - condition: state
+              entity: binary_sensor.est_jour_6h_21h
+              state: 'on'
             - condition: state
               entity: sensor.groupe_clim
               state: groupe_2
           card:
             type: markdown
             content: >
-              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)**  {% if
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 21h)**  {% if
               is_state('sensor.mode_ete_hiver', 'heat') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Heat)
-                - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Heat)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Heat)
               {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Cool)
                 - Climatiseur Bureau : {{ states('sensor.temperature_cible') | int }}°C (Cool)
@@ -243,21 +243,20 @@ streamline_templates:
             text_only: true
         - type: conditional
           conditions:
-            - condition: numeric_state
-              entity: sensor.current_hour
-              below: 20
-              above: 5
+            - condition: state
+              entity: binary_sensor.est_jour_6h_21h
+              state: 'on'
             - condition: state
               entity: sensor.groupe_clim
               state: groupe_3
           card:
             type: markdown
             content: >
-              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)** {% if
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 21h)** {% if
               is_state('sensor.mode_ete_hiver', 'heat') %}
-                - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Heat)
                 - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Heat)
-                - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Heat)
               {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
                 - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Cool)
@@ -270,21 +269,20 @@ streamline_templates:
             text_only: true
         - type: conditional
           conditions:
-            - condition: numeric_state
-              entity: sensor.current_hour
-              below: 20
-              above: 5
+            - condition: state
+              entity: binary_sensor.est_jour_6h_21h
+              state: 'on'
             - condition: state
               entity: sensor.groupe_clim
               state: groupe_4
           card:
             type: markdown
             content: |
-              **{{ states('sensor.presence_clim') }} (6h ⟷ 20h)**
+              **{{ states('sensor.presence_clim') }} (6h ⟷ 21h)**
               {% if is_state('sensor.mode_ete_hiver', 'heat') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Heat)
                 - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Heat)
-                - Climatiseur Chambre : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Chambre : {{ states('sensor.temperature_cible') | int }}°C (Heat)
               {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_confort') | int }}°C (Cool)
                 - Climatiseur Bureau : {{ states('sensor.temperature_confort') | int }}°C (Cool)
@@ -297,17 +295,16 @@ streamline_templates:
             text_only: true
         - type: conditional
           conditions:
-            - condition: numeric_state
-              entity: sensor.current_hour
-              below: 6
-              above: 19
+            - condition: state
+              entity: binary_sensor.est_nuit_21h_6h
+              state: 'on'
             - condition: state
               entity: sensor.groupe_clim
               state: groupe_1
           card:
             type: markdown
             content: >
-              **{{ states('sensor.presence_clim') }} (20h ⟷ 6h)** {% if
+              **{{ states('sensor.presence_clim') }} (21h ⟷ 6h)** {% if
               is_state('sensor.mode_ete_hiver', 'heat') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
                 - Climatiseur Bureau : {{ states('sensor.temperature_eco_hiver_corrige') | int }}°C (éCO Heat)
@@ -324,26 +321,19 @@ streamline_templates:
             text_only: true
         - type: conditional
           conditions:
-            - condition: numeric_state
-              entity: sensor.current_hour
-              below: 6
-              above: 19
+            - condition: state
+              entity: binary_sensor.est_nuit_21h_6h
+              state: 'on'
             - condition: state
               entity: sensor.groupe_clim
-              state: groupe_2
-            - condition: state
-              entity: sensor.groupe_clim
-              state: groupe_3
-            - condition: state
-              entity: sensor.groupe_clim
-              state: groupe_4
+              state_not: groupe_1
           card:
             type: markdown
             content: >
-              **{{ states('sensor.presence_clim') }} (20h ⟷ 6h)** {% if
+              **{{ states('sensor.presence_clim') }} (21h ⟷ 6h)** {% if
               is_state('sensor.mode_ete_hiver', 'heat') %}
-                - Climatiseur Salon : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
-                - Climatiseur Bureau : {{ states('sensor.consigne_de_base') | int }}°C (Heat)
+                - Climatiseur Salon : {{ states('sensor.temperature_confort_nuit') | int }}°C (Heat)
+                - Climatiseur Bureau : {{ states('sensor.temperature_confort_nuit') | int }}°C (Heat)
                 - Climatiseur Chambre : {{ states('sensor.temperature_confort_nuit') | int }}°C (Heat)
               {% elif is_state('sensor.mode_ete_hiver', 'cool') %}
                 - Climatiseur Salon : {{ states('sensor.temperature_cible') | int }}°C (Cool)
@@ -1419,7 +1409,7 @@ views:
           - type: custom:bubble-card
             card_type: button
             button_type: state
-            entity: device_tracker.mamour
+            entity: device_tracker.poco_x7_pro_mamour
             show_name: true
             show_last_changed: true
             show_attribute: false
@@ -1476,6 +1466,7 @@ views:
                       ? 'mdi:basket-check'
                       : 'mdi:crosshairs-question'
               )}
+            name: Mamour
           - type: custom:mushroom-entity-card
             entity: binary_sensor.detecteur_de_fuite_ikea_water_leak
             name: Détecteur de fuite sous évier cuisine
@@ -1664,6 +1655,7 @@ views:
                     ]]]
               - type: custom:button-card
                 entities:
+                  - sensor.delta_ademe_recommande
                   - sensor.clim_salon_etat
                   - sensor.radiateur_cuisine_etat
                   - sensor.clim_bureau_etat
@@ -1681,6 +1673,7 @@ views:
                   - climate.clim_bureau_rm4_mini
                   - climate.clim_chambre_rm4_mini
                 triggers_update:
+                  - sensor.delta_ademe_recommande
                   - sensor.clim_salon_etat
                   - sensor.radiateur_cuisine_etat
                   - sensor.clim_bureau_etat
@@ -1716,7 +1709,7 @@ views:
                         "titre titre titre"
                         "piece mode consigne"
                     - grid-template-columns: 1fr 1fr 1fr
-                    - grid-template-rows: auto
+                    - grid-template-rows: auto auto auto
                     - margin-top: 3px
                   custom_fields:
                     titre:
@@ -1760,6 +1753,7 @@ views:
 
                       const pieces = [
                         { name: 'T̄ Appart. ----------', color: 'white' },
+                        { name: 'Δ Ademe ------------', color: 'white' },
                         { name: 'Mode ->', color: 'white' },
                         { name: 'Salon', power: safeState('sensor.salon_power_status'), mode: safeState('sensor.clim_salon_etat') },
                         { name: 'Cuisine', power: safeState('sensor.cuisine_power_status'), mode: safeState('sensor.radiateur_cuisine_etat') },
@@ -1779,11 +1773,13 @@ views:
                         'heat': '#FFA500',
                         'fan': 'turquoise',
                         'off': '#F44336',
-                        'default': 'purple'
+                        'N/A': '#aaaaaa', 
+                        'default': '#aaaaaa'
                       };
 
                       function safeState(entityId, defaultValue = 'off') {
                         const state = states[entityId]?.state?.trim()?.toLowerCase() || defaultValue;
+                        if (state === 'unknown' || state === 'unavailable') return 'N/A';
                         return state === 'fan_only' ? 'fan' : state;
                       }
 
@@ -1808,6 +1804,7 @@ views:
 
                       return [
                         '<span style="display: block; text-align: left; line-height: 1.2; color: transparent;">.</span>',
+                        '<span style="display: block; text-align: left; line-height: 1.2; color: transparent;">.</span>',
                         ...modes.map(mode => formatMode(safeState(mode.entity)))
                       ].join('');
                     ]]]
@@ -1825,6 +1822,29 @@ views:
                         return 'N/A';
                       }
 
+                      // Fonction pour gérer la couleur (Purple si N/A) et le formatage
+                      function formatDisplay(value) {
+                        const color = value === 'N/A' ? '#aaaaaa' : 'inherit';
+                        const text = value === 'N/A' ? 'N/A' : value + '°C';
+                        return `<span style="display: block; text-align: right; line-height: 1.2; color: ${color};">${text}</span>`;
+                      }
+
+                      // --- LOGIQUE DELTA ADEME RÉUTILISÉE ET FORMATÉE ---
+                      const deltaADEME = parseFloat(states['sensor.delta_ademe_recommande']?.state);
+                      const isCooling = states['sensor.mode_ete_hiver']?.state === 'cool';
+
+                      const deltaColor = 
+                        !isNaN(deltaADEME) && isCooling && deltaADEME >= -8 && deltaADEME <= -4 
+                          ? 'lime' // Optimal
+                          : !isNaN(deltaADEME) && isCooling
+                            ? '#FF0000' // Avertissement
+                            : 'white'; // Neutre
+                            
+                      const ademeDisplayValue = !isNaN(deltaADEME) 
+                        ? `${deltaADEME.toFixed(1)}°C` 
+                        : 'N/A';
+                      // -----------------------------------------------------------
+
                       const tempMoyenne = safeState('sensor.temperature_moyenne_interieure');
                       const consigneSalon = safeState('climate.clim_salon_rm4_mini');
                       const consigneCuisine = safeState('climate.radiateur_cuisine');
@@ -1834,12 +1854,13 @@ views:
 
                       return [
                         `<span style="display: block; text-align: right; line-height: 1.2; color: #00FF00;">${tempMoyenne}°C</span>`,
+                        `<span style="display: block; text-align: right; line-height: 1.2; color: ${deltaColor};">${ademeDisplayValue}</span>`,
                         '<span style="display: block; text-align: right; line-height: 1.2;">.</span>',
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneSalon !== 'N/A' ? consigneSalon + '°C' : 'N/A'}</span>`,
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneCuisine !== 'N/A' ? consigneCuisine + '°C' : 'N/A'}</span>`,
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneBureau !== 'N/A' ? consigneBureau + '°C' : 'N/A'}</span>`,
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneSdB !== 'N/A' ? consigneSdB + '°C' : 'N/A'}</span>`,
-                        `<span style="display: block; text-align: right; line-height: 1.2;">${consigneChambre !== 'N/A' ? consigneChambre + '°C' : 'N/A'}</span>`
+                        formatDisplay(consigneSalon),
+                        formatDisplay(consigneCuisine),
+                        formatDisplay(consigneBureau),
+                        formatDisplay(consigneSdB),
+                        formatDisplay(consigneChambre)
                       ].join('');
                     ]]]
               - type: custom:button-card
@@ -2043,7 +2064,7 @@ views:
                       - text-align: left
                     quotidien:
                       - justify-self: start
-                      - margin-left: 15px
+                      - margin-left: 12px
                       - text-align: left
                     mensuel:
                       - justify-self: end
@@ -2059,6 +2080,10 @@ views:
                         'on_heat': '#FFA500',
                         'on_fan_only': 'turquoise',
                         'off': 'white',
+                        'on_off': '#aaaaaa', 
+                        'off_cool': '#aaaaaa', 
+                        'off_heat': '#aaaaaa', 
+                        'off_fan_only': '#aaaaaa', 
                       };
 
                       function getColorForStatus(powerStatus, mode) {
@@ -2189,28 +2214,41 @@ views:
                     ]]]
                   piece: |
                     [[[
+                      // Petite sécurité (?.state) ajoutée pour éviter le crash si une entité manque
                       return `
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_appartement_etat'].state !== 'Éteint' ? 'lightgreen' : 'white'};">Appart.</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_salon_etat'].state !== 'Éteint' ? 'lightgreen' : 'white'};">Salon</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_cuisine_etat'].state !== 'Éteint' ? 'lightgreen' : 'white'};">Cuisine</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_bureau_etat'].state === 'Éco.' ? 'white' : states['sensor.lumiere_bureau_etat'].state !== 'Éteint' ? 'lightgreen' : 'white'};">Bureau</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_salle_de_bain_etat'].state !== 'Éteint' ? 'lightgreen' : 'white'};">SdB</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_chambre_etat'].state === 'Éco.' ? 'white' : states['sensor.lumiere_chambre_etat'].state !== 'Éteint' ? 'lightgreen' : 'white'};">Chambre</span>
+                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_appartement_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Appart.</span>
+                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_salon_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Salon</span>
+                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_cuisine_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Cuisine</span>
+                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_bureau_etat']?.state === 'Éco.' ? 'white' : states['sensor.lumiere_bureau_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Bureau</span>
+                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_salle_de_bain_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">SdB</span>
+                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_chambre_etat']?.state === 'Éco.' ? 'white' : states['sensor.lumiere_chambre_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Chambre</span>
                       `;
                     ]]]
                   quotidien: |
                     [[[
                       function safeState(entityId) {
-                        var value = parseFloat(states[entityId].state || 0);
-                        if (isNaN(value)) {
-                          return '0 <span style="font-size: 5px;">Wh</span>';
+                        const entity = states[entityId];
+                        
+                        // Si l'entité n'existe pas ou est indisponible -> N/A gris
+                        if (!entity || entity.state === 'unavailable' || entity.state === 'unknown' || entity.state === 'N/A') {
+                           return '<span style="color: #aaaaaa;">N/A</span>';
                         }
+
+                        var value = parseFloat(entity.state);
+                        
+                        // Si ce n'est pas un nombre valide -> N/A gris
+                        if (isNaN(value)) {
+                          return '<span style="color: #aaaaaa;">N/A</span>';
+                        }
+
+                        // Calcul Wh vs kWh
                         if (value < 1) {
                           return (value * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
                         } else {
                           return value.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
                         }
                       }
+
                       return `
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_appart_2_energy_daily')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salon_5_energy_daily')}</span>
@@ -2223,16 +2261,26 @@ views:
                   mensuel: |
                     [[[
                       function safeState(entityId) {
-                        var value = parseFloat(states[entityId].state || 0);
-                        if (isNaN(value)) {
-                          return '0 <span style="font-size: 5px;">Wh</span>';
+                        const entity = states[entityId];
+                        
+                        // Si l'entité n'existe pas ou est indisponible -> N/A gris
+                        if (!entity || entity.state === 'unavailable' || entity.state === 'unknown' || entity.state === 'N/A') {
+                           return '<span style="color: #aaaaaa;">N/A</span>';
                         }
+
+                        var value = parseFloat(entity.state);
+                        
+                        if (isNaN(value)) {
+                          return '<span style="color: #aaaaaa;">N/A</span>';
+                        }
+
                         if (value < 1) {
                           return (value * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
                         } else {
                           return value.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
                         }
                       }
+
                       return `
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_appart_2_energy_monthly')}</span>
                         <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salon_5_energy_monthly')}</span>
@@ -2306,10 +2354,11 @@ views:
                   etat: |
                     [[[
                       function getColorForStatus(status) {
+                        if (status === 'N/A') return '#aaaaaa'; // Gris pour N/A
                         if (status === 'Allumé') return 'lime';
                         if (status === 'Éteint') return 'rgb(244,67,54)';
                         if (status === 'Éco.') return 'orange';
-                        if (status === 'erreur') return 'purple';
+                        if (status === 'erreur') return '#aaaaaa';
 
                         if (status === 'Entrée') return 'lightgreen';
                         if (status === 'Couloir') return 'lightgreen';
@@ -2324,14 +2373,24 @@ views:
                         if (status === 'Tête Lit') return 'lightgreen';
                         if (status === 'Ch.+zG') return 'lightgreen';
                         if (status === 'Ch.+zÉ') return 'lightgreen';
+                        
+                        return 'white'; // Fallback
                       }
 
-                      var appartementStatus = states['sensor.lumiere_appartement_etat'].state;
-                      var salonStatus = states['sensor.lumiere_salon_etat'].state;
-                      var cuisineStatus = states['sensor.lumiere_cuisine_etat'].state;
-                      var bureauStatus = states['sensor.lumiere_bureau_etat'].state;
-                      var sdbStatus = states['sensor.lumiere_salle_de_bain_etat'].state;
-                      var chambreStatus = states['sensor.lumiere_chambre_etat'].state;
+                      function safeState(entityId) {
+                        const state = states[entityId]?.state;
+                        if (!state || state === 'unavailable' || state === 'unknown') {
+                          return 'N/A';
+                        }
+                        return state;
+                      }
+
+                      var appartementStatus = safeState('sensor.lumiere_appartement_etat');
+                      var salonStatus = safeState('sensor.lumiere_salon_etat');
+                      var cuisineStatus = safeState('sensor.lumiere_cuisine_etat');
+                      var bureauStatus = safeState('sensor.lumiere_bureau_etat');
+                      var sdbStatus = safeState('sensor.lumiere_salle_de_bain_etat');
+                      var chambreStatus = safeState('sensor.lumiere_chambre_etat');
 
                       return `
                       <div>
@@ -2346,8 +2405,13 @@ views:
                     ]]]
                   active: |
                     [[[
+                      // Fonction sécurisée : si l'entité n'existe pas, on considère qu'elle n'est pas 'on'
                       function countActiveEntities(entities) {
-                        return entities.filter(entity => states[entity] && states[entity].state === 'on').length;
+                        return entities.filter(entity => states[entity]?.state === 'on').length;
+                      }
+
+                      function safeStateCheck(entityId) {
+                         return states[entityId]?.state === 'on';
                       }
 
                       function getColorForCount(activeCount, totalCount) {
@@ -2375,7 +2439,7 @@ views:
                       };
 
                       var bureauEntities = ['light.bureau_z2m'];
-                      if (states['switch.ecran_p_c_3_play_hue'].state === 'on') {
+                      if (safeStateCheck('switch.ecran_p_c_3_play_hue')) {
                         bureauEntities.push('light.bureau');
                       }
                       var bureau = {
@@ -2385,13 +2449,13 @@ views:
                       };
 
                       var sdb = {
-                        activeCount: states['light.lampe_salle_de_bain_hue'].state === 'on' ? 1 : 0,
+                        activeCount: safeStateCheck('light.lampe_salle_de_bain_hue') ? 1 : 0,
                         totalCount: 1,
-                        color: getColorForCount(states['light.lampe_salle_de_bain_hue'].state === 'on' ? 1 : 0, 1)
+                        color: getColorForCount(safeStateCheck('light.lampe_salle_de_bain_hue') ? 1 : 0, 1)
                       };
 
                       var chambreEntities = ['light.chambre'];
-                      if (states['switch.prise_tete_de_lit_chambre'].state === 'on') {
+                      if (safeStateCheck('switch.prise_tete_de_lit_chambre')) {
                         chambreEntities.push('light.hue_color_candle_chambre_gege');
                         chambreEntities.push('light.hue_color_candle_chambre_eric');
                       }
@@ -2470,22 +2534,32 @@ views:
                     ]]]
                   etat: |
                     [[[
-                      function getColorForStatus(powerStatus) {
-                        if (powerStatus === 'unavailable') return 'purple';
-                        return powerStatus === 'on' ? 'lightgreen' : 'rgb(244,67,54)';
+                      // Fonction pour récupérer l'état de manière sécurisée
+                      function safeState(entityId) {
+                        const entity = states[entityId];
+                        // Si l'entité n'existe pas, est indisponible ou inconnue -> N/A
+                        if (!entity || entity.state === 'unavailable' || entity.state === 'unknown') {
+                          return 'N/A';
+                        }
+                        return entity.state;
                       }
 
-                      function getStatusText(powerStatus) {
-                        if (powerStatus === 'unavailable') return 'Non trouvé';
-                        return powerStatus === 'on' ? 'Allumé' : 'Éteint';
+                      function getColorForStatus(status) {
+                        if (status === 'N/A') return '#aaaaaa'; // Gris
+                        return status === 'on' ? 'lightgreen' : 'rgb(244,67,54)';
                       }
 
-                      var horlogeStatus = states['switch.prise_horloge_ikea'] ? states['switch.prise_horloge_ikea'].state : 'unavailable';
-                      var salonStatus = states['light.hue_smart_salon'] ? states['light.hue_smart_salon'].state : 'unavailable';
-                      var tvSalonStatus = states['light.hue_smart_tv_salon'] ? states['light.hue_smart_tv_salon'].state : 'unavailable';
-                      var pcBureauStatus = states['switch.hue_smart_eco_pc_bureau'] ? states['switch.hue_smart_eco_pc_bureau'].state : 'unavailable';
-                      var tvChambreStatus = states['light.hue_smart_tv_chambre'] ? states['light.hue_smart_tv_chambre'].state : 'unavailable';
-                      var teteDeLitStatus = states['switch.prise_tete_de_lit_chambre'] ? states['switch.prise_tete_de_lit_chambre'].state : 'unavailable';
+                      function getStatusText(status) {
+                        if (status === 'N/A') return 'N/A';
+                        return status === 'on' ? 'Allumé' : 'Éteint';
+                      }
+
+                      var horlogeStatus = safeState('switch.prise_horloge_ikea');
+                      var salonStatus = safeState('light.hue_smart_salon');
+                      var tvSalonStatus = safeState('light.hue_smart_tv_salon');
+                      var pcBureauStatus = safeState('switch.hue_smart_eco_pc_bureau');
+                      var tvChambreStatus = safeState('light.hue_smart_tv_chambre');
+                      var teteDeLitStatus = safeState('switch.prise_tete_de_lit_chambre');
 
                       return `
                       <div>
@@ -2523,7 +2597,7 @@ views:
                     - margin-top: 4.5px
                   custom_fields:
                     titre:
-                      - grid-area: title
+                      - grid-area: titre
                       - justify-self: center
                       - text-align: center
                       - font-weight: bold
@@ -2566,35 +2640,53 @@ views:
                     ]]]
                   fenetres: |
                     [[[
-                      function getColorForFenetreStatus(FenetreStatus) {
-                        if (FenetreStatus === 'on') { return '<span style="color: rgb(244,67,54);">Ouvert</span>'; }
-                        if (FenetreStatus === 'off') { return '<span style="color: lightgreen;">Fermé</span>'; }
-                        return '<span style="color: purple;">Erreur</span>';
+                      function getColorForFenetreStatus(entityId) {
+                        const state = states[entityId]?.state;
+
+                        if (state === 'on') { return '<span style="color: rgb(244,67,54);">Ouvert</span>'; }
+                        if (state === 'off') { return '<span style="color: lightgreen;">Fermé</span>'; }
+                        
+                        // N/A en gris si erreur ou inconnu
+                        return '<span style="color: #aaaaaa;">N/A</span>';
                       }
-                      var salonFenetreStatus = getColorForFenetreStatus(states['binary_sensor.contact_fenetre_salon_ikea_contact']?.state || 'off');
-                      var cuisineFenetreStatus = getColorForFenetreStatus(states['binary_sensor.contact_fenetre_cuisine_ikea_contact']?.state || 'off');
-                      var bureauFenetreStatus = getColorForFenetreStatus(states['binary_sensor.contact_fenetre_bureau_ikea_contact']?.state || 'off');
-                      var chambreFenetreStatus = getColorForFenetreStatus(states['binary_sensor.contact_fenetre_chambre_ikea_contact']?.state || 'off');
+
+                      var salon = getColorForFenetreStatus('binary_sensor.contact_fenetre_salon_ikea_contact');
+                      var cuisine = getColorForFenetreStatus('binary_sensor.contact_fenetre_cuisine_ikea_contact');
+                      var bureau = getColorForFenetreStatus('binary_sensor.contact_fenetre_bureau_ikea_contact');
+                      var chambre = getColorForFenetreStatus('binary_sensor.contact_fenetre_chambre_ikea_contact');
+
                       return `
                       <div>
-                        <div>${salonFenetreStatus}</div>
-                        <div>${cuisineFenetreStatus}</div>
-                        <div>${bureauFenetreStatus}</div>
-                        <div>${chambreFenetreStatus}</div>
+                        <div>${salon}</div>
+                        <div>${cuisine}</div>
+                        <div>${bureau}</div>
+                        <div>${chambre}</div>
                       </div>
                       `;
                     ]]]
                   stores: |
                     [[[
                       function getStoreStatus(entityId) {
-                        var state = states[entityId]?.state;
-                        if (state === undefined) return '-';
+                        const entity = states[entityId];
+
+                        // REMIS COMME AVANT : Si l'entité n'existe pas (Cuisine/Chambre), on retourne un tiret
+                        if (!entity) return '-';
+                        
+                        const state = entity.state;
+
+                        // Si l'entité existe mais est en erreur, on retourne N/A en gris
+                        if (state === 'unavailable' || state === 'unknown' || state === 'N/A') {
+                          return '<span style="color: #aaaaaa;">N/A</span>';
+                        }
+                        
                         return state;
                       }
+
                       var salonStoreStatus = getStoreStatus('sensor.store_salon_status');
                       var cuisineStoreStatus = getStoreStatus('sensor.store_cuisine_status');
                       var bureauStoreStatus = getStoreStatus('sensor.store_bureau_status');
                       var chambreStoreStatus = getStoreStatus('sensor.store_chambre_status'); 
+                      
                       return `
                       <div>
                         <div>${salonStoreStatus}</div>
@@ -2700,7 +2792,9 @@ views:
                       - justify-self: start
                       - '--text-color-sensor': |
                           [[[
-                            let val = states["sensor.system_monitor_utilisation_du_processeur"].state;
+                            const stateObj = states["sensor.system_monitor_utilisation_du_processeur"];
+                            if (!stateObj || stateObj.state === 'unavailable' || stateObj.state === 'unknown') return '#aaaaaa';
+                            let val = parseFloat(stateObj.state);
                             if (val < 75) return 'white';
                             if (val >= 75 && val < 90) return 'orange';
                             else return 'rgb(244,67,54)';
@@ -2711,7 +2805,9 @@ views:
                       - justify-self: start
                       - '--text-color-sensor': |
                           [[[
-                            let val = states["sensor.prise_mini_pc_ikea_power"].state;
+                            const stateObj = states["sensor.prise_mini_pc_ikea_power"];
+                            if (!stateObj || stateObj.state === 'unavailable' || stateObj.state === 'unknown') return '#aaaaaa';
+                            let val = parseFloat(stateObj.state);
                             if (val < 15) return 'white';
                             if (val >= 15 && val < 19) return 'orange';
                             else return 'rgb(244,67,54)';
@@ -2722,7 +2818,9 @@ views:
                       - justify-self: start
                       - '--text-color-sensor': |
                           [[[
-                            let val = states["sensor.system_monitor_utilisation_de_la_memoire"].state;
+                            const stateObj = states["sensor.system_monitor_utilisation_de_la_memoire"];
+                            if (!stateObj || stateObj.state === 'unavailable' || stateObj.state === 'unknown') return '#aaaaaa';
+                            let val = parseFloat(stateObj.state);
                             if (val < 75) return 'white';
                             if (val >= 75 && val < 90) return 'orange';
                             else return 'rgb(244,67,54)';
@@ -2733,7 +2831,9 @@ views:
                       - justify-self: start
                       - '--text-color-sensor': |
                           [[[
-                            let val = states["sensor.system_monitor_utilisation_du_disque"].state;
+                            const stateObj = states["sensor.system_monitor_utilisation_du_disque"];
+                            if (!stateObj || stateObj.state === 'unavailable' || stateObj.state === 'unknown') return '#aaaaaa';
+                            let val = parseFloat(stateObj.state);
                             if (val < 75) return 'white';
                             if (val >= 75 && val < 90) return 'orange';
                             else return 'rgb(244,67,54)';
@@ -2745,19 +2845,27 @@ views:
                     ]]]
                   cpu: |
                     [[[
-                      return `<ha-icon icon="mdi:server" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${states['sensor.system_monitor_utilisation_du_processeur'].state}%</span></span>`
+                      const stateObj = states['sensor.system_monitor_utilisation_du_processeur'];
+                      const val = (stateObj && stateObj.state !== 'unavailable' && stateObj.state !== 'unknown') ? stateObj.state + '%' : 'N/A';
+                      return `<ha-icon icon="mdi:server" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${val}</span></span>`
                     ]]]
                   conso: |
                     [[[
-                      return `<ha-icon icon="mdi:lightning-bolt-outline" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>Power: <span style="color: var(--text-color-sensor);">${states['sensor.prise_mini_pc_ikea_power'].state}W</span></span>`
+                      const stateObj = states['sensor.prise_mini_pc_ikea_power'];
+                      const val = (stateObj && stateObj.state !== 'unavailable' && stateObj.state !== 'unknown') ? stateObj.state + 'W' : 'N/A';
+                      return `<ha-icon icon="mdi:lightning-bolt-outline" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>Power: <span style="color: var(--text-color-sensor);">${val}</span></span>`
                     ]]]
                   ram: |
                     [[[
-                      return `<ha-icon icon="mdi:memory" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${states['sensor.system_monitor_utilisation_de_la_memoire'].state}%</span></span>`
+                      const stateObj = states['sensor.system_monitor_utilisation_de_la_memoire'];
+                      const val = (stateObj && stateObj.state !== 'unavailable' && stateObj.state !== 'unknown') ? stateObj.state + '%' : 'N/A';
+                      return `<ha-icon icon="mdi:memory" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${val}</span></span>`
                     ]]]
                   sd: |
                     [[[
-                      return `<ha-icon icon="mdi:harddisk" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.system_monitor_utilisation_du_disque'].state}%</span></span>`
+                      const stateObj = states['sensor.system_monitor_utilisation_du_disque'];
+                      const val = (stateObj && stateObj.state !== 'unavailable' && stateObj.state !== 'unknown') ? stateObj.state + '%' : 'N/A';
+                      return `<ha-icon icon="mdi:harddisk" style="width: 15px; height: 15px; color: rgb(70, 175, 75);"></ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${val}</span></span>`
                     ]]]
               - type: custom:button-card
                 entity: sensor.available_updates
@@ -3090,11 +3198,11 @@ views:
                       - justify-self: center
                       - text-align: center
                       - font-weight: bold
-                      - margin-top: '-3px'
+                      - margin-top: 3px
                     nom:
                       - grid-area: nom
                       - justify-self: start
-                      - margin-left: 8px
+                      - margin-left: 4px
                       - text-align: left
                     batterie:
                       - grid-area: batterie
@@ -3105,7 +3213,7 @@ views:
                       - justify-self: end
                       - margin-right: 8px
                       - text-align: right
-                      - margin-top: 6px
+                      - margin-top: 0px
                 custom_fields:
                   titre: |
                     [[[
@@ -3115,10 +3223,11 @@ views:
                     [[[
                       return `
                       <div>
-                        <div>POCOX7</div>
+                        <div>POCO_E</div>
+                        <div>POCO_G</div>
+                        <div>1+10P_E</div>
+                        <div>1+10P_G</div>
                         <div>GM1901</div>
-                        <div>Mamour</div>
-                        <div>NE2213</div>
                         <div>SM-A53</div>
                         <div>Tablette</div>
                       </div>
@@ -3127,7 +3236,6 @@ views:
                   batterie: |
                     [[[
                       function getColorForBatteryLevel(batteryLevel) {
-                        // Sécurisation des valeurs
                         const lvl = Number(batteryLevel);
                         if (Number.isNaN(lvl)) return 'gray';
                         if (lvl >= 80) return 'lightgreen';
@@ -3148,19 +3256,21 @@ views:
                         }
                       
 
-                      const pocox7proStatus   = getDeviceStatus('sensor.poco_x7_pro_battery_level');
+                      const pocox7_e_Status   = getDeviceStatus('sensor.poco_x7_pro_battery_level');
+                      const pocox7_g_Status   = getDeviceStatus('sensor.poco_x7_pro_mamour_battery_level');
+                      const ne2213_e_Status   = getDeviceStatus('sensor.ne2213_eric_battery_level');
+                      const ne2213_g_Status   = getDeviceStatus('sensor.ne2213_mamour_battery_level');
                       const gm1901Status      = getDeviceStatus('sensor.gm1901_battery_level');
-                      const ne2213MamourStatus= getDeviceStatus('sensor.ne2213_mamour_battery_level');
-                      const ne2213Status      = getDeviceStatus('sensor.ne2213_battery_level');
                       const smA530FStatus     = getDeviceStatus('sensor.sm_a530f_battery_level');
                       const tabletteStatus    = getDeviceStatus('sensor.tablette_battery_level');
 
                       return `
                       <div>
-                        <div>${pocox7proStatus}</div>
+                        <div>${pocox7_e_Status}</div>
+                        <div>${pocox7_g_Status}</div>
+                        <div>${ne2213_e_Status}</div>
+                        <div>${ne2213_g_Status}</div>
                         <div>${gm1901Status}</div>
-                        <div>${ne2213MamourStatus}</div>
-                        <div>${ne2213Status}</div>
                         <div>${smA530FStatus}</div>
                         <div>${tabletteStatus}</div>
                       </div>
@@ -3178,19 +3288,21 @@ views:
                         if (state === 'full')               return 'Full';
                         return state;
                       }
-                      const pocox7proBatteryState    = getBatteryStateIcon('sensor.poco_x7_pro_battery_state');
+                      const pocox7_e_BatteryState    = getBatteryStateIcon('sensor.poco_x7_pro_battery_state');
+                      const pocox7_g_BatteryState    = getBatteryStateIcon('sensor.poco_x7_pro_mamour_battery_state');
+                      const ne2213_e_BatteryState    = getBatteryStateIcon('sensor.ne2213_eric_battery_state');
+                      const ne2213_g_BatteryState    = getBatteryStateIcon('sensor.ne2213_mamour_battery_state');
                       const gm1901BatteryState       = getBatteryStateIcon('sensor.gm1901_battery_state');
-                      const ne2213MamourBatteryState = getBatteryStateIcon('sensor.ne2213_mamour_battery_state');
-                      const ne2213BatteryState       = getBatteryStateIcon('sensor.ne2213_battery_state');
                       const smA530FBatteryState      = getBatteryStateIcon('sensor.sm_a530f_battery_state');
                       const tabletteBatteryState     = getBatteryStateIcon('sensor.tablette_battery_state');
 
                       return `
                       <div>
-                        <div>${pocox7proBatteryState}</div>
+                        <div>${pocox7_e_BatteryState}</div>
+                        <div>${pocox7_g_BatteryState}</div>
+                        <div>${ne2213_e_BatteryState}</div>
+                        <div>${ne2213_g_BatteryState}</div>
                         <div>${gm1901BatteryState}</div>
-                        <div>${ne2213MamourBatteryState}</div>
-                        <div>${ne2213BatteryState}</div>
                         <div>${smA530FBatteryState}</div>
                         <div>${tabletteBatteryState}</div>
                       </div>
@@ -7947,13 +8059,6 @@ views:
           - type: horizontal-stack
             cards:
               - type: custom:vertical-stack-in-card
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: none !important;
-                      box-shadow: none !important;
-                      border: none !important;
-                    }
                 cards:
                   - type: custom:mushroom-template-card
                     entity: sensor.th_balcon_nord_temperature
@@ -7968,7 +8073,14 @@ views:
                       {% else %}
                         mdi:arrow-right-thick
                       {% endif %}
-                    icon_color: >
+                    primary: ''
+                    secondary: '{{ states(''sensor.th_balcon_nord_temperature'') }}°C'
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#tcourbe'
+                    hold_action:
+                      action: none
+                    color: >
                       {% if is_state('sensor.th_balcon_nord_temperature_trend',
                       'increasing') %}
                         red
@@ -7979,13 +8091,7 @@ views:
                       {% else %}
                         #df6366
                       {% endif %}
-                    primary: ''
-                    secondary: '{{ states(''sensor.th_balcon_nord_temperature'') }}°C'
-                    layout: horizontal
-                    tap_action:
-                      action: none
-                    hold_action:
-                      action: none
+                    features_position: bottom
                     card_mod:
                       style: |
                         ha-card {
@@ -8038,6 +8144,7 @@ views:
                       state: false
                       legend: false
                       fill: fade
+                      points: false
                     card_mod:
                       style: |
                         ha-card {
@@ -8045,6 +8152,13 @@ views:
                           box-shadow: none !important;
                           border: none !important;
                         }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                    }
               - type: custom:vertical-stack-in-card
                 cards:
                   - type: custom:mushroom-template-card
@@ -8059,21 +8173,22 @@ views:
                       {% else %}
                         mdi:arrow-right-thick
                       {% endif %}
-                    icon_color: >
+                    icon_color: |
                       {% if is_state('sensor.th_balcon_nord_humidity_trend',
-                      'increasing') %}
-                        blue
-                      {% elif is_state('sensor.th_balcon_nord_humidity_trend',
-                      'decreasing') %}
-                        #ADD8E6
-                      {% else %}
-                        #00CED1
-                      {% endif %}
+                          'increasing') %}
+                            blue
+                          {% elif is_state('sensor.th_balcon_nord_humidity_trend',
+                          'decreasing') %}
+                            #ADD8E6
+                          {% else %}
+                            #00CED1
+                          {% endif %}
                     primary: ''
                     secondary: '{{ states(''sensor.th_balcon_nord_humidity'') }}%'
                     layout: horizontal
                     tap_action:
-                      action: none
+                      action: navigate
+                      navigation_path: '#hcourbe'
                     hold_action:
                       action: none
                     card_mod:
@@ -8129,6 +8244,7 @@ views:
                       state: false
                       legend: false
                       fill: fade
+                      points: false
                     card_mod:
                       style: |
                         ha-card {
@@ -9029,6 +9145,276 @@ views:
                 variables:
                   entity: sensor.th_chambre_temperature
                   card_title: Carte des T° de la CHAMBRE
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#tcourbe'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: Tendance (T°)
+                icon: mdi:thermometer-check
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: horizontal-stack
+                cards:
+                  - type: custom:vertical-stack-in-card
+                    cards:
+                      - type: custom:mushroom-template-card
+                        entity: sensor.th_balcon_nord_temperature
+                        icon: >
+                          {% if
+                          is_state('sensor.th_balcon_nord_temperature_trend',
+                          'increasing') %}
+                            mdi:arrow-top-right-thick
+                          {% elif
+                          is_state('sensor.th_balcon_nord_temperature_trend',
+                          'decreasing') %}
+                            mdi:arrow-bottom-right-thick
+                          {% else %}
+                            mdi:arrow-right-thick
+                          {% endif %}
+                        primary: ''
+                        secondary: '{{ states(''sensor.th_balcon_nord_temperature'') }}°C'
+                        tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        color: >
+                          {% if
+                          is_state('sensor.th_balcon_nord_temperature_trend',
+                          'increasing') %}
+                            red
+                          {% elif
+                          is_state('sensor.th_balcon_nord_temperature_trend',
+                          'decreasing') %}
+                            blue
+                          {% else %}
+                            #df6366
+                          {% endif %}
+                        features_position: bottom
+                        card_mod:
+                          style: |
+                            ha-card {
+                              background-color: transparent !important;
+                              border: none !important;
+                            }
+                            mushroom-state-info$: |
+                              .primary {
+                                font-size: 12px !important;
+                                color: lightgrey !important;
+                                position: relative;
+                                bottom: 5px;
+                                left: 5px;
+                                overflow: visible !important;
+                                white-space: normal !important;
+                              }
+                              .secondary {
+                                font-size: 19px !important;
+                                position: relative;
+                                overflow: visible !important;
+                                top: 0px;
+                                left: 5px;
+                              }
+                            mushroom-shape-icon$: |
+                              .shape {
+                                position: relative;
+                                left: 0px;
+                                top: 0px;
+                              }
+                            .: |
+                              :host {
+                                --mush-icon-size: 50px;
+                              }
+                      - type: custom:mini-graph-card
+                        entities:
+                          - entity: sensor.th_balcon_nord_temperature
+                            name: Température
+                            color: '#df6366'
+                        height: 300
+                        hours_to_show: 24
+                        decimals: 1
+                        points_per_hour: 1
+                        line_width: 2
+                        font_size: 85
+                        hour24: true
+                        animate: true
+                        show:
+                          labels: true
+                          name: false
+                          icon: false
+                          state: true
+                          legend: true
+                          extrema: true
+                          fill: fade
+                          points: true
+                          loading_indicator: false
+                        card_mod:
+                          style: |
+                            ha-card {
+                              background: none !important;
+                              box-shadow: none !important;
+                              border: none !important;
+                            }
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: none !important;
+                          box-shadow: none !important;
+                          border: none !important;
+                        }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                      height: 300px;
+                      margin-left: auto;
+                      margin-right: auto;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#hcourbe'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: Tendance (Humitidée %)
+                icon: mdi:water-check
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: horizontal-stack
+                cards:
+                  - type: custom:vertical-stack-in-card
+                    cards:
+                      - type: custom:mushroom-template-card
+                        entity: sensor.th_balcon_nord_humidity
+                        icon: >
+                          {% if is_state('sensor.th_balcon_nord_humidity_trend',
+                          'increasing') %}
+                            mdi:arrow-top-right-thick
+                          {% elif
+                          is_state('sensor.th_balcon_nord_humidity_trend',
+                          'decreasing') %}
+                            mdi:arrow-bottom-right-thick
+                          {% else %}
+                            mdi:arrow-right-thick
+                          {% endif %}
+                        primary: ''
+                        secondary: '{{ states(''sensor.th_balcon_nord_humidity'') }}°C'
+                        tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        color: >
+                          {% if is_state('sensor.th_balcon_nord_humidity_trend',
+                          'increasing') %}
+                            blue
+                          {% elif
+                          is_state('sensor.th_balcon_nord_humidity_trend',
+                          'decreasing') %}
+                            #ADD8E6
+                          {% else %}
+                            #00CED1
+                          {% endif %}
+                        features_position: bottom
+                        card_mod:
+                          style: |
+                            ha-card {
+                              background-color: transparent !important;
+                              border: none !important;
+                            }
+                            mushroom-state-info$: |
+                              .primary {
+                                font-size: 12px !important;
+                                color: lightgrey !important;
+                                position: relative;
+                                bottom: 5px;
+                                left: 5px;
+                                overflow: visible !important;
+                                white-space: normal !important;
+                              }
+                              .secondary {
+                                font-size: 19px !important;
+                                position: relative;
+                                overflow: visible !important;
+                                top: 0px;
+                                left: 5px;
+                              }
+                            mushroom-shape-icon$: |
+                              .shape {
+                                position: relative;
+                                left: 0px;
+                                top: 0px;
+                              }
+                            .: |
+                              :host {
+                                --mush-icon-size: 50px;
+                              }
+                      - type: custom:mini-graph-card
+                        entities:
+                          - entity: sensor.th_balcon_nord_humidity
+                            name: Température
+                            color: '#00CED1'
+                        height: 300
+                        hours_to_show: 24
+                        decimals: 1
+                        points_per_hour: 1
+                        line_width: 2
+                        font_size: 85
+                        hour24: true
+                        animate: true
+                        show:
+                          labels: true
+                          name: false
+                          icon: false
+                          state: true
+                          legend: true
+                          extrema: true
+                          fill: fade
+                          points: true
+                          loading_indicator: false
+                        card_mod:
+                          style: |
+                            ha-card {
+                              background: none !important;
+                              box-shadow: none !important;
+                              border: none !important;
+                            }
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: none !important;
+                          box-shadow: none !important;
+                          border: none !important;
+                        }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                      height: 300px;
+                      margin-left: auto;
+                      margin-right: auto;
+                    }
     cards: []
   - type: sections
     path: clim
@@ -9516,6 +9902,8 @@ views:
                 entity: switch.radiateur_elec_cuisine
                 color: state
                 icon: mdi:power
+                tap_action:
+                  action: toggle
               - type: entity
                 show_state: true
                 show_icon: true
@@ -9849,6 +10237,20 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
+                entity: switch.schedule_soufflant_salle_de_bain_week
+                name: Sem.
+                color: state
+                state_content: name
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: switch.schedule_soufflant_salle_de_bain_week_end
+                name: Week-End
+                color: state
+                state_content: name
+              - type: entity
+                show_state: true
+                show_icon: true
                 entity: sensor.prise_radiateur_salle_de_bain_nous_power
                 color: amber
               - type: entity
@@ -9864,112 +10266,23 @@ views:
               grid_rows: 1
             tap_action:
               action: navigate
-              navigation_path: /dashboard-tablette/prog-clim-chambre
-          - type: vertical-stack
-            cards:
-              - type: custom:ring-tile
-                name: Salle de Bain
-                entity: sensor.th_salle_de_bain_temperature
-                ring_entity: sensor.th_salle_de_bain_humidity
-                ring_type: open
-                ring_size: 5
-                scale: ticks_with_labels
-                top_element: icon
-                middle_element: value_with_unit
-                bottom_element: name
-                colorize_icon: true
-                indicator: dot
-                marker2: sensor.th_salle_de_bain_temperature
-                marker2_colour: '#FFA500'
-                min: 0
-                max: 100
-                colour:
-                  '0': '#00FF00'
-                  '50': '#00FF00'
-                  '55': '#FFA500'
-                  '60': '#FFA500'
-                  '75': '#F44336'
-                card_mod:
-                  style: |
-                    ha-card {
-                      margin-top: -30px;
-                      background: none !important;
-                      border: none !important;
-                      box-shadow: none !important;
-                    }
-            grid_options:
-              columns: full
-              rows: 4
-          - type: custom:mushroom-template-card
-            entity: input_boolean.inter_radiateur_salle_de_bain
-            primary: Radiateur Salle de Bain
-            secondary: >
-              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
-              'on') %}
-                Activé
-              {% else %}
-                Désactivé
-              {% endif %}
-            icon: >
-              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
-              'on') %}
-                mdi:radiator
-              {% else %}
-                mdi:radiator-disabled
-              {% endif %}
-            badge_icon: >
-              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
-              'on') %}
-                mdi:power
-              {% else %}
-                mdi:power-off
-              {% endif %}
-            badge_color: >
-              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
-              'on') %}
-                orange
-              {% else %}
-                grey
-              {% endif %}
-            tap_action:
-              action: toggle
-            grid_options:
-              columns: 12
-              rows: 1
-            color: >
-              {% if is_state('input_boolean.inter_radiateur_salle_de_bain',
-              'on') %}
-                orange
-              {% else %}
-                grey
-              {% endif %}
-            features_position: bottom
+              navigation_path: /dashboard-tablette/prog-soufflant-sdb
+          - type: thermostat
+            entity: climate.soufflant_salle_de_bain
+            features:
+              - style: icons
+                type: climate-hvac-modes
+                hvac_modes:
+                  - 'off'
+                  - heat
+            show_current_as_primary: false
             card_mod:
-              style:
-                mushroom-state-info$: |
-                  .primary {
-                    position: relative;
-                    top: -5px;
-                    left: 10px;
-                    font-size: 20px !important;
-                    font-weight: bold;
-                  }
-                  .secondary {
-                    position: relative;
-                    top: 5px;
-                    left: 10px;
-                    font-size: 12px !important;
-                  }
-                .: |
-                  :host {
-                    --mush-icon-size: 60px;
-                  }
-                style: |
-                  ha-card {
-                    margin-top: -10px;
-                    border: 1px solid {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %} orange {% else %} grey {% endif %};
-                    background-color: {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %} rgba(255, 140, 0, 0.1) {% else %} transparent {% endif %};
-                  }
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: vertical-stack
             cards:
               - type: custom:auto-entities
@@ -10252,10 +10565,20 @@ views:
       - type: grid
         cards:
           - type: heading
-            icon: mdi:sun-snowflake
+            icon: mdi:sofa
             heading: CLIM. DU SALON
             heading_style: title
-            badges: []
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.th_salon_temperature
+                name:
+                  type: area
+                color: green
+                state_content:
+                  - name
+                  - state
             tap_action:
               action: navigate
               navigation_path: /dashboard-tablette/clim
@@ -10488,10 +10811,20 @@ views:
       - type: grid
         cards:
           - type: heading
-            icon: mdi:sun-thermometer-outline
+            icon: mdi:fridge
             heading: RADIATEUR CUISINE
             heading_style: title
-            badges: []
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.th_cuisine_temperature
+                name:
+                  type: area
+                color: green
+                state_content:
+                  - name
+                  - state
             tap_action:
               action: navigate
               navigation_path: /dashboard-tablette/clim
@@ -10744,10 +11077,20 @@ views:
       - type: grid
         cards:
           - type: heading
-            icon: mdi:sun-snowflake
+            icon: mdi:desktop-tower-monitor
             heading: CLIM. DU BUREAU
             heading_style: title
-            badges: []
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.th_bureau_temperature
+                name:
+                  type: area
+                color: green
+                state_content:
+                  - name
+                  - state
             tap_action:
               action: navigate
               navigation_path: /dashboard-tablette/clim
@@ -10977,6 +11320,256 @@ views:
         column_span: 2
     cards: []
   - type: sections
+    max_columns: 4
+    title: prog soufflant sdb
+    path: prog-soufflant-sdb
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            icon: mdi:bathtub
+            heading: Soufflant Salle de Bain
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.th_salle_de_bain_temperature
+                name:
+                  type: area
+                color: green
+                state_content:
+                  - name
+                  - state
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-tablette/clim
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+          - card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                  margin: 0;
+                  padding: 0;
+                }
+            clock_size: large
+            time_zone: Europe/Paris
+            time_format: '24'
+            show_seconds: true
+            type: clock
+            grid_options:
+              columns: full
+              rows: 2
+          - include:
+              - climate.soufflant_salle_de_bain
+            exclude: []
+            discover_existing: true
+            title: Planificateur Soufflant Salle de Bain
+            show_header_toggle: true
+            display_options:
+              primary_info: default
+              secondary_info:
+                - relative-time
+                - days
+                - time
+                - additional-tasks
+            sort_by:
+              - state
+              - relative-time
+            customize: {}
+            tags:
+              - Jours de la semaine
+              - Week-End
+            exclude_tags: []
+            type: custom:scheduler-card
+            grid_options:
+              columns: 24
+              rows: auto
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                  margin: 0;
+                  padding: 0;
+                }
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >
+                  # Soufflant SdB Semaine
+
+                  **Jours de la semaine :** {{
+                  state_attr('switch.schedule_soufflant_salle_de_bain_week',
+                  'weekdays') | join(', ') }}
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      margin: 0;
+                      padding: 0;
+                    }
+              - type: entities
+                entities:
+                  - entity: switch.schedule_soufflant_salle_de_bain_week
+                    name: Programmation Soufflant SdB Semaine
+                state_color: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      margin: 0;
+                      padding: 0;
+                    }
+              - type: markdown
+                content: >
+                  {% set entity_id =
+                  'switch.schedule_soufflant_salle_de_bain_week' %} {% set
+                  timeslots = state_attr(entity_id, 'timeslots') %} {% set
+                  actions = state_attr(entity_id, 'actions') %}
+
+                  **Créneaux horaires et actions :** {% for i in range(timeslots
+                  | length) %}
+                    - **{{ timeslots[i] }}** -> {{ actions[i].data.temperature }}°C -> Mode: {{ actions[i].data.hvac_mode }}
+                  {% endfor %}
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      margin: 0;
+                      padding: 0;
+                    }
+              - type: markdown
+                content: >
+                  {% set entity_id =
+                  'switch.schedule_soufflant_salle_de_bain_week' %} {% set
+                  current_slot = state_attr(entity_id, 'current_slot') %} {% set
+                  next_slot = state_attr(entity_id, 'next_slot') %} {% set
+                  next_trigger = state_attr(entity_id, 'next_trigger') %} {% set
+                  timeslots = state_attr(entity_id, 'timeslots') %} {% set
+                  actions = state_attr(entity_id, 'actions') %}
+
+                  **Créneau actuel :** {% if current_slot is not none %} {{
+                  timeslots[current_slot] }} -> {{
+                  actions[current_slot].data.temperature }}°C -> Mode: {{
+                  actions[current_slot].data.hvac_mode }} {% else %} Non défini
+                  {% endif %}
+
+                  <br> **Prochain créneau :** {% if next_slot is not none %} {{
+                  timeslots[next_slot] }} -> {{
+                  actions[next_slot].data.temperature }}°C -> Mode: {{
+                  actions[next_slot].data.hvac_mode }} {% else %} Non défini {%
+                  endif %}
+
+                  <br> **Prochain déclenchement :** {% if next_trigger is not
+                  none %} à {{ next_trigger | as_timestamp |
+                  timestamp_custom('%H:%M') }} {% else %} Non défini {% endif %}
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      margin: 0;
+                      padding: 0;
+                    }
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >
+                  # Soufflant SdB Week-End
+
+                  **Jours de la semaine :** {{
+                  state_attr('switch.schedule_soufflant_salle_de_bain_week_end',
+                  'weekdays') | join(', ') }}
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                    }
+              - type: entities
+                entities:
+                  - entity: switch.schedule_soufflant_salle_de_bain_week_end
+                    name: Programmation Souflant SdB Week-End
+                state_color: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      margin: 0;
+                      padding: 0;
+                    }   
+              - type: markdown
+                content: >
+                  {% set entity_id =
+                  'switch.schedule_soufflant_salle_de_bain_week_end' %} {% set
+                  timeslots = state_attr(entity_id, 'timeslots') %} {% set
+                  actions = state_attr(entity_id, 'actions') %}
+
+                  **Créneaux horaires et actions :** {% for i in range(timeslots
+                  | length) %}
+                    - **{{ timeslots[i] }}** -> {{ actions[i].data.temperature }}°C -> Mode: {{ actions[i].data.hvac_mode }}
+                  {% endfor %}
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                    }
+              - type: markdown
+                content: >
+                  {% set entity_id =
+                  'switch.schedule_soufflant_salle_de_bain_week_end' %} {% set
+                  current_slot = state_attr(entity_id, 'current_slot') %} {% set
+                  next_slot = state_attr(entity_id, 'next_slot') %} {% set
+                  next_trigger = state_attr(entity_id, 'next_trigger') %} {% set
+                  timeslots = state_attr(entity_id, 'timeslots') %} {% set
+                  actions = state_attr(entity_id, 'actions') %}
+
+                  <br><br><br> **Créneau actuel :** {% if current_slot is not
+                  none %} {{ timeslots[current_slot] }} -> {{
+                  actions[current_slot].data.temperature }}°C -> Mode: {{
+                  actions[current_slot].data.hvac_mode }} {% else %} Non défini
+                  {% endif %}
+
+                  <br> **Prochain créneau :** {% if next_slot is not none %} {{
+                  timeslots[next_slot] }} -> {{
+                  actions[next_slot].data.temperature }}°C -> Mode: {{
+                  actions[next_slot].data.hvac_mode }} {% else %} Non défini {%
+                  endif %}
+
+                  <br> **Prochain déclenchement :** {% if next_trigger is not
+                  none %} le {{ next_trigger | as_timestamp |
+                  timestamp_custom('%d/%m/%y') }} à {{ next_trigger |
+                  as_timestamp | timestamp_custom('%H:%M') }} {% else %} Non
+                  défini {% endif %}
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
+                      margin: 0;
+                      padding: 0;
+                    }
+        column_span: 2
+  - type: sections
     max_columns: 2
     title: prog clim chambre
     path: prog-clim-chambre
@@ -10984,10 +11577,20 @@ views:
       - type: grid
         cards:
           - type: heading
-            icon: mdi:sun-snowflake
+            icon: mdi:bed
             heading: CLIM. DE LA CHAMBRE
             heading_style: title
-            badges: []
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.th_chambre_temperature
+                name:
+                  type: area
+                color: green
+                state_content:
+                  - name
+                  - state
             tap_action:
               action: navigate
               navigation_path: /dashboard-tablette/clim
@@ -14417,8 +15020,55 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
+                entity: climate.soufflant_salle_de_bain
+                icon: mdi:power
+                color: state
+                tap_action:
+                  action: more-info
+                state_content:
+                  - name
+                  - temperature
+                name: Réglé à
+              - type: entity
+                show_state: true
+                show_icon: true
                 entity: sensor.th_salle_de_bain_temperature
                 color: green
+                state_content:
+                  - name
+                  - state
+                name:
+                  type: area
+          - type: custom:bubble-card
+            card_type: climate
+            entity: climate.soufflant_salle_de_bain
+            sub_button:
+              - name: HVAC modes menu
+                select_attribute: hvac_modes
+                state_background: false
+                show_arrow: true
+                show_background: true
+                show_attribute: false
+                entity: climate.soufflant_salle_de_bain
+            icon: mdi:heat-wave
+            scrolling_effect: false
+            show_icon: true
+            force_icon: false
+            show_name: true
+            show_state: true
+            show_attribute: true
+            name: Soufflant de la Salle de Bain
+            styles: |
+              ha-card {
+                --bubble-state-climate-heat-color: #ff6100;
+              }
+            step: 1
+            hide_temperature: false
+            state_color: false
+            min_temp: 21
+            max_temp: 23
+            show_last_changed: false
+            show_last_updated: false
           - type: custom:streamline-card
             template: clim_voltage_ring-tile
             variables:
@@ -16071,69 +16721,40 @@ views:
               grid_columns: full
               grid_rows: 1
             heading: Xiaomi POCO X7 Pro
-          - type: vertical-stack
-            cards:
-              - type: custom:streamline-card
-                template: portable
-                variables:
-                  entity: sensor.poco_x7_pro_battery_level
-          - type: entities
-            entities:
+          - type: conditional
+            conditions:
               - entity: sensor.poco_x7_pro_battery_level
-              - entity: sensor.poco_x7_pro_battery_state
-                name: Battery state
-              - entity: sensor.poco_x7_pro_charger_type
-                name: Charger type
-                secondary_info: none
-              - entity: sensor.poco_x7_pro_battery_health
-              - entity: sensor.poco_x7_pro_battery_temperature
-              - entity: sensor.poco_x7_pro_network_type
-              - entity: sensor.poco_x7_pro_wi_fi_connection
-            state_color: true
-            show_header_toggle: true
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-          - type: heading
-            icon: mdi:cellphone-nfc
-            heading: Samsung A8 SM-A530F
-            heading_style: title
-            badges: []
-            tap_action:
-              action: navigate
-              navigation_path: /dashboard-tablette/0
-            layout_options:
-              grid_columns: full
-              grid_rows: 1
-          - type: vertical-stack
-            cards:
-              - type: custom:streamline-card
-                template: portable
-                variables:
-                  entity: sensor.sm_a530f_battery_level
-          - type: entities
-            entities:
-              - entity: sensor.sm_a530f_battery_level
-              - entity: sensor.sm_a530f_battery_state
-                name: Battery state
-              - entity: sensor.sm_a530f_charger_type
-                name: Charger type
-                secondary_info: none
-              - entity: sensor.sm_a530f_battery_health
-              - entity: sensor.sm_a530f_battery_temperature
-            state_color: true
-            show_header_toggle: true
-            card_mod:
-              style: |
-                ha-card {
-                  background: none !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                }
+                state_not: unavailable
+              - entity: sensor.poco_x7_pro_battery_level
+                state_not: unknown
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:streamline-card
+                  template: portable
+                  variables:
+                    entity: sensor.poco_x7_pro_battery_level
+                - type: entities
+                  entities:
+                    - entity: sensor.poco_x7_pro_battery_level
+                    - entity: sensor.poco_x7_pro_battery_state
+                      name: Battery state
+                    - entity: sensor.poco_x7_pro_charger_type
+                      name: Charger type
+                      secondary_info: none
+                    - entity: sensor.poco_x7_pro_battery_health
+                    - entity: sensor.poco_x7_pro_battery_temperature
+                    - entity: sensor.poco_x7_pro_network_type
+                    - entity: sensor.poco_x7_pro_wi_fi_connection
+                  state_color: true
+                  show_header_toggle: true
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: none !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                      }
           - type: heading
             icon: mdi:cellphone-nfc
             heading: Oneplus 10Pro NE2213 (E)
@@ -16145,11 +16766,45 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
-      - type: grid
-        cards:
+          - type: conditional
+            conditions:
+              - entity: sensor.ne2213_eric_battery_level
+                state_not: unavailable
+              - entity: sensor.ne2213_eric_battery_level
+                state_not: unknown
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:streamline-card
+                  template: portable
+                  variables:
+                    entity: sensor.ne2213_eric_battery_level
+                - type: entities
+                  entities:
+                    - entity: sensor.ne2213_eric_battery_level
+                    - entity: sensor.ne2213_eric_battery_state
+                      name: Battery state
+                    - entity: sensor.ne2213_eric_charger_type
+                      name: Charger type
+                      secondary_info: none
+                    - entity: sensor.ne2213_eric_battery_health
+                      name: Battery health
+                      secondary_info: none
+                    - entity: sensor.ne2213_eric_battery_temperature
+                    - entity: sensor.ne2213_eric_network_type
+                    - entity: sensor.ne2213_eric_wi_fi_connection
+                  state_color: true
+                  show_header_toggle: true
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: none !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                      }
           - type: heading
             icon: mdi:cellphone-nfc
-            heading: Oneplus 7 GM1901
+            heading: Samsung A8 SM-A530F
             heading_style: title
             badges: []
             tap_action:
@@ -16158,24 +16813,112 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
+          - type: conditional
+            conditions:
+              - entity: sensor.sm_a530f_battery_level
+                state_not: unavailable
+              - entity: sensor.sm_a530f_battery_level
+                state_not: unknown
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:streamline-card
+                  template: portable
+                  variables:
+                    entity: sensor.sm_a530f_battery_level
+                - type: entities
+                  entities:
+                    - entity: sensor.sm_a530f_battery_level
+                    - entity: sensor.sm_a530f_battery_state
+                      name: Battery state
+                    - entity: sensor.sm_a530f_charger_type
+                      name: Charger type
+                      secondary_info: none
+                    - entity: sensor.sm_a530f_battery_health
+                    - entity: sensor.sm_a530f_battery_temperature
+                  state_color: true
+                  show_header_toggle: true
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: none !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                      }
+          - type: heading
+            icon: mdi:cellphone-nfc
+            heading: Tablette
+            heading_style: title
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-tablette/0
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+          - type: conditional
+            conditions:
+              - entity: sensor.tablette_battery_level
+                state_not: unavailable
+              - entity: sensor.tablette_battery_level
+                state_not: unknown
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:streamline-card
+                  template: portable
+                  variables:
+                    entity: sensor.tablette_battery_level
+                - type: entities
+                  entities:
+                    - entity: sensor.tablette_battery_level
+                    - entity: sensor.tablette_battery_state
+                      name: Battery state
+                    - entity: sensor.tablette_charger_type
+                      name: Charger type
+                      secondary_info: none
+                    - entity: sensor.tablette_battery_health
+                    - entity: sensor.tablette_battery_temperature
+                  state_color: true
+                  show_header_toggle: true
+                  card_mod:
+                    style: |
+                      ha-card {
+                        background: none !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                      }
+      - type: grid
+        cards:
+          - type: heading
+            icon: mdi:cellphone-nfc
+            heading_style: title
+            badges: []
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-tablette/0
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+            heading: Xiaomi POCO X7 Pro Mamour
           - type: vertical-stack
             cards:
               - type: custom:streamline-card
                 template: portable
                 variables:
-                  entity: sensor.gm1901_battery_level
+                  entity: sensor.poco_x7_pro_mamour_battery_level
           - type: entities
             entities:
-              - entity: sensor.gm1901_battery_level
-              - entity: sensor.gm1901_battery_state
+              - entity: sensor.poco_x7_pro_mamour_battery_level
+              - entity: sensor.poco_x7_pro_mamour_battery_state
                 name: Battery state
-              - entity: sensor.gm1901_charger_type
+              - entity: sensor.poco_x7_pro_mamour_charger_type
                 name: Charger type
                 secondary_info: none
-              - entity: sensor.gm1901_battery_health
-              - entity: sensor.gm1901_battery_temperature
-              - entity: sensor.gm1901_network_type
-              - entity: sensor.gm1901_wi_fi_connection
+              - entity: sensor.poco_x7_pro_mamour_battery_health
+              - entity: sensor.poco_x7_pro_mamour_battery_temperature
+              - entity: sensor.poco_x7_pro_mamour_network_type
+              - entity: sensor.poco_x7_pro_mamour_wi_fi_connection
             state_color: true
             show_header_toggle: true
             card_mod:
@@ -16227,7 +16970,7 @@ views:
                 }
           - type: heading
             icon: mdi:cellphone-nfc
-            heading: Tablette
+            heading: Oneplus 7 GM1901
             heading_style: title
             badges: []
             tap_action:
@@ -16241,17 +16984,19 @@ views:
               - type: custom:streamline-card
                 template: portable
                 variables:
-                  entity: sensor.tablette_battery_level
+                  entity: sensor.gm1901_battery_level
           - type: entities
             entities:
-              - entity: sensor.tablette_battery_level
-              - entity: sensor.tablette_battery_state
+              - entity: sensor.gm1901_battery_level
+              - entity: sensor.gm1901_battery_state
                 name: Battery state
-              - entity: sensor.tablette_charger_type
+              - entity: sensor.gm1901_charger_type
                 name: Charger type
                 secondary_info: none
-              - entity: sensor.tablette_battery_health
-              - entity: sensor.tablette_battery_temperature
+              - entity: sensor.gm1901_battery_health
+              - entity: sensor.gm1901_battery_temperature
+              - entity: sensor.gm1901_network_type
+              - entity: sensor.gm1901_wi_fi_connection
             state_color: true
             show_header_toggle: true
             card_mod:
