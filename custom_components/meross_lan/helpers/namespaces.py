@@ -221,7 +221,9 @@ class NamespaceHandler:
                 {ns.key: _request_payload_type.value},
             )
 
-    def polling_request_add_channel(self, channel, extra: dict = {}, /):
+    def polling_request_add_channel(
+        self, channel, extra: "mt.MerossPayloadType" = {}, /
+    ):
         # Ensures the channel is set in polling request payload should
         # the ns need it. Also adjusts the estimated polling_response_size.
         polling_request_channels = self.polling_request_channels
@@ -608,10 +610,12 @@ class NamespaceHandler:
         is considered the maximum amount of time after which the poll 'has' to
         be done. If it hasn't elapsed then they're eventually packed
         with the outgoing ns_multiple (lazy polling).
-        This strategy also avoids polling when MQTT is active if the namespace
+        This strategy should also avoid polling when MQTT is active if the namespace
         supports PUSH or we have received at least one PUSH for it (lastpush).
         """
         device = self.device
+        """ TODO: re-enable this optimization after testing. It looks like our 'knowledge' of
+        PUSHed namespaces is not perfect yet and we're skipping needed polls (#607 #609).
         if (
             device._mqtt_active
             and self.polling_epoch_next
@@ -619,7 +623,7 @@ class NamespaceHandler:
         ):
             # on MQTT no need for updates since they're being PUSHed
             return
-
+        """
         if device._polling_epoch >= self.polling_epoch_next:
             if await device.async_request_smartpoll(self):
                 return

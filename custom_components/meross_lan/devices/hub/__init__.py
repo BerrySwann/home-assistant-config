@@ -34,9 +34,9 @@ if TYPE_CHECKING:
     from ...helpers.device import AsyncRequestFunc, DigestInitReturnType
     from ...helpers.entity import MLEntity
     from ...merossclient.cloudapi import SubDeviceInfoType
+    from ...merossclient.protocol import types as mt
     from ...merossclient.protocol.namespaces import Namespace
     from ...merossclient.protocol.types import sensor as mt_s
-    from ...merossclient.protocol import types as mt
     from .mts100 import Mts100Climate
 
     WELL_KNOWN_TYPE_MAP: Final[dict[str, Callable]]
@@ -107,6 +107,10 @@ class HubSubIdChannelMixin(MLEntity if TYPE_CHECKING else object):
     """
     Mixin implementation for protocol method 'SET' on hub entities/namespaces backed by a
     subId/channel indexing key pair (see legacy implementations like 'me.MEListChannelMixin').
+    TODO: migrate subdevice entities channel indexing (needs registry migration).
+    Right now we're fixing channel to 0 since hub subdevices seems to not discriminate channels.
+    Implementing full support for varying channels per subdevice would need some rework on subdevice
+    entities indexing (id and unique_id)and management.
     """
 
     if TYPE_CHECKING:
@@ -115,7 +119,6 @@ class HubSubIdChannelMixin(MLEntity if TYPE_CHECKING else object):
     # interface: MLEntity
     @override
     async def async_request_value(self, device_value, /):
-        """sends the actual request to the device. this is likely to be overloaded"""
         ns = self.ns
         return await self.manager.async_request_ack(
             ns.name,
@@ -123,8 +126,8 @@ class HubSubIdChannelMixin(MLEntity if TYPE_CHECKING else object):
             {
                 ns.key: [
                     {
-                        ns.key_channel: self.manager.id,  # subId
-                        mc.KEY_CHANNEL: self.channel,
+                        ns.key_channel: self.manager.subId,
+                        mc.KEY_CHANNEL: 0,
                         self.key_value: device_value,
                     }
                 ]
@@ -171,7 +174,6 @@ class HubSubIdDeviceCfgMixin(MLEntity if TYPE_CHECKING else object):
     # interface: MLEntity
     @override
     async def async_request_value(self, device_value, /):
-        """sends the actual request to the device. this is likely to be overloaded"""
         ns = self.ns
         return await self.manager.async_request_ack(
             ns.name,
@@ -179,8 +181,8 @@ class HubSubIdDeviceCfgMixin(MLEntity if TYPE_CHECKING else object):
             {
                 ns.key: [
                     {
-                        ns.key_channel: self.manager.id,  # subId
-                        mc.KEY_CHANNEL: self.channel,
+                        ns.key_channel: self.manager.subId,
+                        mc.KEY_CHANNEL: 0,
                         self.key_group: {
                             self.key_value: device_value,
                         },
@@ -451,12 +453,28 @@ class HubMixin(Device if TYPE_CHECKING else object):
                 self, ns, mc.MTS100_ALL_TYPESET, is_mts100, count
             )
 
-    def setup_simple_handler(self, ns: "Namespace", /):
-        try:
-            self.namespace_handlers[ns.name].polling_response_size_inc()
-        except KeyError:
-            if ns.name in self.descriptor.ability:
-                HubNamespaceHandler(self, ns)
+    def setup_simple_handlers(self, *nss: "Namespace"):
+        ability = self.descriptor.ability
+        for ns in nss:
+            try:
+                self.namespace_handlers[ns.name].polling_response_size_inc()
+            except KeyError:
+                if ns.name in ability:
+                    HubNamespaceHandler(self, ns)
+
+    def setup_subid_handlers(
+        self,
+        subdevice: "SubDevice",
+        *nss: "Namespace",
+        extra: "mt.MerossPayloadType" = {"channel": 0},
+    ):
+        ability = self.descriptor.ability
+        for ns in nss:
+            if ns.name not in ability:
+                continue
+            handler = self.get_handler(ns)
+            handler.register_parser(subdevice)
+            handler.polling_request_add_channel(subdevice.subId, extra)
 
     def _handle_Appliance_Digest_Hub(self, header: dict, payload: dict):
         self._parse_hub(payload[mc.KEY_HUB])
@@ -549,9 +567,9 @@ class SubDevice(NamespaceParser, BaseDevice):
         "async_request",
         "check_device_timezone",
         "hub",
+        "subId",
         "model",
         "p_digest",
-        "sub_device_info",
         "sensor_battery",
         "switch_togglex",
     )
@@ -564,10 +582,9 @@ class SubDevice(NamespaceParser, BaseDevice):
         self.check_device_timezone = hub.check_device_timezone
         # these properties are needed to be in place before base class init
         self.hub = hub
+        self.subId = id = p_digest[mc.KEY_ID]
         self.model = model
         self.p_digest = p_digest
-        self.sub_device_info = None
-        id = p_digest[mc.KEY_ID]
         super().__init__(
             id,
             api=hub.api,
@@ -586,12 +603,14 @@ class SubDevice(NamespaceParser, BaseDevice):
         # this is a generic toggle we'll setup in case the subdevice
         # 'advertises' it and no specialized implementation is in place
         self.switch_togglex: MLSwitch | None = None
-
-        hub.setup_simple_handler(mn_h.Appliance_Hub_Battery)
-        hub.setup_simple_handler(mn_h.Appliance_Hub_ToggleX)
-        hub.setup_simple_handler(mn_h.Appliance_Hub_SubDevice_Version)
+        hub.setup_simple_handlers(
+            mn_h.Appliance_Hub_Battery,
+            mn_h.Appliance_Hub_ToggleX,
+            mn_h.Appliance_Hub_SubDevice_Version,
+        )
         if model not in mc.MTS100_ALL_TYPESET:
             hub.setup_chunked_handler(mn_h.Appliance_Hub_Sensor_All, False, 8)
+        hub.setup_subid_handlers(self, mn_h.Appliance_Config_DeviceCfg)
         hub.remove_issue(mlc.ISSUE_HUB_SUBDEVICE_REMOVED, id)
 
     # interface: EntityManager
@@ -646,7 +665,6 @@ class SubDevice(NamespaceParser, BaseDevice):
         )
 
     def update_sub_device_info(self, sub_device_info: "SubDeviceInfoType"):
-        self.sub_device_info = sub_device_info
         name = sub_device_info.get(mc.KEY_SUBDEVICENAME) or self._get_internal_name()
         if name != self.device_registry_entry.name:
             self.api.device_registry.async_update_device(
@@ -808,6 +826,9 @@ class SubDevice(NamespaceParser, BaseDevice):
         if self.online:
             self.sensor_battery.update_native_value(p_battery[mc.KEY_VALUE])
 
+    def _parse_deviceCfg(self, p_devicecfg: "mt.HubSubIdPayload"):
+        pass
+
     def _parse_exception(self, p_exception: dict):
         """{"id": "00000000", "code": 5061}"""
         # TODO: code 5061 seems related to loss of connectivity between the hub
@@ -864,7 +885,7 @@ class MTS100SubDevice(SubDevice):
         self.climate = Mts100Climate(self)
         hub.setup_chunked_handler(mn_h.Appliance_Hub_Mts100_All, True, 8)
         hub.setup_chunked_handler(mn_h.Appliance_Hub_Mts100_ScheduleB, True, 4)
-        hub.setup_simple_handler(mn_h.Appliance_Hub_Mts100_Adjust)
+        hub.setup_simple_handlers(mn_h.Appliance_Hub_Mts100_Adjust)
 
     async def async_shutdown(self):
         await super().async_shutdown()
@@ -1111,7 +1132,7 @@ class MS100SubDevice(SubDevice):
             20,
             1,
         )
-        hub.setup_simple_handler(mn_h.Appliance_Hub_Sensor_Adjust)
+        hub.setup_simple_handlers(mn_h.Appliance_Hub_Sensor_Adjust)
 
     async def async_shutdown(self):
         await super().async_shutdown()
@@ -1167,7 +1188,6 @@ WELL_KNOWN_TYPE_MAP[mc.KEY_TEMPHUM] = MS100SubDevice
 
 class MS130SubDevice(SubDevice):
     __slots__ = (
-        "subId",
         "sensor_humidity",
         "sensor_light",
         "sensor_temperature",
@@ -1175,17 +1195,14 @@ class MS130SubDevice(SubDevice):
 
     def __init__(self, hub: HubMixin, p_digest: dict):
         super().__init__(hub, p_digest, mc.TYPE_MS130)
-        self.subId = self.id
         self.sensor_humidity = MLHumiditySensor(self, self.id)
         self.sensor_temperature = MLTemperatureSensor(self, self.id, device_scale=100)
         self.sensor_light = MLLightSensor(self, self.id)
-        ns = mn_h.Appliance_Control_Sensor_LatestX
-        if ns.name in hub.descriptor.ability:
-            handler = hub.get_handler(ns)
-            handler.register_parser(self)
-            handler.polling_request_add_channel(
-                self.subId, {"channel": 0, "data": ["light", "temp", "humi"]}
-            )
+        hub.setup_subid_handlers(
+            self,
+            mn_h.Appliance_Control_Sensor_LatestX,
+            extra={"channel": 0, "data": ["light", "temp", "humi"]},
+        )
 
     async def async_shutdown(self):
         await super().async_shutdown()
@@ -1332,7 +1349,7 @@ class MST100SubDevice(SubDevice):
             MLConfigNumber.__init__(
                 self,
                 manager,
-                0,
+                manager.id,
                 mc.KEY_DURATION,
                 MLConfigNumber.DEVICE_CLASS_DURATION,
                 name="Watering duration",
@@ -1348,7 +1365,7 @@ class MST100SubDevice(SubDevice):
             MLSwitch.__init__(
                 self,
                 manager,
-                0,
+                manager.id,
                 mc.KEY_ONOFF,
                 MLSwitch.DeviceClass.SWITCH,
                 name="Watering",
@@ -1366,7 +1383,6 @@ class MST100SubDevice(SubDevice):
                 self.update_onoff(False)
 
     if TYPE_CHECKING:
-        subId: str
         number_duration: WateringDurationNumber
         switch_water_onoff: OnOffSwitch
 
@@ -1390,22 +1406,15 @@ class MST100SubDevice(SubDevice):
             onoff: int  # 1: on, 2: off
 
     __slots__ = (
-        "subId",
         "number_duration",
         "switch_water_onoff",
     )
 
     def __init__(self, hub: HubMixin, p_digest: dict):
         SubDevice.__init__(self, hub, p_digest, mc.TYPE_MST100)
-        self.subId = self.id
         self.number_duration = MST100SubDevice.WateringDurationNumber(self)
         self.switch_water_onoff = MST100SubDevice.OnOffSwitch(self)
-        for ns in (mn_h.Appliance_Config_DeviceCfg, mn_h.Appliance_Control_Water):
-            if ns.name not in hub.descriptor.ability:
-                continue
-            handler = hub.get_handler(ns)
-            handler.register_parser(self)
-            handler.polling_request_add_channel(self.subId, {"channel": 0})
+        hub.setup_subid_handlers(self, mn_h.Appliance_Control_Water)
 
     async def async_shutdown(self):
         await SubDevice.async_shutdown(self)
