@@ -1,6 +1,6 @@
 - sensor:
-    - name: "Groupe Clim"
-      unique_id: groupe_clim
+    - name: "Groupe Clim OLD"
+      unique_id: groupe_clim_old
       state: >
         {% set ssid = "Freebox_GG" %}
         {% set mamour_ssid = states('sensor.poco_x7_pro_mamour_wi_fi_connection') | string %}
@@ -58,8 +58,8 @@
         {% endif %}
 
 - sensor:
-    - name: "Presence Clim"
-      unique_id: presence_clim
+    - name: "Presence Clim OLD"
+      unique_id: presence_clim_old
       state: >
         {% set ssid = "Freebox_GG" %}
         {% set mamour_ssid = states('sensor.poco_x7_pro_mamour_wi_fi_connection') | string %}

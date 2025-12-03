@@ -1,0 +1,66 @@
+- sensor:
+    - name: "Groupe Clim"
+      unique_id: groupe_clim
+      state: >
+        {# 1. Définition de la Cible #}
+        {% set target_ssid = "Freebox_GG" %}
+        
+        {# 2. Vérification Booléenne (Vrai ou Faux) #}
+        {% set mamour_is_home = states('sensor.poco_x7_pro_mamour_network_type') == 'wifi' 
+                                and states('sensor.poco_x7_pro_mamour_wi_fi_connection') == target_ssid %}
+        
+        {% set eric_is_home = states('sensor.poco_x7_pro_network_type') == 'wifi' 
+                              and states('sensor.poco_x7_pro_wi_fi_connection') == target_ssid %}
+
+        {# 3. Déduction du Groupe #}
+        {% if mamour_is_home and eric_is_home %}
+          groupe_4
+        {% elif eric_is_home %}
+          groupe_3
+        {% elif mamour_is_home %}
+          groupe_2
+        {% else %}
+          groupe_1
+        {% endif %}
+      icon: mdi:account-group
+
+- sensor:
+    - name: "Presence Clim"
+      unique_id: presence_clim
+      icon: mdi:cellphone-information
+      state: >
+        {# --- 1. CONFIGURATION --- #}
+        {% set target_ssid = "Freebox_GG" %}
+
+        {# --- 2. RÉCUPÉRATION DES DONNÉES (Mamour) --- #}
+        {% set m_net = states('sensor.poco_x7_pro_mamour_network_type') %}
+        {% set m_ssid = states('sensor.poco_x7_pro_mamour_wi_fi_connection') %}
+
+        {# --- 3. RÉCUPÉRATION DES DONNÉES (Eric) --- #}
+        {% set e_net = states('sensor.poco_x7_pro_network_type') %}
+        {% set e_ssid = states('sensor.poco_x7_pro_wi_fi_connection') %}
+
+        {# --- 4. CALCUL DU STATUT (Mamour) --- #}
+        {% if m_net == 'wifi' and m_ssid == target_ssid %}
+          {% set m_stat = "WIFI" %}
+        {% elif m_net == 'wifi' %}
+          {% set m_stat = "WIFI_!?" %}
+        {% else %}
+          {% set m_stat = "CELL" %}
+        {% endif %}
+
+        {# --- 5. CALCUL DU STATUT (Eric) --- #}
+        {% if e_net == 'wifi' and e_ssid == target_ssid %}
+          {% set e_stat = "WIFI" %}
+        {% elif e_net == 'wifi' %}
+          {% set e_stat = "WIFI_!?" %}
+        {% else %}
+          {% set e_stat = "CELL" %}
+        {% endif %}
+
+        {# --- 6. AFFICHAGE FINAL --- #}
+        {% if m_stat == e_stat %}
+          [2] en [{{ m_stat }}]
+        {% else %}
+          [Mamour: {{ m_stat }}] / [Eric: {{ e_stat }}]
+        {% endif %}
