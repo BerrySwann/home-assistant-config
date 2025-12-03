@@ -14,6 +14,7 @@ from homeassistant.core import (
     Event,
     State,
 )
+from homeassistant.exceptions import HomeAssistantError
 
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.helpers.restore_state import (
@@ -62,6 +63,7 @@ from .feature_motion_manager import FeatureMotionManager
 from .feature_window_manager import FeatureWindowManager
 from .feature_safety_manager import FeatureSafetyManager
 from .feature_auto_start_stop_manager import FeatureAutoStartStopManager
+from .feature_lock_manager import FeatureLockManager
 from .state_manager import StateManager
 from .vtherm_state import VThermState
 from .vtherm_preset import VThermPreset, HIDDEN_PRESETS, PRESET_AC_SUFFIX
@@ -190,12 +192,15 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         self._safety_manager: FeatureSafetyManager = FeatureSafetyManager(self, hass)
         # Auto start/stop is only for over_climate
         self._auto_start_stop_manager: FeatureAutoStartStopManager | None = None
+        self._lock_manager: FeatureLockManager = FeatureLockManager(self, hass)
 
         self.register_manager(self._presence_manager)
         self.register_manager(self._power_manager)
         self.register_manager(self._motion_manager)
         self.register_manager(self._window_manager)
         self.register_manager(self._safety_manager)
+        self.register_manager(self._safety_manager)
+        self.register_manager(self._lock_manager)
 
         self._cancel_recalculate_later: Callable[[], None] | None = None
 
@@ -246,6 +251,9 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
 
             if cfg.get(CONF_USE_ADVANCED_CENTRAL_CONFIG) is True:
                 clean_one(cfg, STEP_CENTRAL_ADVANCED_DATA_SCHEMA)
+
+            if cfg.get(CONF_USE_LOCK_CENTRAL_CONFIG) is True:
+                clean_one(cfg, STEP_CENTRAL_LOCK_DATA_SCHEMA)
 
             # take all central config
             entry_infos = central_config.data.copy()
@@ -618,6 +626,10 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
             )
 
             self.restore_specific_previous_state(old_state)
+
+            # Restore all managers states from previous state
+            for manager in self._managers:
+                manager.restore_state(old_state)
         else:
             # No previous state, try and restore defaults
             if self._state_manager.current_state.target_temperature is None:
@@ -966,6 +978,11 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         return self._auto_start_stop_manager
 
     @property
+    def lock_manager(self) -> FeatureLockManager | None:
+        """Get the lock manager"""
+        return self._lock_manager
+
+    @property
     def current_state(self) -> VThermState | None:
         """Get the current state"""
         return self._state_manager.current_state
@@ -1175,7 +1192,17 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
     ## Entry events (from linked devices or users)
     ##
 
+    @staticmethod
+    def check_lock(func):
+        """Decorator to check if the thermostat is locked."""
+        async def wrapper(self, *args, **kwargs):
+            if self.lock_manager.check_is_locked(func.__name__):
+                return
+            return await func(self, *args, **kwargs)
+        return wrapper
+
     @overrides
+    @check_lock
     async def async_set_hvac_mode(self, hvac_mode: VThermHvacMode):  # , need_control_heating=True):
         """Set new target hvac mode. Uses the HA VThermHvacMode enum to respect the original type."""
         write_event_log(_LOGGER, self, f"Set hvac mode: {hvac_mode}")
@@ -1188,9 +1215,9 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         await self.update_states(force=False)
 
     @overrides
+    @check_lock
     async def async_set_preset_mode(self, preset_mode: str):
         """Set new preset mode."""
-
         # We accept a new preset when:
         # 1. last_central_mode is not set,
         # 2. or last_central_mode is AUTO,
@@ -1244,6 +1271,7 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         write_event_log(_LOGGER, self, f"Set swing mode: {swing_mode}")
         return
 
+    @check_lock
     async def async_set_temperature(self, **kwargs):
         """Set new requested target temperature and turn off any active presets."""
         temperature = kwargs.get(ATTR_TEMPERATURE)
@@ -1286,7 +1314,7 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
                 self._presets_away[self.get_preset_away_name(preset)] = temperature_away
         else:
             _LOGGER.warning(
-                "%s - No preset %s configured for this thermostat. " "Ignoring set_preset_temperature call",
+                "%s - No preset %s configured for this thermostat. Ignoring set_preset_temperature call",
                 self,
                 preset,
             )
@@ -1587,6 +1615,7 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
                 ),
                 "messages": messages,
                 "is_sleeping": self.is_sleeping,
+                "is_locked": self.lock_manager.is_locked,
                 "is_recalculate_scheduled": self.is_recalculate_scheduled,
             },
             "configuration": {
@@ -1789,6 +1818,8 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         target:
             entity_id: climate.thermostat_1
         """
+        if self.lock_manager.check_is_locked("service_set_presence"):
+            return
         write_event_log(_LOGGER, self, f"Calling SERVICE_SET_PRESENCE, presence: {presence}")
         await self._presence_manager.update_presence(presence)
         await self.async_control_heating(force=True)
@@ -1808,6 +1839,8 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         target:
             entity_id: climate.thermostat_2
         """
+        if self.lock_manager.check_is_locked("service_set_safety"):
+            return
         write_event_log(
             _LOGGER, self, f"Calling SERVICE_SET_SAFETY, delay_min: {delay_min}, " f"min_on_percent: {min_on_percent * 100} %, default_on_percent: {default_on_percent * 100} %"
         )
@@ -1834,6 +1867,8 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         target:
             entity_id: climate.thermostat_1
         """
+        if self.lock_manager.check_is_locked("service_set_window_bypass_state"):
+            return
         write_event_log(_LOGGER, self, f"Calling SERVICE_SET_WINDOW_BYPASS, window_bypass: {window_bypass}")
         if await self._window_manager.set_window_bypass(window_bypass):
             self.requested_state.force_changed()
@@ -1845,6 +1880,8 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         target:
             entity_id: climate.thermostat_1
         """
+        if self.lock_manager.check_is_locked("service_set_hvac_mode_sleep"):
+            return
         write_event_log(_LOGGER, self, "Calling SERVICE_SET_HVAC_MODE_SLEEP")
         raise NotImplementedError("service_set_hva_mode_sleep not implemented for this kind of thermostat. Only for over_climate with valve regulation is supported")
 
@@ -1869,6 +1906,10 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         target:
             entity_id: climate.thermostat_1
         """
+
+        if self.lock_manager.check_is_locked("service_set_tpi_parameters"):
+            return
+
         write_event_log(
             _LOGGER,
             self,
@@ -1917,6 +1958,23 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
 
         self.recalculate()
         await self.async_control_heating(force=True)
+
+    async def service_lock(self, code: str | None = None):
+        """Handle the lock service call."""
+
+        if not self.lock_manager.has_lock_settings_enabled:
+            _LOGGER.error("%s - Cannot lock thermostat: no lock settings enabled (neither users nor automations)", self)
+            raise HomeAssistantError("Cannot lock thermostat: no lock settings enabled. At least one of 'lock users' or 'lock automations' must be enabled.")
+
+        if self.lock_manager.change_lock_state(True, code):
+            self.update_custom_attributes()
+            self.async_write_ha_state()
+
+    async def service_unlock(self, code: str | None = None):
+        """Handle the unlock service call."""
+        if self.lock_manager.change_lock_state(False, code):
+            self.update_custom_attributes()
+            self.async_write_ha_state()
 
     ##
     ## For testing purpose
