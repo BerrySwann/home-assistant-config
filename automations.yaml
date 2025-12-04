@@ -945,8 +945,8 @@
   mode: queued
 - id: '1750309185567'
   alias: (H) [ CLIM DEBUG ] Force Mode Correct (Sécurité)
-  description: 'Vérifie si une clim est dans le mauvais mode.  Mode SINGLE : Une seule
-    vérification à la fois pour éviter les conflits.'
+  description: Vérifie si une clim est dans le mauvais mode.  Mode SINGLE. Notifie
+    avec noms courts pour la montre.
   triggers:
   - trigger: state
     entity_id:
@@ -956,33 +956,33 @@
     to:
   conditions: []
   actions:
-  - delay: 00:00:05
+  - delay: 00:00:02
   - variables:
       mode_attendu: '{{ states(''sensor.mode_ete_hiver'') }}'
-      clims_incorrectes: "{% set liste = [] %}\n{# --- SALON --- #} {% if states('climate.clim_salon_rm4_mini')
+      clims_incorrectes: "{% set liste = [] %}\n{# SALON #} {% if states('climate.clim_salon_rm4_mini')
         not in ['off', 'unavailable', 'unknown', mode_attendu] \n      and is_state('switch.clim_salon_nous',
         'on') %}\n  {% set liste = liste + ['climate.clim_salon_rm4_mini'] %}\n{%
-        endif %}\n{# --- BUREAU --- #} {% if states('climate.clim_bureau_rm4_mini')
-        not in ['off', 'unavailable', 'unknown', mode_attendu] \n      and is_state('switch.clim_du_bureau_nous',
+        endif %}\n{# BUREAU #} {% if states('climate.clim_bureau_rm4_mini') not in
+        ['off', 'unavailable', 'unknown', mode_attendu] \n      and is_state('switch.clim_du_bureau_nous',
         'on') %}\n  {% set liste = liste + ['climate.clim_bureau_rm4_mini'] %}\n{%
-        endif %}\n{# --- CHAMBRE --- #} {% if states('climate.clim_chambre_rm4_mini')
-        not in ['off', 'unavailable', 'unknown', mode_attendu] \n      and is_state('switch.clim_chambre_nous',
+        endif %}\n{# CHAMBRE #} {% if states('climate.clim_chambre_rm4_mini') not
+        in ['off', 'unavailable', 'unknown', mode_attendu] \n      and is_state('switch.clim_chambre_nous',
         'on') %}\n  {% set liste = liste + ['climate.clim_chambre_rm4_mini'] %}\n{%
         endif %}\n{{ liste }}\n"
   - if:
     - condition: template
       value_template: '{{ clims_incorrectes | length > 0 }}'
     then:
-    - delay: 00:00:02
     - action: notify.mobile_app_poco_x7_pro
       data:
-        title: Mauvais mode détecté !
-        message: 'Forcée vers: -> {{ mode_attendu | upper }} Appareils corrigés :  {%
-          for clim in clims_incorrectes %} -> {{ state_attr(clim, ''friendly_name'')
-          }} {% endfor %}
-
-          '
-    - delay: 00:00:02
+        title: DEBUG CLIM
+        message: "{# On utilise 'ns' (namespace) pour garder la mémoire hors de la
+          boucle #}\n{% set ns = namespace(noms=[]) %}\n\n{% for c in clims_incorrectes
+          %}\n  {% if 'salon' in c %} \n    {% set ns.noms = ns.noms + ['Salon'] %}\n
+          \ {% elif 'bureau' in c %} \n    {% set ns.noms = ns.noms + ['Bureau'] %}\n
+          \ {% elif 'chambre' in c %} \n    {% set ns.noms = ns.noms + ['Chambre']
+          %}\n  {% endif %}\n{% endfor %}\n\nForce -> {{ states('sensor.mode_ete_hiver')
+          | upper }}\npour: {{ ns.noms | join(', ') }}\n"
     - action: climate.set_hvac_mode
       target:
         entity_id: '{{ clims_incorrectes }}'
