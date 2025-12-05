@@ -1,6 +1,6 @@
 - sensor:
-    - name: "Message Clim personnalisé 20h <-> 6h"
-      unique_id: message_clim_personnalise_20h_6h
+    - name: "Message Clim personnalisé 21h00 <-> 6h00"
+      unique_id: message_clim_personnalise_21h00_6h00
       state: >
         {# --- Vérification des dépendances critiques --- #}
         {%- if states('sensor.poco_x7_pro_mamour_network_type') in ['unknown', 'unavailable'] or
