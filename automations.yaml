@@ -1157,16 +1157,14 @@
 - *id001
 - id: '1758129997644'
   alias: (D) Notification température Up ou Down de [6h00 -> 21h00]
-  description: 'Notification température Up ou Down en fonction des présences et réseaux
-    (6h-21h)
+  description: 'Envoie le message personnalisé de clim uniquement si le texte du message
+    change, entre 6h et 21h.
 
     '
   triggers:
-  - entity_id:
-    - sensor.poco_x7_pro_mamour_wi_fi_connection
-    - sensor.poco_x7_pro_wi_fi_connection
-    - sensor.th_balcon_nord_temperature
-    trigger: state
+  - trigger: state
+    entity_id: sensor.message_clim_personnalise_6h_21h
+    to:
   conditions:
   - condition: time
     after: 06:00:00
@@ -1181,30 +1179,28 @@
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
         in ['unknown', 'unavailable'] }}\n"
     then:
-    - data:
-        message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
-      action: notify.mobile_app_poco_x7_pro
-      alias: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Erreur Capteurs
+        message: 'Un capteur (Température, Wifi ou Message) est indisponible. Vérifiez
+          les entités.
+
+          '
     else:
-    - data:
-        message: "⚠️ Erreur : \nUn capteur TENDANCE est indisponible !\nVérifiez les
-          dépendances.\n"
-      action: notify.mobile_app_poco_x7_pro
-      alias: 'Erreur : Un capteur TENDANCE est indisponible !'
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        message: '{{ states(''sensor.message_clim_personnalise_6h_21h'') }}'
   mode: queued
 - id: '1758298361594'
   alias: (E) Notification température Up ou Down de [21h00 -> 6h00]
-  description: 'Notification température Up ou Down en fonction des présences et réseaux
-    (21h-6h)
+  description: 'Envoie le message personnalisé de clim uniquement si le texte du message
+    change, entre 21h et 6h.
 
     '
   triggers:
-  - entity_id:
-    - sensor.poco_x7_pro_mamour_wi_fi_connection
-    - sensor.poco_x7_pro_wi_fi_connection
-    - sensor.th_balcon_nord_temperature
+  - trigger: state
+    entity_id: sensor.message_clim_personnalise_21h_6h
     to:
-    trigger: state
   conditions:
   - condition: time
     after: '21:00:00'
@@ -1219,7 +1215,9 @@
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
         in ['unknown', 'unavailable'] }}\n"
     then:
-    - data:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Erreur Capteurs (Nuit)
         message: '⚠️ Erreur :
 
           Un capteur TENDANCE est indisponible !
@@ -1227,13 +1225,10 @@
           Vérifiez les dépendances.
 
           '
-      action: notify.mobile_app_poco_x7_pro
-      alias: ' Erreur :Un capteur TENDANCE est indisponible !'
     else:
-    - data:
-        message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
-      action: notify.mobile_app_poco_x7_pro
-      alias: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        message: '{{ states(''sensor.message_clim_personnalise_21h_6h'') }}'
   mode: queued
 - id: '1759042747368'
   alias: DB Purge MariaDB + Repack
