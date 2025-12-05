@@ -116,6 +116,7 @@
       {% set temp_cible = states('sensor.temperature_cible') | int %}
       {% set delta_1 = states('sensor.delta_1') | int %}
       {% set delta_2 = states('sensor.delta_2') | int %}
+      {% set delta_3 = states('sensor.delta_3') | int %}
       {% set delta_5 = states('sensor.delta_5') | int %}
       {% set delta_7 = states('sensor.delta_7') | int %}
 
