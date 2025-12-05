@@ -944,7 +944,7 @@
           title: éCO Prises [2] en [WIFI]"
   mode: queued
 - id: '1750309185567'
-  alias: (H) [ CLIM DEBUG ] Force Mode Correct (Sécurité)
+  alias: (I) [ CLIM DEBUG ] Force Mode Correct (Sécurité)
   description: Vérifie si une clim est dans le mauvais mode.  Mode SINGLE. Notifie
     avec noms courts pour la montre.
   triggers:
@@ -990,7 +990,7 @@
         hvac_mode: '{{ mode_attendu }}'
   mode: single
 - id: '1752138633943'
-  alias: (G) [CLIM ] Notification de changement de mode Été/Fan/Hiver
+  alias: (H) [CLIM ] Notification de changement de mode Été/Fan/Hiver
   description: Notification lorsque le mode change entre Été, Ventilateur ou Hiver
     (cool / fan_only / heat)
   triggers:
@@ -1006,7 +1006,7 @@
     action: notify.mobile_app_poco_x7_pro
   mode: single
 - id: '1754214931347'
-  alias: (E) [CLIM] Notification de fermeture des fenêtres
+  alias: (F) [CLIM] Notification de fermeture des fenêtres
   description: Envoie une notification lorsqu'une fenêtre est fermée.
   triggers:
   - entity_id:
@@ -1031,7 +1031,7 @@
     action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754230309244'
-  alias: (F) [ CLIM ] Automatisation Arrêt Clim Notification
+  alias: (G) [ CLIM ] Automatisation Arrêt Clim Notification
   description: Notification quand une clim est coupée manuellement, seulement si fenêtres
     fermées et prises actives.
   triggers:
@@ -1071,69 +1071,6 @@
         \ 'climate.clim_bureau_rm4_mini': 'du Bureau',\n  'climate.clim_chambre_rm4_mini':
         'de la Chambre'\n} %} La clim. {{ pieces.get(trigger.entity_id, 'inconnue')
         }} a été coupée.\n"
-  mode: queued
-- id: '1754491576463'
-  alias: (I) [CLIM 'off' en demi-saison si delta T̄i < -1 et T°Ext > 15]
-  description: 'Éteint toutes les climatisations si le delta (intérieur - extérieur)
-    est < -1°C pendant 10 minutes, que la température extérieure est > 15°C, et que
-    les 3 prises extérieures sont ON. Gère la répartition équilibrée des modes (cool/heat)
-    et la consommation électrique. Et entre 8h et 17h.
-
-    '
-  triggers:
-  - entity_id: sensor.temperature_delta_valeur
-    below: -1
-    for: 00:10:00
-    trigger: numeric_state
-  - trigger: state
-    entity_id:
-    - sensor.th_balcon_nord_temperature
-  conditions:
-  - condition: and
-    conditions:
-    - condition: time
-      after: 06:00:00
-      before: '20:00:00'
-      weekday:
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
-      - sat
-      - sun
-    - condition: template
-      value_template: '{{ states(''sensor.th_balcon_nord_temperature'') | float >
-        states(''sensor.temperature_hors_gel_hiver'') | float }}'
-    - condition: state
-      entity_id: switch.clim_salon_nous
-      state: 'on'
-    - condition: state
-      entity_id: switch.clim_du_bureau_nous
-      state: 'on'
-    - condition: state
-      entity_id: switch.clim_chambre_nous
-      state: 'on'
-    - condition: template
-      value_template: '{{ states(''climate.clim_salon_rm4_mini'') != ''off''}}'
-    - condition: template
-      value_template: '{{ states(''climate.clim_bureau_rm4_mini'') != ''off''}}'
-    - condition: template
-      value_template: '{{ states(''climate.clim_chambre_rm4_mini'') != ''off''}} '
-  actions:
-  - data:
-      hvac_mode: 'off'
-    target:
-      entity_id:
-      - climate.clim_salon_rm4_mini
-      - climate.clim_bureau_rm4_mini
-      - climate.clim_chambre_rm4_mini
-    action: climate.set_hvac_mode
-  - data:
-      title: Delta T° < -1°C
-      message: Les clim ont été éteinte. ({{ states('sensor.temperature_delta_valeur')
-        }}°C)
-    action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1757248609691'
   alias: '[Backup] Git hourly H+10'
@@ -1219,7 +1156,7 @@
 - *id001
 - *id001
 - id: '1758129997644'
-  alias: (C) Notification température Up ou Down de [6h00 -> 21h00]
+  alias: (D) Notification température Up ou Down de [6h00 -> 21h00]
   description: 'Notification température Up ou Down en fonction des présences et réseaux
     (6h-21h)
 
@@ -1247,14 +1184,16 @@
     - data:
         message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
       action: notify.mobile_app_poco_x7_pro
+      alias: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
     else:
     - data:
         message: "⚠️ Erreur : \nUn capteur TENDANCE est indisponible !\nVérifiez les
           dépendances.\n"
       action: notify.mobile_app_poco_x7_pro
+      alias: 'Erreur : Un capteur TENDANCE est indisponible !'
   mode: queued
 - id: '1758298361594'
-  alias: (D) Notification température Up ou Down de [21h00 -> 6h00]
+  alias: (E) Notification température Up ou Down de [21h00 -> 6h00]
   description: 'Notification température Up ou Down en fonction des présences et réseaux
     (21h-6h)
 
@@ -1281,10 +1220,6 @@
         in ['unknown', 'unavailable'] }}\n"
     then:
     - data:
-        message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
-      action: notify.mobile_app_poco_x7_pro
-    else:
-    - data:
         message: '⚠️ Erreur :
 
           Un capteur TENDANCE est indisponible !
@@ -1293,6 +1228,12 @@
 
           '
       action: notify.mobile_app_poco_x7_pro
+      alias: ' Erreur :Un capteur TENDANCE est indisponible !'
+    else:
+    - data:
+        message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
+      action: notify.mobile_app_poco_x7_pro
+      alias: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
   mode: queued
 - id: '1759042747368'
   alias: DB Purge MariaDB + Repack
@@ -2757,3 +2698,106 @@
 
               '
   mode: queued
+- id: '1764957375111'
+  alias: (C) [CLIM OFF] Gardien Éco (Delta T < -1 et T°Ext > Seuil Non-Chauffage)
+  description: 'Module de sécurité ÉCO. Coupe les climatisations si elles tournent
+    alors que l''air extérieur est plus chaud que le seuil de non-chauffage défini
+    (sensor.seuil_non_chauffage_bas) et que le Delta est favorable.
+
+    '
+  triggers:
+  - trigger: numeric_state
+    entity_id: sensor.temperature_delta_valeur
+    below: -1
+    for: 00:10:00
+  conditions:
+  - condition: time
+    after: 06:00:00
+    before: '21:00:00'
+  - condition: template
+    value_template: "{{ states('sensor.th_balcon_nord_temperature') | float(0) > \n
+      \  states('sensor.seuil_non_chauffage_bas') | float(15) }}"
+  - condition: numeric_state
+    entity_id: sensor.th_balcon_nord_temperature
+    below: 25
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: climate.clim_salon_rm4_mini
+      state:
+      - cool
+      - heat
+      - fan_only
+      - dry
+      - auto
+    - condition: state
+      entity_id: climate.clim_bureau_rm4_mini
+      state:
+      - cool
+      - heat
+      - fan_only
+      - dry
+      - auto
+    - condition: state
+      entity_id: climate.clim_chambre_rm4_mini
+      state:
+      - cool
+      - heat
+      - fan_only
+      - dry
+      - auto
+  actions:
+  - if:
+    - condition: state
+      entity_id: climate.clim_salon_rm4_mini
+      state:
+      - cool
+      - heat
+      - fan_only
+      - dry
+      - auto
+    then:
+    - action: climate.set_hvac_mode
+      target:
+        entity_id: climate.clim_salon_rm4_mini
+      data:
+        hvac_mode: 'off'
+  - if:
+    - condition: state
+      entity_id: climate.clim_bureau_rm4_mini
+      state:
+      - cool
+      - heat
+      - fan_only
+      - dry
+      - auto
+    then:
+    - action: climate.set_hvac_mode
+      target:
+        entity_id: climate.clim_bureau_rm4_mini
+      data:
+        hvac_mode: 'off'
+  - if:
+    - condition: state
+      entity_id: climate.clim_chambre_rm4_mini
+      state:
+      - cool
+      - heat
+      - fan_only
+      - dry
+      - auto
+    then:
+    - action: climate.set_hvac_mode
+      target:
+        entity_id: climate.clim_chambre_rm4_mini
+      data:
+        hvac_mode: 'off'
+  - action: notify.mobile_app_poco_x7_pro
+    data:
+      title: Delta T° < -1°C
+      message: 'Les clim ont été éteinte. ({{ states(''sensor.temperature_delta_valeur'')
+        }}°C) T° Ext.: ({{ states(''sensor.th_balcon_nord_temperature'') }}°C) Seuil
+        réglé à: {{ states(''sensor.seuil_non_chauffage_bas'') }}°C.
+
+        '
+  mode: single
