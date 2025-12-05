@@ -40,8 +40,8 @@
     unit_of_measurement: "°C"
     state: "17"
 
-  - name: "Temperature Hors-Gel Hiver"
-    unique_id: temperature_hors_gel_hiver
+  - name: "Seuil non chauffage bas"
+    unique_id: seuil_non_chauffage_bas
     unit_of_measurement: "°C"
     state: "15"
 
@@ -54,6 +54,11 @@
   - name: "Delta_2"
     unique_id: delta_2
     state: "2"
+    unit_of_measurement: "°C"
+
+  - name: "Delta_3"
+    unique_id: delta_3
+    state: "3"
     unit_of_measurement: "°C"
 
   - name: "Delta_5"
@@ -115,13 +120,14 @@
       {% set delta_7 = states('sensor.delta_7') | int %}
 
       {% if temp_ext < 10 %}
-        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int }}
+        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_3) | int }}
       {% elif temp_ext < 12 %}
-        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int }}
-      {% elif temp_ext > 32 %}
-        {{ temp_ext - delta_5 | int }}
+        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int }}
+      {# --- CORRECTION ICI : On teste 40 AVANT 32 --- #}
       {% elif temp_ext > 40 %}
         {{ temp_ext - delta_7 | int }}
+      {% elif temp_ext > 32 %}
+        {{ temp_ext - delta_5 | int }}
       {% else %}
         {{ (temp_diff + (temp_cible - consigne_de_base)) | int }}
       {% endif %}

@@ -1866,7 +1866,7 @@
     then:
     - action: notify.mobile_app_poco_x7_pro
       data:
-        title: Clim coupée par prise ext.
+        title: CLIM COUPÉE
         message: "{% set piece = 'inconnue' %} {% if 'salon' in trigger.entity_id
           %}\n  {% set piece = 'du Salon' %}\n{% elif 'bureau' in trigger.entity_id
           %}\n  {% set piece = 'du Bureau' %}\n{% elif 'chambre' in trigger.entity_id
