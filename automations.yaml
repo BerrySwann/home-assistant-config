@@ -2076,24 +2076,24 @@
   conditions:
   - condition: time
     after: 06:00:00
-    before: '20:00:01'
+    before: '21:00:00'
   actions:
   - delay: 00:00:02
   - if:
     - condition: template
-      value_template: "{{ states('sensor.message_clim_personnalise_6h_20h') in ['unknown',
+      value_template: "{{ states('sensor.message_clim_personnalise_6h_21h') in ['unknown',
         'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
         in ['unknown', 'unavailable'] }}\n"
     then:
     - data:
-        message: '⚠️ Erreur : Un capteur TENDANCE est indisponible ! Vérifiez les
-          dépendances.'
+        message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
       action: notify.mobile_app_poco_x7_pro
     else:
     - data:
-        message: '{{ states(''sensor.message_clim_personnalise_6h_20h'') }}'
+        message: "⚠️ Erreur : \nUn capteur TENDANCE est indisponible !\nVérifiez les
+          dépendances.\n"
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1758298361594'
@@ -2112,24 +2112,29 @@
   conditions:
   - condition: time
     after: '20:00:00'
-    before: 06:00:01
+    before: 06:00:00
   actions:
   - delay: 00:00:02
   - if:
     - condition: template
-      value_template: "{{ states('sensor.message_clim_personnalise_20h_6h') in ['unknown',
+      value_template: "{{ states('sensor.message_clim_personnalise_21h_6h') in ['unknown',
         'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
         in ['unknown', 'unavailable'] }}\n"
     then:
     - data:
-        message: '⚠️ Erreur : Un capteur TENDANCE est indisponible ! Vérifiez les
-          dépendances.'
+        message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
       action: notify.mobile_app_poco_x7_pro
     else:
     - data:
-        message: '{{ states(''sensor.message_clim_personnalise_20h_6h'') }}'
+        message: '⚠️ Erreur :
+
+          Un capteur TENDANCE est indisponible !
+
+          Vérifiez les dépendances.
+
+          '
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1759042747368'
@@ -8671,7 +8676,7 @@
         - alias: 'NOTIF : ETAT'
           action: notify.mobile_app_poco_x7_pro
           data:
-            title: '[JOUR] {{ states(''sensor.presence_clim'') }}'
+            title: '{{ states(''sensor.presence_clim'') }}'
             message: 'Mode : {{ mode_saison | upper }}
 
               Salon: {{ t_salon_target }}°
@@ -8876,7 +8881,7 @@
         - alias: 'NOTIF : ETAT'
           action: notify.mobile_app_poco_x7_pro
           data:
-            title: '[NUIT] {{ states(''sensor.presence_clim'') }}'
+            title: '{{ states(''sensor.presence_clim'') }}'
             message: 'Mode : {{ mode_saison | upper }}
 
               Salon: {{ t_salon_target }}°
