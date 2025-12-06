@@ -2796,3 +2796,24 @@
 
         '
   mode: single
+- id: '1765052018689'
+  alias: Minuterie Sèche Serciettes Salle de Bain (1h)
+  description: Coupe la prise si la puissance > 50W pendant 1 heure, puis la rallume.
+  triggers:
+  - entity_id: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+    above: 50
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+    trigger: numeric_state
+  conditions: []
+  actions:
+  - target:
+      entity_id: switch.prise_radiateur_salle_de_bain_inspelning_ikea
+    action: switch.turn_off
+  - delay: 00:01:00
+  - target:
+      entity_id: switch.prise_radiateur_salle_de_bain_inspelning_ikea
+    action: switch.turn_on
+  mode: single
