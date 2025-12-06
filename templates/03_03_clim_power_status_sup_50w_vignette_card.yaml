@@ -75,7 +75,28 @@
       {% endif %}
 
 #========================================================================
-# Radiateur Salle de Bain (ON) si (_power) superieur a 20 Watts
+# Soufflant Salle de Bain (ON) si (_power) superieur a 20 Watts
+#========================================================================
+  - name: "SdB Power Status"
+    unique_id: sdb_power_status
+    state: >
+      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 20 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+  - name: "SdB Power Status Affichage"
+    unique_id: sdb_power_status_affichage
+    state: >
+      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 1 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+#========================================================================
+# Sèche Salle de Bain (ON) si (_power) superieur a 20 Watts
 #========================================================================
   - name: "SdB Power Status"
     unique_id: sdb_power_status
