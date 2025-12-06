@@ -403,6 +403,8 @@ devices:
     friendly_name: Ecran P.C. 3 PLAY HUE
   '0x880f62fffee3aeee':
     friendly_name: Inter Radiateur Salle de Bain (IKEA RODRET)
+  '0x94a081fffe5c2490':
+    friendly_name: Prise radiateur Salle de Bain (INSPELNING IKEA)
 groups:
   '1':
     friendly_name: Bureau z2m

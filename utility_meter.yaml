@@ -23,7 +23,7 @@ eclair_hourly:
 
 #==================================================================
 #
-# TOTO Clim et radiateur salon / cuisine / bureau / SdB / Chambre
+# TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre
 #
 #==================================================================
 
@@ -88,7 +88,7 @@ clim_du_bureau_quotidien_um:
   cycle: daily
 
 #------------------------------------------------------------
-# RADIATEUR SALLE DE BAIN
+# SOUFLANT SALLE DE BAIN
 #------------------------------------------------------------
 
 radiateur_sdb_annuel_um:
@@ -105,6 +105,26 @@ radiateur_sdb_hebdomadaire_um:
 
 radiateur_sdb_quotidien_um:
   source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: daily
+
+#------------------------------------------------------------
+# SECHE-SERVIETTES SALLE DE BAIN
+#------------------------------------------------------------
+
+seche_serviettes_sdb_annuel_um:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+  cycle: yearly
+
+seche_serviettes_sdb_mensuel_um:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+  cycle: monthly
+
+seche_serviettes_sdb_hebdomadaire_um:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+  cycle: weekly
+
+seche_serviettes_sdb_quotidien_um:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
   cycle: daily
 
 #------------------------------------------------------------
