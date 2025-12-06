@@ -96,21 +96,21 @@
       {% endif %}
 
 #========================================================================
-# Sèche Salle de Bain (ON) si (_power) superieur a 20 Watts
+# Sèche-serviettes Salle de Bain (ON) si (_power) superieur a 20 Watts
 #========================================================================
-  - name: "SdB Power Status"
-    unique_id: sdb_power_status
+  - name: "SdB Sèche-Serviettes Power Status"
+    unique_id: sdb_seche_serv_power_status
     state: >
-      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 20 %}
+      {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float > 20 %}
         on
       {% else %}
         off
       {% endif %}
 
-  - name: "SdB Power Status Affichage"
-    unique_id: sdb_power_status_affichage
+  - name: "SdB Sèche-Serviettes Power Status Affichage"
+    unique_id: sdb_seche_serviettes_power_status_affichage
     state: >
-      {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float > 1 %}
+      {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float > 1 %}
         on
       {% else %}
         off
