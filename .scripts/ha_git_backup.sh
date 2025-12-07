@@ -94,10 +94,9 @@ if [[ -z "$CHANGED" ]]; then
 fi
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ Message de commit                                                        │
+# │ Message de commit (MODIFIÉ POUR ACCEPTER TEXTE PERSO)                    │
 # ╰──────────────────────────────────────────────────────────────────────────╯
-# argument optionnel: "weekly" => tag hebdo
-WEEKLY="${1:-}"
+INPUT_ARG="${1:-}" # Récupère le premier argument (weekly ou texte perso)
 
 # version HA (via CLI supervisor si dispo, sinon .HA_VERSION, sinon vide)
 HA_VER=""
@@ -107,13 +106,20 @@ elif [[ -f /config/.HA_VERSION ]]; then
   HA_VER="$(cat /config/.HA_VERSION 2>/dev/null || true)"
 fi
 
-MSG_BASE="$(date '+%Y-%m-%d %H:%M:%S %Z')"
-if [[ "$WEEKLY" == "weekly" ]]; then
-  MSG="HAOS weekly backup: ${MSG_BASE}"
+# --- NOUVELLE LOGIQUE ---
+if [[ "$INPUT_ARG" == "weekly" ]]; then
+  # Cas 1 : Hebdomadaire
+  MSG="HAOS weekly backup: $(date '+%Y-%m-%d %H:%M:%S %Z') (HA ${HA_VER})"
+  IS_WEEKLY="true"
+elif [[ -n "$INPUT_ARG" ]]; then
+  # Cas 2 : Message manuel (ex: "Sauvegarde Manuelle")
+  MSG="$INPUT_ARG"
+  IS_WEEKLY="false"
 else
-  MSG="HAOS auto-backup: ${MSG_BASE}"
+  # Cas 3 : Automatique (vide)
+  MSG="HAOS auto-backup: $(date '+%Y-%m-%d %H:%M:%S %Z') (HA ${HA_VER})"
+  IS_WEEKLY="false"
 fi
-[[ -n "$HA_VER" ]] && MSG="${MSG} (HA ${HA_VER})"
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ Commit & push                                                            │
@@ -135,7 +141,7 @@ fi
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ Tag hebdomadaire (optionnel)                                             │
 # ╰──────────────────────────────────────────────────────────────────────────╯
-if [[ "$WEEKLY" == "weekly" ]]; then
+if [[ "$IS_WEEKLY" == "true" ]]; then
   TAG_BASE="weekly-$(date +'%G-W%V')"   # ex: weekly-2025-W37
   TAG="$TAG_BASE"
   if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
@@ -146,6 +152,7 @@ if [[ "$WEEKLY" == "weekly" ]]; then
   log "🏷️  Tag créé: $TAG"
 fi
 
+# Modification du log pour dire "Git Push OK" comme demandé
 log "✅ Backup GitHub OK: $MSG"
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
