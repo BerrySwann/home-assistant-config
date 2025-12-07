@@ -127,15 +127,19 @@ fi
 git add -A
 if git commit -m "$MSG"; then
   log "📝 Commit: $MSG"
+  
+  # ne jamais pousser sur master
+  if ! git push origin "$BRANCH"; then
+    log "⚠️  Push sur '$BRANCH' a échoué, tentative sur 'main'"
+    git push origin main
+  fi
+  
+  log "✅ Backup GitHub OK: $MSG"
+  
 else
-  log "ℹ️  Rien à committer (déjà à jour)"
+  # LOGIQUE CORRIGÉE : Si rien à committer, on écrit un log clair et on sort.
+  log "✅ Backup GitHub OK: [AUCUN CHANGEMENT] L'état était déjà à jour."
   exit 0
-fi
-
-# ne jamais pousser sur master
-if ! git push origin "$BRANCH"; then
-  log "⚠️  Push sur '$BRANCH' a échoué, tentative sur 'main'"
-  git push origin main
 fi
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
