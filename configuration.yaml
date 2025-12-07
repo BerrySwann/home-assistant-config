@@ -184,4 +184,4 @@ notify:
   - name: export_donnees_gemini
     platform: file
     filename: export_gemini.json
-    timestamp: false # On gère le timestamp nous-mêmes dans le JSON
+    timestamp: false
