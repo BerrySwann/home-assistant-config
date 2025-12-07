@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# "[L1] shebang + strict mode"
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ Config & logging                                                         │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 LOG_DIR="/config/.logs"
-mkdir -p "$LOG_DIR"                                # "[L7] dossier logs"
+mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/ha_git_backup.log"
 
-# rotation simple (1000 dernières lignes)
 if [[ -f "$LOG_FILE" ]]; then
   tail -n 1000 "$LOG_FILE" > "${LOG_FILE}.tmp" && mv "${LOG_FILE}.tmp" "$LOG_FILE"
 fi
@@ -27,14 +25,11 @@ if [[ "$CUR_BRANCH" == "master" ]]; then
   exit 1
 fi
 
-# éviter 'dubious ownership' en environnement container
-git config --global --add safe.directory /config || true  # "[L28] safe.directory"
+git config --global --add safe.directory /config || true
 
-# identité Git locale (si non définie)
 git config user.name  >/dev/null 2>&1 || git config user.name  "Eric Rodi (HAOS)"
 git config user.email >/dev/null 2>&1 || git config user.email "erodi@users.noreply.github.com"
 
-# clé SSH optionnelle locale
 if [[ -f /config/.ssh/id_ed25519 ]]; then
   export GIT_SSH_COMMAND='ssh -i /config/.ssh/id_ed25519 -o StrictHostKeyChecking=no'
   log "ℹ️  GIT_SSH_COMMAND activé (/config/.ssh/id_ed25519)"
@@ -42,13 +37,11 @@ else
   log "ℹ️  Pas de /config/.ssh/id_ed25519, SSH par défaut"
 fi
 
-# ne jamais tracker secrets.yaml
 if git ls-files --error-unmatch secrets.yaml >/dev/null 2>&1; then
   log "❌ secrets.yaml est tracké par git — ABANDON"
   exit 1
 fi
 
-# s'assurer d'un remote 'origin' et d'un upstream correct
 git remote get-url origin >/dev/null 2>&1 || { log "❌ Remote 'origin' absent"; exit 1; }
 BRANCH="$CUR_BRANCH"
 git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1 || git branch -u "origin/${BRANCH}" || true
@@ -58,14 +51,12 @@ git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1 || git br
 # ╰──────────────────────────────────────────────────────────────────────────╯
 git fetch origin || true
 
-# activer rebase + autostash (si non global)
 git config pull.rebase true || true
 git config rebase.autoStash true || true
 
 if ! git pull --rebase --autostash origin "$BRANCH"; then
   log "⚠️  pull --rebase --autostash a échoué, fallback stash manuel"
   STASHED=0
-  # stashe si modifs (tracked/untracked)
   if ! git diff --quiet || [[ -n "$(git ls-files -o --exclude-standard)" ]]; then
     git stash push --include-untracked -m "ha-backup-autostash" && STASHED=1
     log "ℹ️  Changements stashés temporairement"
@@ -79,26 +70,25 @@ if ! git pull --rebase --autostash origin "$BRANCH"; then
 fi
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ Détection des changements                                                │
+# │ Détection des changements (MODIFIÉ)                                      │
 # ╰──────────────────────────────────────────────────────────────────────────╯
-# on limite le backup aux fichiers utiles (yaml/md) mais on garde un fallback
+# Le bloc est modifié pour NE PAS avoir de 'exit 0' prématuré
 CHANGED="$( { git diff --name-only; git ls-files -o --exclude-standard; } \
   | grep -E '\.(ya?ml|md)$' | sort -u || true )"
 
 if [[ -z "$CHANGED" ]]; then
   STATUS_LINES="$(git status --porcelain || true)"
   if [[ -z "$STATUS_LINES" ]]; then
-    log "ℹ️  Aucun changement après pré-pull — rien à faire"
-    exit 0
+    # On log l'information, mais on ne sort plus d'ici. Le script continue vers le bloc Commit
+    log "ℹ️  Aucun changement après pré-pull — PUSH MANUEL CONTINUE VERS LA CONFIRMATION."
   fi
 fi
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ Message de commit (MODIFIÉ POUR ACCEPTER TEXTE PERSO)                    │
 # ╰──────────────────────────────────────────────────────────────────────────╯
-INPUT_ARG="${1:-}" # Récupère le premier argument (weekly ou texte perso)
+INPUT_ARG="${1:-}"
 
-# version HA (via CLI supervisor si dispo, sinon .HA_VERSION, sinon vide)
 HA_VER=""
 if command -v ha >/dev/null 2>&1; then
   HA_VER="$(ha core info 2>/dev/null | sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' | head -n1 || true)"
@@ -106,29 +96,24 @@ elif [[ -f /config/.HA_VERSION ]]; then
   HA_VER="$(cat /config/.HA_VERSION 2>/dev/null || true)"
 fi
 
-# --- LOGIQUE ---
 if [[ "$INPUT_ARG" == "weekly" ]]; then
-  # Cas 1 : Hebdomadaire
   MSG="HAOS weekly backup: $(date '+%Y-%m-%d %H:%M:%S %Z')${HA_VER:+ (HA ${HA_VER})}"
   IS_WEEKLY="true"
 elif [[ -n "$INPUT_ARG" ]]; then
-  # Cas 2 : Message manuel (ex: "Sauvegarde Manuelle")
   MSG="$INPUT_ARG"
   IS_WEEKLY="false"
 else
-  # Cas 3 : Automatique (vide)
   MSG="HAOS auto-backup: $(date '+%Y-%m-%d %H:%M:%S %Z')${HA_VER:+ (HA ${HA_VER})}"
   IS_WEEKLY="false"
 fi
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ Commit & push                                                            │
+# │ Commit & push (CORRIGÉ POUR ÉCRIRE LE LOG DE SUCCÈS SI RIEN À FAIRE)     │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 git add -A
 if git commit -m "$MSG"; then
   log "📝 Commit: $MSG"
   
-  # ne jamais pousser sur master
   if ! git push origin "$BRANCH"; then
     log "⚠️  Push sur '$BRANCH' a échoué, tentative sur 'main'"
     git push origin main
@@ -137,7 +122,8 @@ if git commit -m "$MSG"; then
   log "✅ Backup GitHub OK: $MSG"
   
 else
-  # LOGIQUE CORRIGÉE : Si rien à committer, on écrit un log clair et on sort.
+  # SI le commit échoue (parce qu'il n'y a rien à committer)
+  # On écrit un message de confirmation clair puis on sort (exit 0)
   log "✅ Backup GitHub OK: [AUCUN CHANGEMENT] L'état était déjà à jour."
   exit 0
 fi
@@ -146,7 +132,7 @@ fi
 # │ Tag hebdomadaire (optionnel)                                             │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 if [[ "$IS_WEEKLY" == "true" ]]; then
-  TAG_BASE="weekly-$(date +'%G-W%V')"   # ex: weekly-2025-W37
+  TAG_BASE="weekly-$(date +'%G-W%V')"
   TAG="$TAG_BASE"
   if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
     TAG="${TAG_BASE}-$(date +'%H%M')"
@@ -156,8 +142,8 @@ if [[ "$IS_WEEKLY" == "true" ]]; then
   log "🏷️  Tag créé: $TAG"
 fi
 
-# Modification du log pour dire "Git Push OK" comme demandé
-log "✅ Backup GitHub OK: $MSG"
+# Note : Le log final ici est supprimé, car il est désormais géré dans les blocs if/else
+# pour garantir qu'il soit atteint.
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ Notification HA (optionnelle)                                            │
