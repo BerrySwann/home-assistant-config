@@ -1,10 +1,8 @@
 git_backup_push: >-
-  bash -lc '/config/.scripts/ha_git_backup.sh >> /config/.logs/ha_git_backup.log 2>&1'
-# "[L101] shell_command git_backup_push"
+  bash -lc '/config/.scripts/ha_git_backup.sh "Sauvegarde Manuelle (Dashboard)" >> /config/.logs/ha_git_backup.log 2>&1'
 
 git_backup_push_weekly: >-
   bash -lc '/config/.scripts/ha_git_backup.sh weekly >> /config/.logs/ha_git_backup.log 2>&1'
-# "[L105] shell_command git_backup_push_weekly"
 
 git_pull_ff: >-
   bash -lc 'cd /config &&
