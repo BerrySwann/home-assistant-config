@@ -9,7 +9,7 @@ git_pull:
       message: Fetch/prune + pull --ff-only lancé sur /config.
     action: persistent_notification.create
   description: ''
-git_backup_refresh:
+git_backup_and_update:
   alias: Git Backup & Refresh
   icon: mdi:cloud-upload
   sequence:
@@ -20,7 +20,7 @@ git_backup_refresh:
       entity_id: sensor.backup_github_status
     action: homeassistant.update_entity
   description: ''
-git_backup_weekly_refresh:
+git_backup_weekly_and_update:
   alias: Git Backup Weekly & Refresh
   icon: mdi:calendar-clock
   sequence:
