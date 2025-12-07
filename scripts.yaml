@@ -11,7 +11,7 @@ git_pull:
   description: ''
 
 # -----------------------------------------------------------
-# Scripts Backup GitHub (CORRIGÉS avec Notification)
+# Scripts Backup GitHub (CORRIGÉS : Update Journal + Status)
 # -----------------------------------------------------------
 
 git_backup_and_update:
@@ -19,16 +19,18 @@ git_backup_and_update:
   icon: mdi:cloud-upload
   sequence:
   - action: shell_command.git_backup_push
+  # On laisse un peu plus de temps (8s) pour l'écriture du log
   - delay:
-      seconds: 5
+      seconds: 8
   - target:
-      entity_id: sensor.backup_github_status
+      entity_id: 
+        - sensor.backup_github_status
+        - sensor.backup_github_journal  # <--- AJOUTÉ
     action: homeassistant.update_entity
-  # AJOUT DE LA NOTIFICATION ICI
   - action: persistent_notification.create
     data:
       title: Git Push
-      message: "Sauvegarde vers GitHub terminée (Statut mis à jour)."
+      message: "Sauvegarde vers GitHub terminée (Journal mis à jour)."
 
 git_backup_weekly_and_update:
   alias: Git Backup Weekly & Refresh
@@ -36,12 +38,13 @@ git_backup_weekly_and_update:
   sequence:
   - action: shell_command.git_backup_push_weekly
   - delay:
-      seconds: 5
+      seconds: 8
   - target:
-      entity_id: sensor.backup_github_status
+      entity_id:
+        - sensor.backup_github_status
+        - sensor.backup_github_journal  # <--- AJOUTÉ
     action: homeassistant.update_entity
-  # AJOUT DE LA NOTIFICATION ICI
   - action: persistent_notification.create
     data:
       title: Git Push Weekly
-      message: "Sauvegarde Hebdomadaire terminée (Statut mis à jour)."
+      message: "Sauvegarde Hebdomadaire terminée (Journal mis à jour)."
