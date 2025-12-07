@@ -26,8 +26,44 @@
         states('sensor.clim_chambre_quotidien') | float(0)) | round(2) }}
 
 #========================================================================
+# TOTAUX QUOTIDIEN MEAN
+#========================================================================
+
+- sensor:
+  - name: "Conso. Clim. Rad. Total 24h Mean"
+    unique_id: conso_clim_rad_total_24h_kwh
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash-outline
+    state: >
+      {{ (states('sensor.clim_salon_conso_24h_kwh') | float(0) +
+        states('sensor.radiateur_cuisine_conso_24h_kwh') | float(0) +
+        states('sensor.clim_bureau_conso_24h_kwh') | float(0) +
+        states('sensor.rad_sdb_nous_conso_24h_kwh') | float(0) +
+        states('sensor.rad_sdb_ikea_conso_24h_kwh') | float(0) +
+        states('sensor.clim_chambre_conso_24h_kwh') | float(0)) | round(2) }}
+
+#========================================================================
 # TOTAUX MENSUEL 
 #========================================================================
+- sensor:
+  - name: "Conso. Clim. Rad. Total 730h mean"
+    unique_id: conso_clim_rad_total_730h_mean
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash-outline
+    state: >
+      {{ (states('sensor.clim_salon_mean_730h_kwh') | float(0) +
+        states('sensor.radiateur_cuisine_mean_730h_kwh') | float(0) +
+        states('sensor.clim_bureau_mean_730h_kwh') | float(0) +
+        states('sensor.rad_sdb_nous_mean_730h_kwh') | float(0) +
+        states('sensor.rad_sdb_ikea_mean_730h_kwh') | float(0) +
+        states('sensor.clim_chambre_mean_730h_kwh') | float(0)) | round(2) }}
+
+#========================================================================
+# TOTAUX MENSUEL 
+#========================================================================
+
 - sensor:
   - name: "Conso. Clim. Rad. Total MENSUEL"
     unique_id: conso_clim_rad_total_mensuel
