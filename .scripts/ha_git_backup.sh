@@ -108,24 +108,24 @@ else
 fi
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ Commit & push (CORRIGÉ POUR ÉCRIRE LE LOG DE SUCCÈS SI RIEN À FAIRE)     │
+# │ Commit & push (CORRIGÉ POUR ÉCRIRE LE LOG DE SUCCÈS SI RIEN À FAIRE)     │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 git add -A
 if git commit -m "$MSG"; then
   log "📝 Commit: $MSG"
-  
+
+# On pousse uniquement si le commit a eu lieu
   if ! git push origin "$BRANCH"; then
-    log "⚠️  Push sur '$BRANCH' a échoué, tentative sur 'main'"
+    log "⚠️ Push sur '$BRANCH' a échoué, tentative sur 'main'"
     git push origin main
-  fi
-  
+fi
+
+# Message de succès si l'action a eu lieu
   log "✅ Backup GitHub OK: $MSG"
-  
+
 else
-  # SI le commit échoue (parce qu'il n'y a rien à committer)
-  # On écrit un message de confirmation clair puis on sort (exit 0)
-  log "✅ Backup GitHub OK: [AUCUN CHANGEMENT] L'état était déjà à 
-  ."
+# CORRECTION : Message de confirmation si rien à committer
+  log "✅ Backup GitHub OK: [AUCUN CHANGEMENT] L'état était déjà à jour."
   exit 0
 fi
 
