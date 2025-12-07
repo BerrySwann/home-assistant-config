@@ -9,6 +9,11 @@ git_pull:
       message: Fetch/prune + pull --ff-only lancé sur /config.
     action: persistent_notification.create
   description: ''
+
+# -----------------------------------------------------------
+# Scripts Backup GitHub (CORRIGÉS avec Notification)
+# -----------------------------------------------------------
+
 git_backup_and_update:
   alias: Git Backup & Refresh
   icon: mdi:cloud-upload
@@ -19,7 +24,12 @@ git_backup_and_update:
   - target:
       entity_id: sensor.backup_github_status
     action: homeassistant.update_entity
-  description: ''
+  # AJOUT DE LA NOTIFICATION ICI
+  - action: persistent_notification.create
+    data:
+      title: Git Push
+      message: "Sauvegarde vers GitHub terminée (Statut mis à jour)."
+
 git_backup_weekly_and_update:
   alias: Git Backup Weekly & Refresh
   icon: mdi:calendar-clock
@@ -30,3 +40,8 @@ git_backup_weekly_and_update:
   - target:
       entity_id: sensor.backup_github_status
     action: homeassistant.update_entity
+  # AJOUT DE LA NOTIFICATION ICI
+  - action: persistent_notification.create
+    data:
+      title: Git Push Weekly
+      message: "Sauvegarde Hebdomadaire terminée (Statut mis à jour)."
