@@ -177,3 +177,11 @@ climate:
     temperature_sensor: sensor.th_salon_temperature
     humidity_sensor: sensor.th_salon_humidity
 
+# ==========================================================================
+# NOTIFY - EXPORT DE DONNÉES POUR GEMINI
+# ==========================================================================
+notify:
+  - name: export_donnees_gemini
+    platform: file
+    filename: export_gemini.json
+    timestamp: false # On gère le timestamp nous-mêmes dans le JSON

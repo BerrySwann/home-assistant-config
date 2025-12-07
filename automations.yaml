@@ -2817,3 +2817,42 @@
       entity_id: switch.prise_radiateur_salle_de_bain_inspelning_ikea
     action: switch.turn_on
   mode: single
+- id: '1765130517086'
+  alias: System - Export Données Gemini (JSON)
+  description: Génère une ligne JSON chaque heure pour analyse IA
+  triggers:
+  - minutes: '0'
+    trigger: time_pattern
+  conditions: []
+  actions:
+  - data:
+      message: "{\n  \"timestamp\": \"{{ now().isoformat() }}\",\n  \"meteo\": {\n
+        \   \"interieur_temp\": {{ states('sensor.temperature_moyenne_interieure')
+        | float(0) }},\n    \"exterieur_temp\": {{ states('sensor.th_balcon_nord_temperature')
+        | float(0) }}\n  },\n  \"chauffage_climatisation\": {\n    \"salon\": {\n
+        \     \"power_w\": {{ states('sensor.clim_salon_nous_power') | float(0) }},\n
+        \     \"conso_24h_glissant_kwh\": {{ states('sensor.clim_salon_conso_24h_kwh')
+        | float(0) }},\n      \"mean_730h_kwh\": {{ states('sensor.clim_salon_mean_730h_kwh')
+        | float(0) }},\n      \"total_jour_fixe_kwh\": {{ states('sensor.clim_salon_quotidien_um')
+        | float(0) }}\n    },\n    \"bureau\": {\n      \"power_w\": {{ states('sensor.clim_du_bureau_nous_power')
+        | float(0) }},\n      \"conso_24h_glissant_kwh\": {{ states('sensor.clim_bureau_conso_24h_kwh')
+        | float(0) }},\n      \"total_jour_fixe_kwh\": {{ states('sensor.clim_du_bureau_quotidien_um')
+        | float(0) }}\n    },\n    \"chambre\": {\n      \"power_w\": {{ states('sensor.clim_chambre_nous_power')
+        | float(0) }},\n      \"conso_24h_glissant_kwh\": {{ states('sensor.clim_chambre_conso_24h_kwh')
+        | float(0) }},\n      \"total_jour_fixe_kwh\": {{ states('sensor.clim_chambre_quotidien_um')
+        | float(0) }}\n    },\n    \"radiateur_cuisine\": {\n       \"power_w\": {{
+        states('sensor.radiateur_elec_cuisine_power') | float(0) }},\n       \"total_jour_fixe_kwh\":
+        {{ states('sensor.radiateur_elec_cuisine_quotidien_um') | float(0) }}\n    },\n
+        \   \"radiateur_sdb\": {\n       \"power_w\": {{ states('sensor.prise_radiateur_salle_de_bain_nous_power')
+        | float(0) }},\n       \"total_jour_fixe_kwh\": {{ states('sensor.radiateur_sdb_quotidien_um')
+        | float(0) }}\n    }\n  },\n  \"appareils_cles\": {\n    \"frigo\": {\n      \"avg_24h_w\":
+        {{ states('sensor.prise_frigo_cuisine_nous_mean_24h_kwh') | float(0) }},\n
+        \     \"total_jour_fixe_kwh\": {{ states('sensor.prise_frigo_cuisine_nous_daily')
+        | float(0) }}\n    },\n    \"pc_bureau\": {\n      \"power_w\": {{ states('sensor.prise_bureau_pc_ikea_power')
+        | float(0) }},\n      \"total_jour_fixe_kwh\": {{ states('sensor.prise_bureau_pc_ikea_daily')
+        | float(0) }}\n    },\n    \"box_internet\": {\n      \"total_jour_fixe_kwh\":
+        {{ states('sensor.prise_box_internet_ikea_daily') | float(0) }}\n    }\n  },\n
+        \ \"totaux\": {\n     \"chauffage_total_jour_kwh\": {{ states('sensor.conso_clim_rad_total_quotidien')
+        | float(0) }}\n  }\n},"
+    action: notify.export_donnees_gemini
+  mode: single
