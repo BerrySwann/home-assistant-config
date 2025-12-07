@@ -18,7 +18,6 @@ git_backup_and_update:
   alias: Git Backup & Refresh
   icon: mdi:cloud-upload
   sequence:
-    # On appelle la shell_command en lui passant le message dans "data"
     - service: shell_command.git_backup_push_manual
       data:
         custom_message: "Sauvegarde Manuelle (Dashboard)" 
@@ -33,6 +32,8 @@ git_backup_and_update:
       data:
         title: Git Push
         message: "Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour)."
+
+
 
 git_backup_weekly_and_update:
   alias: Git Backup Weekly & Refresh

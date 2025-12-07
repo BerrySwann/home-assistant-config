@@ -1,9 +1,14 @@
-git_backup_push_manual: "bash -lc '/config/.scripts/ha_git_backup.sh \"{{ custom_message }}\" >> /config/.logs/ha_git_backup.log 2>&1'"
+# Commande pour le PUSH MANUEL (permet de passer le message via 'data')
+git_backup_push_manual: >-
+  bash -lc '/config/.scripts/ha_git_backup.sh "{{ custom_message }}" >> /config/.logs/ha_git_backup.log 2>&1'
 
+# Commande pour le PUSH AUTOMATIQUE (ancienne commande, sans argument)
 git_backup_push: "bash -lc '/config/.scripts/ha_git_backup.sh >> /config/.logs/ha_git_backup.log 2>&1'"
 
+# Commande pour le PUSH WEEKLY (utilise l'argument "weekly")
 git_backup_push_weekly: "bash -lc '/config/.scripts/ha_git_backup.sh weekly >> /config/.logs/ha_git_backup.log 2>&1'"
 
+# Commande pour le PULL (inchangée)
 git_pull_ff: >-
   bash -lc 'cd /config &&
   git fetch origin --prune &&
@@ -12,4 +17,3 @@ git_pull_ff: >-
   else
     echo "❌ Git pull KO: $(date "+%F %T %Z")" >> /config/.logs/ha_git_backup.log;
   fi'
-
