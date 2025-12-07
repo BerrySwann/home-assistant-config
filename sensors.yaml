@@ -654,63 +654,57 @@
   sampling_size: 400
 
 # =========================================================================
-# CLIMATISEURS / POMPES A CHALEUR (Moyennes de Puissance 24h)
+# CLIMATISEURS / POMPES A CHALEUR (Consommation Totale 24h en kWh)
 # =========================================================================
 
 - platform: statistics
-  name: Clim Salon mean 24h W
-  unique_id: clim_salon_mean_24h_w
-  entity_id: sensor.clim_salon_nous_power
-  state_characteristic: mean 
+  name: Clim Salon Conso 24h kWh
+  unique_id: clim_salon_conso_24h_kwh
+  entity_id: sensor.clim_salon_nous_energy   # Source: Énergie cumulée (kWh)
+  state_characteristic: change              # Calcule la différence (la conso)
   max_age: { hours: 24 }
-  precision: 1
-  keep_last_sample: true
+  precision: 3
+  
+- platform: statistics
+  name: Clim Bureau Conso 24h kWh
+  unique_id: clim_bureau_conso_24h_kwh
+  entity_id: sensor.clim_du_bureau_nous_energy
+  state_characteristic: change
+  max_age: { hours: 24 }
+  precision: 3
 
 - platform: statistics
-  name: Clim Bureau mean 24h W
-  unique_id: clim_bureau_mean_24h_w
-  entity_id: sensor.clim_du_bureau_nous_power
-  state_characteristic: mean 
+  name: Clim Chambre Conso 24h kWh
+  unique_id: clim_chambre_conso_24h_kwh
+  entity_id: sensor.clim_chambre_nous_energy
+  state_characteristic: change
   max_age: { hours: 24 }
-  precision: 1
-  keep_last_sample: true
-
-- platform: statistics
-  name: Clim Chambre mean 24h W
-  unique_id: clim_chambre_mean_24h_w
-  entity_id: sensor.clim_chambre_nous_power
-  state_characteristic: mean 
-  max_age: { hours: 24 }
-  precision: 1
-  keep_last_sample: true
+  precision: 3
   
 # =========================================================================
-# RADIATEURS ÉLECTRIQUES (Moyennes de Puissance 24h)
+# RADIATEURS ÉLECTRIQUES (Consommation Totale 24h en kWh)
 # =========================================================================
 
 - platform: statistics
-  name: Radiateur Cuisine mean 24h W
-  unique_id: radiateur_cuisine_mean_24h_w
-  entity_id: sensor.radiateur_elec_cuisine_power
-  state_characteristic: mean 
+  name: Radiateur Cuisine Conso 24h kWh
+  unique_id: radiateur_cuisine_conso_24h_kwh
+  entity_id: sensor.radiateur_elec_cuisine_energy
+  state_characteristic: change
   max_age: { hours: 24 }
-  precision: 1
-  keep_last_sample: true
+  precision: 3
 
 - platform: statistics
-  name: Rad. SDB Nous mean 24h W
-  unique_id: rad_sdb_nous_mean_24h_w
-  entity_id: sensor.prise_radiateur_salle_de_bain_nous_power
-  state_characteristic: mean 
+  name: Rad. SDB Nous Conso 24h kWh
+  unique_id: rad_sdb_nous_conso_24h_kwh
+  entity_id: sensor.prise_radiateur_salle_de_bain_nous_energy
+  state_characteristic: change
   max_age: { hours: 24 }
-  precision: 1
-  keep_last_sample: true
+  precision: 3
 
 - platform: statistics
-  name: Rad. SDB Ikea mean 24h W
-  unique_id: rad_sdb_ikea_mean_24h_w
-  entity_id: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
-  state_characteristic: mean 
+  name: Rad. SDB Ikea Conso 24h kWh
+  unique_id: rad_sdb_ikea_conso_24h_kwh
+  entity_id: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+  state_characteristic: change
   max_age: { hours: 24 }
-  precision: 1
-  keep_last_sample: true
+  precision: 3

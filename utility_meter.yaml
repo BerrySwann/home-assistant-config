@@ -354,3 +354,33 @@ all_standby_daily:
   source: sensor.all_standby_kwh
   cycle: daily
   # "[L220] idem"
+
+# ==========================================================================
+# UTILITY METERS (daily) — Chauffage/Climatisation
+# ==========================================================================
+
+clim_salon_nous_daily:
+  source: sensor.clim_salon_nous_energy
+  cycle: daily
+
+clim_du_bureau_nous_daily:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: daily
+
+clim_chambre_nous_daily:
+  source: sensor.clim_chambre_nous_energy
+  cycle: daily
+
+radiateur_elec_cuisine_daily:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: daily
+
+prise_radiateur_salle_de_bain_nous_daily:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: daily
+
+prise_radiateur_salle_de_bain_inspelning_ikea_daily:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+  cycle: daily
+
+# Les capteurs de statistiques mean 730h/24h utiliseront ces nouvelles entités.
