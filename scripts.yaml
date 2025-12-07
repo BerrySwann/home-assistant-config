@@ -18,19 +18,21 @@ git_backup_and_update:
   alias: Git Backup & Refresh
   icon: mdi:cloud-upload
   sequence:
-  - action: shell_command.git_backup_push
-  # On laisse un peu plus de temps (8s) pour l'écriture du log
-  - delay:
-      seconds: 8
-  - target:
-      entity_id: 
-        - sensor.backup_github_status
-        - sensor.backup_github_journal  # <--- AJOUTÉ
-    action: homeassistant.update_entity
-  - action: persistent_notification.create
-    data:
-      title: Git Push
-      message: "Sauvegarde vers GitHub terminée (Journal mis à jour)."
+    # On appelle la shell_command en lui passant le message dans "data"
+    - service: shell_command.git_backup_push_manual
+      data:
+        custom_message: "Sauvegarde Manuelle (Dashboard)" 
+    - delay:
+        seconds: 8
+    - target:
+        entity_id: 
+          - sensor.backup_github_status
+          - sensor.backup_github_journal
+      action: homeassistant.update_entity
+    - action: persistent_notification.create
+      data:
+        title: Git Push
+        message: "Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour)."
 
 git_backup_weekly_and_update:
   alias: Git Backup Weekly & Refresh

@@ -106,10 +106,10 @@ elif [[ -f /config/.HA_VERSION ]]; then
   HA_VER="$(cat /config/.HA_VERSION 2>/dev/null || true)"
 fi
 
-# --- NOUVELLE LOGIQUE ---
+# --- LOGIQUE ---
 if [[ "$INPUT_ARG" == "weekly" ]]; then
   # Cas 1 : Hebdomadaire
-  MSG="HAOS weekly backup: $(date '+%Y-%m-%d %H:%M:%S %Z') (HA ${HA_VER})"
+  MSG="HAOS weekly backup: $(date '+%Y-%m-%d %H:%M:%S %Z')${HA_VER:+ (HA ${HA_VER})}"
   IS_WEEKLY="true"
 elif [[ -n "$INPUT_ARG" ]]; then
   # Cas 2 : Message manuel (ex: "Sauvegarde Manuelle")
@@ -117,7 +117,7 @@ elif [[ -n "$INPUT_ARG" ]]; then
   IS_WEEKLY="false"
 else
   # Cas 3 : Automatique (vide)
-  MSG="HAOS auto-backup: $(date '+%Y-%m-%d %H:%M:%S %Z') (HA ${HA_VER})"
+  MSG="HAOS auto-backup: $(date '+%Y-%m-%d %H:%M:%S %Z')${HA_VER:+ (HA ${HA_VER})}"
   IS_WEEKLY="false"
 fi
 
