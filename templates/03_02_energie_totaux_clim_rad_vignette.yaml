@@ -7,9 +7,9 @@
 #
 #========================================================================
 
-#========================================================================
-# TOTAUX QUOTIDIEN
-#========================================================================
+# =========================================================================
+# CAPTEUR: CONSO. CLIM/RAD TOTAL QUOTIDIEN (Corrigé pour correspondre aux unique_id)
+# =========================================================================
 
 - sensor:
   - name: "Conso. Clim. Rad. Total QUOTIDIEN"
@@ -18,12 +18,22 @@
     unit_of_measurement: "kWh"
     icon: mdi:flash-outline
     state: >
-      {{ (states('sensor.clim_salon_quotidien') | float(0) +
-        states('sensor.radiateur_elec_cuisine_quotid1en') | float(0) +
-        states('sensor.clim_du_bureau_quotidien') | float(0) +
-        states('sensor.radiateur_sdb_quotidien') | float(0) +
-        states('sensor.seche_serv_sdb_quotidien') | float(0) +
-        states('sensor.clim_chambre_quotidien') | float(0)) | round(2) }}
+      {% set entities = [
+        'sensor.clim_salon_quotidien', 
+        'sensor.radiateur_elec_cuisine_quotidien', 
+        'sensor.clim_du_bureau_quotidien',
+        'sensor.radiateur_sdb_quotidien', 
+        'sensor.seche_serv_sdb_quotidien', 
+        'sensor.clim_chambre_quotidien'
+      ] %}
+      
+      {% set total_conso = namespace(value=0) %}
+      
+      {% for entity in entities %}
+        {% set total_conso.value = total_conso.value + states(entity) | float(0) %}
+      {% endfor %}
+      
+      {{ total_conso.value | round(2) }}
 
 #========================================================================
 # TOTAUX QUOTIDIEN MEAN
