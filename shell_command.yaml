@@ -2,13 +2,13 @@
 git_backup_push_manual: >-
   bash -lc '/config/.scripts/ha_git_backup.sh "{{ custom_message }}" >> /config/.logs/ha_git_backup.log 2>&1'
 
-# Commande pour le PUSH AUTOMATIQUE (ancienne commande, sans argument)
+# Commande pour le PUSH AUTOMATIQUE (générique, sans argument)
 git_backup_push: "bash -lc '/config/.scripts/ha_git_backup.sh >> /config/.logs/ha_git_backup.log 2>&1'"
 
 # Commande pour le PUSH WEEKLY (utilise l'argument "weekly")
 git_backup_push_weekly: "bash -lc '/config/.scripts/ha_git_backup.sh weekly >> /config/.logs/ha_git_backup.log 2>&1'"
 
-# Commande pour le PULL (inchangée)
+# Commande pour le PULL (pour mettre à jour la configuration locale)
 git_pull_ff: >-
   bash -lc 'cd /config &&
   git fetch origin --prune &&
