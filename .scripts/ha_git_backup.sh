@@ -124,7 +124,8 @@ if git commit -m "$MSG"; then
 else
   # SI le commit échoue (parce qu'il n'y a rien à committer)
   # On écrit un message de confirmation clair puis on sort (exit 0)
-  log "✅ Backup GitHub OK: [AUCUN CHANGEMENT] L'état était déjà à jour."
+  log "✅ Backup GitHub OK: [AUCUN CHANGEMENT] L'état était déjà à 
+  ."
   exit 0
 fi
 
