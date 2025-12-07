@@ -596,6 +596,121 @@
   state_characteristic: mean
   max_age: { hours: 730 }
   sampling_size: 400
-  # "[S132]"
-  # -test- -upload-
 
+# =========================================================================
+# CLIMATISEURS / POMPES A CHALEUR (Moyennes d'Énergie) 730h
+# =========================================================================
+
+- platform: statistics
+  name: Clim Salon mean 730h kWh
+  unique_id: clim_salon_mean_730h_kwh
+  entity_id: sensor.clim_salon_nous_daily # Doit exister
+  state_characteristic: mean 
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: Clim Bureau mean 730h kWh
+  unique_id: clim_bureau_mean_730h_kwh
+  entity_id: sensor.clim_du_bureau_nous_daily # Doit exister
+  state_characteristic: mean 
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: Clim Chambre mean 730h kWh
+  unique_id: clim_chambre_mean_730h_kwh
+  entity_id: sensor.clim_chambre_nous_daily # Doit exister
+  state_characteristic: mean 
+  max_age: { hours: 730 }
+  sampling_size: 400
+  
+# =========================================================================
+# RADIATEURS ÉLECTRIQUES (Moyennes d'Énergie) 730h
+# =========================================================================
+
+- platform: statistics
+  name: Radiateur Cuisine mean 730h kWh
+  unique_id: radiateur_cuisine_mean_730h_kwh
+  entity_id: sensor.radiateur_elec_cuisine_daily # Doit exister
+  state_characteristic: mean 
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: Rad. SDB Nous mean 730h kWh
+  unique_id: rad_sdb_nous_mean_730h_kwh
+  entity_id: sensor.prise_radiateur_salle_de_bain_nous_daily # Doit exister
+  state_characteristic: mean 
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: Rad. SDB Ikea mean 730h kWh
+  unique_id: rad_sdb_ikea_mean_730h_kwh
+  entity_id: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_daily # Doit exister
+  state_characteristic: mean 
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+# =========================================================================
+# CLIMATISEURS / POMPES A CHALEUR (Moyennes de Puissance 24h)
+# =========================================================================
+
+- platform: statistics
+  name: Clim Salon mean 24h W
+  unique_id: clim_salon_mean_24h_w
+  entity_id: sensor.clim_salon_nous_power
+  state_characteristic: mean 
+  max_age: { hours: 24 }
+  precision: 1
+  keep_last_sample: true
+
+- platform: statistics
+  name: Clim Bureau mean 24h W
+  unique_id: clim_bureau_mean_24h_w
+  entity_id: sensor.clim_du_bureau_nous_power
+  state_characteristic: mean 
+  max_age: { hours: 24 }
+  precision: 1
+  keep_last_sample: true
+
+- platform: statistics
+  name: Clim Chambre mean 24h W
+  unique_id: clim_chambre_mean_24h_w
+  entity_id: sensor.clim_chambre_nous_power
+  state_characteristic: mean 
+  max_age: { hours: 24 }
+  precision: 1
+  keep_last_sample: true
+  
+# =========================================================================
+# RADIATEURS ÉLECTRIQUES (Moyennes de Puissance 24h)
+# =========================================================================
+
+- platform: statistics
+  name: Radiateur Cuisine mean 24h W
+  unique_id: radiateur_cuisine_mean_24h_w
+  entity_id: sensor.radiateur_elec_cuisine_power
+  state_characteristic: mean 
+  max_age: { hours: 24 }
+  precision: 1
+  keep_last_sample: true
+
+- platform: statistics
+  name: Rad. SDB Nous mean 24h W
+  unique_id: rad_sdb_nous_mean_24h_w
+  entity_id: sensor.prise_radiateur_salle_de_bain_nous_power
+  state_characteristic: mean 
+  max_age: { hours: 24 }
+  precision: 1
+  keep_last_sample: true
+
+- platform: statistics
+  name: Rad. SDB Ikea mean 24h W
+  unique_id: rad_sdb_ikea_mean_24h_w
+  entity_id: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+  state_characteristic: mean 
+  max_age: { hours: 24 }
+  precision: 1
+  keep_last_sample: true
