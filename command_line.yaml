@@ -114,14 +114,14 @@
       bash -lc 'cd /config && git tag --list "weekly-*" | sort | tail -n1 || true'
     scan_interval: 1800
 
-# --- Journal (5 dernières lignes pertinentes) ---
+# --- Journal (10 dernières lignes pertinentes) ---
 - sensor:
     name: "Backup GitHub Journal"
     unique_id: backup_github_journal
     command: >-
       bash -lc 'LOG=/config/.logs/ha_git_backup.log;
       if [ -s "$LOG" ]; then
-        OUT=$(grep -aE "Backup GitHub OK:|❌|ABANDON|error:|push declined|Permission denied|Host key verification failed|Tag créé|Git pull" "$LOG" | tail -n 5);
+        OUT=$(grep -aE "Backup GitHub OK:|❌|ABANDON|error:|push declined|Permission denied|Host key verification failed|Tag créé|Git pull" "$LOG" | tail -n 10);
         OUT_ESCAPED=$(printf "%s" "$OUT" | sed -e "s/\\\\/\\\\\\\\/g" -e "s/\"/\\\\\"/g" -e ":a;N;\$!ba;s/\n/\\\\n/g");
         printf "{\"text\":\"%s\"}\n" "$OUT_ESCAPED";
       else
