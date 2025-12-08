@@ -106,7 +106,7 @@ notify:
 
   - name: export_donnees_gemini
     platform: file
-    filename: analyse.log
+    filename: /config/analyse.log
     timestamp: false
 
 # BASE DE DONNEE MariaDB
