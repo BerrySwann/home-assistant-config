@@ -81,33 +81,28 @@ alexa_media:
       password: !secret amazon_password
       url: amazon.fr
 
-# ==========================================================================
-# Zone NOTIFY
-# ==========================================================================
-
-  
-
-  # Telegram
+# Telegram
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_token
     allowed_chat_ids: 
     - !secret id_telegram_HA-Bot
 
+    # ==========================================================================
+# Zone NOTIFY
+# ==========================================================================
+
 notify:
+# export_donnees_gemini
+  - name: export_donnees_gemini
+    platform: file
+    filename: analyse.log
+    timestamp: false
+
+# Telegram
   - platform: telegram
     name: Telegram
     chat_id: !secret id_telegram_HA-Bot
-
-  - name: z2m_error_file
-    platform: file
-    filename: /config/zigbee2mqtt/log/error.log
-    timestamp: false
-
-  - name: export_donnees_gemini
-    platform: file
-    filename: /config/analyse.log
-    timestamp: false
 
 # BASE DE DONNEE MariaDB
 recorder:

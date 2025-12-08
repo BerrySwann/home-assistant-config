@@ -2825,7 +2825,7 @@
   mode: single
 - id: '1765130517086'
   alias: System - Export Données Gemini
-  description: Génère une ligne chaque heure dans analyse.log via Shell
+  description: Génère un rapport JSON propre dans analyse.log
   triggers:
   - minutes: '0'
     trigger: time_pattern
@@ -2855,5 +2855,5 @@
         | float(0) }}\n    }\n  },\n  \"global\": {\n    \"ecojoko_jour\": {{ states('sensor.ecojoko_energy_daily')
         | float(0) }},\n    \"total_chauffage_jour\": {{ states('sensor.conso_clim_rad_total_quotidien')
         | float(0) }}\n  }\n}"
-    action: shell_command.write_to_analyse_log
+    action: notify.export_donnees_gemini
   mode: single
