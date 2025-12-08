@@ -19,4 +19,5 @@ git_pull_ff: >-
   fi'
 
 # Ecrire dans le fichier analyse.log pour gimini
+# On utilise des guillemets simples ' autour du message pour protéger le JSON
 write_to_analyse_log: "echo '{{ message }}' >> /config/analyse.log"
