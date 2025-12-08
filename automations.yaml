@@ -2825,7 +2825,7 @@
   mode: single
 - id: '1765130517086'
   alias: System - Export Données Gemini
-  description: Génère une ligne chaque heure dans analyse.log
+  description: Génère une ligne chaque heure dans analyse.log via Shell
   triggers:
   - minutes: '0'
     trigger: time_pattern
