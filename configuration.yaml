@@ -147,11 +147,12 @@ openai_conversation:
 
 bluetooth:
   device_tracker:
-  - platform: bluetooth_le_tracker
+    - platform: bluetooth_le_tracker
 
+# CORRECTION ICI : speedtestdotnet doit être collé à gauche, pas sous bluetooth !
 speedtestdotnet:
   scan_interval:
-    minutes: 30  # Lance un test toutes les 30 minutes
+    minutes: 30
   monitored_conditions:
     - ping
     - download
