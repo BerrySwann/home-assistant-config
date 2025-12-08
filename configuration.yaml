@@ -105,10 +105,10 @@ notify:
 # NOTIFY - EXPORT DE DONNÉES POUR GEMINI
 # ==========================================================================
 
-  - name: export_donnees_gemini
+  - name: notify.export_donnees_gemini
     platform: file
-    filename: export_gemini.json
-    timestamp: false
+    filename: analyse.log  # <-- On écrit maintenant dans un .log
+    timestamp: false       # On garde false car on inclut déjà la date précise dans nos données
 
 # BASE DE DONNEE MariaDB
 recorder:
