@@ -81,6 +81,10 @@ alexa_media:
       password: !secret amazon_password
       url: amazon.fr
 
+# ==========================================================================
+# Zone NOTIFY
+# ==========================================================================
+
   # Telegram
 telegram_bot:
   - platform: polling
@@ -96,7 +100,15 @@ notify:
     platform: file
     filename: /config/zigbee2mqtt/log/error.log
     timestamp: false
-    
+
+# ==========================================================================
+# NOTIFY - EXPORT DE DONNÉES POUR GEMINI
+# ==========================================================================
+
+  - name: export_donnees_gemini
+    platform: file
+    filename: export_gemini.json
+    timestamp: false
 
 # BASE DE DONNEE MariaDB
 recorder:
@@ -177,11 +189,3 @@ climate:
     temperature_sensor: sensor.th_salon_temperature
     humidity_sensor: sensor.th_salon_humidity
 
-# ==========================================================================
-# NOTIFY - EXPORT DE DONNÉES POUR GEMINI
-# ==========================================================================
-
-  - name: export_donnees_gemini
-    platform: file
-    filename: export_gemini.json
-    timestamp: false
