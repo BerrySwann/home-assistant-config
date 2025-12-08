@@ -2824,8 +2824,8 @@
     action: switch.turn_on
   mode: single
 - id: '1765130517086'
-  alias: System - Export Données Gemini (JSON)
-  description: Génère une ligne JSON chaque heure pour analyse IA
+  alias: System - Export Données Gemini
+  description: Génère une ligne chaque heure pour analyse IA
   triggers:
   - minutes: '0'
     trigger: time_pattern
