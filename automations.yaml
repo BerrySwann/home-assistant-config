@@ -1165,6 +1165,9 @@
   - trigger: state
     entity_id: sensor.message_clim_personnalise_6h_21h
     to:
+  - trigger: state
+    entity_id:
+    - sensor.th_balcon_nord_temperature
   conditions:
   - condition: time
     after: 06:00:00
@@ -1201,6 +1204,9 @@
   - trigger: state
     entity_id: sensor.message_clim_personnalise_21h_6h
     to:
+  - trigger: state
+    entity_id:
+    - sensor.th_balcon_nord_temperature
   conditions:
   - condition: time
     after: '21:00:00'

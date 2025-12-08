@@ -62,5 +62,5 @@
         {% if m_stat == e_stat %}
           [2] en [{{ m_stat }}]
         {% else %}
-          [Mamour: {{ m_stat }}] / [Eric: {{ e_stat }}]
+          [Mamour: {{ m_stat }}/{{ e_stat }}]
         {% endif %}
