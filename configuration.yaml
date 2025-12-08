@@ -180,7 +180,7 @@ climate:
 # ==========================================================================
 # NOTIFY - EXPORT DE DONNÉES POUR GEMINI
 # ==========================================================================
-notify:
+
   - name: export_donnees_gemini
     platform: file
     filename: export_gemini.json
