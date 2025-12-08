@@ -2824,36 +2824,12 @@
     action: switch.turn_on
   mode: single
 - id: '1765130517086'
-  alias: System - Export Données Gemini
-  description: Génère un rapport JSON propre dans analyse.log
+  alias: System - Export Gemini via Script
+  description: Lance le script d'export toutes les heures
   triggers:
   - minutes: '0'
     trigger: time_pattern
   conditions: []
   actions:
-  - data:
-      message: "{\n  \"timestamp\": \"{{ now().isoformat() }}\",\n  \"meteo\": {\n
-        \   \"int_temp\": {{ states('sensor.temperature_moyenne_interieure') | float(0)
-        }},\n    \"ext_temp\": {{ states('sensor.th_balcon_nord_temperature') | float(0)
-        }}\n  },\n  \"chauffage_clim\": {\n    \"salon\": {\n      \"power_w\": {{
-        states('sensor.clim_salon_nous_power') | float(0) }},\n      \"conso_24h_glissant\":
-        {{ states('sensor.clim_salon_conso_24h_kwh') | float(0) }},\n      \"conso_jour_fixe\":
-        {{ states('sensor.clim_salon_quotidien_um') | float(0) }}\n    },\n    \"bureau\":
-        {\n      \"power_w\": {{ states('sensor.clim_du_bureau_nous_power') | float(0)
-        }},\n      \"conso_24h_glissant\": {{ states('sensor.clim_bureau_conso_24h_kwh')
-        | float(0) }},\n      \"conso_jour_fixe\": {{ states('sensor.clim_du_bureau_quotidien_um')
-        | float(0) }}\n    },\n    \"chambre\": {\n      \"power_w\": {{ states('sensor.clim_chambre_nous_power')
-        | float(0) }},\n      \"conso_24h_glissant\": {{ states('sensor.clim_chambre_conso_24h_kwh')
-        | float(0) }},\n      \"conso_jour_fixe\": {{ states('sensor.clim_chambre_quotidien_um')
-        | float(0) }}\n    },\n    \"rad_cuisine\": {\n      \"power_w\": {{ states('sensor.radiateur_elec_cuisine_power')
-        | float(0) }},\n      \"conso_24h_glissant\": {{ states('sensor.radiateur_cuisine_conso_24h_kwh')
-        | float(0) }},\n      \"conso_jour_fixe\": {{ states('sensor.radiateur_elec_cuisine_quotidien_um')
-        | float(0) }}\n    },\n    \"rad_sdb_soufflant\": {\n      \"power_w\": {{
-        states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) }},\n
-        \     \"conso_24h_glissant\": {{ states('sensor.rad_sdb_nous_conso_24h_kwh')
-        | float(0) }},\n      \"conso_jour_fixe\": {{ states('sensor.radiateur_sdb_quotidien_um')
-        | float(0) }}\n    }\n  },\n  \"global\": {\n    \"ecojoko_jour\": {{ states('sensor.ecojoko_energy_daily')
-        | float(0) }},\n    \"total_chauffage_jour\": {{ states('sensor.conso_clim_rad_total_quotidien')
-        | float(0) }}\n  }\n}"
-    action: notify.export_donnees_gemini
+  - action: script.export_gemini_now
   mode: single
