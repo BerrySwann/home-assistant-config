@@ -55,22 +55,24 @@ git_backup_weekly_and_update:
       title: Git Push Weekly
       message: "Sauvegarde Hebdomadaire terminée (Journal mis à jour)."
 
-alias: Force Export Gemini Log
-sequence:
-  - service: shell_command.write_to_analyse_log
-    data:
-      message: >-
-        {
-          "timestamp": "{{ now().isoformat() }}",
-          "meteo": {
-            "int": {{ states('sensor.temperature_moyenne_interieure') | float(0) }},
-            "ext": {{ states('sensor.th_balcon_nord_temperature') | float(0) }}
-          },
-          "chauffage": {
+export_gemini_now: #force_export_gemini_log
+  alias: "Force Export Gemini Log"
+  sequence:
+    - service: shell_command.write_to_analyse_log
+      data:
+        # On construit le JSON ici
+        message: >-
+          {
+            "timestamp": "{{ now().isoformat() }}",
+            "meteo": {
+              "int": {{ states('sensor.temperature_moyenne_interieure') | float(0) }},
+              "ext": {{ states('sensor.th_balcon_nord_temperature') | float(0) }}
+            },
+            "chauffage": {
               "salon_w": {{ states('sensor.clim_salon_nous_power') | float(0) }},
               "salon_kwh_24h": {{ states('sensor.clim_salon_conso_24h_kwh') | float(0) }}
-          },
-          "global": {
+            },
+            "global": {
               "ecojoko": {{ states('sensor.ecojoko_energy_daily') | float(0) }}
+            }
           }
-        }
