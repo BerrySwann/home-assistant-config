@@ -17,3 +17,6 @@ git_pull_ff: >-
   else
     echo "❌ Git pull KO: $(date "+%F %T %Z")" >> /config/.logs/ha_git_backup.log;
   fi'
+
+# Ecrire dans le fichier analyse.log pour gimini
+write_to_analyse_log: "echo '{{ message }}' >> /config/analyse.log"

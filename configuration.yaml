@@ -101,15 +101,6 @@ notify:
     filename: /config/zigbee2mqtt/log/error.log
     timestamp: false
 
-# ==========================================================================
-# NOTIFY - EXPORT DE DONNÉES POUR GEMINI
-# ==========================================================================
-
-  - name: export_donnees_gemini
-    platform: file
-    filename: analyse.log
-    timestamp: false
-
 # BASE DE DONNEE MariaDB
 recorder:
   db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
