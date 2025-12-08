@@ -96,7 +96,7 @@ notify:
 # export_donnees_gemini
   - name: export_donnees_gemini
     platform: file
-    filename: analyse.log
+    filename: /config/analyse.log
     timestamp: false
 
 # Telegram
@@ -149,7 +149,7 @@ bluetooth:
   device_tracker:
   - platform: bluetooth_le_tracker
 
-  speedtestdotnet:
+speedtestdotnet:
   scan_interval:
     minutes: 30  # Lance un test toutes les 30 minutes
   monitored_conditions:
