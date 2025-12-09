@@ -3,8 +3,6 @@ homeassistant:
   packages: !include_dir_named integrations/
   allowlist_external_dirs:
     - "/config/"
-  
-
 
 # Loads default set of integrations. Do not remove.
 default_config:
@@ -15,6 +13,9 @@ frontend:
 
 script: !include scripts.yaml
 scene: !include scenes.yaml
+
+# Pour script python
+python_script:
 
 # Pour powercalc
 powercalc:
@@ -176,4 +177,3 @@ climate:
     controller_data: remote.clim_salon
     temperature_sensor: sensor.th_salon_temperature
     humidity_sensor: sensor.th_salon_humidity
-
