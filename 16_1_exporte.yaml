@@ -1,5 +1,0 @@
-- sensor:
-    - name: "Gemini Export Data"
-      unique_id: gemini_export_data
-      state: "{{ states('text.gemini_json_buffer') }}"
-      entity_id: text.gemini_json_buffer

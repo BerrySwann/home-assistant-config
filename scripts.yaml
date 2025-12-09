@@ -181,8 +181,8 @@ export_gemini_now:
             } | to_json
           }}
           
-    # --- 2. ENREGISTRER L'ÉTAT DANS TEXT.GEMINI_JSON_BUFFER ---
-    - service: text.set_value
+    # --- 2. ACTION CORRIGÉE: ENREGISTRER L'ÉTAT DANS INPUT_TEXT ---
+    - service: input_text.set_value
       data:
-        entity_id: text.gemini_json_buffer
+        entity_id: input_text.gemini_json_buffer
         value: "{{ json_payload }}"

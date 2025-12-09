@@ -1,0 +1,7 @@
+- sensor:
+    - name: "Gemini Export Data"
+      unique_id: gemini_export_data
+      state: "{{ states('input_text.gemini_json_buffer') }}"
+      # La ligne ci-dessous assure que le capteur se met à jour immédiatement 
+      # après que le script ait changé l'état de input_text.gemini_json_buffer.
+      entity_id: input_text.gemini_json_buffer
