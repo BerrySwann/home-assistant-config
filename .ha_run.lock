@@ -1,9 +1,1 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-{"pid": 67, "version": 1, "ha_version": "2025.12.2", "start_ts": 1765299795.5526102}
-=======
-{"pid": 67, "version": 1, "ha_version": "2025.11.1", "start_ts": 1765303500.0108514}
->>>>>>> Stashed changes
-=======
-{"pid": 67, "version": 1, "ha_version": "2025.12.2", "start_ts": 1765303696.2637277}
->>>>>>> Stashed changes
+{"pid": 67, "version": 1, "ha_version": "2025.12.2", "start_ts": 1765304422.8483472}
