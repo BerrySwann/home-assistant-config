@@ -2820,8 +2820,9 @@
     action: switch.turn_on
   mode: single
 - id: '1765130517086'
-  alias: System - Export Gemini via Script
-  description: Lance le script d'export toutes les heures pour analyse.log
+  alias: System - Export Données Gemini (Horaire)
+  description: Exécute le script d'export de données complet (Clim, Énergie, Météo)
+    toutes les heures.
   triggers:
   - minutes: '0'
     trigger: time_pattern
