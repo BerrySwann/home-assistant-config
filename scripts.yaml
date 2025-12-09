@@ -56,133 +56,14 @@ git_backup_weekly_and_update:
       message: "Sauvegarde Hebdomadaire terminée (Journal mis à jour)."
 
 export_gemini_now:
-  alias: "Force Export Gemini Log"
+  alias: "Force Export Gemini Log - TEST FINAL"
   icon: mdi:database-export
   sequence:
-    # --- 1. CONSTRUCTION DU JSON COMPLET ---
+    # 1. CRÉATION D'UNE VARIABLE SIMPLE POUR LE TEST
     - variables:
-        json_payload: >
-          {{ 
-            {
-              "timestamp": now().isoformat(),
-              "meteo": {
-                "int": states('sensor.temperature_moyenne_interieure') | float(0),
-                "ext": states('sensor.th_balcon_nord_temperature') | float(0)
-              },
-              "chauffage_clim": {
-                "salon": {
-                  "power_w": states('sensor.clim_salon_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.clim_salon_quotidien_um') | float(0)
-                },
-                "bureau": {
-                  "power_w": states('sensor.clim_du_bureau_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.clim_du_bureau_quotidien_um') | float(0)
-                },
-                "chambre": {
-                  "power_w": states('sensor.clim_chambre_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.clim_chambre_quotidien_um') | float(0)
-                },
-                "rad_cuisine": {
-                  "power_w": states('sensor.radiateur_elec_cuisine_power') | float(0),
-                  "conso_jour_kwh": states('sensor.radiateur_elec_cuisine_quotidien_um') | float(0)
-                },
-                "rad_sdb_soufflant": {
-                  "power_w": states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.radiateur_sdb_quotidien_um') | float(0)
-                },
-                "rad_sdb_serviettes": {
-                  "power_w": states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0),
-                  "conso_jour_kwh": states('sensor.seche_serviettes_sdb_quotidien_um') | float(0)
-                }
-              },
-              "appareils_fixes": {
-                "frigo": {
-                  "power_w": states('sensor.prise_frigo_cuisine_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.prise_frigo_cuisine_nous_daily') | float(0)
-                },
-                "congelateur": {
-                  "power_w": states('sensor.prise_congelateur_cuisine_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.prise_congelateur_cuisine_nous_daily') | float(0)
-                },
-                "box_internet": {
-                  "power_w": states('sensor.prise_box_internet_ikea_power') | float(0),
-                  "conso_jour_kwh": states('sensor.prise_box_internet_ikea_daily') | float(0)
-                },
-                "pc_bureau": {
-                  "power_w": states('sensor.prise_bureau_pc_ikea_power') | float(0),
-                  "conso_jour_kwh": states('sensor.prise_bureau_pc_ikea_daily') | float(0)
-                }
-              },
-              "appareils_occasionnels": {
-                "lave_linge": {
-                  "power_w": states('sensor.prise_lave_linge_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.prise_lave_linge_nous_daily') | float(0)
-                },
-                "lave_vaisselle": {
-                  "power_w": states('sensor.prise_lave_vaisselle_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.prise_lave_vaisselle_nous_daily') | float(0)
-                },
-                "four_plaque": {
-                  "power_w": states('sensor.four_et_plaque_de_cuisson_power') | float(0),
-                  "conso_jour_kwh": states('sensor.four_et_plaque_de_cuisson_daily') | float(0)
-                },
-                "airfryer": {
-                  "power_w": states('sensor.prise_airfryer_ninja_nous_power') | float(0),
-                  "conso_jour_kwh": states('sensor.prise_airfryer_ninja_nous_daily') | float(0)
-                }
-              },
-              "eclairage": {
-                "total_kwh_jour": (
-                  states('sensor.eclairage_salon_5_quotidien_um') | float(0) +
-                  states('sensor.eclairage_appart_3_quotidien_um') | float(0) +
-                  states('sensor.eclairage_bureau_5_quotidien_um') | float(0) +
-                  states('sensor.eclairage_sdb_2_quotidien_um') | float(0) +
-                  states('sensor.eclairage_chambre_4_quotidien_um') | float(0)
-                ) | round(3)
-              },
-              "totaux": {
-                "global_ecojoko_kwh_jour": states('sensor.ecojoko_energy_daily') | float(0),
-                "global_ecojoko_kwh_j_1": states('sensor.ecojoko_kwh_j_1') | float(0),
-                "all_standby_kwh_jour": states('sensor.all_standby_daily') | float(0),
-                "linky_hp_kwh_jour": state_attr('sensor.linky_jour_0', 'hp_kwh') | float(0),
-                "linky_hc_kwh_jour": state_attr('sensor.linky_jour_0', 'hc_kwh') | float(0),
-                "linky_index_total": states('sensor.linky_total_kwh_medata') | float(0)
-              },
-              "linky_history": {
-                "day_1": {
-                  "kwh": state_attr('sensor.linky_jour_1', 'total_kwh') | float(0),
-                  "cout_eur": state_attr('sensor.linky_jour_1', 'cout') | float(0)
-                },
-                "day_2": {
-                  "kwh": state_attr('sensor.linky_jour_2', 'total_kwh') | float(0),
-                  "cout_eur": state_attr('sensor.linky_jour_2', 'cout') | float(0)
-                },
-                "day_3": {
-                  "kwh": state_attr('sensor.linky_jour_3', 'total_kwh') | float(0),
-                  "cout_eur": state_attr('sensor.linky_jour_3', 'cout') | float(0)
-                },
-                "day_4": {
-                  "kwh": state_attr('sensor.linky_jour_4', 'total_kwh') | float(0),
-                  "cout_eur": state_attr('sensor.linky_jour_4', 'cout') | float(0)
-                },
-                "day_5": {
-                  "kwh": state_attr('sensor.linky_jour_5', 'total_kwh') | float(0),
-                  "cout_eur": state_attr('sensor.linky_jour_5', 'cout') | float(0)
-                },
-                "day_6": {
-                  "kwh": state_attr('sensor.linky_jour_6', 'total_kwh') | float(0),
-                  "cout_eur": state_attr('sensor.linky_jour_6', 'cout') | float(0)
-                },
-                "day_7": {
-                  "kwh": state_attr('sensor.linky_jour_7', 'total_kwh') | float(0),
-                  "cout_eur": state_attr('sensor.linky_jour_7', 'cout') | float(0)
-                }
-              }
-            } | to_json
-          }}
+        test_payload: "JSON_EXPORT_TEST_SUCCESSFUL: {{ now().isoformat() }}"
           
-    # --- 2. ACTION CORRIGÉE: ENREGISTRER L'ÉTAT DANS INPUT_TEXT ---
-    - service: input_text.set_value
+    # 2. APPEL DU SCRIPT PYTHON AVEC LA CHAÎNE SIMPLE
+    - service: python_script.gemini_log
       data:
-        entity_id: input_text.gemini_json_buffer
-        value: "{{ json_payload }}"
+        json_payload: "{{ test_payload }}"
