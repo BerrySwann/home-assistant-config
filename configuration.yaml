@@ -88,17 +88,10 @@ telegram_bot:
     allowed_chat_ids: 
     - !secret id_telegram_HA-Bot
 
-    # ==========================================================================
+# ==========================================================================
 # Zone NOTIFY
 # ==========================================================================
-
 notify:
-# export_donnees_gemini
-  - name: export_donnees_gemini
-    platform: file
-    filename: /config/analyse.log
-    timestamp: false
-
 # Telegram
   - platform: telegram
     name: Telegram

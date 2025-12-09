@@ -61,19 +61,21 @@ export_gemini_now:
   sequence:
     - service: shell_command.write_to_analyse_log
       data:
-        # On construit le JSON ici
-        message: >-
-          {
-            "timestamp": "{{ now().isoformat() }}",
-            "meteo": {
-              "int": {{ states('sensor.temperature_moyenne_interieure') | float(0) }},
-              "ext": {{ states('sensor.th_balcon_nord_temperature') | float(0) }}
-            },
-            "chauffage": {
-              "salon_w": {{ states('sensor.clim_salon_nous_power') | float(0) }},
-              "salon_kwh_24h": {{ states('sensor.clim_salon_conso_24h_kwh') | float(0) }}
-            },
-            "global": {
-              "ecojoko": {{ states('sensor.ecojoko_energy_daily') | float(0) }}
-            }
-          }
+        # ⚠️ Le filtre | to_json garantit un format sûr en ligne unique
+        message: >
+          {{ 
+            {
+              "timestamp": now().isoformat(),
+              "meteo": {
+                "int": states('sensor.temperature_moyenne_interieure') | float(0),
+                "ext": states('sensor.th_balcon_nord_temperature') | float(0)
+              },
+              "chauffage": {
+                "salon_w": states('sensor.clim_salon_nous_power') | float(0),
+                "salon_kwh_24h": states('sensor.clim_salon_conso_24h_kwh') | float(0)
+              },
+              "global": {
+                "ecojoko": states('sensor.ecojoko_energy_daily') | float(0)
+              }
+            } | to_json
+          }}

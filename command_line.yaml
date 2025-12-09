@@ -186,3 +186,14 @@
     command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp5_input"
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
+
+# ==========================================================================
+# CAPTEUR LECTEUR : Lit la dernière ligne du fichier exporté
+# ==========================================================================
+- sensor:
+    name: "Gemini Export Data"
+    unique_id: gemini_export_data
+    command: "tail -n 1 /config/.logs/gemini_export.log"
+    # Le capteur se met à jour 10 secondes après l'exécution du script d'export
+    scan_interval: 10 
+    value_template: "{{ value }}"
