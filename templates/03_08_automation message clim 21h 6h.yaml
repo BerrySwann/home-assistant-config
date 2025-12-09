@@ -64,9 +64,9 @@
             {%- elif 'groupe_2' in groupe %}
               {# MAMOUR AT HOME #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
                 {%- set message_mode = "[FAN ONLY]\nChambre\nSalon/Bureau" %}
               {%- else %}
@@ -76,9 +76,9 @@
             {%- elif 'groupe_3' in groupe %}
               {# ERIC AT HOME #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
                 {%- set message_mode = "[FAN ONLY]\nChambre\nSalon/Bureau" %}
               {%- else %}
@@ -88,11 +88,11 @@
             {%- elif 'groupe_4' in groupe %}
               {# MAMOUR & ERIC AT HOME #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "[FAN ONLY]\nChambre\nSalon/Bureau" %}
+                {%- set message_mode = "[FAN ONLY]\nChambre\nSalon & Bureau" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
