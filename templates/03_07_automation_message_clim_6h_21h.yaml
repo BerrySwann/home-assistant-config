@@ -36,7 +36,7 @@
           {# --- Header basé sur Presence Clim --- #}
           {%- set message_header = "T° " ~ presence %}
 
-          {# --- Logique principale pour 6h-20h --- #}
+          {# --- Logique principale pour 6h-2h --- #}
           {%- if not clims_alimentees %}
             {%- set message_mode = "[UNITS OFF]" %}
 
@@ -96,8 +96,9 @@
 
           {# --- Construction du message final --- #}
           {{ message_header }}
-          {{ message_tendance }}
           {{ message_mode }}
+          {{ message_tendance }}
+          
         {%- endif %}
       availability: >
         {{ states('sensor.poco_x7_pro_mamour_network_type') not in ['unknown', 'unavailable'] and
