@@ -181,8 +181,8 @@ export_gemini_now:
             } | to_json
           }}
           
-    # --- 2. ENREGISTRER L'ÉTAT DU CAPTEUR DIRECTEMENT (BYPASS DU FICHIER) ---
-    - service: homeassistant.set_state
+    # --- 2. ENREGISTRER L'ÉTAT DANS TEXT.GEMINI_JSON_BUFFER ---
+    - service: text.set_value
       data:
-        entity_id: sensor.gemini_export_data
-        state: "{{ json_payload }}"
+        entity_id: text.gemini_json_buffer
+        value: "{{ json_payload }}"
