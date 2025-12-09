@@ -24,7 +24,9 @@
           {%- set groupe = states('sensor.groupe_clim') %}
           {%- set presence = states('sensor.presence_clim') %}
 
-          {# --- Message de tendance --- #}
+          {# ################################################################# #}
+          {#                            PARTIE 1 : TENDANCE                    #}
+          {# ################################################################# #}
           {%- if tendance == 'increasing' %}
             {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
           {%- elif tendance == 'decreasing' %}
@@ -33,58 +35,64 @@
             {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
           {%- endif %}
 
-          {# --- Header basé sur Presence Clim --- #}
-          {%- set message_header = "T° " ~ presence %}
 
-          {# --- Logique principale pour 20h-6h (priorité à la chambre) --- #}
+          {# ################################################################# #}
+          {#                            PARTIE 2 : HEADER                      #}
+          {# ################################################################# #}
+          {%- set message_header = presence %}
+
+
+          {# ################################################################# #}
+          {#                            PARTIE 3 : MODE                        #}
+          {# ################################################################# #}
           {%- if not clims_alimentees %}
             {%- set message_mode = "[UNITS OFF]" %}
 
           {%- else %}
             {%- if 'groupe_1' in groupe %}
-              {# ABSENT (les 2 en CELL ou WIFI_!?), on reste en éco sur les 3 clims #}
+              {# ABSENT #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "3 clim " ~ temp_eco ~ "° [éCO HEAT]" %}
+                {%- set message_mode = "[éCO HEAT]\nLes 3 clim " ~ temp_eco ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "3 clim " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nLes 3 clim " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "3 clim [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nLes 3 clim" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_2' in groupe %}
-              {# MAMOUR AT HOME => Chambre prioritaire #}
+              {# MAMOUR AT HOME #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Chambre [FAN ONLY] - Salon/Bureau [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nChambre\nSalon/Bureau" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_3' in groupe %}
-              {# ERIC AT HOME => Chambre prioritaire aussi la nuit #}
+              {# ERIC AT HOME #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Chambre [FAN ONLY] - Salon/Bureau [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nChambre\nSalon/Bureau" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_4' in groupe %}
-              {# MAMOUR & ERIC AT HOME => Chambre prioritaire, salon/bureau en cible #}
+              {# MAMOUR & ERIC AT HOME #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "[HEAT]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Chambre " ~ temp_diff ~ "° - Salon/Bureau " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nChambre " ~ temp_diff ~ "°\nSalon/Bureau " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Chambre [FAN ONLY] - Salon/Bureau [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nChambre\nSalon/Bureau" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
@@ -94,10 +102,13 @@
             {%- endif %}
           {%- endif %}
 
-          {# --- Construction du message final --- #}
+          {# ################################################################# #}
+          {#                     ASSEMBLAGE FINAL DU MESSAGE                   #}
+          {# ################################################################# #}
           {{ message_header }}
           {{ message_tendance }}
           {{ message_mode }}
+          
         {%- endif %}
       availability: >
         {{ states('sensor.poco_x7_pro_mamour_network_type') not in ['unknown', 'unavailable'] and

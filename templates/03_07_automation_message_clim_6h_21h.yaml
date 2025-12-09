@@ -24,7 +24,9 @@
           {%- set groupe = states('sensor.groupe_clim') %}
           {%- set presence = states('sensor.presence_clim') %}
 
-          {# --- Message de tendance --- #}
+          {# ################################################################# #}
+          {#                            PARTIE 1 : TENDANCE                    #}
+          {# ################################################################# #}
           {%- if tendance == 'increasing' %}
             {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
           {%- elif tendance == 'decreasing' %}
@@ -33,58 +35,64 @@
             {%- set message_tendance = "T°Ext stable " ~ temp_ext ~ "°" %}
           {%- endif %}
 
-          {# --- Header basé sur Presence Clim --- #}
-          {%- set message_header = "T° " ~ presence %}
 
-          {# --- Logique principale pour 6h-2h --- #}
+          {# ################################################################# #}
+          {#                            PARTIE 2 : HEADER                      #}
+          {# ################################################################# #}
+          {%- set message_header = presence %}
+
+
+          {# ################################################################# #}
+          {#                            PARTIE 3 : MODE                        #}
+          {# ################################################################# #}
           {%- if not clims_alimentees %}
             {%- set message_mode = "[UNITS OFF]" %}
 
           {%- else %}
             {%- if 'groupe_1' in groupe %}
-              {# ABSENT => 3 clims en éco ou cible selon mode #}
+              {# ABSENT => 3 clims en éco #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Les 3 Clim " ~ temp_eco ~ "° [éCO HEAT]" %}
+                {%- set message_mode = "[éCO HEAT]\nLes 3 Clim " ~ temp_eco ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Les 3 Clim " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nLes 3 Clim " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Les 3 Clim [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nLes 3 Clim" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_2' in groupe %}
-              {# MAMOUR AT HOME => Salon prioritaire, Bureau & Chambre en cible #}
+              {# MAMOUR AT HOME => Salon prioritaire #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "[HEAT]\nSalon " ~ temp_diff ~ "°\nBureau & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Salon " ~ temp_diff ~ "° - Bureau & Chambre " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nSalon " ~ temp_diff ~ "°\nBureau & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Salon [FAN ONLY] - Bureau & Chambre [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nSalon\nBureau & Chambre" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_3' in groupe %}
-              {# ERIC AT HOME => Bureau prioritaire, Salon & Chambre en cible #}
+              {# ERIC AT HOME => Bureau prioritaire #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "[HEAT]\nBureau " ~ temp_diff ~ "°\nSalon & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Bureau " ~ temp_diff ~ "° - Salon & Chambre " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nBureau " ~ temp_diff ~ "°\nSalon & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Bureau [FAN ONLY] - Salon & Chambre [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nBureau\nSalon & Chambre" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
 
             {%- elif 'groupe_4' in groupe %}
-              {# MAMOUR & ERIC AT HOME => Salon & Bureau prioritaires, Chambre en cible #}
+              {# MAMOUR & ERIC AT HOME => Salon & Bureau prioritaires #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [HEAT]" %}
+                {%- set message_mode = "[HEAT]\nSalon & Bureau " ~ temp_diff ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "Salon & Bureau " ~ temp_diff ~ "° - Chambre " ~ temp_cible ~ "° [COOL]" %}
+                {%- set message_mode = "[COOL]\nSalon & Bureau " ~ temp_diff ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "Salon & Bureau [FAN ONLY] - Chambre [FAN ONLY]" %}
+                {%- set message_mode = "[FAN ONLY]\nSalon & Bureau\nChambre" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
@@ -94,10 +102,12 @@
             {%- endif %}
           {%- endif %}
 
-          {# --- Construction du message final --- #}
+          {# ################################################################# #}
+          {#                     ASSEMBLAGE FINAL DU MESSAGE                   #}
+          {# ################################################################# #}
           {{ message_header }}
-          {{ message_mode }}
           {{ message_tendance }}
+          {{ message_mode }}
           
         {%- endif %}
       availability: >

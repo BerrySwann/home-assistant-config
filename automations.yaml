@@ -1157,43 +1157,39 @@
 - *id001
 - id: '1758129997644'
   alias: (D) Notification température Up ou Down de [6h00 -> 21h00]
-  description: 'Envoie le message personnalisé de clim uniquement si le texte du message
+  description: Envoie le message personnalisé de clim uniquement si le texte du message
     change, entre 6h et 21h.
-
-    '
   triggers:
   - trigger: state
     entity_id: sensor.message_clim_personnalise_6h_21h
-    to:
-  - trigger: state
-    entity_id:
-    - sensor.th_balcon_nord_temperature
   conditions:
   - condition: time
     after: 06:00:00
     before: '21:00:00'
+  - condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
   actions:
   - delay: 00:00:02
   - if:
     - condition: template
-      value_template: "{{ states('sensor.message_clim_personnalise_6h_21h') in ['unknown',
-        'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
+      value_template: "{{ states('sensor.message_clim_personnalise_6h00_21h00') in
+        ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
         in ['unknown', 'unavailable'] }}\n"
     then:
     - action: notify.mobile_app_poco_x7_pro
       data:
-        title: ⚠️ Erreur Capteurs
+        title: Erreur Capteurs
         message: 'Un capteur (Température, Wifi ou Message) est indisponible. Vérifiez
-          les entités.
-
-          '
+          les entités. État message: {{ states(''sensor.message_clim_personnalise_6h_21h'')
+          }}'
     else:
     - action: notify.mobile_app_poco_x7_pro
       data:
-        message: '{{ states(''sensor.message_clim_personnalise_6h_21h'') }}'
-  mode: queued
+        title: Info Clim
+        message: '{{ states(''sensor.message_clim_personnalise_6h00_21h00'') }}'
+  mode: single
 - id: '1758298361594'
   alias: (E) Notification température Up ou Down de [21h00 -> 6h00]
   description: 'Envoie le message personnalisé de clim uniquement si le texte du message
@@ -2825,7 +2821,7 @@
   mode: single
 - id: '1765130517086'
   alias: System - Export Gemini via Script
-  description: Lance le script d'export toutes les heures
+  description: Lance le script d'export toutes les heures pour analyse.log
   triggers:
   - minutes: '0'
     trigger: time_pattern

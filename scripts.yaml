@@ -55,8 +55,9 @@ git_backup_weekly_and_update:
       title: Git Push Weekly
       message: "Sauvegarde Hebdomadaire terminée (Journal mis à jour)."
 
-export_gemini_now: #force_export_gemini_log
+export_gemini_now:
   alias: "Force Export Gemini Log"
+  icon: mdi:file-document-edit
   sequence:
     - service: shell_command.write_to_analyse_log
       data:
