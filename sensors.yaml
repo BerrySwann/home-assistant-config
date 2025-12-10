@@ -347,7 +347,7 @@
   unit_time: h
   round: 3
   # Sortie : sensor.clim_chambre_nous_kwh
-  
+
 # ==========================================================================
 # STATISTICS — Moyennes Glissantes (kWh) pour tous les appareils
 # ==========================================================================
