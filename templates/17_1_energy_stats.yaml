@@ -1,0 +1,387 @@
+
+
+# =========================================================================
+# TEMPLATE ENERGY STATS (Remplace l'intégration statistics - SANS BUGS YAML)
+# Utilisation: history_func pour calculer la consommation glissante (24h) 
+# et la moyenne (730h).
+# =========================================================================
+- sensor:
+# --------------------------------------------------------------------------
+# --- ENTRÉE (Box Internet & Horloge)
+# --------------------------------------------------------------------------
+
+  # Box Internet - Consommation 24h
+  - name: prise_box_internet_ikea Conso 24h kWh
+    unique_id: prise_box_internet_ikea_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_box_internet_ikea_kwh', 24, 3) }}"
+
+  # Box Internet - Moyenne 730h
+  - name: prise_box_internet_ikea mean 730h (kWh)
+    unique_id: prise_box_internet_ikea_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_box_internet_ikea_daily', 730, 2) }}"
+    
+  # Horloge - Consommation 24h
+  - name: prise_horloge_ikea Conso 24h kWh
+    unique_id: prise_horloge_ikea_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_horloge_ikea_kwh', 24, 3) }}"
+
+  # Horloge - Moyenne 730h
+  - name: prise_horloge_ikea mean 730h (kWh)
+    unique_id: prise_horloge_ikea_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_horloge_ikea_daily', 730, 2) }}"
+
+# --------------------------------------------------------------------------
+# --- SALON (PC Gégé & Chargeur)
+# --------------------------------------------------------------------------
+
+  # PC Gégé - Consommation 24h
+  - name: prise_pc_s_gege_ikea Conso 24h kWh
+    unique_id: prise_pc_s_gege_ikea_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_pc_s_gege_ikea_kwh', 24, 3) }}"
+
+  # PC Gégé - Moyenne 730h
+  - name: prise_pc_s_gege_ikea mean 730h (kWh)
+    unique_id: prise_pc_s_gege_ikea_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_pc_s_gege_ikea_daily', 730, 2) }}"
+    
+  # Chargeur - Consommation 24h
+  - name: prise_salon_chargeur_nous Conso 24h kWh
+    unique_id: prise_salon_chargeur_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_salon_chargeur_nous_kwh', 24, 3) }}"
+
+  # Chargeur - Moyenne 730h
+  - name: prise_salon_chargeur_nous mean 730h (kWh)
+    unique_id: prise_salon_chargeur_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_salon_chargeur_nous_daily', 730, 2) }}"
+
+# --------------------------------------------------------------------------
+# --- CUISINE (Four MO, Lave-Linge, LV, Airfryer, Four Plaque, Frigo, Congélateur)
+# --------------------------------------------------------------------------
+
+  # Four Micro-Ondes - Consommation 24h
+  - name: prise_four_micro_ondes_nous Conso 24h kWh
+    unique_id: prise_four_micro_ondes_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_four_micro_ondes_nous_kwh', 24, 3) }}"
+
+  # Four Micro-Ondes - Moyenne 730h
+  - name: prise_four_micro_ondes_nous mean 730h (kWh)
+    unique_id: prise_four_micro_ondes_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_four_micro_ondes_nous_daily', 730, 2) }}"
+
+  # Lave-Linge - Consommation 24h
+  - name: prise_lave_linge_nous Conso 24h kWh
+    unique_id: prise_lave_linge_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_lave_linge_nous_kwh', 24, 3) }}"
+
+  # Lave-Linge - Moyenne 730h
+  - name: prise_lave_linge_nous mean 730h (kWh)
+    unique_id: prise_lave_linge_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_lave_linge_nous_daily', 730, 2) }}"
+
+  # Lave-Vaisselle - Consommation 24h
+  - name: prise_lave_vaisselle_nous Conso 24h kWh
+    unique_id: prise_lave_vaisselle_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_lave_vaisselle_nous_kwh', 24, 3) }}"
+
+  # Lave-Vaisselle - Moyenne 730h
+  - name: prise_lave_vaisselle_nous mean 730h (kWh)
+    unique_id: prise_lave_vaisselle_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_lave_vaisselle_nous_daily', 730, 2) }}"
+
+  # Airfryer - Consommation 24h
+  - name: prise_airfryer_ninja_nous Conso 24h kWh
+    unique_id: prise_airfryer_ninja_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_airfryer_ninja_nous_kwh', 24, 3) }}"
+
+  # Airfryer - Moyenne 730h
+  - name: prise_airfryer_ninja_nous mean 730h (kWh)
+    unique_id: prise_airfryer_ninja_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_airfryer_ninja_nous_daily', 730, 2) }}"
+
+  # Four Plaque - Consommation 24h
+  - name: four_et_plaque_de_cuisson Conso 24h kWh
+    unique_id: four_et_plaque_de_cuisson_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.four_et_plaque_de_cuisson_kwh', 24, 3) }}"
+
+  # Four Plaque - Moyenne 730h
+  - name: four_et_plaque_de_cuisson mean 730h (kWh)
+    unique_id: four_et_plaque_de_cuisson_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.four_et_plaque_de_cuisson_daily', 730, 2) }}"
+
+  # Frigo - Consommation 24h
+  - name: prise_frigo_cuisine_nous Conso 24h kWh
+    unique_id: prise_frigo_cuisine_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_frigo_cuisine_nous_kwh', 24, 3) }}"
+
+  # Frigo - Moyenne 730h
+  - name: prise_frigo_cuisine_nous mean 730h (kWh)
+    unique_id: prise_frigo_cuisine_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_frigo_cuisine_nous_daily', 730, 2) }}"
+
+  # Congélateur - Consommation 24h
+  - name: prise_congelateur_cuisine_nous Conso 24h kWh
+    unique_id: prise_congelateur_cuisine_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_congelateur_cuisine_nous_kwh', 24, 3) }}"
+
+  # Congélateur - Moyenne 730h
+  - name: prise_congelateur_cuisine_nous mean 730h (kWh)
+    unique_id: prise_congelateur_cuisine_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_congelateur_cuisine_nous_daily', 730, 2) }}"
+
+# --------------------------------------------------------------------------
+# --- BUREAU (PC Bureau & Fer à Repasser)
+# --------------------------------------------------------------------------
+
+  # PC Bureau - Consommation 24h
+  - name: prise_bureau_pc_ikea Conso 24h kWh
+    unique_id: prise_bureau_pc_ikea_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_bureau_pc_ikea_kwh', 24, 3) }}"
+
+  # PC Bureau - Moyenne 730h
+  - name: prise_bureau_pc_ikea mean 730h (kWh)
+    unique_id: prise_bureau_pc_ikea_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_bureau_pc_ikea_daily', 730, 2) }}"
+
+  # Fer à Repasser - Consommation 24h
+  - name: prise_bureau_fer_a_repasser_nous Conso 24h kWh
+    unique_id: prise_bureau_fer_a_repasser_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_bureau_fer_a_repasser_nous_kwh', 24, 3) }}"
+
+  # Fer à Repasser - Moyenne 730h
+  - name: prise_bureau_fer_a_repasser_nous mean 730h (kWh)
+    unique_id: prise_bureau_fer_a_repasser_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_bureau_fer_a_repasser_nous_daily', 730, 2) }}"
+
+# --------------------------------------------------------------------------
+# --- CHAMBRE (Tête de Lit & TV Chambre)
+# --------------------------------------------------------------------------
+
+  # Tête de Lit - Consommation 24h
+  - name: prise_tete_de_lit_chambre Conso 24h kWh
+    unique_id: prise_tete_de_lit_chambre_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_tete_de_lit_chambre_kwh', 24, 3) }}"
+
+  # Tête de Lit - Moyenne 730h
+  - name: prise_tete_de_lit_chambre mean 730h (kWh)
+    unique_id: prise_tete_de_lit_chambre_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_tete_de_lit_chambre_daily', 730, 2) }}"
+
+  # TV Chambre - Consommation 24h
+  - name: prise_tv_chambre_nous Conso 24h kWh
+    unique_id: prise_tv_chambre_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_tv_chambre_nous_kwh', 24, 3) }}"
+
+  # TV Chambre - Moyenne 730h
+  - name: prise_tv_chambre_nous mean 730h (kWh)
+    unique_id: prise_tv_chambre_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_tv_chambre_nous_daily', 730, 2) }}"
+
+# --------------------------------------------------------------------------
+# --- VEILLE (All Standby)
+# --------------------------------------------------------------------------
+
+  # Veille - Consommation 24h
+  - name: all_standby Conso 24h kWh
+    unique_id: all_standby_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.all_standby_kwh', 24, 3) }}"
+
+  # Veille - Moyenne 730h
+  - name: all_standby mean 730h (kWh)
+    unique_id: all_standby_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.all_standby_daily', 730, 2) }}"
+
+# --------------------------------------------------------------------------
+# --- CHAUFFAGE & CLIMATISATION
+# --------------------------------------------------------------------------
+
+  # Clim Salon - Consommation 24h
+  - name: Clim Salon Conso 24h kWh
+    unique_id: clim_salon_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.clim_salon_nous_kwh', 24, 3) }}"
+
+  # Clim Salon - Moyenne 730h
+  - name: Clim Salon mean 730h kWh
+    unique_id: clim_salon_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.clim_salon_nous_daily', 730, 2) }}"
+
+  # Clim Bureau - Consommation 24h
+  - name: Clim Bureau Conso 24h kWh
+    unique_id: clim_bureau_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.clim_du_bureau_nous_kwh', 24, 3) }}"
+
+  # Clim Bureau - Moyenne 730h
+  - name: Clim Bureau mean 730h kWh
+    unique_id: clim_bureau_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.clim_du_bureau_nous_daily', 730, 2) }}"
+
+  # Clim Chambre - Consommation 24h
+  - name: Clim Chambre Conso 24h kWh
+    unique_id: clim_chambre_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.clim_chambre_nous_kwh', 24, 3) }}"
+
+  # Clim Chambre - Moyenne 730h
+  - name: Clim Chambre mean 730h kWh
+    unique_id: clim_chambre_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.clim_chambre_nous_daily', 730, 2) }}"
+
+  # Radiateur Cuisine - Consommation 24h
+  - name: Radiateur Cuisine Conso 24h kWh
+    unique_id: radiateur_cuisine_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.radiateur_elec_cuisine_kwh', 24, 3) }}"
+
+  # Radiateur Cuisine - Moyenne 730h
+  - name: Radiateur Cuisine mean 730h kWh
+    unique_id: radiateur_cuisine_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.radiateur_elec_cuisine_daily', 730, 2) }}"
+
+  # Rad. SDB Nous - Consommation 24h
+  - name: Rad. SDB Nous Conso 24h kWh
+    unique_id: rad_sdb_nous_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_radiateur_salle_de_bain_nous_kwh', 24, 3) }}"
+
+  # Rad. SDB Nous - Moyenne 730h
+  - name: Rad. SDB Nous mean 730h kWh
+    unique_id: rad_sdb_nous_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_radiateur_salle_de_bain_nous_daily', 730, 2) }}"
+
+  # Rad. SDB Ikea - Consommation 24h
+  - name: Rad. SDB Ikea Conso 24h kWh
+    unique_id: rad_sdb_ikea_conso_24h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ consumption_change('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh', 24, 3) }}"
+
+  # Rad. SDB Ikea - Moyenne 730h
+  - name: Rad. SDB Ikea mean 730h kWh
+    unique_id: rad_sdb_ikea_mean_730h_kwh
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    state: "{{ mean_daily('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_daily', 730, 2) }}"
