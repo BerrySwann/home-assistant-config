@@ -1,5 +1,5 @@
 # ==========================================================================
-# UTILISATION: utility_meter
+# UTILISATION: utility_meter (CORRIGÉ et NETTOYÉ)
 # ==========================================================================
 
 # --------------------------------------------------------------------------
@@ -43,105 +43,105 @@ ecojoko_energy_monthly:
 # --------------------------------------------------------------------------
 
 # --- CLIM SALON ---
-clim_salon_annuel_um:
-  source: sensor.clim_salon_nous_kwh # HARMONISÉ
+clim_salon_nous_yearly:
+  source: sensor.clim_salon_nous_kwh
   cycle: yearly
 
-clim_salon_mensuel_um:
-  source: sensor.clim_salon_nous_kwh # HARMONISÉ
+clim_salon_nous_monthly:
+  source: sensor.clim_salon_nous_kwh
   cycle: monthly
 
-clim_salon_hebdomadaire_um:
-  source: sensor.clim_salon_nous_kwh # HARMONISÉ
+clim_salon_nous_weekly:
+  source: sensor.clim_salon_nous_kwh
   cycle: weekly
 
-clim_salon_quotidien_um:
-  source: sensor.clim_salon_nous_kwh # HARMONISÉ
+clim_salon_nous_daily:
+  source: sensor.clim_salon_nous_kwh
   cycle: daily
 
 # --- RADIATEUR CUISINE ---
-radiateur_elec_cuisine_annuel_um:
-  source: sensor.radiateur_elec_cuisine_kwh # HARMONISÉ
+radiateur_elec_cuisine_yearly:
+  source: sensor.radiateur_elec_cuisine_kwh
   cycle: yearly
 
-radiateur_elec_cuisine_mensuel_um:
-  source: sensor.radiateur_elec_cuisine_kwh # HARMONISÉ
+radiateur_elec_cuisine_monthly:
+  source: sensor.radiateur_elec_cuisine_kwh
   cycle: monthly
 
-radiateur_elec_cuisine_hebdomadaire_um:
-  source: sensor.radiateur_elec_cuisine_kwh # HARMONISÉ
+radiateur_elec_cuisine_weekly:
+  source: sensor.radiateur_elec_cuisine_kwh
   cycle: weekly
 
-radiateur_elec_cuisine_quotidien_um:
-  source: sensor.radiateur_elec_cuisine_kwh # HARMONISÉ
+radiateur_elec_cuisine_daily:
+  source: sensor.radiateur_elec_cuisine_kwh
   cycle: daily
 
 # --- CLIM BUREAU ---
-clim_du_bureau_annuel_um:
-  source: sensor.clim_du_bureau_nous_kwh # HARMONISÉ
+clim_du_bureau_nous_yearly:
+  source: sensor.clim_du_bureau_nous_kwh
   cycle: yearly
 
-clim_du_bureau_mensuel_um:
-  source: sensor.clim_du_bureau_nous_kwh # HARMONISÉ
+clim_du_bureau_nous_monthly:
+  source: sensor.clim_du_bureau_nous_kwh
   cycle: monthly
 
-clim_du_bureau_hebdomadaire_um:
-  source: sensor.clim_du_bureau_nous_kwh # HARMONISÉ
+clim_du_bureau_nous_weekly:
+  source: sensor.clim_du_bureau_nous_kwh
   cycle: weekly
 
-clim_du_bureau_quotidien_um:
-  source: sensor.clim_du_bureau_nous_kwh # HARMONISÉ
+clim_du_bureau_nous_daily:
+  source: sensor.clim_du_bureau_nous_kwh
   cycle: daily
 
-# --- SOUFFLANT SALLE DE BAIN ---
-radiateur_sdb_annuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_kwh # HARMONISÉ
+# --- SOUFFLANT SALLE DE BAIN (Nous) ---
+prise_radiateur_salle_de_bain_nous_yearly:
+  source: sensor.prise_radiateur_salle_de_bain_nous_kwh
   cycle: yearly
 
-radiateur_sdb_mensuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_kwh # HARMONISÉ
+prise_radiateur_salle_de_bain_nous_monthly:
+  source: sensor.prise_radiateur_salle_de_bain_nous_kwh
   cycle: monthly
 
-radiateur_sdb_hebdomadaire_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_kwh # HARMONISÉ
+prise_radiateur_salle_de_bain_nous_weekly:
+  source: sensor.prise_radiateur_salle_de_bain_nous_kwh
   cycle: weekly
 
-radiateur_sdb_quotidien_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_kwh # HARMONISÉ
+prise_radiateur_salle_de_bain_nous_daily:
+  source: sensor.prise_radiateur_salle_de_bain_nous_kwh
   cycle: daily
 
-# --- SECHE-SERVIETTES SALLE DE BAIN ---
-seche_serviettes_sdb_annuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh # HARMONISÉ
+# --- SECHE-SERVIETTES SALLE DE BAIN (Ikea) ---
+prise_radiateur_salle_de_bain_inspelning_ikea_yearly:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh
   cycle: yearly
 
-seche_serviettes_sdb_mensuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh # HARMONISÉ
+prise_radiateur_salle_de_bain_inspelning_ikea_monthly:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh
   cycle: monthly
 
-seche_serviettes_sdb_hebdomadaire_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh # HARMONISÉ
+prise_radiateur_salle_de_bain_inspelning_ikea_weekly:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh
   cycle: weekly
 
-seche_serviettes_sdb_quotidien_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh # HARMONISÉ
+prise_radiateur_salle_de_bain_inspelning_ikea_daily:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh
   cycle: daily
 
 # --- CLIM CHAMBRE ---
-clim_chambre_annuel_um:
-  source: sensor.clim_chambre_nous_kwh # HARMONISÉ
+clim_chambre_nous_yearly:
+  source: sensor.clim_chambre_nous_kwh
   cycle: yearly
 
-clim_chambre_mensuel_um:
-  source: sensor.clim_chambre_nous_kwh # HARMONISÉ
+clim_chambre_nous_monthly:
+  source: sensor.clim_chambre_nous_kwh
   cycle: monthly
 
-clim_chambre_hebdomadaire_um:
-  source: sensor.clim_chambre_nous_kwh # HARMONISÉ
+clim_chambre_nous_weekly:
+  source: sensor.clim_chambre_nous_kwh
   cycle: weekly
 
-clim_chambre_quotidien_um:
-  source: sensor.clim_chambre_nous_kwh # HARMONISÉ
+clim_chambre_nous_daily:
+  source: sensor.clim_chambre_nous_kwh
   cycle: daily
 
 # --------------------------------------------------------------------------
@@ -149,87 +149,87 @@ clim_chambre_quotidien_um:
 # --------------------------------------------------------------------------
 
 # --- ECLAIRAGE SALON ---
-eclairage_salon_5_annuel_um:
+eclairage_salon_5_yearly:
   source: sensor.eclairage_salon_5_energie
   cycle: yearly
 
-eclairage_salon_5_mensuel_um:
+eclairage_salon_5_monthly:
   source: sensor.eclairage_salon_5_energie
   cycle: monthly
 
-eclairage_salon_5_hebdomadaire_um:
+eclairage_salon_5_weekly:
   source: sensor.eclairage_salon_5_energie
   cycle: weekly
 
-eclairage_salon_5_quotidien_um:
+eclairage_salon_5_daily:
   source: sensor.eclairage_salon_5_energie
   cycle: daily
 
 # --- ECLAIRAGE APPARTEMENT (HOME) ---
-eclairage_appart_3_annuel_um:
+eclairage_appart_3_yearly:
   source: sensor.eclairage_appart_3_energie
   cycle: yearly
 
-eclairage_appart_3_mensuel_um:
+eclairage_appart_3_monthly:
   source: sensor.eclairage_appart_3_energie
   cycle: monthly
 
-eclairage_appart_3_hebdomadaire_um:
+eclairage_appart_3_weekly:
   source: sensor.eclairage_appart_3_energie
   cycle: weekly
 
-eclairage_appart_3_quotidien_um:
+eclairage_appart_3_daily:
   source: sensor.eclairage_appart_3_energie
   cycle: daily
 
 # --- ECLAIRAGE BUREAU ---
-eclairage_bureau_5_annuel_um:
+eclairage_bureau_5_yearly:
   source: sensor.eclairage_bureau_5_energie
   cycle: yearly
 
-eclairage_bureau_5_mensuel_um:
+eclairage_bureau_5_monthly:
   source: sensor.eclairage_bureau_5_energie
   cycle: monthly
 
-eclairage_bureau_5_hebdomadaire_um:
+eclairage_bureau_5_weekly:
   source: sensor.eclairage_bureau_5_energie
   cycle: weekly
 
-eclairage_bureau_5_quotidien_um:
+eclairage_bureau_5_daily:
   source: sensor.eclairage_bureau_5_energie
   cycle: daily
 
 # --- ECLAIRAGE SALLE DE BAIN ---
-eclairage_sdb_2_annuel_um:
+eclairage_sdb_2_yearly:
   source: sensor.eclairage_sdb_2_energie
   cycle: yearly
 
-eclairage_sdb_2_mensuel_um:
+eclairage_sdb_2_monthly:
   source: sensor.eclairage_sdb_2_energie
   cycle: monthly
 
-eclairage_sdb_2_hebdomadaire_um:
+eclairage_sdb_2_weekly:
   source: sensor.eclairage_sdb_2_energie
   cycle: weekly
 
-eclairage_sdb_2_quotidien_um:
+eclairage_sdb_2_daily:
   source: sensor.eclairage_sdb_2_energie
   cycle: daily
 
 # --- ECLAIRAGE CHAMBRE ---
-eclairage_chambre_4_annuel_um:
+eclairage_chambre_4_yearly:
   source: sensor.eclairage_chambre_4_energie
   cycle: yearly
 
-eclairage_chambre_4_mensuel_um:
+eclairage_chambre_4_monthly:
   source: sensor.eclairage_chambre_4_energie
   cycle: monthly
 
-eclairage_chambre_4_hebdomadaire_um:
+eclairage_chambre_4_weekly:
   source: sensor.eclairage_chambre_4_energie
   cycle: weekly
 
-eclairage_chambre_4_quotidien_um:
+eclairage_chambre_4_daily:
   source: sensor.eclairage_chambre_4_energie
   cycle: daily
 
