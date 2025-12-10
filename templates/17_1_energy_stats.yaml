@@ -1,22 +1,21 @@
-
-
-# =========================================================================
-# TEMPLATE ENERGY STATS (Remplace l'intégration statistics - SANS BUGS YAML)
-# Utilisation: history_func pour calculer la consommation glissante (24h) 
-# et la moyenne (730h).
-# =========================================================================
 - sensor:
-# --------------------------------------------------------------------------
-# --- ENTRÉE (Box Internet & Horloge)
-# --------------------------------------------------------------------------
 
+# --- ENTRÉE (Box Internet & Horloge) ---
   # Box Internet - Consommation 24h
   - name: prise_box_internet_ikea Conso 24h kWh
     unique_id: prise_box_internet_ikea_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_box_internet_ikea_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_box_internet_ikea_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Box Internet - Moyenne 730h
   - name: prise_box_internet_ikea mean 730h (kWh)
@@ -24,15 +23,31 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_box_internet_ikea_daily', 730, 2) }}"
-    
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_box_internet_ikea_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
+      
   # Horloge - Consommation 24h
   - name: prise_horloge_ikea Conso 24h kWh
     unique_id: prise_horloge_ikea_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_horloge_ikea_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_horloge_ikea_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Horloge - Moyenne 730h
   - name: prise_horloge_ikea mean 730h (kWh)
@@ -40,19 +55,32 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_horloge_ikea_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_horloge_ikea_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
-# --------------------------------------------------------------------------
-# --- SALON (PC Gégé & Chargeur)
-# --------------------------------------------------------------------------
-
+# --- SALON (PC Gégé & Chargeur) ---
   # PC Gégé - Consommation 24h
   - name: prise_pc_s_gege_ikea Conso 24h kWh
     unique_id: prise_pc_s_gege_ikea_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_pc_s_gege_ikea_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_pc_s_gege_ikea_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # PC Gégé - Moyenne 730h
   - name: prise_pc_s_gege_ikea mean 730h (kWh)
@@ -60,7 +88,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_pc_s_gege_ikea_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_pc_s_gege_ikea_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
     
   # Chargeur - Consommation 24h
   - name: prise_salon_chargeur_nous Conso 24h kWh
@@ -68,7 +104,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_salon_chargeur_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_salon_chargeur_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Chargeur - Moyenne 730h
   - name: prise_salon_chargeur_nous mean 730h (kWh)
@@ -76,19 +120,32 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_salon_chargeur_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_salon_chargeur_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
-# --------------------------------------------------------------------------
-# --- CUISINE (Four MO, Lave-Linge, LV, Airfryer, Four Plaque, Frigo, Congélateur)
-# --------------------------------------------------------------------------
-
+# --- CUISINE ---
   # Four Micro-Ondes - Consommation 24h
   - name: prise_four_micro_ondes_nous Conso 24h kWh
     unique_id: prise_four_micro_ondes_nous_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_four_micro_ondes_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_four_micro_ondes_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Four Micro-Ondes - Moyenne 730h
   - name: prise_four_micro_ondes_nous mean 730h (kWh)
@@ -96,7 +153,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_four_micro_ondes_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_four_micro_ondes_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Lave-Linge - Consommation 24h
   - name: prise_lave_linge_nous Conso 24h kWh
@@ -104,7 +169,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_lave_linge_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_lave_linge_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Lave-Linge - Moyenne 730h
   - name: prise_lave_linge_nous mean 730h (kWh)
@@ -112,7 +185,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_lave_linge_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_lave_linge_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Lave-Vaisselle - Consommation 24h
   - name: prise_lave_vaisselle_nous Conso 24h kWh
@@ -120,7 +201,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_lave_vaisselle_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_lave_vaisselle_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Lave-Vaisselle - Moyenne 730h
   - name: prise_lave_vaisselle_nous mean 730h (kWh)
@@ -128,7 +217,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_lave_vaisselle_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_lave_vaisselle_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Airfryer - Consommation 24h
   - name: prise_airfryer_ninja_nous Conso 24h kWh
@@ -136,7 +233,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_airfryer_ninja_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_airfryer_ninja_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Airfryer - Moyenne 730h
   - name: prise_airfryer_ninja_nous mean 730h (kWh)
@@ -144,7 +249,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_airfryer_ninja_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_airfryer_ninja_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Four Plaque - Consommation 24h
   - name: four_et_plaque_de_cuisson Conso 24h kWh
@@ -152,7 +265,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.four_et_plaque_de_cuisson_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.four_et_plaque_de_cuisson_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Four Plaque - Moyenne 730h
   - name: four_et_plaque_de_cuisson mean 730h (kWh)
@@ -160,7 +281,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.four_et_plaque_de_cuisson_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.four_et_plaque_de_cuisson_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Frigo - Consommation 24h
   - name: prise_frigo_cuisine_nous Conso 24h kWh
@@ -168,7 +297,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_frigo_cuisine_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_frigo_cuisine_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Frigo - Moyenne 730h
   - name: prise_frigo_cuisine_nous mean 730h (kWh)
@@ -176,7 +313,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_frigo_cuisine_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_frigo_cuisine_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Congélateur - Consommation 24h
   - name: prise_congelateur_cuisine_nous Conso 24h kWh
@@ -184,7 +329,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_congelateur_cuisine_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_congelateur_cuisine_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Congélateur - Moyenne 730h
   - name: prise_congelateur_cuisine_nous mean 730h (kWh)
@@ -192,19 +345,32 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_congelateur_cuisine_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_congelateur_cuisine_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
-# --------------------------------------------------------------------------
-# --- BUREAU (PC Bureau & Fer à Repasser)
-# --------------------------------------------------------------------------
-
+# --- BUREAU ---
   # PC Bureau - Consommation 24h
   - name: prise_bureau_pc_ikea Conso 24h kWh
     unique_id: prise_bureau_pc_ikea_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_bureau_pc_ikea_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_bureau_pc_ikea_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # PC Bureau - Moyenne 730h
   - name: prise_bureau_pc_ikea mean 730h (kWh)
@@ -212,7 +378,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_bureau_pc_ikea_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_bureau_pc_ikea_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Fer à Repasser - Consommation 24h
   - name: prise_bureau_fer_a_repasser_nous Conso 24h kWh
@@ -220,7 +394,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_bureau_fer_a_repasser_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_bureau_fer_a_repasser_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Fer à Repasser - Moyenne 730h
   - name: prise_bureau_fer_a_repasser_nous mean 730h (kWh)
@@ -228,19 +410,32 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_bureau_fer_a_repasser_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_bureau_fer_a_repasser_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
-# --------------------------------------------------------------------------
-# --- CHAMBRE (Tête de Lit & TV Chambre)
-# --------------------------------------------------------------------------
-
+# --- CHAMBRE ---
   # Tête de Lit - Consommation 24h
   - name: prise_tete_de_lit_chambre Conso 24h kWh
     unique_id: prise_tete_de_lit_chambre_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_tete_de_lit_chambre_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_tete_de_lit_chambre_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Tête de Lit - Moyenne 730h
   - name: prise_tete_de_lit_chambre mean 730h (kWh)
@@ -248,7 +443,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_tete_de_lit_chambre_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_tete_de_lit_chambre_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # TV Chambre - Consommation 24h
   - name: prise_tv_chambre_nous Conso 24h kWh
@@ -256,7 +459,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_tv_chambre_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_tv_chambre_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # TV Chambre - Moyenne 730h
   - name: prise_tv_chambre_nous mean 730h (kWh)
@@ -264,19 +475,32 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_tv_chambre_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_tv_chambre_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
-# --------------------------------------------------------------------------
-# --- VEILLE (All Standby)
-# --------------------------------------------------------------------------
-
+# --- VEILLE (All Standby) ---
   # Veille - Consommation 24h
   - name: all_standby Conso 24h kWh
     unique_id: all_standby_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.all_standby_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.all_standby_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Veille - Moyenne 730h
   - name: all_standby mean 730h (kWh)
@@ -284,19 +508,32 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.all_standby_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.all_standby_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
-# --------------------------------------------------------------------------
-# --- CHAUFFAGE & CLIMATISATION
-# --------------------------------------------------------------------------
-
+# --- CHAUFFAGE & CLIMATISATION ---
   # Clim Salon - Consommation 24h
   - name: Clim Salon Conso 24h kWh
     unique_id: clim_salon_conso_24h_kwh
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.clim_salon_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.clim_salon_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Clim Salon - Moyenne 730h
   - name: Clim Salon mean 730h kWh
@@ -304,7 +541,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.clim_salon_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.clim_salon_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Clim Bureau - Consommation 24h
   - name: Clim Bureau Conso 24h kWh
@@ -312,7 +557,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.clim_du_bureau_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.clim_du_bureau_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Clim Bureau - Moyenne 730h
   - name: Clim Bureau mean 730h kWh
@@ -320,7 +573,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.clim_du_bureau_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.clim_du_bureau_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Clim Chambre - Consommation 24h
   - name: Clim Chambre Conso 24h kWh
@@ -328,7 +589,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.clim_chambre_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.clim_chambre_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Clim Chambre - Moyenne 730h
   - name: Clim Chambre mean 730h kWh
@@ -336,7 +605,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.clim_chambre_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.clim_chambre_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Radiateur Cuisine - Consommation 24h
   - name: Radiateur Cuisine Conso 24h kWh
@@ -344,7 +621,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.radiateur_elec_cuisine_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.radiateur_elec_cuisine_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Radiateur Cuisine - Moyenne 730h
   - name: Radiateur Cuisine mean 730h kWh
@@ -352,7 +637,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.radiateur_elec_cuisine_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.radiateur_elec_cuisine_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Rad. SDB Nous - Consommation 24h
   - name: Rad. SDB Nous Conso 24h kWh
@@ -360,7 +653,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_radiateur_salle_de_bain_nous_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_radiateur_salle_de_bain_nous_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Rad. SDB Nous - Moyenne 730h
   - name: Rad. SDB Nous mean 730h kWh
@@ -368,7 +669,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_radiateur_salle_de_bain_nous_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_radiateur_salle_de_bain_nous_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
 
   # Rad. SDB Ikea - Consommation 24h
   - name: Rad. SDB Ikea Conso 24h kWh
@@ -376,7 +685,15 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ consumption_change('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh', 24, 3) }}"
+    state: >
+      {% set start = now() - timedelta(hours=24) %}
+      {% set history = history_func('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_kwh', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 1 %}
+        {{ (states | last - states | first) | round(3) }}
+      {% else %}
+        {{ 0 | float }} 
+      {% endif %}
 
   # Rad. SDB Ikea - Moyenne 730h
   - name: Rad. SDB Ikea mean 730h kWh
@@ -384,4 +701,12 @@
     unit_of_measurement: kWh
     device_class: energy
     state_class: measurement
-    state: "{{ mean_daily('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_daily', 730, 2) }}"
+    state: >
+      {% set start = now() - timedelta(hours=730) %}
+      {% set history = history_func('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_daily', start) %}
+      {% set states = history | map(attribute='state') | reject('eq', 'unavailable') | reject('eq', 'unknown') | map('float', default=0) | list %}
+      {% if states | length > 0 %}
+        {{ (states | sum / states | length) | round(2) }}
+      {% else %}
+        {{ 0.00 | float }} 
+      {% endif %}
