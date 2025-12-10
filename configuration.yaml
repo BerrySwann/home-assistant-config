@@ -75,7 +75,7 @@ input_text: !include input_text.yaml
 #renvoi au fichier input_select.yaml
 input_select: !include input_select.yaml
 
-  # Amazon
+# Amazon
 alexa_media:
   accounts:
     - email: !secret amazon_user
@@ -143,7 +143,6 @@ bluetooth:
   device_tracker:
     - platform: bluetooth_le_tracker
 
-# CORRECTION ICI : speedtestdotnet doit être collé à gauche, pas sous bluetooth !
 speedtestdotnet:
   scan_interval:
     minutes: 30
