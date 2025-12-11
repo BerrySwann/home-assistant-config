@@ -304,6 +304,31 @@
     cycle: daily
 
   #clim salon
-  all_standby_daily:
-    source: sensor.all_standby_kwh
+  clim_salon_daily:
+    source: sensor.clim_salon_kWh
+    cycle: daily
+
+  #Radiateur cuisine
+  radiateur_cuisine_daily:
+    source: sensor.radiateur_cuisine_kWh
+    cycle: daily
+
+  #Clim bureau
+  clim_bureau_daily:
+    source: sensor.clim_bureau_kwh
+    cycle: daily
+
+  #Soufflant salle de bain
+  soufflant_sdb_daily:
+    source: sensor.soufflant_sdb_kWh
+    cycle: daily
+
+  #Sèche serviette salle de bain
+  seche_serv_daily:
+    source: sensor.seche_serv_sdb_kwh
+    cycle: daily
+
+  #Clim chambre
+  clim_chambre_daily:
+    source: sensor.clim_chambre_kwh
     cycle: daily

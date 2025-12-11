@@ -267,10 +267,10 @@
   unit_time: h
   round: 3
 
-# --- radiateur cuisine ---
+# --- Radiateur cuisine ---
 - platform: integration
   source: sensor.radiateur_elec_cuisine_power
-  name: clim_salon_kWh
+  name: radiateur_cuisine_kWh
   unit_prefix: k
   unit_time: h
   round: 3
@@ -278,7 +278,7 @@
 # --- Clim Bureau ---
 - platform: integration
   source: sensor.clim_du_bureau_nous_power
-  name: clim_salon_kWh
+  name: clim_bureau_kWh
   unit_prefix: k
   unit_time: h
   round: 3
@@ -286,7 +286,7 @@
 # --- Soufflant salle de bain ---
 - platform: integration
   source: sensor.prise_radiateur_salle_de_bain_nous_power
-  name: clim_salon_kWh
+  name: soufflant_sdb_kWh
   unit_prefix: k
   unit_time: h
   round: 3
@@ -294,7 +294,7 @@
 # --- Sèche serviette salle de bain ---
 - platform: integration
   source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
-  name: clim_salon_kWh
+  name: seche_serv_sdb_kWh
   unit_prefix: k
   unit_time: h
   round: 3
@@ -569,6 +569,108 @@
   name: all_standby mean 730h (kWh)
   unique_id: all_standby_mean_730h_kwh
   entity_id: sensor.all_standby_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+# --- Clim Salon ---
+- platform: statistics
+  name: Clim Salon mean 24h (kWh)
+  unique_id: clim_salon_mean_24h_kwh
+  entity_id: sensor.clim_salon_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: Clim Salon mean 730h (kWh)
+  unique_id: clim_salon_mean_730h_kwh
+  entity_id: sensor.clim_salon_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+# --- Radiateur cuisine ---
+- platform: statistics
+  name: Radiateur Cuisine mean 24h (kWh)
+  unique_id: radiateur_cuisine_mean_24h_kwh
+  entity_id: sensor.radiateur_cuisine_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: Radiateur Cuisine mean 730h (kWh)
+  unique_id: radiateur_cuisine_mean_730h_kwh
+  entity_id: sensor.clim_bureau_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+# --- Clim Salon ---
+- platform: statistics
+  name: Clim Bureau mean 24h (kWh)
+  unique_id: clim_bureau_mean_24h_kwh
+  entity_id: sensor.clim_bureau_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: Clim Bureau mean 730h (kWh)
+  unique_id: clim_bureau_mean_730h_kwh
+  entity_id: sensor.clim_bureau_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+# --- Soufflant salle de bain ---
+- platform: statistics
+  name: Soufflant SdB mean 24h (kWh)
+  unique_id: soufflant_sdb_mean_24h_kwh
+  entity_id: sensor.soufflant_sdb_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: Soufflant SdB mean 730h (kWh)
+  unique_id: soufflant_sdb_mean_730h_kwh
+  entity_id: sensor.soufflant_sdb_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+# --- Sèche serviette salle de bain ---
+- platform: statistics
+  name: Sèche Serv mean 24h (kWh)
+  unique_id: seche_serv_mean_24h_kwh
+  entity_id: sensor.seche_serv_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: Sèche Serv mean 730h (kWh)
+  unique_id: seche_serv_mean_730h_kwh
+  entity_id: sensor.seche_serv_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+# --- Clim chambre ---
+- platform: statistics
+  name: Clim Chambre mean 24h (kWh)
+  unique_id: clim_chambre_mean_24h_kwh
+  entity_id: sensor.clim_chambre_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: Clim Chambre mean 730h (kWh)
+  unique_id: clim_chambre_mean_730h_kwh
+  entity_id: sensor.clim_chambre_daily
   state_characteristic: mean
   max_age: { hours: 730 }
   sampling_size: 400
