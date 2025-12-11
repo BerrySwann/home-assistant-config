@@ -132,10 +132,9 @@
 #========================================================================
 #
 # INTEGRATION (énergie_kWh à partir de la puissance W)
+# INTEGRATION — chaque source power -> sensor.<base>_kwh
 #
 #========================================================================
-
-# INTEGRATION — chaque source power -> sensor.<base>_kwh
 
 - platform: integration
   source: sensor.prise_box_internet_ikea_power
@@ -254,6 +253,59 @@
   unit_time: h
   round: 3
 
+#========================================================================
+# Clim / Radiateur / Soufflant / Sèche serviette
+# INTEGRATION (énergie_kWh à partir de la puissance W)
+# INTEGRATION — chaque source power -> sensor.<base>_kwh
+#========================================================================
+
+# --- Clim Salon ---
+- platform: integration
+  source: sensor.clim_salon_nous_power
+  name: clim_salon_kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- radiateur cuisine ---
+- platform: integration
+  source: sensor.radiateur_elec_cuisine_power
+  name: clim_salon_kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- Clim Bureau ---
+- platform: integration
+  source: sensor.clim_du_bureau_nous_power
+  name: clim_salon_kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- Soufflant salle de bain ---
+- platform: integration
+  source: sensor.prise_radiateur_salle_de_bain_nous_power
+  name: clim_salon_kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- Sèche serviette salle de bain ---
+- platform: integration
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+  name: clim_salon_kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- Clim chambre ---
+- platform: integration
+  source: sensor.clim_chambre_nous_power
+  name: clim_salon_kWh
+  unit_prefix: k
+  unit_time: h
+  round: 3
 # ==========================================================================
 # STATISTICS — moyennes glissantes sur 24h & 730h à partir des *daily*
 # STATISTICS — sensor.<base>_mean_24h_kwh & sensor.<base>_mean_730h_kwh

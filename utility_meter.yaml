@@ -1,5 +1,6 @@
-utility_meter:
+  #==================================================================
   # toto éclaire (foudres - Point d'impact)
+  #==================================================================
   eclair_yearly:
     source: sensor.blitzortung_lightning_counter
     cycle: yearly
@@ -21,7 +22,7 @@ utility_meter:
     cycle: hourly
 
   #==================================================================
-  # TOTO Clim et radiateur salon / cuisine / bureau / SdB / Chambre
+  # TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre
   #==================================================================
 
   # CLIM SALON
@@ -75,21 +76,38 @@ utility_meter:
     source: sensor.clim_du_bureau_nous_energy
     cycle: daily
 
-  # RADIATEUR SALLE DE BAIN
-  radiateur_sdb_annuel_um:
+  # Soufflant SALLE DE BAIN
+  soufflant_sdb_annuel_um:
     source: sensor.prise_radiateur_salle_de_bain_nous_energy
     cycle: yearly
 
-  radiateur_sdb_mensuel_um:
+  soufflant_sdb_mensuel_um:
     source: sensor.prise_radiateur_salle_de_bain_nous_energy
     cycle: monthly
 
-  radiateur_sdb_hebdomadaire_um:
+  soufflant_sdb_hebdomadaire_um:
     source: sensor.prise_radiateur_salle_de_bain_nous_energy
     cycle: weekly
 
-  radiateur_sdb_quotidien_um:
+  soufflant_sdb_quotidien_um:
     source: sensor.prise_radiateur_salle_de_bain_nous_energy
+    cycle: daily
+
+  # Sèche serviettes SALLE DE BAIN
+  seche_serv_sdb_annuel_um:
+    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
+    cycle: yearly
+
+  seche_serv_sdb_mensuel_um:
+    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
+    cycle: monthly
+
+  seche_serv_sdb_hebdomadaire_um:
+    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
+    cycle: weekly
+
+  seche_serv_sdb_quotidien_um:
+    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
     cycle: daily
 
   # CLIM CHAMBRE
@@ -212,10 +230,10 @@ utility_meter:
 
   # ==========================================================================
   # UTILITY METERS (daily) — 1 compteur / prise
+  # sensor.<base>_daily = daily(sensor.<base>_kwh)
   # ==========================================================================
 
-  # sensor.<base>_daily = daily(sensor.<base>_kwh)
-
+  #Entrée
   prise_box_internet_ikea_daily:
     source: sensor.prise_box_internet_ikea_kwh
     cycle: daily
@@ -224,6 +242,7 @@ utility_meter:
     source: sensor.prise_horloge_ikea_kwh
     cycle: daily
 
+  #Salon
   prise_pc_s_gege_ikea_daily:
     source: sensor.prise_pc_s_gege_ikea_kwh
     cycle: daily
@@ -232,6 +251,7 @@ utility_meter:
     source: sensor.prise_salon_chargeur_nous_kwh
     cycle: daily
 
+  #Cuisine
   prise_four_micro_ondes_nous_daily:
     source: sensor.prise_four_micro_ondes_nous_kwh
     cycle: daily
@@ -260,6 +280,7 @@ utility_meter:
     source: sensor.prise_congelateur_cuisine_nous_kwh
     cycle: daily
 
+  #Bureau
   prise_bureau_pc_ikea_daily:
     source: sensor.prise_bureau_pc_ikea_kwh
     cycle: daily
@@ -268,6 +289,7 @@ utility_meter:
     source: sensor.prise_bureau_fer_a_repasser_nous_kwh
     cycle: daily
 
+  #Chambre
   prise_tete_de_lit_chambre_daily:
     source: sensor.prise_tete_de_lit_chambre_kwh
     cycle: daily
@@ -276,6 +298,12 @@ utility_meter:
     source: sensor.prise_tv_chambre_nous_kwh
     cycle: daily
 
+  #All Standby
+  all_standby_daily:
+    source: sensor.all_standby_kwh
+    cycle: daily
+
+  #clim salon
   all_standby_daily:
     source: sensor.all_standby_kwh
     cycle: daily
