@@ -115,6 +115,8 @@ recorder:
       - call_service
 
     entity_globs:
+      - sensor.127_0_0_1_*_tx
+      - sensor.127_0_0_1_*_rx
       - sensor.*linkquality
       - sensor.*last_seen
       - sensor.date*
