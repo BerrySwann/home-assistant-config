@@ -1,334 +1,281 @@
-  #==================================================================
-  # toto éclaire (foudres - Point d'impact)
-  #==================================================================
-  eclair_yearly:
-    source: sensor.blitzortung_lightning_counter
-    cycle: yearly
-
-  eclair_monthly:
-    source: sensor.blitzortung_lightning_counter
-    cycle: monthly
-
-  eclair_weekly:
-    source: sensor.blitzortung_lightning_counter
-    cycle: weekly
-
-  eclair_daily:
-    source: sensor.blitzortung_lightning_counter
-    cycle: daily
-
-  eclair_hourly:
-    source: sensor.blitzortung_lightning_counter
-    cycle: hourly
-
-  #==================================================================
-  # TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre
-  #==================================================================
-
-  # CLIM SALON
-  clim_salon_annuel_um:
-    source: sensor.clim_salon_nous_energy
-    cycle: yearly
-
-  clim_salon_mensuel_um:
-    source: sensor.clim_salon_nous_energy
-    cycle: monthly
-
-  clim_salon_hebdomadaire_um:
-    source: sensor.clim_salon_nous_energy
-    cycle: weekly
-
-  clim_salon_quotidien_um:
-    source: sensor.clim_salon_nous_energy
-    cycle: daily
-
-  # RADIATEUR CUISINE
-  radiateur_elec_cuisine_annuel_um:
-    source: sensor.radiateur_elec_cuisine_energy
-    cycle: yearly
-
-  radiateur_elec_cuisine_mensuel_um:
-    source: sensor.radiateur_elec_cuisine_energy
-    cycle: monthly
-
-  radiateur_elec_cuisine_hebdomadaire_um:
-    source: sensor.radiateur_elec_cuisine_energy
-    cycle: weekly
-
-  radiateur_elec_cuisine_quotidien_um:
-    source: sensor.radiateur_elec_cuisine_energy
-    cycle: daily
-
-  # CLIM BUREAU
-  clim_du_bureau_annuel_um:
-    source: sensor.clim_du_bureau_nous_energy
-    cycle: yearly
-
-  clim_du_bureau_mensuel_um:
-    source: sensor.clim_du_bureau_nous_energy
-    cycle: monthly
-
-  clim_du_bureau_hebdomadaire_um:
-    source: sensor.clim_du_bureau_nous_energy
-    cycle: weekly
-
-  clim_du_bureau_quotidien_um:
-    source: sensor.clim_du_bureau_nous_energy
-    cycle: daily
-
-  # Soufflant SALLE DE BAIN
-  soufflant_sdb_annuel_um:
-    source: sensor.prise_radiateur_salle_de_bain_nous_energy
-    cycle: yearly
-
-  soufflant_sdb_mensuel_um:
-    source: sensor.prise_radiateur_salle_de_bain_nous_energy
-    cycle: monthly
-
-  soufflant_sdb_hebdomadaire_um:
-    source: sensor.prise_radiateur_salle_de_bain_nous_energy
-    cycle: weekly
-
-  soufflant_sdb_quotidien_um:
-    source: sensor.prise_radiateur_salle_de_bain_nous_energy
-    cycle: daily
-
-  # Sèche serviettes SALLE DE BAIN
-  seche_serv_sdb_annuel_um:
-    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
-    cycle: yearly
-
-  seche_serv_sdb_mensuel_um:
-    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
-    cycle: monthly
-
-  seche_serv_sdb_hebdomadaire_um:
-    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
-    cycle: weekly
-
-  seche_serv_sdb_quotidien_um:
-    source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
-    cycle: daily
-
-  # CLIM CHAMBRE
-  clim_chambre_annuel_um:
-    source: sensor.clim_chambre_nous_energy
-    cycle: yearly
-
-  clim_chambre_mensuel_um:
-    source: sensor.clim_chambre_nous_energy
-    cycle: monthly
-
-  clim_chambre_hebdomadaire_um:
-    source: sensor.clim_chambre_nous_energy
-    cycle: weekly
-
-  clim_chambre_quotidien_um:
-    source: sensor.clim_chambre_nous_energy
-    cycle: daily
-
-  #============================================================================
-  # TOTO Eclairage salon / entree-cuisine-couloir / bureau / Chambre
-  #============================================================================
-
-  # Eclairage SALON
-  eclairage_salon_5_annuel_um:
-    source: sensor.eclairage_salon_5_energie
-    cycle: yearly
-
-  eclairage_salon_5_mensuel_um:
-    source: sensor.eclairage_salon_5_energie
-    cycle: monthly
-
-  eclairage_salon_5_hebdomadaire_um:
-    source: sensor.eclairage_salon_5_energie
-    cycle: weekly
-
-  eclairage_salon_5_quotidien_um:
-    source: sensor.eclairage_salon_5_energie
-    cycle: daily
-
-  # Eclairage APPARTEMENT (HOME)
-  eclairage_appart_3_annuel_um:
-    source: sensor.eclairage_appart_3_energie
-    cycle: yearly
-
-  eclairage_appart_3_mensuel_um:
-    source: sensor.eclairage_appart_3_energie
-    cycle: monthly
-
-  eclairage_appart_3_hebdomadaire_um:
-    source: sensor.eclairage_appart_3_energie
-    cycle: weekly
-
-  eclairage_appart_3_quotidien_um:
-    source: sensor.eclairage_appart_3_energie
-    cycle: daily
-
-  # Eclairage BUREAU
-  eclairage_bureau_5_annuel_um:
-    source: sensor.eclairage_bureau_5_energie
-    cycle: yearly
-
-  eclairage_bureau_5_mensuel_um:
-    source: sensor.eclairage_bureau_5_energie
-    cycle: monthly
-
-  eclairage_bureau_5_hebdomadaire_um:
-    source: sensor.eclairage_bureau_5_energie
-    cycle: weekly
-
-  eclairage_bureau_5_quotidien_um:
-    source: sensor.eclairage_bureau_5_energie
-    cycle: daily
-
-  # Eclairage SALLE DE BAIN
-  eclairage_sdb_2_annuel_um:
-    source: sensor.eclairage_sdb_2_energie
-    cycle: yearly
-
-  eclairage_sdb_2_mensuel_um:
-    source: sensor.eclairage_sdb_2_energie
-    cycle: monthly
-
-  eclairage_sdb_2_hebdomadaire_um:
-    source: sensor.eclairage_sdb_2_energie
-    cycle: weekly
-
-  eclairage_sdb_2_quotidien_um:
-    source: sensor.eclairage_sdb_2_energie
-    cycle: daily
-
-  # Eclairage CHAMBRE
-  eclairage_chambre_4_annuel_um:
-    source: sensor.eclairage_chambre_4_energie
-    cycle: yearly
-
-  eclairage_chambre_4_mensuel_um:
-    source: sensor.eclairage_chambre_4_energie
-    cycle: monthly
-
-  eclairage_chambre_4_hebdomadaire_um:
-    source: sensor.eclairage_chambre_4_energie
-    cycle: weekly
-
-  eclairage_chambre_4_quotidien_um:
-    source: sensor.eclairage_chambre_4_energie
-    cycle: daily
-
-  #============================================================================
-  # TOTO ECOJOKO -> Jour / Mois (compteur ELEC)
-  #============================================================================
-
-  ecojoko_energy_daily:
-    source: sensor.ecojoko_consommation_reseau
-    cycle: daily
-
-  ecojoko_energy_monthly:
-    source: sensor.ecojoko_consommation_reseau
-    cycle: monthly
-
-  # ==========================================================================
-  # UTILITY METERS (daily) — 1 compteur / prise
-  # sensor.<base>_daily = daily(sensor.<base>_kwh)
-  # ==========================================================================
-
-  #Entrée
-  prise_box_internet_ikea_daily:
-    source: sensor.prise_box_internet_ikea_kwh
-    cycle: daily
-
-  prise_horloge_ikea_daily:
-    source: sensor.prise_horloge_ikea_kwh
-    cycle: daily
-
-  #Salon
-  prise_pc_s_gege_ikea_daily:
-    source: sensor.prise_pc_s_gege_ikea_kwh
-    cycle: daily
-
-  prise_salon_chargeur_nous_daily:
-    source: sensor.prise_salon_chargeur_nous_kwh
-    cycle: daily
-
-  #Cuisine
-  prise_four_micro_ondes_nous_daily:
-    source: sensor.prise_four_micro_ondes_nous_kwh
-    cycle: daily
-
-  prise_lave_linge_nous_daily:
-    source: sensor.prise_lave_linge_nous_kwh
-    cycle: daily
-
-  prise_lave_vaisselle_nous_daily:
-    source: sensor.prise_lave_vaisselle_nous_kwh
-    cycle: daily
-
-  prise_airfryer_ninja_nous_daily:
-    source: sensor.prise_airfryer_ninja_nous_kwh
-    cycle: daily
-
-  four_et_plaque_de_cuisson_daily:
-    source: sensor.four_et_plaque_de_cuisson_kwh
-    cycle: daily
-
-  prise_frigo_cuisine_nous_daily:
-    source: sensor.prise_frigo_cuisine_nous_kwh
-    cycle: daily
-
-  prise_congelateur_cuisine_nous_daily:
-    source: sensor.prise_congelateur_cuisine_nous_kwh
-    cycle: daily
-
-  #Bureau
-  prise_bureau_pc_ikea_daily:
-    source: sensor.prise_bureau_pc_ikea_kwh
-    cycle: daily
-
-  prise_bureau_fer_a_repasser_nous_daily:
-    source: sensor.prise_bureau_fer_a_repasser_nous_kwh
-    cycle: daily
-
-  #Chambre
-  prise_tete_de_lit_chambre_daily:
-    source: sensor.prise_tete_de_lit_chambre_kwh
-    cycle: daily
-
-  prise_tv_chambre_nous_daily:
-    source: sensor.prise_tv_chambre_nous_kwh
-    cycle: daily
-
-  #All Standby
-  all_standby_daily:
-    source: sensor.all_standby_kwh
-    cycle: daily
-
-  #clim salon
-  clim_salon_daily:
-    source: sensor.clim_salon_kWh
-    cycle: daily
-
-  #Radiateur cuisine
-  radiateur_cuisine_daily:
-    source: sensor.radiateur_cuisine_kWh
-    cycle: daily
-
-  #Clim bureau
-  clim_bureau_daily:
-    source: sensor.clim_bureau_kwh
-    cycle: daily
-
-  #Soufflant salle de bain
-  soufflant_sdb_daily:
-    source: sensor.soufflant_sdb_kWh
-    cycle: daily
-
-  #Sèche serviette salle de bain
-  seche_serv_daily:
-    source: sensor.seche_serv_sdb_kwh
-    cycle: daily
-
-  #Clim chambre
-  clim_chambre_daily:
-    source: sensor.clim_chambre_kwh
-    cycle: daily
+#==================================================================
+# Éclairs (foudres - Point d'impact)
+#==================================================================
+eclair_yearly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: yearly
+eclair_monthly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: monthly
+eclair_weekly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: weekly
+eclair_daily:
+  source: sensor.blitzortung_lightning_counter
+  cycle: daily
+eclair_hourly:
+  source: sensor.blitzortung_lightning_counter
+  cycle: hourly
+
+#==================================================================
+# Climatisation et radiateurs (salon, cuisine, bureau, SdB, chambre)
+#==================================================================
+# CLIM SALON
+clim_salon_annuel:
+  source: sensor.clim_salon_nous_energy
+  cycle: yearly
+clim_salon_mensuel:
+  source: sensor.clim_salon_nous_energy
+  cycle: monthly
+clim_salon_hebdomadaire:
+  source: sensor.clim_salon_nous_energy
+  cycle: weekly
+clim_salon_quotidien:
+  source: sensor.clim_salon_nous_energy
+  cycle: daily
+
+# RADIATEUR CUISINE
+radiateur_cuisine_annuel:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: yearly
+radiateur_cuisine_mensuel:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: monthly
+radiateur_cuisine_hebdomadaire:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: weekly
+radiateur_cuisine_quotidien:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: daily
+
+# CLIM BUREAU
+clim_bureau_annuel:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: yearly
+clim_bureau_mensuel:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: monthly
+clim_bureau_hebdomadaire:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: weekly
+clim_bureau_quotidien:
+  source: sensor.clim_du_bureau_nous_energy
+  cycle: daily
+
+# SOUFFLANT SALLE DE BAIN
+soufflant_sdb_annuel:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: yearly
+soufflant_sdb_mensuel:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: monthly
+soufflant_sdb_hebdomadaire:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: weekly
+soufflant_sdb_quotidien:
+  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+  cycle: daily
+
+# SÈCHE-SERVIETTES SALLE DE BAIN
+seche_serv_sdb_annuel:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
+  cycle: yearly
+seche_serv_sdb_mensuel:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
+  cycle: monthly
+seche_serv_sdb_hebdomadaire:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
+  cycle: weekly
+seche_serv_sdb_quotidien:
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_device_energy
+  cycle: daily
+
+# CLIM CHAMBRE
+clim_chambre_annuel:
+  source: sensor.clim_chambre_nous_energy
+  cycle: yearly
+clim_chambre_mensuel:
+  source: sensor.clim_chambre_nous_energy
+  cycle: monthly
+clim_chambre_hebdomadaire:
+  source: sensor.clim_chambre_nous_energy
+  cycle: weekly
+clim_chambre_quotidien:
+  source: sensor.clim_chambre_nous_energy
+  cycle: daily
+
+#============================================================================
+# Éclairage (salon, entrée/cuisine/couloir, bureau, chambre)
+#============================================================================
+# ÉCLAIRAGE SALON
+eclairage_salon_annuel:
+  source: sensor.eclairage_salon_5_energie
+  cycle: yearly
+eclairage_salon_mensuel:
+  source: sensor.eclairage_salon_5_energie
+  cycle: monthly
+eclairage_salon_hebdomadaire:
+  source: sensor.eclairage_salon_5_energie
+  cycle: weekly
+eclairage_salon_quotidien:
+  source: sensor.eclairage_salon_5_energie
+  cycle: daily
+
+# ÉCLAIRAGE APPARTEMENT
+eclairage_appart_annuel:
+  source: sensor.eclairage_appart_3_energie
+  cycle: yearly
+eclairage_appart_mensuel:
+  source: sensor.eclairage_appart_3_energie
+  cycle: monthly
+eclairage_appart_hebdomadaire:
+  source: sensor.eclairage_appart_3_energie
+  cycle: weekly
+eclairage_appart_quotidien:
+  source: sensor.eclairage_appart_3_energie
+  cycle: daily
+
+# ÉCLAIRAGE BUREAU
+eclairage_bureau_annuel:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: yearly
+eclairage_bureau_mensuel:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: monthly
+eclairage_bureau_hebdomadaire:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: weekly
+eclairage_bureau_quotidien:
+  source: sensor.eclairage_bureau_5_energie
+  cycle: daily
+
+# ÉCLAIRAGE SALLE DE BAIN
+eclairage_sdb_annuel:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: yearly
+eclairage_sdb_mensuel:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: monthly
+eclairage_sdb_hebdomadaire:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: weekly
+eclairage_sdb_quotidien:
+  source: sensor.eclairage_sdb_2_energie
+  cycle: daily
+
+# ÉCLAIRAGE CHAMBRE
+eclairage_chambre_annuel:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: yearly
+eclairage_chambre_mensuel:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: monthly
+eclairage_chambre_hebdomadaire:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: weekly
+eclairage_chambre_quotidien:
+  source: sensor.eclairage_chambre_4_energie
+  cycle: daily
+
+#============================================================================
+# ÉCOJOKO (compteur électrique)
+#============================================================================
+ecojoko_energy_daily:
+  source: sensor.ecojoko_consommation_reseau
+  cycle: daily
+ecojoko_energy_monthly:
+  source: sensor.ecojoko_consommation_reseau
+  cycle: monthly
+
+#============================================================================
+# UTILITY METERS (daily) — 1 compteur par prise
+#============================================================================
+# Entrée
+prise_box_internet_ikea_daily:
+  source: sensor.prise_box_internet_ikea_kwh
+  cycle: daily
+prise_horloge_ikea_daily:
+  source: sensor.prise_horloge_ikea_kwh
+  cycle: daily
+
+# Salon
+prise_pc_s_gege_ikea_daily:
+  source: sensor.prise_pc_s_gege_ikea_kwh
+  cycle: daily
+prise_salon_chargeur_nous_daily:
+  source: sensor.prise_salon_chargeur_nous_kwh
+  cycle: daily
+
+# Cuisine
+prise_four_micro_ondes_nous_daily:
+  source: sensor.prise_four_micro_ondes_nous_kwh
+  cycle: daily
+prise_lave_linge_nous_daily:
+  source: sensor.prise_lave_linge_nous_kwh
+  cycle: daily
+prise_lave_vaisselle_nous_daily:
+  source: sensor.prise_lave_vaisselle_nous_kwh
+  cycle: daily
+prise_airfryer_ninja_nous_daily:
+  source: sensor.prise_airfryer_ninja_nous_kwh
+  cycle: daily
+four_et_plaque_de_cuisson_daily:
+  source: sensor.four_et_plaque_de_cuisson_kwh
+  cycle: daily
+prise_frigo_cuisine_nous_daily:
+  source: sensor.prise_frigo_cuisine_nous_kwh
+  cycle: daily
+prise_congelateur_cuisine_nous_daily:
+  source: sensor.prise_congelateur_cuisine_nous_kwh
+  cycle: daily
+
+# Bureau
+prise_bureau_pc_ikea_daily:
+  source: sensor.prise_bureau_pc_ikea_kwh
+  cycle: daily
+prise_bureau_fer_a_repasser_nous_daily:
+  source: sensor.prise_bureau_fer_a_repasser_nous_kwh
+  cycle: daily
+
+# Chambre
+prise_tete_de_lit_chambre_daily:
+  source: sensor.prise_tete_de_lit_chambre_kwh
+  cycle: daily
+prise_tv_chambre_nous_daily:
+  source: sensor.prise_tv_chambre_nous_kwh
+  cycle: daily
+
+# All Standby
+all_standby_daily:
+  source: sensor.all_standby_kwh
+  cycle: daily
+
+# Clim salon
+clim_salon_daily:
+  source: sensor.clim_salon_kwh
+  cycle: daily
+
+# Radiateur cuisine
+radiateur_cuisine_daily:
+  source: sensor.radiateur_cuisine_kwh
+  cycle: daily
+
+# Clim bureau
+clim_bureau_daily:
+  source: sensor.clim_bureau_kwh
+  cycle: daily
+
+# Soufflant salle de bain
+soufflant_sdb_daily:
+  source: sensor.soufflant_sdb_kwh
+  cycle: daily
+
+# Sèche serviette salle de bain
+seche_serv_daily:
+  source: sensor.seche_serv_sdb_kwh
+  cycle: daily
+
+# Clim chambre
+clim_chambre_daily:
+  source: sensor.clim_chambre_kwh
+  cycle: daily
