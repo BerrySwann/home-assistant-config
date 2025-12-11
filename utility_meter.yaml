@@ -1,4 +1,3 @@
-
   # toto éclaire (foudres - Point d'impact)
   eclair_yearly:
     source: sensor.blitzortung_lightning_counter
