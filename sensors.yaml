@@ -453,6 +453,23 @@
   max_age: { hours: 730 }
   sampling_size: 400
 
+# --- All Standby ---
+- platform: statistics
+  name: all_standby mean 24h (kWh)
+  unique_id: all_standby_mean_24h_kwh
+  entity_id: sensor.all_standby_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: all_standby mean 730h (kWh)
+  unique_id: all_standby_mean_730h_kwh
+  entity_id: sensor.all_standby_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
 # Clim Salon
 - platform: statistics
   name: Clim Salon mean 24h (kWh)
