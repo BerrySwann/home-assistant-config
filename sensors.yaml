@@ -218,6 +218,22 @@
   unit_time: h
   round: 3
 
+- platform: statistics
+  name: prise_tv_chambre_nous mean 24h (kWh)
+  unique_id: prise_tv_chambre_nous_mean_24h_kwh
+  entity_id: sensor.prise_tv_chambre_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_tv_chambre_nous mean 730h (kWh)
+  unique_id: prise_tv_chambre_nous_mean_730h_kwh
+  entity_id: sensor.prise_tv_chambre_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
 # All Standby
 - platform: integration
   source: sensor.all_standby_power
@@ -289,6 +305,22 @@
   max_age: { hours: 730 }
   sampling_size: 400
 
+- platform: statistics
+  name: prise_horloge_ikea mean 24h (kWh)
+  unique_id: prise_horloge_ikea_mean_24h_kwh
+  entity_id: sensor.prise_horloge_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_horloge_ikea mean 730h (kWh)
+  unique_id: prise_horloge_ikea_mean_730h_kwh
+  entity_id: sensor.prise_horloge_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
 # Salon
 - platform: statistics
   name: prise_pc_s_gege_ikea mean 24h (kWh)
@@ -302,6 +334,22 @@
   name: prise_pc_s_gege_ikea mean 730h (kWh)
   unique_id: prise_pc_s_gege_ikea_mean_730h_kwh
   entity_id: sensor.prise_pc_s_gege_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: prise_salon_chargeur_nous mean 24h (kWh)
+  unique_id: prise_salon_chargeur_nous_mean_24h_kwh
+  entity_id: sensor.prise_salon_chargeur_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_salon_chargeur_nous mean 730h (kWh)
+  unique_id: prise_salon_chargeur_nous_mean_730h_kwh
+  entity_id: sensor.prise_salon_chargeur_nous_daily
   state_characteristic: mean
   max_age: { hours: 730 }
   sampling_size: 400
@@ -432,6 +480,22 @@
   name: prise_bureau_pc_ikea mean 730h (kWh)
   unique_id: prise_bureau_pc_ikea_mean_730h_kwh
   entity_id: sensor.prise_bureau_pc_ikea_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: prise_bureau_fer_a_repasser_nous mean 24h (kWh)
+  unique_id: prise_bureau_fer_a_repasser_nous_mean_24h_kwh
+  entity_id: sensor.prise_bureau_fer_a_repasser_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_bureau_fer_a_repasser_nous mean 730h (kWh)
+  unique_id: prise_bureau_fer_a_repasser_nous_mean_730h_kwh
+  entity_id: sensor.prise_bureau_fer_a_repasser_nous_daily
   state_characteristic: mean
   max_age: { hours: 730 }
   sampling_size: 400
