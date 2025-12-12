@@ -115,12 +115,19 @@ recorder:
       - call_service
 
     entity_globs:
-      - sensor.127_0_0_1_*_tx
-      - sensor.127_0_0_1_*_rx
+      - sensor.127_0_0_1*
       - sensor.*linkquality
       - sensor.*last_seen
       - sensor.date*
       - sensor.time*
+      - TOSHIBA HDWD120*
+      - sensor.sandisk*
+      - sensor.samsung_ssd_970_evo_plus*
+      - sensor.nvidia_nvidia_geforce_rtx_3060*
+      - sensor.gigabyte_b450_aorus_elite*
+      - sensor.generic_memory*
+      - sensor.ethernet*
+      - sensor.amd_ryzen_9_5900x*
 
 sql:
   - name: Taille DB Home Assistant
