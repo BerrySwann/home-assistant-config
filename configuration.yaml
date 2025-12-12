@@ -120,7 +120,7 @@ recorder:
       - sensor.*last_seen
       - sensor.date*
       - sensor.time*
-      - TOSHIBA HDWD120*
+      - sensor.toshiba*
       - sensor.sandisk*
       - sensor.samsung_ssd_970_evo_plus*
       - sensor.nvidia_nvidia_geforce_rtx_3060*
