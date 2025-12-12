@@ -323,6 +323,102 @@
   max_age: { hours: 730 }
   sampling_size: 400
 
+- platform: statistics
+  name: prise_lave_linge_nous mean 24h (kWh)
+  unique_id: prise_lave_linge_nous_mean_24h_kwh
+  entity_id: sensor.prise_lave_linge_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_lave_linge_nous mean 730h (kWh)
+  unique_id: prise_lave_linge_nous_mean_730h_kwh
+  entity_id: sensor.prise_lave_linge_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: prise_lave_vaisselle_nous mean 24h (kWh)
+  unique_id: prise_lave_vaisselle_nous_mean_24h_kwh
+  entity_id: sensor.prise_lave_vaisselle_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_lave_vaisselle_nous mean 730h (kWh)
+  unique_id: prise_lave_vaisselle_nous_mean_730h_kwh
+  entity_id: sensor.prise_lave_vaisselle_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: prise_airfryer_ninja_nous mean 24h (kWh)
+  unique_id: prise_airfryer_ninja_nous_mean_24h_kwh
+  entity_id: sensor.prise_airfryer_ninja_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_airfryer_ninja_nous mean 730h (kWh)
+  unique_id: prise_airfryer_ninja_nous_mean_730h_kwh
+  entity_id: sensor.prise_airfryer_ninja_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: four_et_plaque_de_cuisson mean 24h (kWh)
+  unique_id: four_et_plaque_de_cuisson_mean_24h_kwh
+  entity_id: sensor.four_et_plaque_de_cuisson_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: four_et_plaque_de_cuisson mean 730h (kWh)
+  unique_id: four_et_plaque_de_cuisson_mean_730h_kwh
+  entity_id: sensor.four_et_plaque_de_cuisson_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: prise_frigo_cuisine_nous mean 24h (kWh)
+  unique_id: prise_frigo_cuisine_nous_mean_24h_kwh
+  entity_id: sensor.prise_frigo_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_frigo_cuisine_nous mean 730h (kWh)
+  unique_id: prise_frigo_cuisine_nous_mean_730h_kwh
+  entity_id: sensor.prise_frigo_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
+- platform: statistics
+  name: prise_congelateur_cuisine_nous mean 24h (kWh)
+  unique_id: prise_congelateur_cuisine_nous_mean_24h_kwh
+  entity_id: sensor.prise_congelateur_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_congelateur_cuisine_nous mean 730h (kWh)
+  unique_id: prise_congelateur_cuisine_nous_mean_730h_kwh
+  entity_id: sensor.prise_congelateur_cuisine_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
 # Bureau
 - platform: statistics
   name: prise_bureau_pc_ikea mean 24h (kWh)
