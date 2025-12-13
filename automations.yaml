@@ -2763,17 +2763,6 @@
       entity_id: switch.prise_radiateur_salle_de_bain_inspelning_ikea
     action: switch.turn_on
   mode: single
-- id: '1765130517086'
-  alias: System - Export Données Gemini (Horaire)
-  description: Exécute le script d'export de données complet (Clim, Énergie, Météo)
-    toutes les heures.
-  triggers:
-  - minutes: '0'
-    trigger: time_pattern
-  conditions: []
-  actions:
-  - action: script.export_gemini_now
-  mode: single
 - id: '1765308061437'
   alias: (E) Notification température Up ou Down de [21h00 -> 7h30]
   description: 'Envoie le message personnalisé de clim si le texte change, OU au début

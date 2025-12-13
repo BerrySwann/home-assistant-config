@@ -9,35 +9,24 @@ git_pull:
       message: Fetch/prune + pull --ff-only lancé sur /config.
     action: persistent_notification.create
   description: ''
-
-# -----------------------------------------------------------
-# Scripts Backup GitHub (CORRIGÉS : Update Journal + Status)
-# -----------------------------------------------------------
-
 git_backup_and_update:
   alias: Git Backup & Refresh
   icon: mdi:cloud-upload
   sequence:
-    # ⚠️ APPEL DE LA NOUVELLE shell_command.git_backup_push_manual
-    - service: shell_command.git_backup_push_manual
-      data:
-        custom_message: "Sauvegarde Manuelle (Dashboard)" 
-    - delay:
-        seconds: 8
-    - target:
-        entity_id: 
-          - sensor.backup_github_status
-          - sensor.backup_github_journal
-      action: homeassistant.update_entity
-    - action: persistent_notification.create
-      data:
-        title: Git Push
-        message: "Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour)."
-
-# Laissez le script git_backup_weekly_and_update inchangé.
-
-
-
+  - service: shell_command.git_backup_push_manual
+    data:
+      custom_message: Sauvegarde Manuelle (Dashboard)
+  - delay:
+      seconds: 8
+  - target:
+      entity_id:
+      - sensor.backup_github_status
+      - sensor.backup_github_journal
+    action: homeassistant.update_entity
+  - action: persistent_notification.create
+    data:
+      title: Git Push
+      message: Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour).
 git_backup_weekly_and_update:
   alias: Git Backup Weekly & Refresh
   icon: mdi:calendar-clock
@@ -47,23 +36,10 @@ git_backup_weekly_and_update:
       seconds: 8
   - target:
       entity_id:
-        - sensor.backup_github_status
-        - sensor.backup_github_journal  # <--- AJOUTÉ
+      - sensor.backup_github_status
+      - sensor.backup_github_journal
     action: homeassistant.update_entity
   - action: persistent_notification.create
     data:
       title: Git Push Weekly
-      message: "Sauvegarde Hebdomadaire terminée (Journal mis à jour)."
-
-export_gemini_now:
-  alias: "Force Export Gemini Log - TEST FINAL"
-  icon: mdi:database-export
-  sequence:
-    # 1. CRÉATION D'UNE VARIABLE SIMPLE POUR LE TEST
-    - variables:
-        test_payload: "JSON_EXPORT_TEST_SUCCESSFUL: {{ now().isoformat() }}"
-          
-    # 2. APPEL DU SCRIPT PYTHON AVEC LA CHAÎNE SIMPLE
-    - service: python_script.gemini_log
-      data:
-        json_payload: "{{ test_payload }}"
+      message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
