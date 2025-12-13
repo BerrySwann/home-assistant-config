@@ -1157,14 +1157,14 @@
 - id: '1758298361594'
   alias: (D) Notification température Up ou Down de [7h30 -> 21h00]
   description: 'Envoie le message personnalisé de clim si le texte change, OU au réveil
-    à 06h00.
+    à 07h30.
 
     '
   triggers:
   - trigger: state
     entity_id: sensor.th_balcon_nord_temperature
   - trigger: time
-    at: 06:00:00
+    at: 07:30:00
   conditions: []
   actions:
   - condition: time
@@ -1189,6 +1189,7 @@
     else:
     - action: notify.mobile_app_poco_x7_pro
       data:
+        title: '[Automa. Notif. Jrs]'
         message: '{{ states(''sensor.message_clim_personnalise_7h30_21h00'') }}'
   mode: queued
 - id: '1759042747368'
@@ -2066,8 +2067,8 @@
   alias: A - Chauffage Cuisine (entre 4h45 & 7h LMMJ ou 5:45h & 8h VSD avec T° 19,9°
     <-> 20.5°)
   description: Allume ou éteint le chauffage selon la température (19,9° <-> 20.5°)
-    aux conditions  (entre 4h45 et 7h LMMJ & 5h45 et 8h00 VSD / 19,9° <-> 20.5°) et
-    si Eric at HOME
+    aux conditions (entre 4h45 et 7h LMMJ & 5h45 et 8h00 VSD / 19,9° <-> 20.5°) et
+    si Eric OU Mamour at HOME
   triggers:
   - at: 04:45:00
     trigger: time
@@ -2080,19 +2081,27 @@
   - entity_id: sensor.th_cuisine_temperature
     below: 19.9
     trigger: numeric_state
+  - entity_id: sensor.th_cuisine_temperature
+    above: 20.5
+    trigger: numeric_state
   conditions:
   - condition: and
     conditions:
-    - condition: zone
-      entity_id: person.eric
-      zone: zone.home
+    - condition: or
+      conditions:
+      - condition: zone
+        entity_id: person.eric
+        zone: zone.home
+      - condition: zone
+        entity_id: person.mamour
+        zone: zone.home
     - condition: or
       conditions:
       - condition: and
         conditions:
         - condition: time
           after: 04:45:00
-          before: 07:00:00
+          before: 07:00:01
           weekday:
           - mon
           - tue
@@ -2102,7 +2111,7 @@
         conditions:
         - condition: time
           after: 05:45:00
-          before: 08:00:00
+          before: 08:00:01
           weekday:
           - fri
           - sat
@@ -2110,8 +2119,12 @@
   actions:
   - choose:
     - conditions:
+      - condition: template
+        value_template: '{{ now().hour == 7 and now().minute == 0 and now().second
+          == 0 }}
+
+          '
       - condition: time
-        after: 07:00:00
         weekday:
         - mon
         - tue
@@ -2123,18 +2136,18 @@
         entity_id: 66a2c8ea314f57c47f4accdc5d611779
         domain: switch
       - data:
-          message: /!\ RADIATEUR est "OFF"  FORCE /!\
+          message: /!\ RADIATEUR est "OFF" FORCE /!\
         action: notify.mobile_app_poco_x7_pro
       - action: notify.mobile_app_poco_x7_pro
         data:
-          message: /!\ RADIATEUR est "OFF" FORCE  /!\
-      - data:
-          message: Le chauffage de la Cuisine est éteint en mode forcé
-        action: notify.alexa_media_echo_dot_cuisine
-        enabled: false
+          message: /!\ RADIATEUR est "OFF" FORCE /!\
     - conditions:
+      - condition: template
+        value_template: '{{ now().hour == 8 and now().minute == 0 and now().second
+          == 0 }}
+
+          '
       - condition: time
-        after: 08:00:00
         weekday:
         - fri
         - sat
@@ -2149,11 +2162,7 @@
         action: notify.mobile_app_poco_x7_pro
       - action: notify.mobile_app_poco_x7_pro
         data:
-          message: /!\ RADIATEUR est "OFF" FORCE  /!\
-      - data:
-          message: Le chauffage de la Cuisine est éteint en mode forcé
-        action: notify.alexa_media_echo_dot_cuisine
-        enabled: false
+          message: /!\ RADIATEUR est "OFF" FORCE /!\
     - conditions:
       - condition: numeric_state
         entity_id: sensor.th_cuisine_temperature
@@ -2170,10 +2179,6 @@
       - action: notify.mobile_app_poco_x7_pro
         data:
           message: /!\ RADIATEUR est "ON" /!\
-      - data:
-          message: Le chauffage de la Cuisine est en Fonctionnement.
-        action: notify.alexa_media_echo_dot_cuisine
-        enabled: false
     - conditions:
       - condition: numeric_state
         entity_id: sensor.th_cuisine_temperature
@@ -2190,10 +2195,6 @@
       - action: notify.mobile_app_poco_x7_pro
         data:
           message: /!\ RADIATEUR est "OFF" /!\
-      - data:
-          message: Le chauffage de la Cuisine est éteint.
-        action: notify.alexa_media_echo_dot_cuisine
-        enabled: false
   mode: single
 - id: '1763927002568'
   alias: C - Arrêt Radiateur Salle de Bain
@@ -2266,7 +2267,7 @@
     - binary_sensor.contact_fenetre_chambre_ikea_contact
     from: 'on'
     to: 'off'
-    id: force_run
+    id: sensor_update
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
@@ -2435,15 +2436,11 @@
           action: notify.mobile_app_poco_x7_pro
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
-            message: 'Mode : {{ mode_saison | upper }}
-
-              Salon: {{ t_salon_target }}°
-
-              Bureau: {{ t_bureau_target }}°
-
-              Chambre: {{ t_chambre_target }}°
-
-              '
+            message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
+              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco }}° (Absent)\n{% else
+              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
+              \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
+              endif %}\n"
   mode: queued
 - id: '1764787136826'
   alias: (B - 0) [ TEST 2025-12-13 ] Automatisation pour contrôler de [21h00 <-> 07h30]
@@ -2483,7 +2480,7 @@
     - binary_sensor.contact_fenetre_chambre_ikea_contact
     from: 'on'
     to: 'off'
-    id: force_run
+    id: sensor_update
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
@@ -2636,15 +2633,11 @@
           action: notify.mobile_app_poco_x7_pro
           data:
             title: '[AN] {{ states(''sensor.presence_clim'') }}'
-            message: 'Mode : {{ mode_saison | upper }}
-
-              Salon: {{ t_salon_target }}°
-
-              Bureau: {{ t_bureau_target }}°
-
-              Chambre: {{ t_chambre_target }}°
-
-              '
+            message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
+              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco }}° (Absent)\n{% else
+              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
+              \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
+              endif %}\n"
   mode: queued
 - id: '1764957375111'
   alias: (C) [CLIM OFF] Gardien Éco (Delta T < -1 et T°Ext > Seuil Non-Chauffage)
@@ -2819,5 +2812,6 @@
     else:
     - action: notify.mobile_app_poco_x7_pro
       data:
+        title: '[Automa. Notif. Nuit]'
         message: '{{ states(''sensor.message_clim_personnalise_21h00_7h30'') }}'
   mode: queued

@@ -14,8 +14,8 @@
           {%- set tendance = states('sensor.th_balcon_nord_temperature_trend') %}
           {%- set temp_ext = states('sensor.th_balcon_nord_temperature') | float %}
           {%- set temp_cible = states('sensor.temperature_cible') | float %}
-          {%- set temp_diff = states('sensor.temperature_differentielle') | float %}
-          {%- set temp_eco = states('sensor.temperature_eco_hiver') | float %}
+          {%- set temp_confort = states('sensor.temperature_confort_jour') | float %}
+          {%- set temp_eco = states('sensor.temperature_eco_hiver_corrige') | float %}
           {%- set mode = states('sensor.mode_ete_hiver') %}
           {%- set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
           {%- set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
@@ -64,9 +64,9 @@
             {%- elif 'groupe_2' in groupe %}
               {# MAMOUR AT HOME => Salon prioritaire #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nSalon " ~ temp_diff ~ "°\nBureau & Chambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nSalon " ~ temp_confort ~ "°\nBureau & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "[COOL]\nSalon " ~ temp_diff ~ "°\nBureau & Chambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[COOL]\nSalon " ~ temp_confort ~ "°\nBureau & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
                 {%- set message_mode = "[FAN ONLY]\nSalon [FAN ONLY]\nBureau & Chambre [FAN ONLY]" %}
               {%- else %}
@@ -76,9 +76,9 @@
             {%- elif 'groupe_3' in groupe %}
               {# ERIC AT HOME => Bureau prioritaire #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nBureau " ~ temp_diff ~ "°\nSalon & Chambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nBureau " ~ temp_confort ~ "°\nSalon & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "[COOL]\nBureau " ~ temp_diff ~ "°\nSalon & Chambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[COOL]\nBureau " ~ temp_confort ~ "°\nSalon & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
                 {%- set message_mode = "[FAN ONLY]\nBureau [FAN ONLY]\nSalon & Chambre [FAN ONLY]" %}
               {%- else %}
@@ -88,9 +88,9 @@
             {%- elif 'groupe_4' in groupe %}
               {# MAMOUR & ERIC AT HOME => Salon & Bureau prioritaires #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nSalon & Bureau " ~ temp_diff ~ "°\nChambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nSalon & Bureau " ~ temp_confort ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'cool' %}
-                {%- set message_mode = "[COOL]\nSalon & Bureau " ~ temp_diff ~ "°\nChambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[COOL]\nSalon & Bureau " ~ temp_confort ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
                 {%- set message_mode = "[FAN ONLY]\nSalon & Bureau [FAN ONLY]\nChambre [FAN ONLY]" %}
               {%- else %}
