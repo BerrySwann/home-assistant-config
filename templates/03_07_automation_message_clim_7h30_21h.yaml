@@ -1,5 +1,5 @@
 - sensor:
-    - name: "Message Clim personnalisé 7h30 <-> 21h00"
+    - name: "Message Clim Personnalise 7h30 <-> 21h00"
       unique_id: message_clim_personnalise_7h30_21h00
       state: >
         {# --- Vérification des dépendances critiques --- #}

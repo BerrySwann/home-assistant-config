@@ -1154,40 +1154,6 @@
 - *id001
 - *id001
 - *id001
-- id: '1758129997644'
-  triggers:
-  - trigger: state
-    entity_id:
-    - sensor.th_balcon_nord_temperature
-  conditions:
-  - condition: time
-    after: 06:00:00
-    before: '21:00:00'
-  actions:
-  - delay: 00:00:02
-  - if:
-    - condition: template
-      value_template: "{{ states('sensor.message_clim_personnalise_21h00_6h00') in
-        ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
-        in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
-        in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
-        in ['unknown', 'unavailable'] }}\n"
-    then:
-    - action: notify.mobile_app_poco_x7_pro
-      data:
-        title: ⚠️ Erreur Capteurs (Jours)
-        message: '⚠️ Erreur :
-
-          Un capteur TENDANCE est indisponible !
-
-          Vérifiez les dépendances.
-
-          '
-    else:
-    - action: notify.mobile_app_poco_x7_pro
-      data:
-        message: '{{ states(''sensor.message_clim_personnalise_21h_6h'') }}'
-  mode: queued
 - id: '1758298361594'
   alias: (D) Notification température Up ou Down de [7h30 -> 21h00]
   description: 'Envoie le message personnalisé de clim si le texte change, OU au réveil
@@ -1207,7 +1173,7 @@
   - delay: 00:00:02
   - if:
     - condition: template
-      value_template: "{{ states('sensor.message_clim_personnalise_6h00_21h00') in
+      value_template: "{{ states('sensor.message_clim_personnalise_7h30_21h00') in
         ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
@@ -1680,7 +1646,7 @@
   alias: (L) [DEBUG] Notifier les changements de message clim (Mobile)
   description: ''
   triggers:
-  - entity_id: sensor.message_clim_personnalise_6h_20h
+  - entity_id: sensor.message_clim_personnalise_7h30_21h00
     trigger: state
   actions:
   - choose:
@@ -2259,16 +2225,16 @@
     action: switch.turn_off
   mode: single
 - id: '1764784032821'
-  alias: (A - 0) [TEST 2025-12-03] Automatisation pour contrôler de [07h30 <-> 21h00]
+  alias: (A - 0) [TEST 2025-12-13] Automatisation pour contrôler de [07h30 <-> 21h00]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
-    du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
-    qui sont contrôlées 24h sur 24.
+    du type de réseau des portables [WIFI/CELLULAR]. L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
+    sont contrôlées.
   description: '[TEST] Automatisation pour contrôler de [07h30 <-> 21h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
-    des portables [WIFI/CELLULAR]. (SAUF) L''état des fenêtres [OUVERTE(S)/FERMÉE(S)]
-    qui sont contrôlées 24h sur 24. - 06h00 ou Arrivée : Force l''allumage. - Changement
-    Température : Ne met à jour que si déjà allumé. - Gestion différenciée par pièce
-    (Salon/Bureau) selon présence.'
+    des portables [WIFI/CELLULAR].L''état des fenêtres [OUVERTE(S)/FERMÉE(S)] sont
+    contrôlées. - 07h30 ou Arrivée : Force l''allumage. - Changement Température :
+    Ne met à jour que si déjà allumé. - Gestion différenciée par pièce (Salon/Bureau)
+    selon présence.'
   triggers:
   - alias: 'SYSTEM : Redémarrage Home Assistant'
     trigger: homeassistant
@@ -2317,7 +2283,7 @@
     - sensor.th_balcon_nord_temperature
     - sensor.temperature_cible
     - sensor.mode_ete_hiver
-    - sensor.temperature_confort
+    - sensor.temperature_confort_jour
     id: sensor_update
   conditions:
   - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE JOUR'
@@ -2334,8 +2300,8 @@
         \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n   | selectattr('state',
         'eq', 'on') | list | count > 0 }}\n"
       temp_eco: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17) }}'
-      temp_cible: '{{ states(''sensor.temperature_cible'') | float(25) }}'
-      temp_confort: '{{ states(''sensor.temperature_confort'') | float(24) }}'
+      temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
+      temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
       prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and \n   is_state('switch.clim_du_bureau_nous',
         'on') and \n   is_state('switch.clim_chambre_nous', 'on') }}\n"
       t_salon_target: '{{ temp_cible }}'
@@ -2480,7 +2446,7 @@
               '
   mode: queued
 - id: '1764787136826'
-  alias: (B - 0) [ TEST 2025-12-03 ] Automatisation pour contrôler de [21h00 <-> 07h30]
+  alias: (B - 0) [ TEST 2025-12-13 ] Automatisation pour contrôler de [21h00 <-> 07h30]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR].
   description: 'Automatisation pour contrôler de [21h00 <-> 07h30] les climatiseurs
@@ -2551,8 +2517,8 @@
         \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n   | selectattr('state',
         'eq', 'on') | list | count > 0 }}\n"
       temp_eco: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17) }}'
-      temp_cible: '{{ states(''sensor.temperature_cible'') | float(25) }}'
-      temp_nuit: '{{ states(''sensor.temperature_confort_nuit'') | float(24) }}'
+      temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
+      temp_nuit: '{{ states(''sensor.temperature_confort_nuit'') | float(18) }}'
       prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and \n   is_state('switch.clim_du_bureau_nous',
         'on') and \n   is_state('switch.clim_chambre_nous', 'on') }}\n"
       t_salon_target: '{{ temp_cible }}'
@@ -2834,7 +2800,7 @@
   - delay: 00:00:02
   - if:
     - condition: template
-      value_template: "{{ states('sensor.message_clim_personnalise_21h00_6h00') in
+      value_template: "{{ states('sensor.message_clim_personnalise_21h00_7h30') in
         ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_mamour_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.poco_x7_pro_wi_fi_connection')
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
