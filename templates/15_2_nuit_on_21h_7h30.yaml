@@ -1,0 +1,9 @@
+- binary_sensor:
+      - name: "Est Nuit (21h-7h30)"
+        unique_id: est_nuit_21h_7h30
+        state: >
+          {% set current_time = now().time() %}
+          {% set start_time = time(21, 0) %}
+          {% set end_time = time(7, 30) %}
+          
+          {{ current_time >= start_time or current_time < end_time }}

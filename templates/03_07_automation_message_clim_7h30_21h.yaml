@@ -1,6 +1,6 @@
 - sensor:
-    - name: "Message Clim personnalisé 6h00 <-> 21h00"
-      unique_id: message_clim_personnalise_6h00_21h00
+    - name: "Message Clim personnalisé 7h30 <-> 21h00"
+      unique_id: message_clim_personnalise_7h30_21h00
       state: >
         {# --- Vérification des dépendances critiques --- #}
         {%- if states('sensor.poco_x7_pro_mamour_network_type') in ['unknown', 'unavailable'] or
@@ -56,7 +56,7 @@
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nLes 3 Clim " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "[FAN ONLY]\nLes 3 Clim" %}
+                {%- set message_mode = "[FAN ONLY]\nLes 3 Clim [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
@@ -68,7 +68,7 @@
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nSalon " ~ temp_diff ~ "°\nBureau & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "[FAN ONLY]\nSalon\nBureau & Chambre" %}
+                {%- set message_mode = "[FAN ONLY]\nSalon [FAN ONLY]\nBureau & Chambre [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
@@ -80,7 +80,7 @@
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nBureau " ~ temp_diff ~ "°\nSalon & Chambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "[FAN ONLY]\nBureau\nSalon & Chambre" %}
+                {%- set message_mode = "[FAN ONLY]\nBureau [FAN ONLY]\nSalon & Chambre [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}
@@ -92,7 +92,7 @@
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nSalon & Bureau " ~ temp_diff ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
-                {%- set message_mode = "[FAN ONLY]\nSalon & Bureau\nChambre" %}
+                {%- set message_mode = "[FAN ONLY]\nSalon & Bureau [FAN ONLY]\nChambre [FAN ONLY]" %}
               {%- else %}
                 {%- set message_mode = "Mode clim inconnu" %}
               {%- endif %}

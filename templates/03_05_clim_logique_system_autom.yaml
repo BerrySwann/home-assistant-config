@@ -96,8 +96,8 @@
       {% endif %}
 
   # --- MOTEUR DE CALCUL : CONFORT JOUR ---
-  - name: "Temperature confort"
-    unique_id: temperature_confort
+  - name: "Temperature confort Jour"
+    unique_id: temperature_confort_jour
     unit_of_measurement: "°C"
     state: >
       {% set temp_diff = states('sensor.temperature_differentielle') | int %}

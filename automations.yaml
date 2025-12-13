@@ -953,7 +953,6 @@
     - climate.clim_salon_rm4_mini
     - climate.clim_bureau_rm4_mini
     - climate.clim_chambre_rm4_mini
-    to:
   conditions: []
   actions:
   - delay: 00:00:02
@@ -1190,7 +1189,7 @@
         message: '{{ states(''sensor.message_clim_personnalise_21h_6h'') }}'
   mode: queued
 - id: '1758298361594'
-  alias: (D) Notification température Up ou Down de [6h00 -> 21h00]
+  alias: (D) Notification température Up ou Down de [7h30 -> 21h00]
   description: 'Envoie le message personnalisé de clim si le texte change, OU au réveil
     à 06h00.
 
@@ -1203,7 +1202,7 @@
   conditions: []
   actions:
   - condition: time
-    after: 06:00:00
+    after: 07:30:00
     before: '21:00:00'
   - delay: 00:00:02
   - if:
@@ -1216,7 +1215,7 @@
     then:
     - action: notify.mobile_app_poco_x7_pro
       data:
-        title: Erreur Capteurs (Jour)
+        title: '[ANJ] Erreur Capteurs'
         message: 'Un capteur (Température, Wifi ou Message) est indisponible. Vérifiez
           les entités.
 
@@ -1224,7 +1223,7 @@
     else:
     - action: notify.mobile_app_poco_x7_pro
       data:
-        message: '{{ states(''sensor.message_clim_personnalise_6h00_21h00'') }}'
+        message: '{{ states(''sensor.message_clim_personnalise_7h30_21h00'') }}'
   mode: queued
 - id: '1759042747368'
   alias: DB Purge MariaDB + Repack
@@ -1793,7 +1792,7 @@
         '
   - if:
     - condition: time
-      after: 06:00:00
+      after: 07:30:00
       before: '21:00:00'
     then:
     - action: notify.mobile_app_poco_x7_pro
@@ -2469,7 +2468,7 @@
         - alias: 'NOTIF : ETAT'
           action: notify.mobile_app_poco_x7_pro
           data:
-            title: '{{ states(''sensor.presence_clim'') }}'
+            title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: 'Mode : {{ mode_saison | upper }}
 
               Salon: {{ t_salon_target }}°
@@ -2481,10 +2480,10 @@
               '
   mode: queued
 - id: '1764787136826'
-  alias: (B - 0) [ TEST 2025-12-03 ] Automatisation pour contrôler de [21h00 <-> 06h00]
+  alias: (B - 0) [ TEST 2025-12-03 ] Automatisation pour contrôler de [21h00 <-> 07h30]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR].
-  description: 'Automatisation pour contrôler de [21h00 <-> 06h00] les climatiseurs
+  description: 'Automatisation pour contrôler de [21h00 <-> 07h30] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. '
   triggers:
@@ -2501,8 +2500,6 @@
     entity_id:
     - sensor.poco_x7_pro_mamour_network_type
     - sensor.poco_x7_pro_network_type
-    from:
-    to:
     id: force_run
   - alias: 'PRISES : Changement ON/OFF'
     trigger: state
@@ -2510,8 +2507,6 @@
     - switch.clim_salon_nous
     - switch.clim_du_bureau_nous
     - switch.clim_chambre_nous
-    from:
-    to:
     id: force_run
   - alias: 'FENÊTRES : Fermeture (Rétablissement)'
     trigger: state
@@ -2545,7 +2540,7 @@
   - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE NUIT'
     condition: time
     after: '21:00:00'
-    before: 06:00:00
+    before: 07:30:00
   actions:
   - alias: 'INIT : CALCUL DES VARIABLES'
     variables:
@@ -2582,7 +2577,7 @@
       - alias: 'NOTIF : ALERTE FENÊTRE'
         action: notify.mobile_app_poco_x7_pro
         data:
-          title: ⚠️ CLIM COUPÉE
+          title: CLIM COUPÉE
           message: "Une fenêtre a été ouverte. {% set ouverts = expand('binary_sensor.contact_fenetre_salon_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_bureau_ikea_contact',
@@ -2597,7 +2592,7 @@
           value_template: '{{ prises_on }}'
         - condition: time
           after: '21:00:00'
-          before: 06:00:00
+          before: 07:30:00
         sequence:
         - alias: 'CALCUL : DÉFINITION CIBLES'
           choose:
@@ -2674,7 +2669,7 @@
         - alias: 'NOTIF : ETAT'
           action: notify.mobile_app_poco_x7_pro
           data:
-            title: '{{ states(''sensor.presence_clim'') }}'
+            title: '[AN] {{ states(''sensor.presence_clim'') }}'
             message: 'Mode : {{ mode_saison | upper }}
 
               Salon: {{ t_salon_target }}°
@@ -2699,7 +2694,7 @@
     for: 00:10:00
   conditions:
   - condition: time
-    after: 06:00:00
+    after: 07:30:00
     before: '21:00:00'
   - condition: template
     value_template: "{{ states('sensor.th_balcon_nord_temperature') | float(0) > \n
@@ -2821,7 +2816,7 @@
   - action: script.export_gemini_now
   mode: single
 - id: '1765308061437'
-  alias: (E) Notification température Up ou Down de [21h00 -> 6h00]
+  alias: (E) Notification température Up ou Down de [21h00 -> 7h30]
   description: 'Envoie le message personnalisé de clim si le texte change, OU au début
     de la nuit à 21h00.
 
@@ -2835,7 +2830,7 @@
   actions:
   - condition: time
     after: '21:00:00'
-    before: 06:00:00
+    before: 07:30:00
   - delay: 00:00:02
   - if:
     - condition: template
@@ -2847,7 +2842,7 @@
     then:
     - action: notify.mobile_app_poco_x7_pro
       data:
-        title: Erreur Capteurs (Nuit)
+        title: '[ANN] Erreur Capteurs'
         message: 'Erreur :
 
           Un capteur TENDANCE est indisponible !
@@ -2858,5 +2853,5 @@
     else:
     - action: notify.mobile_app_poco_x7_pro
       data:
-        message: '{{ states(''sensor.message_clim_personnalise_21h00_6h00'') }}'
+        message: '{{ states(''sensor.message_clim_personnalise_21h00_7h30'') }}'
   mode: queued

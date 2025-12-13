@@ -1,6 +1,0 @@
-- binary_sensor:
-      - name: "Est jour (6h-21h)"
-        unique_id: est_jour_6h_21h
-        state: >
-          {% set heure = now().hour %}
-          {{ heure >= 6 and heure < 21 }}
