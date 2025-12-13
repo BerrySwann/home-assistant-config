@@ -2260,11 +2260,11 @@
     action: switch.turn_off
   mode: single
 - id: '1764784032821'
-  alias: (A - 0) [TEST 2025-12-03] Automatisation pour contrôler de [06h00 <-> 21h00]
+  alias: (A - 0) [TEST 2025-12-03] Automatisation pour contrôler de [07h30 <-> 21h00]
     les climatiseurs en fonction de la température intérieure/extérieure [DELTA] et
     du type de réseau des portables [WIFI/CELLULAR]. (SAUF) L'état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24.
-  description: '[TEST] Automatisation pour contrôler de [06h00 <-> 20h00] les climatiseurs
+  description: '[TEST] Automatisation pour contrôler de [07h30 <-> 21h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. (SAUF) L''état des fenêtres [OUVERTE(S)/FERMÉE(S)]
     qui sont contrôlées 24h sur 24. - 06h00 ou Arrivée : Force l''allumage. - Changement
@@ -2275,17 +2275,15 @@
     trigger: homeassistant
     event: start
     id: force_run
-  - alias: 'HORAIRE : Démarrage 06h00'
+  - alias: 'HORAIRE : Démarrage 7h30'
     trigger: time
-    at: 06:00:00
+    at: 07:30:00
     id: force_run
   - alias: 'RÉSEAU : Changement Wifi/Cellular'
     trigger: state
     entity_id:
     - sensor.poco_x7_pro_mamour_network_type
     - sensor.poco_x7_pro_network_type
-    from:
-    to:
     id: force_run
   - alias: 'PRISES : Changement ON/OFF'
     trigger: state
@@ -2293,8 +2291,6 @@
     - switch.clim_salon_nous
     - switch.clim_du_bureau_nous
     - switch.clim_chambre_nous
-    from:
-    to:
     id: force_run
   - alias: 'FENÊTRES : Fermeture (Rétablissement)'
     trigger: state
@@ -2327,7 +2323,7 @@
   conditions:
   - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE JOUR'
     condition: time
-    after: 06:00:00
+    after: 07:30:00
     before: '21:00:00'
   actions:
   - alias: 'INIT : CALCUL DES VARIABLES'
@@ -2365,7 +2361,7 @@
       - alias: 'NOTIF : ALERTE FENÊTRE'
         action: notify.mobile_app_poco_x7_pro
         data:
-          title: ⚠️ CLIM COUPÉE
+          title: CLIM COUPÉE
           message: "Une fenêtre à été ouverte. {% set ouverts = expand('binary_sensor.contact_fenetre_salon_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
             \n                        'binary_sensor.contact_fenetre_bureau_ikea_contact',
@@ -2379,7 +2375,7 @@
         - condition: template
           value_template: '{{ prises_on }}'
         - condition: time
-          after: 06:00:00
+          after: 07:30:00
           before: '21:00:00'
         sequence:
         - alias: 'CALCUL : DÉFINITION CIBLES PAR PIÈCE'

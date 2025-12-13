@@ -7,6 +7,41 @@
 #
 #========================================================================
 
+#========================================================================
+# TOTAUX QUOTIDIEN (mean 24h)
+#========================================================================
+
+- sensor:
+  - name: "Clim. Rad. Total mean 24h kWh"
+    unique_id: clim_rad_total_mean_24h_kwh
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash-outline
+    state: >
+      {{ (states('sensor.clim_salon_mean_24h_kwh') | float(0) +
+        states('sensor.radiateur_cuisine_mean_24h_kwh') | float(0) +
+        states('sensor.clim_bureau_mean_24h_kwh') | float(0) +
+        states('sensor.soufflant_sdb_mean_24h_kwh') | float(0) +
+        states('sensor.seche_serv_mean_24h_kwh') | float(0) +
+        states('sensor.clim_chambre_mean_24h_kwh') | float(0)) | round(3) }}
+
+#========================================================================
+# TOTAUX MENSUEL (mean 730h)
+#========================================================================
+- sensor:
+  - name: "Clim. Rad. Total mean 730h kWh"
+    unique_id: clim_rad_total_mean_730h_kwh
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash-outline
+    state: >
+      {{ (states('sensor.clim_salon_mean_730h_kwh') | float(0) +
+        states('sensor.radiateur_cuisine_mean_730h_kwh') | float(0) +
+        states('sensor.clim_bureau_mean_730h_kwh') | float(0) +
+        states('sensor.soufflant_sdb_mean_730h_kwh') | float(0) +
+        states('sensor.seche_serv_mean_730h_kwh') | float(0) +
+        states('sensor.clim_chambre_mean_730h_kwh') | float(0)) | round(3) }}
+
 # =========================================================================
 # CAPTEUR: CONSO. CLIM/RAD TOTAL QUOTIDIEN (Corrigé pour correspondre aux unique_id)
 # =========================================================================
@@ -33,42 +68,7 @@
         {% set total_conso.value = total_conso.value + states(entity) | float(0) %}
       {% endfor %}
       
-      {{ total_conso.value | round(2) }}
-
-#========================================================================
-# TOTAUX QUOTIDIEN MEAN
-#========================================================================
-
-- sensor:
-  - name: "Clim. Rad. Total mean 24h kWh"
-    unique_id: clim_rad_total_mean_24h_kwh
-    device_class: energy
-    unit_of_measurement: "kWh"
-    icon: mdi:flash-outline
-    state: >
-      {{ (states('sensor.clim_salon_mean_24h_kwh') | float(0) +
-        states('sensor.radiateur_cuisine_mean_24h_kwh') | float(0) +
-        states('sensor.clim_bureau_mean_24h_kwh') | float(0) +
-        states('sensor.soufflant_sdb_mean_24h_kwh') | float(0) +
-        states('sensor.seche_serv_mean_24h_kwh') | float(0) +
-        states('sensor.clim_chambre_mean_24h_kwh') | float(0)) | round(2) }}
-
-#========================================================================
-# TOTAUX MENSUEL 
-#========================================================================
-- sensor:
-  - name: "Clim. Rad. Total mean 730h kWh"
-    unique_id: clim_rad_total_mean_730h_kwh
-    device_class: energy
-    unit_of_measurement: "kWh"
-    icon: mdi:flash-outline
-    state: >
-      {{ (states('sensor.clim_salon_mean_730h_kwh') | float(0) +
-        states('sensor.radiateur_cuisine_mean_730h_kwh') | float(0) +
-        states('sensor.clim_bureau_mean_730h_kwh') | float(0) +
-        states('sensor.soufflant_sdb_mean_730h_kwh') | float(0) +
-        states('sensor.seche_serv_mean_730h_kwh') | float(0) +
-        states('sensor.clim_chambre_mean_730h_kwh') | float(0)) | round(2) }}
+      {{ total_conso.value | round(3) }}
 
 #========================================================================
 # TOTAUX MENSUEL 
@@ -86,7 +86,7 @@
         states('sensor.clim_du_bureau_mensuel') | float(0) +
         states('sensor.radiateur_sdb_mensuel') | float(0) +
         states('sensor.seche_serv_sdb_mensuel') | float(0) +
-        states('sensor.clim_chambre_mensuel') | float(0)) | round(2) }}
+        states('sensor.clim_chambre_mensuel') | float(0)) | round(3) }}
 
 #========================================================================
 # PUISSANCE INSTANTANEE
@@ -103,4 +103,4 @@
         states('sensor.clim_du_bureau_nous_power') | float(0) +
         states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) +
         states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) +
-        states('sensor.clim_chambre_nous_power') | float(0)) | round(2) }}
+        states('sensor.clim_chambre_nous_power') | float(0)) | round(3) }}

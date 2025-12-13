@@ -420,17 +420,58 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
             except ValueError:
                 return None
 
-        fan_modes = self.fan_modes
+        # Remove special modes like "auto"
+        fan_modes = self.fan_modes or []
+        speed_modes = [
+            mode for mode in fan_modes
+            if mode not in ["auto"]
+        ]
+
+        # We suppose speed_modes are ordered from low to high speed
+        num_speeds = len(speed_modes)
+        if num_speeds == 0:
+            self._auto_activated_fan_mode = None
+            return
+
+        # We suppose that the speed modes contains at least 3 values
+        # fan_modes = low, medium, high :
+        #    |CONF_AUTO_FAN_LOW     |low    |
+        #    |CONF_AUTO_FAN_MEDIUM  |medium |
+        #    |CONF_AUTO_FAN_HIGH    |high   |
+        #    |CONF_AUTO_FAN_TURBO   |high   |
+        # fan_modes =  low, medium, high, turbo :
+        #    |CONF_AUTO_FAN_LOW     |low  |
+        #    |CONF_AUTO_FAN_MEDIUM  |medium    |
+        #    |CONF_AUTO_FAN_HIGH    |high |
+        #    |CONF_AUTO_FAN_TURBO   |turbo   |
+        # fan_modes = low, medium_low, medium, medium_high, high :
+        #    |CONF_AUTO_FAN_LOW     |medium_low  |
+        #    |CONF_AUTO_FAN_MEDIUM  |medium      |
+        #    |CONF_AUTO_FAN_HIGH    |medium_high |
+        #    |CONF_AUTO_FAN_TURBO   |high        |
+        target_index = -1
         if auto_fan_mode == CONF_AUTO_FAN_LOW:
-            self._auto_activated_fan_mode = find_fan_mode(fan_modes, "low")
+            if num_speeds >= 4:
+                target_index = num_speeds - 4
+            else:
+                target_index = 0
         elif auto_fan_mode == CONF_AUTO_FAN_MEDIUM:
-            self._auto_activated_fan_mode = find_fan_mode(fan_modes, "mid")
+            if num_speeds >= 4:
+                target_index = num_speeds - 3
+            else:
+                target_index = 1
         elif auto_fan_mode == CONF_AUTO_FAN_HIGH:
-            self._auto_activated_fan_mode = find_fan_mode(fan_modes, "high")
+            if num_speeds >= 4:
+                target_index = num_speeds - 2
+            else:
+                target_index = 2
         elif auto_fan_mode == CONF_AUTO_FAN_TURBO:
-            self._auto_activated_fan_mode = find_fan_mode(
-                fan_modes, "turbo"
-            ) or find_fan_mode(fan_modes, "high")
+            target_index = num_speeds - 1
+
+        if target_index >= 0:
+            self._auto_activated_fan_mode = speed_modes[target_index]
+        else:
+            self._auto_activated_fan_mode = None
 
         for val in AUTO_FAN_DEACTIVATED_MODES:
             if find_fan_mode(fan_modes, val):
@@ -843,6 +884,7 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
         """Set the flaf follow the underlying temperature changes"""
         self._follow_underlying_temp_change = follow
         self.update_custom_attributes()
+        self.async_write_ha_state()
 
     @property
     def auto_regulation_mode(self) -> str | None:
@@ -936,6 +978,28 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
         """
         if self.underlying_entity(0):
             return self.underlying_entity(0).swing_modes
+
+        return None
+
+    @property
+    def swing_horizontal_mode(self) -> str | None:
+        """Return the swing horizontal setting.
+
+        Requires ClimateEntityFeature.SWING_HORIZONTAL_MODE.
+        """
+        if self.underlying_entity(0):
+            return self.underlying_entity(0).swing_horizontal_mode
+
+        return None
+
+    @property
+    def swing_horizontal_modes(self) -> list[str] | None:
+        """Return the list of available swing horizontal modes.
+
+        Requires ClimateEntityFeature.SWING_HORIZONTAL_MODE.
+        """
+        if self.underlying_entity(0):
+            return self.underlying_entity(0).swing_horizontal_modes
 
         return None
 
@@ -1089,6 +1153,17 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
         self._swing_mode = swing_mode
         self.async_write_ha_state()
 
+    @overrides
+    async def async_set_swing_horizontal_mode(self, swing_horizontal_mode):
+        """Set new target swing horizontal operation."""
+        _LOGGER.info("%s - Set swing horizontal mode: %s", self, swing_horizontal_mode)
+        if swing_horizontal_mode is None:
+            return
+        for under in self._underlyings:
+            await under.set_swing_horizontal_mode(swing_horizontal_mode)
+        self._swing_horizontal_mode = swing_horizontal_mode
+        self.async_write_ha_state()
+
     async def service_set_auto_regulation_mode(self, auto_regulation_mode: str):
         """Called by a service call:
         service: versatile_thermostat.set_auto_regulation_mode
@@ -1124,6 +1199,7 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
 
         await self._send_regulated_temperature()
         self.update_custom_attributes()
+        self.async_write_ha_state()
 
     async def service_set_auto_fan_mode(self, auto_fan_mode: str):
         """Called by a service call:
@@ -1150,6 +1226,7 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
             self.choose_auto_fan_mode(CONF_AUTO_FAN_TURBO)
 
         self.update_custom_attributes()
+        self.async_write_ha_state()
 
     @overrides
     async def async_turn_off(self) -> None:
