@@ -158,6 +158,15 @@ bluetooth:
 #    - download
 #    - upload
 
+#Speed Test
+speedtestdotnet:
+  scan_interval:
+    minutes: 30  # Lance un test toutes les 30 minutes
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+
 #smartIR
 climate:
   - platform: smartir

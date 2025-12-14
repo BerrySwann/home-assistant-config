@@ -1804,7 +1804,7 @@
     - binary_sensor.contact_fenetre_chambre_ikea_contact
     from: 'on'
     to: 'off'
-    id: sensor_update
+    id: force_run
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
@@ -1867,12 +1867,18 @@
         action: notify.mobile_app_poco_x7_pro
         data:
           title: CLIM COUPÉE
-          message: "Une fenêtre à été ouverte. {% set ouverts = expand('binary_sensor.contact_fenetre_salon_ikea_contact',
-            \n                         'binary_sensor.contact_fenetre_cuisine_ikea_contact',
-            \n                         'binary_sensor.contact_fenetre_bureau_ikea_contact',
-            \n                         'binary_sensor.contact_fenetre_chambre_ikea_contact')
-            \n                      | selectattr('state', 'eq', 'on') | map(attribute='name')
-            | list %}\n{{ ouverts | join(', ') }}\n"
+          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
+            \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
+            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %}\n{% set ouverts
+            = expand(*fenetres) | selectattr('state', 'eq', 'on') %}\n{% if ouverts
+            | length > 0 %}\n  {% for fenetre in ouverts %}\n    \n    {% set piece
+            = fenetre.name | regex_replace(find='^(Contact fenetre |Ikea contact)$',
+            replace='', ignorecase=True) | trim %}\n\n    {# Détermine l'article approprié
+            (du / de la) #}\n    {% set article = 'du' if piece == 'Bureau' or piece
+            == 'Salon' else 'de la' %}\n\n    La fenêtre {{ article }} {{ piece }}
+            a été ouverte\n    {%- if not loop.last %}\n      \n    {% endif -%}\n
+            \ {% endfor %}\n{% else %}\n  Aucune fenêtre n'est actuellement ouverte.\n{%
+            endif %}\n"
     default:
     - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
       choose:
@@ -2019,7 +2025,7 @@
     - binary_sensor.contact_fenetre_chambre_ikea_contact
     from: 'on'
     to: 'off'
-    id: sensor_update
+    id: window_close
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
@@ -2050,8 +2056,8 @@
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
       fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',
         \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
-        \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n   | selectattr('state',
-        'eq', 'on') | list | count > 0 }}\n"
+        \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n      |
+        selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
@@ -2181,9 +2187,9 @@
   mode: queued
 - id: '1764957375111'
   alias: (C) (CLIM OFF) Gardien Éco (Delta T < -1 et T°Ext > Seuil Non-Chauffage)
-  description: 'Module de sécurité ÉCO. Coupe les climatisations si elles tournent
-    alors que l''air extérieur est plus chaud que le seuil de non-chauffage défini
-    (sensor.seuil_non_chauffage_bas) et que le Delta est favorable.'
+  description: Module de sécurité ÉCO. Coupe les climatisations si elles tournent
+    alors que l'air extérieur est plus chaud que le seuil de non-chauffage défini
+    (sensor.seuil_non_chauffage_bas) et que le Delta est favorable.
   triggers:
   - trigger: numeric_state
     entity_id: sensor.temperature_delta_valeur
@@ -2303,7 +2309,8 @@
   mode: single
 - id: '1765308061437'
   alias: (E) Notification température Up ou Down de (21h00 -> 7h30)
-  description: 'Envoie le message personnalisé de clim si le texte change, OU au début de la nuit à 21h00.'
+  description: Envoie le message personnalisé de clim si le texte change, OU au début
+    de la nuit à 21h00.
   triggers:
   - trigger: state
     entity_id: sensor.th_balcon_nord_temperature
@@ -2326,9 +2333,7 @@
     - action: notify.mobile_app_poco_x7_pro
       data:
         title: '[ANN] Erreur Capteurs'
-        message: 'Erreur :
-          Un capteur TENDANCE est indisponible !
-          Vérifiez les dépendances.'
+        message: 'Erreur : Un capteur TENDANCE est indisponible ! Vérifiez les dépendances.'
     else:
     - action: notify.mobile_app_poco_x7_pro
       data:
