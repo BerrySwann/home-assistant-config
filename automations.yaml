@@ -1869,17 +1869,18 @@
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %}  {% set ouverts
-            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% if
-            ouverts | length > 0 %}\n  {% for fenetre in ouverts %}\n    {% set nom_complet
-            = fenetre.name | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
+            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %} {% set ouverts
+            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% set
+            messages = namespace(list=[]) %}\n{% if ouverts | length > 0 %}\n  {%
+            for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
+            %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
             (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
             replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
-            | lower %}\n    {% set article = 'du' if piece == 'bureau' or piece ==
-            'salon' else 'de la' %}\n    La fenêtre {{ article }} {{ piece_lower |
-            title }} a été ouverte\n    {%- if not loop.last %}\n    {% endif -%}\n
-            \ {% endfor %}\n{% else %}\n  Aucune fenêtre n'est actuellement ouverte.\n{%
-            endif %}\n"
+            | lower %}\n    {% set article = 'du' if piece_lower == 'bureau' or piece_lower
+            == 'salon' else 'de la' %}\n    {% set messages.list = messages.list +
+            [\"La fenêtre \" ~ article ~ \" \" ~ piece_lower | upper ~ \" a été ouverte\"]
+            %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
+            \ Aucune fenêtre n'est actuellement ouverte.\n{% endif %}\n"
     default:
     - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
       choose:
@@ -2091,15 +2092,17 @@
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
             \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %} {% set ouverts
-            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% if
-            ouverts | length > 0 %}\n  {% for fenetre in ouverts %}\n    {% set nom_complet
-            = fenetre.name | string %}\n    {% set piece = nom_complet | regex_findall_index(find='fenetre
+            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% set
+            messages = namespace(list=[]) %}\n{% if ouverts | length > 0 %}\n  {%
+            for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
+            %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
             (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
-            replace='', ignorecase=True) | trim %}\n    {% set article = 'du' if piece
-            == 'bureau' or piece == 'salon' else 'de la' %}\n    La fenêtre {{ article
-            }} **{{ piece }}** a été ouverte\n    {%- if not loop.last %}\n    {%
-            endif -%}\n  {% endfor %}\n{% else %}\n  Aucune fenêtre n'est actuellement
-            ouverte.\n{% endif %}\n"
+            replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
+            | lower %}\n    {% set article = 'du' if piece_lower == 'bureau' or piece_lower
+            == 'salon' else 'de la' %}\n    {% set messages.list = messages.list +
+            [\"La fenêtre \" ~ article ~ \" \" ~ piece_lower | upper ~ \" a été ouverte\"]
+            %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
+            \ Aucune fenêtre n'est actuellement ouverte.\n{% endif %}\n"
     default:
     - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
       choose:

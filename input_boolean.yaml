@@ -7,3 +7,19 @@ eric_at_home:
   name: "Eric à la maison (Wi-Fi)"
   initial: off
   icon: mdi:wifi
+
+
+clim_salon_arret_securise_en_cours:
+  name: Blocage CLIM Salon (Arrêt Sécurisé)
+  initial: off
+  icon: mdi:lock-alert
+
+clim_bureau_arret_securise_en_cours:
+  name: Blocage CLIM Bureau (Arrêt Sécurisé)
+  initial: off
+  icon: mdi:lock-alert
+
+clim_chambre_arret_securise_en_cours:
+  name: Blocage CLIM Chambre (Arrêt Sécurisé)
+  initial: off
+  icon: mdi:lock-alert
