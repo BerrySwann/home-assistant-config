@@ -62,7 +62,7 @@
     state: >
       {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}
       {% if bearing is not none %}
-        {% set bearing = bearing | float | round(0) %}
+        {% set bearing = bearing | float (0) | round(0) %}
         {% if bearing == 0 %}
           1
         {% else %}
@@ -78,7 +78,7 @@
   - name: "Vitesse du Vent Vence"
     unique_id: vence_wind_speed_kmh
     state: >
-      {% set wind_speed_ms = states.weather.vence.attributes.wind_speed | float %}
+      {% set wind_speed_ms = states.weather.vence.attributes.wind_speed | float (0) %}
       {% set wind_speed_kmh = (wind_speed_ms * 3.6) | round(1) %}
       {{ wind_speed_kmh }}
     unit_of_measurement: "km/h"

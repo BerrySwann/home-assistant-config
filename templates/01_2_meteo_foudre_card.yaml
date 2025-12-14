@@ -67,7 +67,7 @@
       {% if distance_km in ['unknown', 'unavailable'] %}
         0
       {% else %}
-        {{ (distance_km | float) | round(1) }}
+        {{ (distance_km | float (0)) | round(1) }}
       {% endif %}
     unit_of_measurement: "km"
 
@@ -82,7 +82,7 @@
       {% if bearing in ['unknown', 'unavailable'] %}
         0
       {% else %}
-        {% set bearing = bearing | float | round(0) %}
+        {% set bearing = bearing | float (0) | round(0) %}
         {% if bearing == 0 %}
           1
         {% else %}
@@ -105,9 +105,9 @@
         0
       {% else %}
         {% set time_diff = now - last_impact %}
-        {% set seconds = (time_diff % 60) | int %}
-        {% set minutes = ((time_diff % 3600) / 60) | int %}
-        {% set hours = ((time_diff % 86400) / 3600) | int %}
+        {% set seconds = (time_diff % 60) | int (0) %}
+        {% set minutes = ((time_diff % 3600) / 60) | int (0) %}
+        {% set hours = ((time_diff % 86400) / 3600) | int (0) %}
         {% set days = (time_diff / 86400) | int %}
         {{ days }} jours, {{ hours }} heures, {{ minutes }} minutes, {{ seconds }} secondes
       {% endif %}
