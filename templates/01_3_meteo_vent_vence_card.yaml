@@ -14,7 +14,7 @@
     state: >
       {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}
       {% if bearing is not none %}
-        {% set bearing = bearing | int %}
+        {% set bearing = bearing | int(default=0) %}  <-- CORRECTION ICI
         {% if bearing >= 348.75 or bearing < 11.25 %}
           Nord
         {% elif bearing >= 11.25 and bearing < 33.75 %}

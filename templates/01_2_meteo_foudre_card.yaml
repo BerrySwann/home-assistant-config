@@ -18,7 +18,7 @@
       {% if bearing in ['unknown', 'unavailable'] %}
         Non disponible
       {% else %}
-        {% set bearing = bearing | int %}
+        {% set bearing = bearing | int(default=0) %}  <-- CORRECTION ICI
         {% if bearing >= 348.75 or bearing < 11.25 %}
           Nord
         {% elif bearing >= 11.25 and bearing < 33.75 %}
@@ -99,7 +99,7 @@
     unique_id: temps_depuis_le_dernier_impact_de_foudre
     unit_of_measurement: "seconds"
     state: >
-      {% set last_impact = as_timestamp(states('sensor.blitzortung_lightning_last_impact_time')) %}
+      {% set last_impact = as_timestamp(states('sensor.blitzortung_lightning_last_impact_time') | default(0)) | int(0) %} <-- CORRECTION ICI
       {% set now = as_timestamp(now()) %}
       {% if (now - last_impact) > 7200 %}
         0
