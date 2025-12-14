@@ -84,7 +84,7 @@
       {% set delta_7 = states('sensor.delta_7') | int %}
       
       {% if temp_ext < 10 %}
-        {{ consigne_de_base + delta_2 | int }}
+        {{ consigne_de_base + delta_1 | int }}
       {% elif temp_ext < 12 %}
         {{ consigne_de_base + delta_1 | int}}
       {% elif temp_ext > 40 %}

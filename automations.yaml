@@ -2300,12 +2300,13 @@
         \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
         \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n   | selectattr('state',
         'eq', 'on') | list | count > 0 }}\n"
-      temp_eco: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17) }}'
+      temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
+        }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
       prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and \n   is_state('switch.clim_du_bureau_nous',
         'on') and \n   is_state('switch.clim_chambre_nous', 'on') }}\n"
-      t_salon_target: '{{ temp_cible }}'
+      t_salon_target: '{{ temp_cible + 1 }}'
       t_bureau_target: '{{ temp_cible }}'
       t_chambre_target: '{{ temp_cible }}'
   - alias: 'LOGIQUE : SÉCURITÉ VS STANDARD'
@@ -2352,11 +2353,11 @@
               value_template: '{{ ''groupe_1'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
+                t_salon_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
                   }}'
-                t_bureau_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
+                t_bureau_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
                   }}'
-                t_chambre_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
+                t_chambre_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
                   }}'
           - alias: 'SCÉNARIO : MAMOUR (SALON CONFORT)'
             conditions:
@@ -2364,7 +2365,7 @@
               value_template: '{{ ''groupe_2'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_confort }}'
+                t_salon_target: '{{ temp_confort + 1 }}'
           - alias: 'SCÉNARIO : ERIC (BUREAU CONFORT)'
             conditions:
             - condition: template
@@ -2378,7 +2379,7 @@
               value_template: '{{ ''groupe_4'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_confort }}'
+                t_salon_target: '{{ temp_confort + 1 }}'
                 t_bureau_target: '{{ temp_confort }}'
         - alias: 'ACTION : ENVOI COMMANDES'
           choose:
@@ -2404,7 +2405,7 @@
             data:
               hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
                 'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_salon_target }}'
+              temperature: '{{ t_salon_target + 1 }}'
           - alias: 'TEMPÉRATURE : BUREAU'
             action: climate.set_temperature
             target:
@@ -2437,10 +2438,10 @@
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco }}° (Absent)\n{% else
-              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
-              \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
-              endif %}\n"
+              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else
+              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target +
+              1 }}°\n  Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target
+              }}°\n{% endif %}\n"
   mode: queued
 - id: '1764787136826'
   alias: (B - 0) [ TEST 2025-12-13 ] Automatisation pour contrôler de [21h00 <-> 07h30]
@@ -2513,7 +2514,8 @@
         \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
         \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n   | selectattr('state',
         'eq', 'on') | list | count > 0 }}\n"
-      temp_eco: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17) }}'
+      temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
+        }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_nuit: '{{ states(''sensor.temperature_confort_nuit'') | float(18) }}'
       prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and \n   is_state('switch.clim_du_bureau_nous',
@@ -2565,11 +2567,11 @@
               value_template: '{{ ''groupe_1'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
+                t_salon_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
                   }}'
-                t_bureau_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
+                t_bureau_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
                   }}'
-                t_chambre_target: '{{ temp_eco if mode_saison == ''heat'' else temp_cible
+                t_chambre_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
                   }}'
           default:
           - alias: 'SCÉNARIO : PRÉSENCE NUIT'
@@ -2634,7 +2636,7 @@
           data:
             title: '[AN] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco }}° (Absent)\n{% else
+              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else
               %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
               \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
               endif %}\n"
