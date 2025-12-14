@@ -149,8 +149,6 @@ openai_conversation:
   model: "gpt-4o-mini"
 
 bluetooth:
-  device_tracker:
-    - platform: bluetooth_le_tracker
 
 speedtestdotnet:
   scan_interval:
