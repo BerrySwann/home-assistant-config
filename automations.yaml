@@ -1804,7 +1804,7 @@
     - binary_sensor.contact_fenetre_chambre_ikea_contact
     from: 'on'
     to: 'off'
-    id: force_run
+    id: window_close
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
@@ -1869,14 +1869,15 @@
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %}\n{% set ouverts
-            = expand(*fenetres) | selectattr('state', 'eq', 'on') %}\n{% if ouverts
-            | length > 0 %}\n  {% for fenetre in ouverts %}\n    \n    {% set piece
-            = fenetre.name | regex_replace(find='^(Contact fenetre |Ikea contact)$',
-            replace='', ignorecase=True) | trim %}\n\n    {# Détermine l'article approprié
-            (du / de la) #}\n    {% set article = 'du' if piece == 'Bureau' or piece
-            == 'Salon' else 'de la' %}\n\n    La fenêtre {{ article }} {{ piece }}
-            a été ouverte\n    {%- if not loop.last %}\n      \n    {% endif -%}\n
+            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %}  {% set ouverts
+            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% if
+            ouverts | length > 0 %}\n  {% for fenetre in ouverts %}\n    {% set nom_complet
+            = fenetre.name | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
+            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
+            replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
+            | lower %}\n    {% set article = 'du' if piece == 'bureau' or piece ==
+            'salon' else 'de la' %}\n    La fenêtre {{ article }} {{ piece_lower |
+            title }} a été ouverte\n    {%- if not loop.last %}\n    {% endif -%}\n
             \ {% endfor %}\n{% else %}\n  Aucune fenêtre n'est actuellement ouverte.\n{%
             endif %}\n"
     default:
@@ -2087,12 +2088,18 @@
         action: notify.mobile_app_poco_x7_pro
         data:
           title: CLIM COUPÉE
-          message: "Une fenêtre a été ouverte. {% set ouverts = expand('binary_sensor.contact_fenetre_salon_ikea_contact',
-            \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
-            \n                        'binary_sensor.contact_fenetre_bureau_ikea_contact',
-            \n                        'binary_sensor.contact_fenetre_chambre_ikea_contact')
-            \n                 | selectattr('state', 'eq', 'on') | map(attribute='name')
-            | list %}\n{{ ouverts | join(', ') }}\n"
+          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
+            \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
+            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %} {% set ouverts
+            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% if
+            ouverts | length > 0 %}\n  {% for fenetre in ouverts %}\n    {% set nom_complet
+            = fenetre.name | string %}\n    {% set piece = nom_complet | regex_findall_index(find='fenetre
+            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
+            replace='', ignorecase=True) | trim %}\n    {% set article = 'du' if piece
+            == 'bureau' or piece == 'salon' else 'de la' %}\n    La fenêtre {{ article
+            }} **{{ piece }}** a été ouverte\n    {%- if not loop.last %}\n    {%
+            endif -%}\n  {% endfor %}\n{% else %}\n  Aucune fenêtre n'est actuellement
+            ouverte.\n{% endif %}\n"
     default:
     - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
       choose:
