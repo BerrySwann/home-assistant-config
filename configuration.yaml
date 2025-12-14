@@ -144,19 +144,19 @@ sql:
     device_class: data_size
     unique_id: taille_db_home_assistant
 
-openai_conversation:
-  api_key: !secret chat_gpt_api_key
-  model: "gpt-4o-mini"
+#openai_conversation:
+#  api_key: !secret chat_gpt_api_key
+#  model: "gpt-4o-mini"
 
 bluetooth:
 
-speedtestdotnet:
-  scan_interval:
-    minutes: 30
-  monitored_conditions:
-    - ping
-    - download
-    - upload
+#speedtestdotnet:
+#  scan_interval:
+#    minutes: 30
+#  monitored_conditions:
+#    - ping
+#    - download
+#    - upload
 
 #smartIR
 climate:
