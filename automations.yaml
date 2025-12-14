@@ -2298,15 +2298,16 @@
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
       fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',
         \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
-        \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n   | selectattr('state',
-        'eq', 'on') | list | count > 0 }}\n"
+        \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n      |
+        selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
       prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and \n   is_state('switch.clim_du_bureau_nous',
         'on') and \n   is_state('switch.clim_chambre_nous', 'on') }}\n"
-      t_salon_target: '{{ temp_cible + 1 }}'
+      t_salon_target: '{{ temp_cible + 1 if states(''sensor.mode_ete_hiver'') == ''heat''
+        else temp_cible }}'
       t_bureau_target: '{{ temp_cible }}'
       t_chambre_target: '{{ temp_cible }}'
   - alias: 'LOGIQUE : SÉCURITÉ VS STANDARD'
@@ -2330,10 +2331,10 @@
         data:
           title: CLIM COUPÉE
           message: "Une fenêtre à été ouverte. {% set ouverts = expand('binary_sensor.contact_fenetre_salon_ikea_contact',
-            \n                        'binary_sensor.contact_fenetre_cuisine_ikea_contact',
-            \n                        'binary_sensor.contact_fenetre_bureau_ikea_contact',
-            \n                        'binary_sensor.contact_fenetre_chambre_ikea_contact')
-            \n                 | selectattr('state', 'eq', 'on') | map(attribute='name')
+            \n                         'binary_sensor.contact_fenetre_cuisine_ikea_contact',
+            \n                         'binary_sensor.contact_fenetre_bureau_ikea_contact',
+            \n                         'binary_sensor.contact_fenetre_chambre_ikea_contact')
+            \n                      | selectattr('state', 'eq', 'on') | map(attribute='name')
             | list %}\n{{ ouverts | join(', ') }}\n"
     default:
     - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
@@ -2365,7 +2366,8 @@
               value_template: '{{ ''groupe_2'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_confort + 1 }}'
+                t_salon_target: '{{ temp_confort + 1 if mode_saison == ''heat'' else
+                  temp_confort }}'
           - alias: 'SCÉNARIO : ERIC (BUREAU CONFORT)'
             conditions:
             - condition: template
@@ -2379,7 +2381,8 @@
               value_template: '{{ ''groupe_4'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_confort + 1 }}'
+                t_salon_target: '{{ temp_confort + 1 if mode_saison == ''heat'' else
+                  temp_confort }}'
                 t_bureau_target: '{{ temp_confort }}'
         - alias: 'ACTION : ENVOI COMMANDES'
           choose:

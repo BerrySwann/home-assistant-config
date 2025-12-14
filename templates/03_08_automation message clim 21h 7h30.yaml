@@ -12,10 +12,13 @@
       {%- else %}
         {# --- Définition des variables --- #}
         {%- set tendance = states('sensor.th_balcon_nord_temperature_trend') %}
-        {%- set temp_ext = states('sensor.th_balcon_nord_temperature') | float %}
-        {%- set temp_cible = states('sensor.temperature_cible') | float %}
-        {%- set temp_eco = states('sensor.temperature_eco_hiver_corrige') | float %}
-        {%- set temp_nuit = states('sensor.temperature_confort_nuit') | float %}
+        
+        {# CORRECTIONS ICI : Ajout de valeurs par défaut #}
+        {%- set temp_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {%- set temp_cible = states('sensor.temperature_cible') | float(0) %}
+        {%- set temp_eco = states('sensor.temperature_eco_hiver_corrige') | float(17) %}
+        {%- set temp_nuit = states('sensor.temperature_confort_nuit') | float(18) %}
+        
         {%- set mode = states('sensor.mode_ete_hiver') %}
         {%- set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
         {%- set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
@@ -25,80 +28,51 @@
         {%- set presence = states('sensor.presence_clim') %}
 
         {# ################################################################# #}
-        {#                            PARTIE 1 : TENDANCE                    #}
+        {#                       PARTIE 1 : TENDANCE                         #}
         {# ################################################################# #}
         {%- if tendance == 'increasing' %}
           {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
         {%- elif tendance == 'decreasing' %}
           {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
         {%- else %}
-          {%- set message_tendance = "Temp. stable " ~ temp_ext ~ "°" %}
+          {%- set message_tendance = "T°Ext stable " ~ temp_ext ~ "°" %}
         {%- endif %}
 
-
         {# ################################################################# #}
-        {#                            PARTIE 2 : HEADER                      #}
+        {#                         PARTIE 2 : HEADER                         #}
         {# ################################################################# #}
         {%- set message_header = presence %}
 
-
         {# ################################################################# #}
-        {#                            PARTIE 3 : MODE                        #}
+        {#                          PARTIE 3 : MODE                          #}
         {# ################################################################# #}
         {%- if not clims_alimentees %}
           {%- set message_mode = "[UNITS OFF]" %}
-
         {%- else %}
           {%- if 'groupe_1' in groupe %}
-            {# ABSENT #}
+            {# ABSENT => 3 clims en éco (NUIT) #}
             {%- if mode == 'heat' %}
-              {%- set message_mode = "[éCO HEAT]\nLes 3 clim " ~ temp_eco ~ "°" %}
+              {%- set message_mode = "[éCO HEAT]\\nLes 3 Clim " ~ temp_eco ~ "°" %}
             {%- elif mode == 'cool' %}
-              {%- set message_mode = "[COOL]\nLes 3 clim " ~ temp_cible ~ "°" %}
+              {%- set message_mode = "[COOL]\\nLes 3 Clim " ~ temp_cible ~ "°" %}
             {%- elif mode == 'fan_only' %}
-              {%- set message_mode = "[FAN ONLY]\nLes 3 clim [FAN ONLY]" %}
-            {%- else %}
-              {%- set message_mode = "Mode clim inconnu" %}
-            {%- endif %}
-
-          {%- elif 'groupe_2' in groupe %}
-            {# MAMOUR AT HOME (PRIORITÉ CHAMBRE) #}
-            {%- if mode == 'heat' %}
-              {%- set message_mode = "[HEAT]\nChambre " ~ temp_nuit ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
-            {%- elif mode == 'cool' %}
-              {%- set message_mode = "[COOL]\nChambre " ~ temp_nuit ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
-            {%- elif mode == 'fan_only' %}
-              {%- set message_mode = "[FAN ONLY]\nChambre [FAN ONLY]\nSalon & Bureau [FAN ONLY]" %}
-            {%- else %}
-              {%- set message_mode = "Mode clim inconnu" %}
-            {%- endif %}
-
-          {%- elif 'groupe_3' in groupe %}
-            {# ERIC AT HOME (PRIORITÉ CHAMBRE) #}
-            {%- if mode == 'heat' %}
-              {%- set message_mode = "[HEAT]\nChambre " ~ temp_nuit ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
-            {%- elif mode == 'cool' %}
-              {%- set message_mode = "[COOL]\nChambre " ~ temp_nuit ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
-            {%- elif mode == 'fan_only' %}
-              {%- set message_mode = "[FAN ONLY]\nChambre [FAN ONLY]\nSalon & Bureau [FAN ONLY]" %}
-            {%- else %}
-              {%- set message_mode = "Mode clim inconnu" %}
-            {%- endif %}
-
-          {%- elif 'groupe_4' in groupe %}
-            {# MAMOUR & ERIC AT HOME (PRIORITÉ CHAMBRE) #}
-            {%- if mode == 'heat' %}
-              {%- set message_mode = "[HEAT]\nChambre " ~ temp_nuit ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
-            {%- elif mode == 'cool' %}
-              {%- set message_mode = "[COOL]\nChambre " ~ temp_nuit ~ "°\nSalon & Bureau " ~ temp_cible ~ "°" %}
-            {%- elif mode == 'fan_only' %}
-              {%- set message_mode = "[FAN ONLY]\nChambre [FAN ONLY]\nSalon & Bureau [FAN ONLY]" %}
+              {%- set message_mode = "[FAN ONLY]\\nLes 3 Clim [FAN ONLY]" %}
             {%- else %}
               {%- set message_mode = "Mode clim inconnu" %}
             {%- endif %}
 
           {%- else %}
-            {%- set message_mode = "Scénario groupe non géré" %}
+            {# PRESENCE NUIT (TOUS GROUPES CONFONDUS => PRIORITÉ CHAMBRE) #}
+            {%- if mode == 'heat' %}
+              {%- set message_mode = "[HEAT]\\nChambre " ~ temp_nuit ~ "°\\nSalon & Bureau " ~ temp_cible ~ "°" %}
+            {%- elif mode == 'cool' %}
+              {%- set message_mode = "[COOL]\\nChambre " ~ temp_nuit ~ "°\\nSalon & Bureau " ~ temp_cible ~ "°" %}
+            {%- elif mode == 'fan_only' %}
+              {%- set message_mode = "[FAN ONLY]\\nChambre [FAN ONLY]\\nSalon & Bureau [FAN ONLY]" %}
+            {%- else %}
+              {%- set message_mode = "Mode clim inconnu" %}
+            {%- endif %}
+
           {%- endif %}
         {%- endif %}
 

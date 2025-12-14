@@ -1,4 +1,3 @@
-
 # =======================================================================
 # Lecture des sondes temperature (Mini PC)
 # =======================================================================
@@ -8,29 +7,29 @@
         unique_id: temperature_carte_mere
         unit_of_measurement: "°C"
         device_class: temperature
-        state: "{{ (states('sensor.thermal_zone_0_temp') | float / 1000) | round(1) }}"
+        state: "{{ (states('sensor.thermal_zone_0_temp') | float(0) / 1000) | round(1) }}"
       - name: "Température CPU (Package)"
         unique_id: temperature_cpu_package
         unit_of_measurement: "°C"
         device_class: temperature
-        state: "{{ (states('sensor.temperature_cpu_package') | float / 1000) | round(1) }}"
+        state: "{{ (states('sensor.temperature_cpu_package') | float(0) / 1000) | round(1) }}"
       - name: "Température Core 0"
         unique_id: temperature_core_0
         unit_of_measurement: "°C"
         device_class: temperature
-        state: "{{ (states('sensor.temperature_core_0') | float / 1000) | round(1) }}"
+        state: "{{ (states('sensor.temperature_core_0') | float(0) / 1000) | round(1) }}"
       - name: "Température Core 1"
         unique_id: temperature_core_1
         unit_of_measurement: "°C"
         device_class: temperature
-        state: "{{ (states('sensor.temperature_core_1') | float / 1000) | round(1) }}"
+        state: "{{ (states('sensor.temperature_core_1') | float(0) / 1000) | round(1) }}"
       - name: "Température Core 2"
         unique_id: temperature_core_2
         unit_of_measurement: "°C"
         device_class: temperature
-        state: "{{ (states('sensor.temperature_core_2') | float / 1000) | round(1) }}"
+        state: "{{ (states('sensor.temperature_core_2') | float(0) / 1000) | round(1) }}"
       - name: "Température Core 3"
         unique_id: temperature_core_3
         unit_of_measurement: "°C"
         device_class: temperature
-        state: "{{ (states('sensor.temperature_core_3') | float / 1000) | round(1) }}"
+        state: "{{ (states('sensor.temperature_core_3') | float(0) / 1000) | round(1) }}"

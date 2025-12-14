@@ -49,6 +49,10 @@
       {% endif %}
     attributes:
       couleur: >-
+        {# ON DOIT REDÉFINIR LES VARIABLES ICI POUR LES ATTRIBUTS #}
+        {% set mamour = is_state('sensor.condition_mamour_wifi', 'true') %}
+        {% set eric = is_state('sensor.condition_eric_wifi', 'true') %}
+        
         {% if mamour and eric %}
           green
         {% elif mamour and not eric %}

@@ -2,8 +2,4 @@
       - name: "Est jour (7h30-21h)"
         unique_id: est_jour_7h30_21h
         state: >
-          {% set current_time = now().time() %}
-          {% set start_time = time(7, 30) %}
-          {% set end_time = time(21, 0) %}
-          
-          {{ current_time >= start_time and current_time < end_time }}
+          {{ today_at("07:30") <= now() < today_at("21:00") }}
