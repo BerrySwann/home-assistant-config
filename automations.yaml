@@ -2183,7 +2183,7 @@
   alias: (C) (CLIM OFF) Gardien Éco (Delta T < -1 et T°Ext > Seuil Non-Chauffage)
   description: 'Module de sécurité ÉCO. Coupe les climatisations si elles tournent
     alors que l''air extérieur est plus chaud que le seuil de non-chauffage défini
-    (sensor.seuil_non_chauffage_bas) et que le Delta est favorable.
+    (sensor.seuil_non_chauffage_bas) et que le Delta est favorable.'
   triggers:
   - trigger: numeric_state
     entity_id: sensor.temperature_delta_valeur
@@ -2303,7 +2303,7 @@
   mode: single
 - id: '1765308061437'
   alias: (E) Notification température Up ou Down de (21h00 -> 7h30)
-  description: 'Envoie le message personnalisé de clim si le texte change, OU au débutde la nuit à 21h00.
+  description: 'Envoie le message personnalisé de clim si le texte change, OU au début de la nuit à 21h00.'
   triggers:
   - trigger: state
     entity_id: sensor.th_balcon_nord_temperature
@@ -2327,10 +2327,8 @@
       data:
         title: '[ANN] Erreur Capteurs'
         message: 'Erreur :
-
           Un capteur TENDANCE est indisponible !
-
-          Vérifiez les dépendances.
+          Vérifiez les dépendances.'
     else:
     - action: notify.mobile_app_poco_x7_pro
       data:
