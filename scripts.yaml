@@ -43,3 +43,91 @@ git_backup_weekly_and_update:
     data:
       title: Git Push Weekly
       message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
+
+#=====================================================================================================================================
+# Script de securité pour coupure des Groupes Extèrieur des CLIM
+#=====================================================================================================================================
+
+clim_secure_off:
+  alias: Coupure Sécurisée de la Clim
+  description: Éteint le thermostat, active un verrou spécifique à la pièce, attend l'arrêt du compresseur, puis coupe la prise et enlève le verrou.
+  mode: single
+  fields:
+    piece:
+      description: 'Pièce (ex: salon, bureau, chambre)'
+      example: 'salon'
+      required: true
+  variables:
+    # Définition des entités basées sur le paramètre 'piece'
+    clim_entity: 'climate.clim_{{ piece }}_rm4_mini'
+    switch_entity: 'switch.clim_{{ piece }}_nous'
+    power_status_sensor: 'sensor.{{ piece }}_power_status'
+    lock_entity: 'input_boolean.clim_{{ piece }}_arret_securise_en_cours'
+    piece_nom: >
+      {% if piece == 'salon' %} du Salon
+      {% elif piece == 'bureau' %} du Bureau
+      {% elif piece == 'chambre' %} de la Chambre
+      {% else %} Inconnue
+      {% endif %}
+
+  sequence:
+    # 1. ACTIVER LE VERROU SPÉCIFIQUE (Utilise 'target')
+    - service: input_boolean.turn_on
+      target:
+        entity_id: '{{ lock_entity }}'
+
+    # 2. ARRÊT DU THERMOSTAT (Utilise 'target')
+    - service: climate.set_hvac_mode
+      data:
+        hvac_mode: "off"
+      target:
+        entity_id: '{{ clim_entity }}'
+
+    # 3. VÉRIFICATION IMMÉDIATE : Si déjà en dessous de 50W, on coupe tout de suite. (CORRIGÉ)
+    - if:
+        - condition: template
+          value_template: "{{ is_state(power_status_sensor, 'off') }}" # <-- Correction
+      then:
+        - service: switch.turn_off
+          target:
+            entity_id: '{{ switch_entity }}'
+        - service: notify.mobile_app_poco_x7_pro
+          data:
+            title: CLIM COUPÉE RAPIDEMENT
+            message: "La Clim {{ piece_nom }} était déjà en veille. La prise a été coupée immédiatement."
+      else:
+        # 4. SI CONSOMMATION ÉLEVÉE : On attend qu'elle descende.
+        - service: notify.mobile_app_poco_x7_pro
+          data:
+            title: ARRÊT CLIM EN COURS
+            message: "La Clim {{ piece_nom }} est en cours d'arrêt (compresseur actif). Attente d'arrêt sécurisée (max 10 min)."
+
+        # ATTENTE CONDITIONNELLE : Attend que le capteur de puissance passe à 'off' (CORRIGÉ)
+        - wait_for_trigger:
+            - platform: template # <-- Correction
+              value_template: "{{ is_state(power_status_sensor, 'off') }}" # <-- Correction
+          timeout: '00:10:00'
+          continue_on_timeout: true
+
+        # 5. COUPURE DE LA PRISE (si l'attente a réussi)
+        - if:
+            - condition: template
+              value_template: "{{ wait.completed }}"
+          then:
+            - service: switch.turn_off
+              target:
+                entity_id: '{{ switch_entity }}'
+            - service: notify.mobile_app_poco_x7_pro
+              data:
+                title: CLIM COUPÉE EN SÉCURITÉ
+                message: "La prise de la Clim {{ piece_nom }} a été coupée après l'arrêt propre du compresseur."
+          else:
+            - service: notify.mobile_app_poco_x7_pro
+              data:
+                title: ERREUR ARRÊT CLIM
+                message: "ATTENTION : Échec de l'arrêt propre de la Clim {{ piece_nom }} après 10 minutes. La prise est restée allumée pour éviter une coupure brutale."
+
+    # 6. DÉSACTIVER LE VERROU SPÉCIFIQUE (Utilise 'target')
+    - service: input_boolean.turn_off
+      target:
+        entity_id: '{{ lock_entity }}'

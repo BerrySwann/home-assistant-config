@@ -1946,14 +1946,6 @@
               data:
                 fan_mode: auto
           default:
-          - alias: 'TEMPÉRATURE : SALON'
-            action: climate.set_temperature
-            target:
-              entity_id: climate.clim_salon_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_salon_target }}'
           - alias: 'TEMPÉRATURE : BUREAU'
             action: climate.set_temperature
             target:
@@ -1979,6 +1971,22 @@
               - climate.clim_chambre_rm4_mini
             data:
               fan_mode: auto
+          - choose:
+            - conditions:
+              - condition: state
+                entity_id: input_boolean.clim_salon_arret_securise_en_cours
+                state:
+                - 'off'
+              sequence:
+              - alias: 'TEMPÉRATURE : SALON'
+                action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_salon_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_salon_target }}'
+            alias: SECURITE U.E. Cilm Salon
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
