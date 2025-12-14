@@ -2405,7 +2405,7 @@
             data:
               hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
                 'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_salon_target + 1 }}'
+              temperature: '{{ t_salon_target }}'
           - alias: 'TEMPÉRATURE : BUREAU'
             action: climate.set_temperature
             target:
@@ -2439,9 +2439,9 @@
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
               %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else
-              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target +
-              1 }}°\n  Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target
-              }}°\n{% endif %}\n"
+              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
+              \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
+              endif %}\n"
   mode: queued
 - id: '1764787136826'
   alias: (B - 0) [ TEST 2025-12-13 ] Automatisation pour contrôler de [21h00 <-> 07h30]
