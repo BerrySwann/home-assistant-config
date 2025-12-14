@@ -4,21 +4,24 @@
     - name: "tCOV Salon (ppb)"
       unique_id: tcov_salon_ppb
       state: "{{ states('sensor.qualite_air_salon_ikea_voc_index') }}"
-      unit_of_measurement: "ppb"       # "[T1] unité forcée"
+      unit_of_measurement: "ppb"
+      device_class: volatile_organic_compounds_parts # CORRECTION ICI
       state_class: measurement
       icon: mdi:chemical-weapon
 
     - name: "tCOV Bureau (ppb)"
       unique_id: tcov_bureau_ppb
       state: "{{ states('sensor.qualite_air_bureau_ikea_voc_index') }}"
-      unit_of_measurement: "ppb"       # "[T2]"
+      unit_of_measurement: "ppb"
+      device_class: volatile_organic_compounds_parts # CORRECTION ICI
       state_class: measurement
       icon: mdi:chemical-weapon
 
     - name: "tCOV Chambre (ppb)"
       unique_id: tcov_chambre_ppb
       state: "{{ states('sensor.qualite_air_chambre_ikea_voc_index') }}"
-      unit_of_measurement: "ppb"       # "[T3]"
+      unit_of_measurement: "ppb"
+      device_class: volatile_organic_compounds_parts # CORRECTION ICI
       state_class: measurement
       icon: mdi:chemical-weapon
 

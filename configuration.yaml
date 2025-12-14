@@ -15,7 +15,7 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # Pour script python
-python_script:
+# python_script: 
 
 # Pour powercalc
 powercalc:
