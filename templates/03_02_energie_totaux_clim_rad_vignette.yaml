@@ -1,4 +1,3 @@
-
 #========================================================================
 #
 # TOTAUX ENERGIE
@@ -42,34 +41,6 @@
         states('sensor.seche_serv_mean_730h_kwh') | float(0) +
         states('sensor.clim_chambre_mean_730h_kwh') | float(0)) | round(3) }}
 
-# =========================================================================
-# CAPTEUR: CONSO. CLIM/RAD TOTAL QUOTIDIEN (Corrigé pour correspondre aux unique_id)
-# =========================================================================
-
-- sensor:
-  - name: "Conso. Clim. Rad. Total QUOTIDIEN"
-    unique_id: conso_clim_rad_total_quotidien
-    device_class: energy
-    unit_of_measurement: "kWh"
-    icon: mdi:flash-outline
-    state: >
-      {% set entities = [
-        'sensor.clim_salon_quotidien', 
-        'sensor.radiateur_elec_cuisine_quotidien', 
-        'sensor.clim_du_bureau_quotidien',
-        'sensor.radiateur_sdb_quotidien', 
-        'sensor.seche_serv_sdb_quotidien', 
-        'sensor.clim_chambre_quotidien'
-      ] %}
-      
-      {% set total_conso = namespace(value=0) %}
-      
-      {% for entity in entities %}
-        {% set total_conso.value = total_conso.value + states(entity) | float(0) %}
-      {% endfor %}
-      
-      {{ total_conso.value | round(3) }}
-
 #========================================================================
 # TOTAUX MENSUEL 
 #========================================================================
@@ -94,7 +65,7 @@
 - sensor:
   - name: "Conso Clim Rad Total"
     unique_id: conso_clim_rad_total
-    device_class: energy
+    device_class: power
     unit_of_measurement: "W"
     icon: mdi:flash-outline
     state: >
@@ -103,4 +74,4 @@
         states('sensor.clim_du_bureau_nous_power') | float(0) +
         states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) +
         states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) +
-        states('sensor.clim_chambre_nous_power') | float(0)) | round(3) }}
+        states('sensor.clim_chambre_nous_power') | float(0)) | round(1) }}
