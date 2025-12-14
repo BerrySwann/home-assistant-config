@@ -2804,10 +2804,14 @@
         title: '[Automa. Notif. Nuit]'
         message: '{{ states(''sensor.message_clim_personnalise_21h00_7h30'') }}'
   mode: queued
-- id: 'AUTOMATION_A_SUPPRIMER' # <<< L'ID doit être là
-  alias: "automation.a_test_automatisation_pour_controler_de_06h00_20h00_les_climatiseurs_en_fonction_de_la_temperature_interieure_exterieure_delta_et_du_type_de_reseau_des_portables_wifi_cellular_sauf_l_etat_des_fenetres_ouverte_s_fermee_s_qui_sont_controlees_24h_" # <<< Le nom long exact
-  # ... Ajoutez une action simple pour qu'elle soit valide ...
-  action:
-    - service: system_log.write
-      data:
-        message: "A effacer"
+- id: 'A_CLIM_FANTOME'
+  alias: "A - TEST AUTOMATISATION POUR CONTRÔLER DE 06H00-20H00_LES_CLIMATISEURS_EN_FONCTION_DE_LA_TEMPERATURE_INTERIEURE_EXTERIEURE_DELTA_ET_DU_TYPE_DE_RESEAU_DES_PORTABLES_WIFI_CELLULAR_SAUF_L_ETAT_DES_FENETRES_OUVERTE_S_FERMEE_S_QUI_SONT_CONTROLEES_24H_"
+  triggers:
+  - event_type: homeassistant_start
+    trigger: event
+  actions:
+  - data:
+      message: Automatisation fantôme chargée. Prête à être supprimée.
+      level: warning
+    action: system_log.write
+  mode: single
