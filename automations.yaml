@@ -648,7 +648,7 @@
       {{ result.sensors | join(', ') }}"
   mode: single
 - id: '1748450913123'
-  alias: Automation éCO. (Prise) selon le réseau [Wifi et/ou Cellular] des 2 portables
+  alias: Automation éCO. (Prise) selon le réseau (Wifi et/ou Cellular) des 2 portables
   description: Automation basée sur le type de réseau [Wifi et Cellular] des deux
     portables
   triggers:
@@ -944,7 +944,7 @@
           title: éCO Prises [2] en [WIFI]"
   mode: queued
 - id: '1750309185567'
-  alias: (I) [ CLIM DEBUG ] Force Mode Correct (Sécurité)
+  alias: (I) (CLIM DEBUG) Force Mode Correct (Sécurité)
   description: Vérifie si une clim est dans le mauvais mode.  Mode SINGLE. Notifie
     avec noms courts pour la montre.
   triggers:
@@ -989,7 +989,7 @@
         hvac_mode: '{{ mode_attendu }}'
   mode: single
 - id: '1752138633943'
-  alias: (H) [CLIM ] Notification de changement de mode Été/Fan/Hiver
+  alias: (H) (CLIM) Notification de changement de mode Été/Fan/Hiver
   description: Notification lorsque le mode change entre Été, Ventilateur ou Hiver
     (cool / fan_only / heat)
   triggers:
@@ -1005,7 +1005,7 @@
     action: notify.mobile_app_poco_x7_pro
   mode: single
 - id: '1754214931347'
-  alias: (F) [CLIM] Notification de fermeture des fenêtres
+  alias: (F) (CLIM) Notification de fermeture des fenêtres
   description: Envoie une notification lorsqu'une fenêtre est fermée.
   triggers:
   - entity_id:
@@ -1030,7 +1030,7 @@
     action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1754230309244'
-  alias: (G) [ CLIM ] Automatisation Arrêt Clim Notification
+  alias: (G) (CLIM) Automatisation Arrêt Clim Notification
   description: Notification quand une clim est coupée manuellement, seulement si fenêtres
     fermées et prises actives.
   triggers:
@@ -1155,7 +1155,7 @@
 - *id001
 - *id001
 - id: '1758298361594'
-  alias: (D) Notification température Up ou Down de [7h30 -> 21h00]
+  alias: (D) Notification température Up ou Down de (7h30 -> 21h00)
   description: 'Envoie le message personnalisé de clim si le texte change, OU au réveil
     à 07h30.
 
@@ -1644,7 +1644,7 @@
       action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1760088843808'
-  alias: (L) [DEBUG] Notifier les changements de message clim (Mobile)
+  alias: (L) (DEBUG) Notifier les changements de message clim (Mobile)
   description: ''
   triggers:
   - entity_id: sensor.message_clim_personnalise_7h30_21h00
@@ -1772,7 +1772,7 @@
           {{ piece }} vient d'être éteinte.\n"
   mode: parallel
 - id: '1761235548897'
-  alias: '[TEST] Gestion Optimisée du Store Bureau'
+  alias: (TEST) Gestion Optimisée du Store Bureau
   description: 'Gère l''ouverture et la fermeture du store du bureau en fonction de
     la température et de l''heure, avec des conditions spécifiques pour le contact
     de la fenêtre et la position du store.
@@ -1853,7 +1853,7 @@
     default: []
   mode: single
 - id: '1761236981200'
-  alias: '[TEST] Gestion Optimisée du Store Salon'
+  alias: (TEST) Gestion Optimisée du Store Salon
   description: 'Gère l''ouverture et la fermeture du store du salon en fonction de
     la température et de l''heure, avec des conditions spécifiques pour le contact
     de la fenêtre et la position du store.
@@ -2226,7 +2226,7 @@
     action: switch.turn_off
   mode: single
 - id: '1764784032821'
-  alias: (A - 0) [TEST 2025-12-13] Automatisation CLIM [07h30 <-> 21h00]
+  alias: (A - 0) (TEST 2025-12-13) Automatisation CLIM (07h30 <-> 21h00)
   description: '[TEST] Automatisation pour contrôler de [07h30 <-> 21h00] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR].L''état des fenêtres [OUVERTE(S)/FERMÉE(S)] sont
@@ -2444,7 +2444,7 @@
               endif %}\n"
   mode: queued
 - id: '1764787136826'
-  alias: (B - 0) [ TEST 2025-12-13 ] Automatisation CLIM [21h00 <-> 07h30]
+  alias: (B - 0) ( TEST 2025-12-13 ) Automatisation CLIM (21h00 <-> 07h30)
   description: 'Automatisation pour contrôler de [21h00 <-> 07h30] les climatiseurs
     en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
     des portables [WIFI/CELLULAR]. '
@@ -2640,7 +2640,7 @@
               endif %}\n"
   mode: queued
 - id: '1764957375111'
-  alias: (C) [CLIM OFF] Gardien Éco (Delta T < -1 et T°Ext > Seuil Non-Chauffage)
+  alias: (C) (CLIM OFF) Gardien Éco (Delta T < -1 et T°Ext > Seuil Non-Chauffage)
   description: 'Module de sécurité ÉCO. Coupe les climatisations si elles tournent
     alors que l''air extérieur est plus chaud que le seuil de non-chauffage défini
     (sensor.seuil_non_chauffage_bas) et que le Delta est favorable.
@@ -2764,7 +2764,7 @@
     action: switch.turn_on
   mode: single
 - id: '1765308061437'
-  alias: (E) Notification température Up ou Down de [21h00 -> 7h30]
+  alias: (E) Notification température Up ou Down de (21h00 -> 7h30)
   description: 'Envoie le message personnalisé de clim si le texte change, OU au début
     de la nuit à 21h00.
 
@@ -2804,3 +2804,10 @@
         title: '[Automa. Notif. Nuit]'
         message: '{{ states(''sensor.message_clim_personnalise_21h00_7h30'') }}'
   mode: queued
+- id: 'AUTOMATION_A_SUPPRIMER' # <<< L'ID doit être là
+  alias: "automation.a_test_automatisation_pour_controler_de_06h00_20h00_les_climatiseurs_en_fonction_de_la_temperature_interieure_exterieure_delta_et_du_type_de_reseau_des_portables_wifi_cellular_sauf_l_etat_des_fenetres_ouverte_s_fermee_s_qui_sont_controlees_24h_" # <<< Le nom long exact
+  # ... Ajoutez une action simple pour qu'elle soit valide ...
+  action:
+    - service: system_log.write
+      data:
+        message: "A effacer"
