@@ -2013,13 +2013,13 @@
     from: wifi
     to: cellular
     trigger: state
-    id: absents
+    id: sensor_update
   - alias: RÉSEAU CELLULAR - de réseau d'Eric 'wifi' -> 'cellular'
     entity_id: sensor.gm1901_network_type
     from: wifi
     to: cellular
     trigger: state
-    id: absents
+    id: sensor_update
   - alias: 'PRISES : Changement ON/OFF'
     entity_id:
     - switch.clim_salon_nous
@@ -2199,8 +2199,9 @@
             target:
               entity_id: climate.clim_salon_rm4_mini
             data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+              hvac_mode: "{% if trigger.id == 'sensor_update' and \n      is_state('climate.clim_salon_rm4_mini',
+                'off') and \n      prises_salon_on and \n      is_state('input_boolean.clim_chambre_arret_securise_en_cours',
+                'off') \n%}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
               temperature: '{{ t_salon_target }}'
             action: climate.set_temperature
           - alias: 'TEMPÉRATURE : BUREAU'
@@ -2691,7 +2692,7 @@
   - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE JOUR'
     condition: time
     after: 07:30:00
-    before: '21:00:00'
+    before: 08:00:00
   actions:
   - alias: 'INIT : CALCUL DES VARIABLES'
     variables:
@@ -2753,7 +2754,7 @@
           value_template: '{{ prises_on }}'
         - condition: time
           after: 07:30:00
-          before: '21:00:00'
+          before: 08:00:00
         sequence:
         - alias: 'CALCUL : DÉFINITION CIBLES PAR PIÈCE'
           choose:
