@@ -1096,7 +1096,7 @@
     weekday:
     - sun
   actions:
-  - action: shell_command.git_backup_push_weekly
+  - action: script.git_backup_weekly_refresh
   - data:
       level: info
       message: '[Backup] Weekly exécuté'

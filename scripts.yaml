@@ -27,22 +27,29 @@ git_backup_and_update:
     data:
       title: Git Push
       message: Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour).
-git_backup_weekly_and_update:
+# Fichier : scripts.yaml
+# ID d'entité : script.git_backup_weekly_refresh (vérifiez cet ID exact)
+
+git_backup_weekly_refresh:
   alias: Git Backup Weekly & Refresh
   icon: mdi:calendar-clock
   sequence:
-  - action: shell_command.git_backup_push_weekly
-  - delay:
-      seconds: 8
-  - target:
-      entity_id:
-      - sensor.backup_github_status
-      - sensor.backup_github_journal
-    action: homeassistant.update_entity
-  - action: persistent_notification.create
-    data:
-      title: Git Push Weekly
-      message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
+    # 1. Exécute la commande Git qui fait le commit, le push et le tag.
+    - action: shell_command.git_backup_push_weekly
+    # 2. Ajoute un délai pour laisser le temps au push de se terminer (8 secondes est raisonnable).
+    - delay:
+        seconds: 8
+    # 3. Met à jour les entités de statut (journal et statut).
+    - service: homeassistant.update_entity
+      target:
+        entity_id:
+          - sensor.backup_github_status
+          - sensor.backup_github_journal
+    # 4. Envoie une notification persistante dans l'interface HA.
+    - service: persistent_notification.create
+      data:
+        title: Git Push Weekly
+        message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
 
 #=====================================================================================================================================
 # Script de securité pour coupure des Groupes Extèrieur des CLIM
