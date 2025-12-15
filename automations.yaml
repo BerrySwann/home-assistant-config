@@ -2073,7 +2073,7 @@
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
-      prises_slon_on: '{{ is_state(''switch.clim_salon_nous'', ''on'') }}'
+      prises_salon_on: '{{ is_state(''switch.clim_salon_nous'', ''on'') }}'
       prises_bureau_on: '{{ is_state(''switch.clim_du_bureau_nous'', ''on'') }}'
       prises_chambre_on: '{{ is_state(''switch.clim_chambre_nous'', ''on'') }}'
       t_salon_target: '{{ temp_cible + 1 if states(''sensor.mode_ete_hiver'') == ''heat''
@@ -2121,7 +2121,11 @@
       choose:
       - conditions:
         - condition: template
-          value_template: '{{ prises_on }}'
+          value_template: '{{ prises_salon_on }}'
+        - condition: template
+          value_template: '{{ prises_bureau_on }}'
+        - condition: template
+          value_template: '{{ prises_chambre_on }}'
         - condition: time
           after: 07:30:00
           before: '21:00:00'
