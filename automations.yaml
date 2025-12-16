@@ -2553,22 +2553,6 @@
               data:
                 fan_mode: auto
           default:
-          - alias: 'TEMPÉRATURE : BUREAU'
-            action: climate.set_temperature
-            target:
-              entity_id: climate.clim_bureau_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_bureau_target }}'
-          - alias: 'TEMPÉRATURE : CHAMBRE'
-            action: climate.set_temperature
-            target:
-              entity_id: climate.clim_chambre_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_chambre_target }}'
           - alias: 'VENTILATION : FORCER AUTO'
             action: climate.set_fan_mode
             target:
@@ -2594,6 +2578,38 @@
                     'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_salon_target }}'
             alias: SECURITE U.E. Cilm Salon
+          - alias: SECURITE U.E. Cilm Bureau
+            choose:
+            - conditions:
+              - condition: state
+                entity_id: input_boolean.clim_bureau_arret_securise_en_cours
+                state:
+                - 'off'
+              sequence:
+              - alias: 'TEMPÉRATURE : BUREAU'
+                action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_bureau_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_bureau_target }}'
+          - alias: SECURITE U.E. Cilm Bureau
+            choose:
+            - conditions:
+              - condition: state
+                entity_id: input_boolean.clim_chambre_arret_securise_en_cours
+                state:
+                - 'off'
+              sequence:
+              - alias: 'TEMPÉRATURE : CHAMBRE'
+                action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_chambre_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_chambre_target }}'
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
