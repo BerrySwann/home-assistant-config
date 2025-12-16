@@ -2448,8 +2448,6 @@
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
-      prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and \n   is_state('switch.clim_du_bureau_nous',
-        'on') and \n   is_state('switch.clim_chambre_nous', 'on') }}\n"
       t_salon_target: '{{ temp_cible + 1 if states(''sensor.mode_ete_hiver'') == ''heat''
         else temp_cible }}'
       t_bureau_target: '{{ temp_cible }}'
@@ -2489,11 +2487,9 @@
             %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
             \ Aucune fenêtre n'est actuellement ouverte.\n{% endif %}\n"
     default:
-    - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
+    - alias: 'VÉRIFICATION : HORAIRE'
       choose:
       - conditions:
-        - condition: template
-          value_template: '{{ prises_on }}'
         - condition: time
           after: 07:30:00
           before: '21:00:00'
@@ -2536,80 +2532,71 @@
                 t_salon_target: '{{ temp_confort + 1 if mode_saison == ''heat'' else
                   temp_confort }}'
                 t_bureau_target: '{{ temp_confort }}'
-        - alias: 'ACTION : ENVOI COMMANDES'
-          choose:
-          - alias: 'MODE : FAN ONLY'
-            conditions:
-            - condition: template
-              value_template: '{{ mode_saison == ''fan_only'' }}'
-            sequence:
-            - alias: 'VENTILATION : AUTO'
-              action: climate.set_fan_mode
-              target:
-                entity_id:
-                - climate.clim_salon_rm4_mini
-                - climate.clim_bureau_rm4_mini
-                - climate.clim_chambre_rm4_mini
-              data:
-                fan_mode: auto
-          default:
-          - alias: 'VENTILATION : FORCER AUTO'
-            action: climate.set_fan_mode
-            target:
-              entity_id:
-              - climate.clim_salon_rm4_mini
-              - climate.clim_bureau_rm4_mini
-              - climate.clim_chambre_rm4_mini
-            data:
-              fan_mode: auto
-          - choose:
-            - conditions:
+        - alias: 'ACTION : ENVOI COMMANDES PAR PIÈCE'
+          parallel:
+          - alias: LOGIQUE SALON
+            choose:
+            - alias: 'Conditions Salon : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_salon_nous
+                state: 'on'
               - condition: state
                 entity_id: input_boolean.clim_salon_arret_securise_en_cours
-                state:
-                - 'off'
+                state: 'off'
               sequence:
-              - alias: 'TEMPÉRATURE : SALON'
-                action: climate.set_temperature
+              - action: climate.set_temperature
                 target:
                   entity_id: climate.clim_salon_rm4_mini
                 data:
                   hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
                     'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_salon_target }}'
-            alias: SECURITE U.E. Cilm Salon
-          - alias: SECURITE U.E. Cilm Bureau
+          - alias: LOGIQUE BUREAU
             choose:
-            - conditions:
+            - alias: 'Conditions Bureau : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_du_bureau_nous
+                state: 'on'
               - condition: state
                 entity_id: input_boolean.clim_bureau_arret_securise_en_cours
-                state:
-                - 'off'
+                state: 'off'
               sequence:
-              - alias: 'TEMPÉRATURE : BUREAU'
-                action: climate.set_temperature
+              - action: climate.set_temperature
                 target:
                   entity_id: climate.clim_bureau_rm4_mini
                 data:
                   hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
                     'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_bureau_target }}'
-          - alias: SECURITE U.E. Cilm Bureau
+          - alias: LOGIQUE CHAMBRE
             choose:
-            - conditions:
+            - alias: 'Conditions Chambre : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_chambre_nous
+                state: 'on'
               - condition: state
                 entity_id: input_boolean.clim_chambre_arret_securise_en_cours
-                state:
-                - 'off'
+                state: 'off'
               sequence:
-              - alias: 'TEMPÉRATURE : CHAMBRE'
-                action: climate.set_temperature
+              - action: climate.set_temperature
                 target:
                   entity_id: climate.clim_chambre_rm4_mini
                 data:
                   hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
                     'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_chambre_target }}'
+        - alias: 'VENTILATION : FORCER AUTO'
+          action: climate.set_fan_mode
+          target:
+            entity_id:
+            - climate.clim_salon_rm4_mini
+            - climate.clim_bureau_rm4_mini
+            - climate.clim_chambre_rm4_mini
+          data:
+            fan_mode: auto
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
@@ -2617,8 +2604,8 @@
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else
-              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
-              \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
+              %}\n  [éCO HEAT] Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else %}\n
+              \ Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}° |
+              Bureau: {{ t_bureau_target }}° | Chambre: {{ t_chambre_target }}°\n{%
               endif %}\n"
   mode: queued
