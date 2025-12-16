@@ -1,5 +1,26 @@
+git_backup_and_update:
+  alias: GITHUB A - PUSH Manuelle Backup & Refresh
+  icon: mdi:cloud-upload
+  sequence:
+  - data:
+      custom_message: Sauvegarde Manuelle (Dashboard)
+    action: shell_command.git_backup_push_manual
+  - delay:
+      seconds: 8
+  - target:
+      entity_id:
+      - sensor.backup_github_status
+      - sensor.backup_github_journal
+    action: homeassistant.update_entity
+    data: {}
+  - action: persistent_notification.create
+    data:
+      title: Git Push
+      message: Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour).
+
 git_pull:
-  alias: Git_Pull
+  alias: GITHUB B - PULL
+  icon: mdi:cloud-upload
   mode: queued
   sequence:
   - action: shell_command.git_pull_ff
@@ -9,13 +30,12 @@ git_pull:
       message: Fetch/prune + pull --ff-only lancé sur /config.
     action: persistent_notification.create
   description: ''
-git_backup_and_update:
-  alias: Git Backup & Refresh
-  icon: mdi:cloud-upload
+
+git_backup_weekly_refresh:
+  alias: GITHUB C - Backup Weekly & Refresh
+  icon: mdi:calendar-clock
   sequence:
-  - service: shell_command.git_backup_push_manual
-    data:
-      custom_message: Sauvegarde Manuelle (Dashboard)
+  - action: shell_command.git_backup_push_weekly
   - delay:
       seconds: 8
   - target:
@@ -23,30 +43,56 @@ git_backup_and_update:
       - sensor.backup_github_status
       - sensor.backup_github_journal
     action: homeassistant.update_entity
-  - action: persistent_notification.create
-    data:
-      title: Git Push
-      message: Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour).
-git_backup_weekly_refresh:
-  alias: Git Backup Weekly & Refresh
-  icon: mdi:calendar-clock
-  sequence:
-  - action: shell_command.git_backup_push_weekly
-  - delay:
-      seconds: 8
-  - service: homeassistant.update_entity
-    target:
-      entity_id:
-      - sensor.backup_github_status
-      - sensor.backup_github_journal
-  - service: persistent_notification.create
-    data:
+  - data:
       title: Git Push Weekly
       message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
-clim_secure_off:
-  alias: Coupure Sécurisée de la Clim
-  description: Éteint le thermostat, active un verrou, attend l'arrêt compresseur,
-    coupe la prise. VERSION UNIFIÉE (switch.clim_bureau_nous)
+    action: persistent_notification.create
+  description: ''
+
+j_1_routeur_clim_on_off_intelligent:
+  alias: J - 1 - ROUTEUR - Clim ON/OFF Intelligent
+  description: '[ROUTEUR] À mettre derrière le bouton du Dashboard. 1. Anti-Tremblote
+    (Vérifie Verrou). 2. Si Prise OFF -> Allume. 3. Si Prise ON -> Appelle J-2 (Secu).'
+  mode: single
+  fields:
+    piece:
+      description: 'Pièce (ex: salon, bureau, chambre)'
+      example: salon
+      required: true
+  variables:
+    p: '{{ piece | lower }}'
+    switch_entity: switch.clim_{{ p }}_nous
+    lock_entity: input_boolean.clim_{{ p }}_arret_securise_en_cours
+  sequence:
+  - alias: 1. Sécurité Anti-Tremblote
+    if:
+    - condition: template
+      value_template: '{{ is_state(lock_entity, ''on'') }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: OULA DOUCEMENT !
+        message: Une procédure d'arrêt est déjà en cours sur {{ p | upper }}.
+    - stop: Arrêt sécurisé déjà en cours - Double clic ignoré
+  - alias: 2. Décision ON/OFF
+    if:
+    - condition: template
+      value_template: '{{ is_state(switch_entity, ''off'') }}'
+    then:
+    - alias: 'Action : ALLUMER'
+      action: switch.turn_on
+      target:
+        entity_id: '{{ switch_entity }}'
+    else:
+    - alias: 'Action : APPELER J-2 (SÉCURITÉ)'
+      action: script.j_2_secu_arret_clim_protege
+      data:
+        piece: '{{ p }}'
+
+j_2_secu_arret_clim_protege:
+  alias: J - 2 - SECU - Arrêt Clim Protégé
+  description: '[EXÉCUTANT] Ne pas lancer directement. Appelé par J-1. Gère la séquence
+    d''arrêt sécurisé (Verrou > Thermostat OFF > Attente > Prise OFF).'
   mode: single
   fields:
     piece:
@@ -59,22 +105,24 @@ clim_secure_off:
     clim_entity: climate.clim_{{ p }}_rm4_mini
     switch_entity: switch.clim_{{ p }}_nous
     power_status_sensor: sensor.{{ p }}_power_status
-    piece_nom: '{% if p == ''salon'' %} du Salon  {% elif p == ''bureau'' %} du Bureau  {%
-      elif p == ''chambre'' %} de la Chambre  {% else %} Inconnue {% endif %}
-
-      '
+    piece_nom: >
+      {% if p == 'salon' %} du Salon 
+      {% elif p == 'bureau' %} du Bureau 
+      {% elif p == 'chambre' %} de la Chambre 
+      {% else %} Inconnue {% endif %}
   sequence:
-  - alias: Activation Sécurité
+  - alias: 1. Activation Verrou
     target:
       entity_id: '{{ lock_entity }}'
     action: input_boolean.turn_on
-  - alias: Arrêt Thermostat
+  - alias: 2. Thermostat OFF
     target:
       entity_id: '{{ clim_entity }}'
     action: climate.set_hvac_mode
     data:
       hvac_mode: 'off'
-  - if:
+  - alias: 3. Analyse Puissance
+    if:
     - condition: template
       value_template: '{{ is_state(power_status_sensor, ''off'') }}'
     then:
@@ -89,8 +137,7 @@ clim_secure_off:
     - action: notify.mobile_app_poco_x7_pro
       data:
         title: ARRÊT CLIM EN COURS
-        message: La Clim {{ piece_nom }} s'arrête. Attente arrêt compresseur (~ 5
-          min).
+        message: La Clim {{ piece_nom }} s'arrête. Attente (~ 5 min).
     - wait_for_trigger:
       - trigger: template
         value_template: '{{ is_state(power_status_sensor, ''off'') }}'
@@ -111,8 +158,8 @@ clim_secure_off:
       - action: notify.mobile_app_poco_x7_pro
         data:
           title: ERREUR ARRÊT CLIM
-          message: 'ÉCHEC : Arrêt Clim {{ piece_nom }} après 5 min.  Prise maintenue
-            pour sécurité.'
-  - target:
+          message: 'ÉCHEC : Arrêt Clim {{ piece_nom }} après 5 min. Prise maintenue.'
+  - alias: 4. Désactivation Verrou
+    target:
       entity_id: '{{ lock_entity }}'
     action: input_boolean.turn_off
