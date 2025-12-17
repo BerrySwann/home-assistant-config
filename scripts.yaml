@@ -17,7 +17,6 @@ git_backup_and_update:
     data:
       title: Git Push
       message: Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour).
-
 git_pull:
   alias: GITHUB B - PULL
   icon: mdi:cloud-upload
@@ -30,7 +29,6 @@ git_pull:
       message: Fetch/prune + pull --ff-only lancé sur /config.
     action: persistent_notification.create
   description: ''
-
 git_backup_weekly_refresh:
   alias: GITHUB C - Backup Weekly & Refresh
   icon: mdi:calendar-clock
@@ -48,7 +46,6 @@ git_backup_weekly_refresh:
       message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
     action: persistent_notification.create
   description: ''
-
 j_1_routeur_clim_on_off_intelligent:
   alias: J - 1 - ROUTEUR - Clim ON/OFF Intelligent
   description: '[ROUTEUR] À mettre derrière le bouton du Dashboard. 1. Anti-Tremblote
@@ -88,11 +85,10 @@ j_1_routeur_clim_on_off_intelligent:
       action: script.j_2_secu_arret_clim_protege
       data:
         piece: '{{ p }}'
-
 j_2_secu_arret_clim_protege:
   alias: J - 2 - SECU - Arrêt Clim Protégé
-  description: '[EXÉCUTANT] Ne pas lancer directement. Appelé par J-1. Gère la séquence
-    d''arrêt sécurisé (Verrou > Thermostat OFF > Attente > Prise OFF).'
+  description: '[EXÉCUTANT] Utilise Power Status pour la détection de chauffe et Power
+    Lock (9W) pour la coupure finale.'
   mode: single
   fields:
     piece:
@@ -105,11 +101,11 @@ j_2_secu_arret_clim_protege:
     clim_entity: climate.clim_{{ p }}_rm4_mini
     switch_entity: switch.clim_{{ p }}_nous
     power_status_sensor: sensor.{{ p }}_power_status
-    piece_nom: >
-      {% if p == 'salon' %} du Salon 
-      {% elif p == 'bureau' %} du Bureau 
-      {% elif p == 'chambre' %} de la Chambre 
-      {% else %} Inconnue {% endif %}
+    power_lock_sensor: sensor.{{ p }}_power_lock
+    piece_nom: '{% if p == ''salon'' %} du Salon  {% elif p == ''bureau'' %} du Bureau  {%
+      elif p == ''chambre'' %} de la Chambre  {% else %} Inconnue {% endif %}
+
+      '
   sequence:
   - alias: 1. Activation Verrou
     target:
@@ -121,44 +117,55 @@ j_2_secu_arret_clim_protege:
     action: climate.set_hvac_mode
     data:
       hvac_mode: 'off'
-  - alias: 3. Analyse Puissance
-    if:
-    - condition: template
-      value_template: '{{ is_state(power_status_sensor, ''off'') }}'
-    then:
-    - target:
-        entity_id: '{{ switch_entity }}'
-      action: switch.turn_off
-    - action: notify.mobile_app_poco_x7_pro
-      data:
-        title: Prise clim extérieure
-        message: La Clim {{ piece_nom }} est coupée (déjà en veille).
-    else:
-    - action: notify.mobile_app_poco_x7_pro
-      data:
-        title: ARRÊT CLIM EN COURS
-        message: La Clim {{ piece_nom }} s'arrête. Attente (~ 5 min).
-    - wait_for_trigger:
-      - trigger: template
-        value_template: '{{ is_state(power_status_sensor, ''off'') }}'
-      timeout: 00:05:00
-      continue_on_timeout: true
-    - if:
+  - alias: 3. Analyse et Attente
+    choose:
+    - alias: Déjà à l'arrêt complet
+      conditions:
       - condition: template
-        value_template: '{{ wait.completed }}'
-      then:
+        value_template: '{{ is_state(power_lock_sensor, ''off'') }}'
+      sequence:
       - target:
           entity_id: '{{ switch_entity }}'
         action: switch.turn_off
       - action: notify.mobile_app_poco_x7_pro
         data:
-          title: CLIM À L'ARRÊT
-          message: La prise de la Clim {{ piece_nom }} a été coupée.
-      else:
+          title: Prise clim {{ p | upper }}
+          message: La Clim {{ piece_nom }} est coupée (Repos complet).
+    - alias: Clim en cycle d'arrêt
+      conditions:
+      - condition: template
+        value_template: '{{ is_state(power_lock_sensor, ''on'') }}'
+      sequence:
       - action: notify.mobile_app_poco_x7_pro
         data:
-          title: ERREUR ARRÊT CLIM
-          message: 'ÉCHEC : Arrêt Clim {{ piece_nom }} après 5 min. Prise maintenue.'
+          title: ARRÊT CLIM EN COURS
+          message: 'La Clim {{ piece_nom }} est active ({{ states(''sensor.clim_''
+            ~ p ~ ''_nous_power'') }}W).  Attente de descente sous 9W (max 5 min).
+
+            '
+      - wait_for_trigger:
+        - trigger: template
+          value_template: '{{ is_state(power_lock_sensor, ''off'') }}'
+        timeout: 00:05:00
+        continue_on_timeout: true
+      - if:
+        - condition: template
+          value_template: '{{ is_state(power_lock_sensor, ''off'') }}'
+        then:
+        - target:
+            entity_id: '{{ switch_entity }}'
+          action: switch.turn_off
+        - action: notify.mobile_app_poco_x7_pro
+          data:
+            title: CLIM À L'ARRÊT
+            message: La prise de la Clim {{ piece_nom }} a été coupée proprement (<
+              9W).
+        else:
+        - action: notify.mobile_app_poco_x7_pro
+          data:
+            title: ERREUR ARRÊT CLIM
+            message: 'ÉCHEC : La Clim {{ piece_nom }} consomme toujours > 9W après
+              5 min. Prise maintenue par sécurité.'
   - alias: 4. Désactivation Verrou
     target:
       entity_id: '{{ lock_entity }}'

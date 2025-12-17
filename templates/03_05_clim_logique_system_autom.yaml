@@ -8,12 +8,12 @@
     unique_id: mode_ete_hiver
     state: >
       {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float(-999) %}
-      {% set temp_no_gel = states('sensor.seuil_non_chauffage_bas') | float(-999) %}
+      {% set temp_no_chauf = states('sensor.seuil_non_chauffage_bas') | float(-999) %}
       {% if temp_ext == -999 or temp_hors_gel == -999 %}
         ERREUR
-      {% elif temp_ext < temp_hors_gel %}
+      {% elif temp_ext < temp_no_chauf %}
         heat
-      {% elif temp_hors_gel <= temp_ext <= 25 %}
+      {% elif temp_no_chauf <= temp_ext < 25 %}
         fan_only
       {% else %}
         cool
@@ -71,6 +71,13 @@
     state: "7"
     unit_of_measurement: "°C"
 
+  # --- CALCUL : Correction Mamour Hivers ---
+  - name: "Temperature Corrigé Mamour Hivers"
+    unique_id: temperature_corrige_mamour_hivers
+    unit_of_measurement: "°C"
+    state: >
+      {{ (states('sensor.temperature_confort_jour') | float(0)) + 2 }}
+
   # --- MOTEUR DE CALCUL : CIBLE ---
   - name: "Temperature Cible"
     unique_id: temperature_cible
@@ -118,7 +125,6 @@
       {% set delta_2 = states('sensor.delta_2') | int (0) %}
       {% set delta_5 = states('sensor.delta_5') | int (0) %}
       {% set delta_7 = states('sensor.delta_7') | int (0) %}
-
       {% if temp_ext < 10 %}
         {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
       {% elif temp_ext < 12 %}
@@ -126,19 +132,13 @@
       {% elif temp_ext < 19 %}
         {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int (0) }}
       {% elif temp_ext > 40 %}
-        {# CANICULE EXTRÊME : Ext - 7° #}
         {{ temp_ext - delta_7 | int (0) }}
-      
       {% elif temp_ext > 32 %}
-        {# CANICULE : Ext - 5° #}
         {{ temp_ext - delta_5 | int (0) }}
-      
       {% else %}
-        {# CAS ÉTÉ NUIT (<32°) ou HIVER DOUX (>19°) #}
-        {# Été : 27 + (28-28) = 27° #}
-        {# Hiver : 19 + (18-18) = 19° (Chauffage coupé de toute façon) #}
         {{ (temp_diff + (temp_cible - consigne_de_base)) | int (0) }}
       {% endif %}
+  
   # --- CALCUL : ÉCO HIVER CORRIGÉ ---
   - name: "Temperature éCO. Hiver Corrigé"
     unique_id: temperature_eco_hiver_corrige
@@ -153,6 +153,7 @@
       {% else %}
         {{ temp_eco | int (0) }}
       {% endif %}
+  
 
   # --- MOYENNES ET DELTAS INTERNES ---
   - name: "Température moyenne intérieure"

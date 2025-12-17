@@ -21,6 +21,15 @@
         off
       {% endif %}
 
+  - name: "Salon Power Lock"
+    unique_id: salon_power_locks
+    state: >
+      {% if states('sensor.clim_salon_nous_power') | float (0) >= 7 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
   - name: "Salon Power Status_Affichage"
     unique_id: salon_power_status_affichage
     state: >
@@ -60,6 +69,15 @@
     unique_id: bureau_power_status
     state: >
       {% if states('sensor.clim_du_bureau_nous_power') | float (0) > 50 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+  - name: "Bureau Power Lock"
+    unique_id: bureau_power_locks
+    state: >
+      {% if states('sensor.clim_du_bureau_nous_power') | float (0) >= 9 %}
         on
       {% else %}
         off
@@ -123,6 +141,15 @@
     unique_id: chambre_power_status
     state: >
       {% if states('sensor.clim_chambre_nous_power') | float (0) > 50 %}
+        on
+      {% else %}
+        off
+      {% endif %}
+
+  - name: "Chambre Power Lock"
+    unique_id: chambre_power_locks
+    state: >
+      {% if states('sensor.clim_chambre_nous_power') | float (0) >= 9 %}
         on
       {% else %}
         off
