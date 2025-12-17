@@ -2015,7 +2015,7 @@
           data:
             title: '[AN] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else
+              %}\n  [éCO HEAT]\n  Les 3 Clims à {{ temp_eco_c }}° (Absent)\n{% else
               %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
               \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
               endif %}\n"
@@ -2260,9 +2260,9 @@
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              %}\n  [éCO HEAT] Les 3 Clims à : {{ temp_eco_c }}° (Absent)\n{% else
-              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°
-              | Bureau: {{ t_bureau_target }}° | Chambre: {{ t_chambre_target }}°\n{%
+              %}\n  [éCO HEAT] Les 3 Clims à {{ temp_eco_c }}° (Absent)\n{% else %}\n
+              \ Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}° |
+              Bureau: {{ t_bureau_target }}° | Chambre: {{ t_chambre_target }}°\n{%
               endif %}\n"
   mode: queued
 - id: '1764957375111'
