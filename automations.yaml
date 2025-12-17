@@ -2423,7 +2423,21 @@
     entity_id:
     - sensor.poco_x7_pro_mamour_network_type
     - sensor.poco_x7_pro_network_type
+    from:
+    - cellular
+    to:
+    - wifi
     id: force_run
+  - alias: 'RÉSEAU : Changement Wifi/Cellular'
+    trigger: state
+    entity_id:
+    - sensor.poco_x7_pro_mamour_network_type
+    - sensor.poco_x7_pro_network_type
+    from:
+    - wifi
+    to:
+    - cellular
+    id: sensor_update
   - alias: 'PRISES : Changement ON/OFF'
     trigger: state
     entity_id:
@@ -2431,16 +2445,6 @@
     - switch.clim_bureau_nous
     - switch.clim_chambre_nous
     id: force_run
-  - alias: 'FENÊTRES : Fermeture (Rétablissement)'
-    trigger: state
-    entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
-    from: 'on'
-    to: 'off'
-    id: window_close
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
@@ -2451,6 +2455,16 @@
     from: 'off'
     to: 'on'
     id: window_open
+  - alias: 'FENÊTRES : Fermeture (Rétablissement)'
+    trigger: state
+    entity_id:
+    - binary_sensor.contact_fenetre_salon_ikea_contact
+    - binary_sensor.contact_fenetre_cuisine_ikea_contact
+    - binary_sensor.contact_fenetre_bureau_ikea_contact
+    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'on'
+    to: 'off'
+    id: window_close
   - alias: 'ENVIRONNEMENT : Températures ou Mode'
     trigger: state
     entity_id:
@@ -2639,8 +2653,8 @@
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              %}\n  [éCO HEAT] Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else %}\n
-              \ Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}° |
-              Bureau: {{ t_bureau_target }}° | Chambre: {{ t_chambre_target }}°\n{%
+              %}\n  [éCO HEAT] Les 3 Clims à : {{ temp_eco_c }}° (Absent)\n{% else
+              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°
+              | Bureau: {{ t_bureau_target }}° | Chambre: {{ t_chambre_target }}°\n{%
               endif %}\n"
   mode: queued

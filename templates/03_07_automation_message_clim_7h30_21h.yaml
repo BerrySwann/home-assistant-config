@@ -52,7 +52,8 @@
             {%- if 'groupe_1' in groupe %}
               {# ABSENT => 3 clims en éco #}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[éCO HEAT]\nLes 3 Clim " ~ temp_eco ~ "°" %}
+                {%- set message_mode = "[éCO HEAT]\nLes 3 Clim à " ~ temp_eco ~ "° 
+                (Absent)" %}
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nLes 3 Clim " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
