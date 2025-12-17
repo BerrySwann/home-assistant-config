@@ -24,7 +24,7 @@
   - name: "Salon Power Lock"
     unique_id: salon_power_locks
     state: >
-      {% if states('sensor.clim_salon_nous_power') | float (0) >= 7 %}
+      {% if states('sensor.clim_salon_nous_power') | float (0) >= 5 %}
         on
       {% else %}
         off

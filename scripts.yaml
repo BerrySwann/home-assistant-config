@@ -89,7 +89,8 @@ j_2_secu_arret_clim_protege:
   alias: J - 2 - SECU - Arrêt Clim Protégé
   description: '[EXÉCUTANT] Utilise Power Status pour la détection de chauffe et Power
     Lock (9W) pour la coupure finale.'
-  mode: single
+  mode: parallel
+  max: 3
   fields:
     piece:
       description: 'Pièce (ex: salon, bureau, chambre)'
@@ -140,13 +141,13 @@ j_2_secu_arret_clim_protege:
         data:
           title: ARRÊT CLIM EN COURS
           message: 'La Clim {{ piece_nom }} est active ({{ states(''sensor.clim_''
-            ~ p ~ ''_nous_power'') }}W).  Attente de descente sous 9W (max 5 min).
+            ~ p ~ ''_nous_power'') }}W).  Attente de descente sous 9W (max 10 min).
 
             '
       - wait_for_trigger:
         - trigger: template
           value_template: '{{ is_state(power_lock_sensor, ''off'') }}'
-        timeout: 00:05:00
+        timeout: 00:10:00
         continue_on_timeout: true
       - if:
         - condition: template
