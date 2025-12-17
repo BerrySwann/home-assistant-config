@@ -2418,26 +2418,12 @@
     trigger: time
     at: 07:30:00
     id: force_run
-  - alias: 'RÉSEAU : Changement Wifi/Cellular'
+  - alias: 'RÉSEAU : Changement Wifi <-> Cellular'
     trigger: state
     entity_id:
     - sensor.poco_x7_pro_mamour_network_type
     - sensor.poco_x7_pro_network_type
-    from:
-    - cellular
-    to:
-    - wifi
     id: force_run
-  - alias: 'RÉSEAU : Changement Wifi/Cellular'
-    trigger: state
-    entity_id:
-    - sensor.poco_x7_pro_mamour_network_type
-    - sensor.poco_x7_pro_network_type
-    from:
-    - wifi
-    to:
-    - cellular
-    id: sensor_update
   - alias: 'PRISES : Changement ON/OFF'
     trigger: state
     entity_id:
