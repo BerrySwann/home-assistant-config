@@ -1799,9 +1799,9 @@
   mode: single
 - id: '1764784032821'
   alias: (B - 0) (TEST 2025-12-14) Automatisation CLIM (21h00 <-> 07h30)
-  description: 'Automatisation pour contrôler de [21h00 <-> 07h30] les climatiseurs
-    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
-    des portables [WIFI/CELLULAR].
+  description: '[NUIT] Automatisation pour contrôler de [21h00 <-> 07h30] les climatiseurs.
+    Structure HARMONISÉE avec (A-0). - Gestion différenciée par pièce avec vérification
+    Prise ON + Verrou OFF. - Mode Parallèle pour la réactivité.
 
     '
   triggers:
@@ -1872,11 +1872,9 @@
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_nuit: '{{ states(''sensor.temperature_confort_nuit'') | float(18) }}'
-      prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and\n   is_state('switch.clim_bureau_nous',
-        'on') and\n   is_state('switch.clim_chambre_nous', 'on') }}\n"
-      t_salon_target: '{{ temp_cible }}'
-      t_bureau_target: '{{ temp_cible }}'
-      t_chambre_target: '{{ temp_cible }}'
+      t_salon_target: '{{ temp_nuit }}'
+      t_bureau_target: '{{ temp_nuit }}'
+      t_chambre_target: '{{ temp_nuit }}'
   - alias: 'LOGIQUE : SÉCURITÉ VS STANDARD'
     choose:
     - alias: 'URGENCE : FENÊTRE OUVERTE'
@@ -1898,8 +1896,8 @@
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %} {% set ouverts
-            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% set
+            \ 'binary_sensor.contact_fenetre_bureau_ikea_contact'\n] %}  {% set ouverts
+            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}  {% set
             messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n  {% for
             fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
             %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
@@ -1909,14 +1907,12 @@
             == 'salon' else 'de la' %}\n    {% set messages.list = messages.list +
             [\"La fenêtre \" ~ article ~ \" \" ~ piece_lower | upper ~ \" a été ouverte\"]
             %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
-            \ Aucune fenêtre n'est actuellement ouverte.\n{% endif %}\n"
+            \ Une fenêtre est ouverte (Détection générique).\n{% endif %}\n"
         action: notify.mobile_app_poco_x7_pro
     default:
-    - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
+    - alias: 'VÉRIFICATION : HORAIRE'
       choose:
       - conditions:
-        - condition: template
-          value_template: '{{ prises_on }}'
         - condition: time
           after: '21:00:00'
           before: 07:30:00
@@ -1942,64 +1938,86 @@
 
                   '
           default:
-          - alias: 'SCÉNARIO : PRÉSENCE NUIT'
+          - alias: 'SCÉNARIO : PRÉSENCE NUIT (Défaut)'
             variables:
               t_salon_target: '{{ temp_nuit }}'
               t_bureau_target: '{{ temp_nuit }}'
               t_chambre_target: '{{ temp_nuit }}'
-        - alias: 'ACTION : ENVOI COMMANDES'
-          choose:
-          - alias: 'MODE : FAN ONLY'
-            conditions:
-            - condition: template
-              value_template: '{{ mode_saison == ''fan_only'' }}'
-            sequence:
-            - alias: 'VENTILATION : AUTO'
-              target:
-                entity_id:
-                - climate.clim_salon_rm4_mini
-                - climate.clim_bureau_rm4_mini
-                - climate.clim_chambre_rm4_mini
-              data:
-                fan_mode: auto
-              action: climate.set_fan_mode
-          default:
-          - alias: 'TEMPÉRATURE : SALON'
-            target:
-              entity_id: climate.clim_salon_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_salon_target }}'
-            action: climate.set_temperature
-          - alias: 'TEMPÉRATURE : BUREAU'
-            target:
-              entity_id: climate.clim_bureau_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_bureau_target }}'
-            action: climate.set_temperature
-          - alias: 'TEMPÉRATURE : CHAMBRE'
-            target:
-              entity_id: climate.clim_chambre_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_chambre_target }}'
-            action: climate.set_temperature
-          - alias: 'VENTILATION : FORCER AUTO'
-            target:
-              entity_id:
-              - climate.clim_salon_rm4_mini
-              - climate.clim_bureau_rm4_mini
-              - climate.clim_chambre_rm4_mini
-            data:
-              fan_mode: auto
-            action: climate.set_fan_mode
+        - alias: 'ACTION : ENVOI COMMANDES PAR PIÈCE (PARALLEL)'
+          parallel:
+          - alias: LOGIQUE SALON
+            choose:
+            - alias: 'Salon : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_salon_nous
+                state: 'on'
+              - condition: state
+                entity_id: input_boolean.clim_salon_arret_securise_en_cours
+                state: 'off'
+              sequence:
+              - action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_salon_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_salon_target }}'
+              - action: climate.set_fan_mode
+                target:
+                  entity_id: climate.clim_salon_rm4_mini
+                data:
+                  fan_mode: auto
+          - alias: LOGIQUE BUREAU
+            choose:
+            - alias: 'Bureau : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_bureau_nous
+                state: 'on'
+              - condition: state
+                entity_id: input_boolean.clim_bureau_arret_securise_en_cours
+                state: 'off'
+              sequence:
+              - action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_bureau_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_bureau_target }}'
+              - action: climate.set_fan_mode
+                target:
+                  entity_id: climate.clim_bureau_rm4_mini
+                data:
+                  fan_mode: auto
+          - alias: LOGIQUE CHAMBRE
+            choose:
+            - alias: 'Chambre : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_chambre_nous
+                state: 'on'
+              - condition: state
+                entity_id: input_boolean.clim_chambre_arret_securise_en_cours
+                state: 'off'
+              sequence:
+              - action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_chambre_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_chambre_target }}'
+              - action: climate.set_fan_mode
+                target:
+                  entity_id: climate.clim_chambre_rm4_mini
+                data:
+                  fan_mode: auto
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
+          action: notify.mobile_app_poco_x7_pro
           data:
             title: '[AN] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
@@ -2007,7 +2025,6 @@
               %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
               \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
               endif %}\n"
-          action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1764787136826'
   alias: (A - 0) (TEST 2025-12-14) Automatisation CLIM (07h30 <-> 21h00)
@@ -2021,37 +2038,28 @@
     '
   triggers:
   - alias: 'SYSTEM : Redémarrage Home Assistant'
+    trigger: homeassistant
     event: start
     id: force_run
-    trigger: homeassistant
   - alias: 'HORAIRE : Démarrage 7h30'
+    trigger: time
     at: 07:30:00
     id: force_run
-    trigger: time
-  - alias: 'RÉSEAU : Changement Wifi/Cellular'
+  - alias: 'RÉSEAU : Changement Wifi <-> Cellular'
+    trigger: state
     entity_id:
     - sensor.poco_x7_pro_mamour_network_type
     - sensor.poco_x7_pro_network_type
     id: force_run
-    trigger: state
   - alias: 'PRISES : Changement ON/OFF'
+    trigger: state
     entity_id:
     - switch.clim_salon_nous
     - switch.clim_bureau_nous
     - switch.clim_chambre_nous
     id: force_run
-    trigger: state
-  - alias: 'FENÊTRES : Fermeture (Rétablissement)'
-    entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
-    from: 'on'
-    to: 'off'
-    id: window_close
-    trigger: state
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
+    trigger: state
     entity_id:
     - binary_sensor.contact_fenetre_salon_ikea_contact
     - binary_sensor.contact_fenetre_cuisine_ikea_contact
@@ -2060,15 +2068,24 @@
     from: 'off'
     to: 'on'
     id: window_open
+  - alias: 'FENÊTRES : Fermeture (Rétablissement)'
     trigger: state
+    entity_id:
+    - binary_sensor.contact_fenetre_salon_ikea_contact
+    - binary_sensor.contact_fenetre_cuisine_ikea_contact
+    - binary_sensor.contact_fenetre_bureau_ikea_contact
+    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    from: 'on'
+    to: 'off'
+    id: window_close
   - alias: 'ENVIRONNEMENT : Températures ou Mode'
+    trigger: state
     entity_id:
     - sensor.th_balcon_nord_temperature
     - sensor.temperature_cible
     - sensor.mode_ete_hiver
     - sensor.temperature_confort_jour
     id: sensor_update
-    trigger: state
   conditions:
   - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE JOUR'
     condition: time
@@ -2079,20 +2096,16 @@
     variables:
       mode_saison: '{{ states(''sensor.mode_ete_hiver'') }}'
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
-      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',\n
-        \         'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n          'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-        \         'binary_sensor.contact_fenetre_chambre_ikea_contact')\n      | selectattr('state',
-        'eq', 'on') | list | count > 0 }}\n"
+      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',
+        \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
+        \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n      |
+        selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
-      prises_on: "{{ is_state('switch.clim_salon_nous', 'on') and\n   is_state('switch.clim_bureau_nous',
-        'on') and\n   is_state('switch.clim_chambre_nous', 'on') }}\n"
       t_salon_target: '{{ temp_cible + 1 if states(''sensor.mode_ete_hiver'') == ''heat''
-        else temp_cible }}
-
-        '
+        else temp_cible }}'
       t_bureau_target: '{{ temp_cible }}'
       t_chambre_target: '{{ temp_cible }}'
   - alias: 'LOGIQUE : SÉCURITÉ VS STANDARD'
@@ -2103,6 +2116,7 @@
         value_template: '{{ fenetres_ouvertes }}'
       sequence:
       - alias: 'ACTION : ARRÊT FORCE'
+        action: climate.set_hvac_mode
         target:
           entity_id:
           - climate.clim_salon_rm4_mini
@@ -2110,8 +2124,8 @@
           - climate.clim_chambre_rm4_mini
         data:
           hvac_mode: 'off'
-        action: climate.set_hvac_mode
       - alias: 'NOTIF : ALERTE FENÊTRE'
+        action: notify.mobile_app_poco_x7_pro
         data:
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
@@ -2128,13 +2142,10 @@
             [\"La fenêtre \" ~ article ~ \" \" ~ piece_lower | upper ~ \" a été ouverte\"]
             %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
             \ Aucune fenêtre n'est actuellement ouverte.\n{% endif %}\n"
-        action: notify.mobile_app_poco_x7_pro
     default:
-    - alias: 'VÉRIFICATION : PRISES ON ET HORAIRE'
+    - alias: 'VÉRIFICATION : HORAIRE'
       choose:
       - conditions:
-        - condition: template
-          value_template: '{{ prises_on }}'
         - condition: time
           after: 07:30:00
           before: '21:00:00'
@@ -2148,17 +2159,11 @@
             sequence:
             - variables:
                 t_salon_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
-                  }}
-
-                  '
+                  }}'
                 t_bureau_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
-                  }}
-
-                  '
+                  }}'
                 t_chambre_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
-                  }}
-
-                  '
+                  }}'
           - alias: 'SCÉNARIO : MAMOUR (SALON CONFORT)'
             conditions:
             - condition: template
@@ -2166,9 +2171,7 @@
             sequence:
             - variables:
                 t_salon_target: '{{ temp_confort + 1 if mode_saison == ''heat'' else
-                  temp_confort }}
-
-                  '
+                  temp_confort }}'
           - alias: 'SCÉNARIO : ERIC (BUREAU CONFORT)'
             conditions:
             - condition: template
@@ -2183,71 +2186,90 @@
             sequence:
             - variables:
                 t_salon_target: '{{ temp_confort + 1 if mode_saison == ''heat'' else
-                  temp_confort }}
-
-                  '
+                  temp_confort }}'
                 t_bureau_target: '{{ temp_confort }}'
-        - alias: 'ACTION : ENVOI COMMANDES'
-          choose:
-          - alias: 'MODE : FAN ONLY'
-            conditions:
-            - condition: template
-              value_template: '{{ mode_saison == ''fan_only'' }}'
-            sequence:
-            - alias: 'VENTILATION : AUTO'
-              target:
-                entity_id:
-                - climate.clim_salon_rm4_mini
-                - climate.clim_bureau_rm4_mini
-                - climate.clim_chambre_rm4_mini
-              data:
-                fan_mode: auto
-              action: climate.set_fan_mode
-          default:
-          - alias: 'TEMPÉRATURE : SALON'
-            target:
-              entity_id: climate.clim_salon_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_salon_target }}'
-            action: climate.set_temperature
-          - alias: 'TEMPÉRATURE : BUREAU'
-            target:
-              entity_id: climate.clim_bureau_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_bureau_target }}'
-            action: climate.set_temperature
-          - alias: 'TEMPÉRATURE : CHAMBRE'
-            target:
-              entity_id: climate.clim_chambre_rm4_mini
-            data:
-              hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
-                'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
-              temperature: '{{ t_chambre_target }}'
-            action: climate.set_temperature
-          - alias: 'VENTILATION : FORCER AUTO'
-            target:
-              entity_id:
-              - climate.clim_salon_rm4_mini
-              - climate.clim_bureau_rm4_mini
-              - climate.clim_chambre_rm4_mini
-            data:
-              fan_mode: auto
-            action: climate.set_fan_mode
+        - alias: 'ACTION : ENVOI COMMANDES PAR PIÈCE'
+          parallel:
+          - alias: LOGIQUE SALON
+            choose:
+            - alias: 'Conditions Salon : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_salon_nous
+                state: 'on'
+              - condition: state
+                entity_id: input_boolean.clim_salon_arret_securise_en_cours
+                state: 'off'
+              sequence:
+              - action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_salon_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_salon_target }}'
+              - action: climate.set_fan_mode
+                target:
+                  entity_id: climate.clim_salon_rm4_mini
+                data:
+                  fan_mode: auto
+          - alias: LOGIQUE BUREAU
+            choose:
+            - alias: 'Conditions Bureau : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_bureau_nous
+                state: 'on'
+              - condition: state
+                entity_id: input_boolean.clim_bureau_arret_securise_en_cours
+                state: 'off'
+              sequence:
+              - action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_bureau_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_bureau_target }}'
+              - action: climate.set_fan_mode
+                target:
+                  entity_id: climate.clim_bureau_rm4_mini
+                data:
+                  fan_mode: auto
+          - alias: LOGIQUE CHAMBRE
+            choose:
+            - alias: 'Conditions Chambre : Prise ON et Sécurité OFF'
+              conditions:
+              - condition: state
+                entity_id: switch.clim_chambre_nous
+                state: 'on'
+              - condition: state
+                entity_id: input_boolean.clim_chambre_arret_securise_en_cours
+                state: 'off'
+              sequence:
+              - action: climate.set_temperature
+                target:
+                  entity_id: climate.clim_chambre_rm4_mini
+                data:
+                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
+                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  temperature: '{{ t_chambre_target }}'
+              - action: climate.set_fan_mode
+                target:
+                  entity_id: climate.clim_chambre_rm4_mini
+                data:
+                  fan_mode: auto
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
+          action: notify.mobile_app_poco_x7_pro
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              %}\n  [éCO HEAT]\n  Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else
-              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
-              \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
+              %}\n  [éCO HEAT] Les 3 Clims à : {{ temp_eco_c }}° (Absent)\n{% else
+              %}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°
+              | Bureau: {{ t_bureau_target }}° | Chambre: {{ t_chambre_target }}°\n{%
               endif %}\n"
-          action: notify.mobile_app_poco_x7_pro
   mode: queued
 - id: '1764957375111'
   alias: (C) (CLIM OFF) Gardien Éco (Delta T < -1 et T°Ext > Seuil Non-Chauffage)
