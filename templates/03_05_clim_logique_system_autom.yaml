@@ -120,14 +120,11 @@
       {% set delta_7 = states('sensor.delta_7') | int (0) %}
 
       {% if temp_ext < 10 %}
-        {# GRAND FROID (<10°) : Cible(19) - Base(18) = +1. Diff(19) + 1 - 1 = 19° #}
-        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int (0) }}
-      
+        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
+      {% elif temp_ext < 12 %}
+        {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
       {% elif temp_ext < 19 %}
-        {# HIVER STANDARD (10°-19°) : Cible(18) - Base(18) = 0. Diff(19) - 1 = 18° #}
-        {# CORRECTION ICI : On utilise delta_1 pour avoir 18° et non 17° #}
         {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int (0) }}
-      
       {% elif temp_ext > 40 %}
         {# CANICULE EXTRÊME : Ext - 7° #}
         {{ temp_ext - delta_7 | int (0) }}
