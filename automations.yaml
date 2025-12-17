@@ -2164,7 +2164,7 @@
               value_template: '{{ ''groupe_2'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_confort + 1 if mode_saison == ''heat'' else
+                t_salon_target: '{{ temp_confort + 2 if mode_saison == ''heat'' else
                   temp_confort }}'
           - alias: 'SCÉNARIO : ERIC (BUREAU CONFORT)'
             conditions:
@@ -2172,16 +2172,16 @@
               value_template: '{{ ''groupe_3'' in groupe_presence }}'
             sequence:
             - variables:
-                t_bureau_target: '{{ temp_confort }}'
+                t_bureau_target: '{{ temp_confort - 1 }}'
           - alias: 'SCÉNARIO : TOUS (SALON+BUREAU CONFORT)'
             conditions:
             - condition: template
               value_template: '{{ ''groupe_4'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_confort + 1 if mode_saison == ''heat'' else
+                t_salon_target: '{{ temp_confort + 2 if mode_saison == ''heat'' else
                   temp_confort }}'
-                t_bureau_target: '{{ temp_confort }}'
+                t_bureau_target: '{{ temp_confort - 1 }}'
         - alias: 'ACTION : ENVOI COMMANDES PAR PIÈCE'
           parallel:
           - alias: LOGIQUE SALON

@@ -8,7 +8,7 @@
     unique_id: mode_ete_hiver
     state: >
       {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float(-999) %}
-      {% set temp_hors_gel = states('sensor.seuil_non_chauffage_bas') | float(-999) %}
+      {% set temp_no_gel = states('sensor.seuil_non_chauffage_bas') | float(-999) %}
       {% if temp_ext == -999 or temp_hors_gel == -999 %}
         ERREUR
       {% elif temp_ext < temp_hors_gel %}
