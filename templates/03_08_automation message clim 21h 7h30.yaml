@@ -54,9 +54,9 @@
             {%- if mode == 'heat' %}
               {%- set message_mode = "[éCO HEAT]\\nLes 3 Clim à " ~ temp_eco ~ "° (Absent)" %}
             {%- elif mode == 'cool' %}
-              {%- set message_mode = "[COOL]\\nLes 3 Clim " ~ temp_cible ~ "°" %}
+              {%- set message_mode = "[COOL]\\nLes 3 Clim à " ~ temp_cible ~ "° (Absent)" %}
             {%- elif mode == 'fan_only' %}
-              {%- set message_mode = "[FAN ONLY]\\nLes 3 Clim [FAN ONLY]" %}
+              {%- set message_mode = "[FAN ONLY]\\nLes 3 Clim en [FAN ONLY] (Absent)" %}
             {%- else %}
               {%- set message_mode = "Mode clim inconnu" %}
             {%- endif %}
