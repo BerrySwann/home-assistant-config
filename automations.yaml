@@ -526,16 +526,16 @@
       {{ result.sensors | join(', ') }}"
   mode: single
 - id: '1748450913123'
-  alias: Automation éCO. (Prise) selon le réseau (Wifi et/ou Cellular) des 2 portables
+  alias: Automation éCO. Prises
   description: Automation basée sur le type de réseau [Wifi et Cellular] des deux
-    portables - Optimisée
+    portables - Pilotage des prises basé sur les groupes de 1 à 4 avec statut du sensor.presence_clim
   triggers:
   - entity_id: sensor.groupe_clim
     trigger: state
   conditions: []
   actions:
   - choose:
-    - alias: 'Groupe 1 : Personne'
+    - alias: 'Groupe 1 : Absent'
       conditions:
       - condition: state
         entity_id: sensor.groupe_clim
@@ -543,16 +543,17 @@
       sequence:
       - target:
           entity_id:
-          - switch.2cd1f3631cffd872644e94b82911bd1c
-          - light.35b638346b45f3b344173066dab03737
-          - switch.b37c2b271812bf3539f85ecae964b296
-          - switch.112f9a3e7fdbef3de9b8c3ffe84e3827
-          - switch.fdb008a5af2652bb414838d475af4b94
+          - switch.prise_horloge_ikea
+          - light.hue_smart_salon
+          - switch.ecran_p_c_3_play_hue
+          - switch.hue_smart_eco_pc_bureau
+          - switch.prise_tete_de_lit_chambre
         action: homeassistant.turn_off
       - action: notify.mobile_app_poco_x7_pro
         data:
           message: '[5] prises [OFF]'
-          title: Presence {{ states('sensor.presence_clim') }}
+          title:
+            '[object Object]':
     - alias: 'Groupe 2 : Mamour'
       conditions:
       - condition: state
@@ -561,19 +562,20 @@
       sequence:
       - target:
           entity_id:
-          - switch.2cd1f3631cffd872644e94b82911bd1c
-          - light.35b638346b45f3b344173066dab03737
-          - switch.b37c2b271812bf3539f85ecae964b296
-          - switch.fdb008a5af2652bb414838d475af4b94
+          - switch.prise_horloge_ikea
+          - light.hue_smart_salon
+          - switch.ecran_p_c_3_play_hue
+          - switch.prise_tete_de_lit_chambre
         action: homeassistant.turn_on
       - target:
           entity_id:
-          - switch.112f9a3e7fdbef3de9b8c3ffe84e3827
+          - switch.hue_smart_eco_pc_bureau
         action: homeassistant.turn_off
       - action: notify.mobile_app_poco_x7_pro
         data:
           message: '[4] prises [ON]'
-          title: Presence {{ states('sensor.presence_clim') }}
+          title:
+            '[object Object]':
     - alias: 'Groupe 3 : Eric'
       conditions:
       - condition: state
@@ -582,20 +584,21 @@
       sequence:
       - target:
           entity_id:
-          - switch.b37c2b271812bf3539f85ecae964b296
-          - switch.112f9a3e7fdbef3de9b8c3ffe84e3827
+          - switch.ecran_p_c_3_play_hue
+          - switch.hue_smart_eco_pc_bureau
         action: homeassistant.turn_on
       - target:
           entity_id:
-          - switch.2cd1f3631cffd872644e94b82911bd1c
-          - light.35b638346b45f3b344173066dab03737
-          - switch.fdb008a5af2652bb414838d475af4b94
+          - switch.prise_horloge_ikea
+          - light.hue_smart_salon
+          - switch.prise_tete_de_lit_chambre
         action: homeassistant.turn_off
       - action: notify.mobile_app_poco_x7_pro
         data:
           message: '[2] prises [ON]'
-          title: Presence {{ states('sensor.presence_clim') }}
-    - alias: 'Groupe 4 : Tous'
+          title:
+            '[object Object]':
+    - alias: 'Groupe 4 : Mamour & Eric'
       conditions:
       - condition: state
         entity_id: sensor.groupe_clim
@@ -603,16 +606,17 @@
       sequence:
       - target:
           entity_id:
-          - switch.2cd1f3631cffd872644e94b82911bd1c
-          - light.35b638346b45f3b344173066dab03737
-          - switch.b37c2b271812bf3539f85ecae964b296
-          - switch.112f9a3e7fdbef3de9b8c3ffe84e3827
-          - switch.fdb008a5af2652bb414838d475af4b94
+          - switch.prise_horloge_ikea
+          - light.hue_smart_salon
+          - switch.ecran_p_c_3_play_hue
+          - switch.hue_smart_eco_pc_bureau
+          - switch.prise_tete_de_lit_chambre
         action: homeassistant.turn_on
       - action: notify.mobile_app_poco_x7_pro
         data:
           message: '[5] prises [ON]'
-          title: Presence {{ states('sensor.presence_clim') }}
+          title:
+            '[object Object]':
   mode: queued
 - id: '1750309185567'
   alias: (I) (CLIM DEBUG) Force Mode Correct & Sécurité

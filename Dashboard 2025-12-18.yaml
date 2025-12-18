@@ -118,7 +118,7 @@ streamline_templates:
             {% set temp_ext = states('sensor.th_balcon_nord_temperature') |
             float(-999) %} {% set consigne_de_base =
             states('sensor.consigne_de_base') | int(0) %} {% set mode =
-            states('sensor.mode_ete_hiver') %}  {% set temp_eco =
+            states('sensor.mode_ete_hiver') %} {% set temp_eco =
             states('sensor.temperature_eco_hiver') | int(0) %} {% set temp_eco_c
             = states('sensor.temperature_eco_hiver_corrige') | int(0) %} {% set
             temp_hg = states('sensor.temperature_hors_gel_hiver') | int(0) %} {%
@@ -128,7 +128,7 @@ streamline_templates:
             states('sensor.delta_5') | int(0) %} {% set delta_7 =
             states('sensor.delta_7') | int(0) %} {% set temp_cible =
             states('sensor.temperature_cible') | int(0) %} {% set temp_confort =
-            states('sensor.temperature_confort') | int(0) %} {% set
+            states('sensor.temperature_confort_jour') | int(0) %} {% set
             temp_confort_n = states('sensor.temperature_confort_nuit') | int(0)
             %}
 
@@ -139,16 +139,22 @@ streamline_templates:
             {% if temp_ext < 10 %}
               **- Calcul T°cible si T°Ext. ≤ 10°C [ {{ consigne_de_base }} + {{ delta_2 }} = {{ (consigne_de_base + delta_2) | round(0) }}°C ]**
               **- Température cible [ {{ temp_cible | round(0) }}°C ]**
+              
+              **- Calcul T°Diff. si T°Ext. ≤ 10°C [ {{ temp_diff }} + {{ delta_2 }} = {{ (temp_diff + delta_2) | round(0) }}°C ]**
               **- Température confort [ {{ temp_confort | round(0) }}°C ]**
-              **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**
+              
+              **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ] (21h <-> 7h30)**
               
               **- Calcul T°éCO si T°Ext. ≤ 10°C [ {{ temp_eco }} + {{ delta_1 }} = {{ (temp_eco + delta_1) | round(0) }}°C ]**
               **- Température éCO corrigé: {{ temp_eco_c }}°C (éCO. si absents)**
             {% elif temp_ext < 12 %}
               **- Calcul T°cible si T°Ext. ≤ 12°C [ {{ consigne_de_base }} + {{ delta_1 }} = {{ (consigne_de_base + delta_1) | round(0) }}°C ]**
               **- Température cible [ {{ temp_cible | round(0) }}°C ]**
+
+              **- Calcul T°Diff. si T°Ext. ≤ 12°C [ {{ temp_diff }} + {{ delta_1 }} = {{ (temp_diff + delta_1) | round(0) }}°C ]**
               **- Température confort [ {{ temp_confort | round(0) }}°C ]**
-              **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**
+              
+              **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ] (21h <-> 7h30)**
               **- Température éCO. : {{ temp_eco_c | round(0) }}°C -> (éCO. si absents)**
             {% elif temp_ext > 40 %}
               **- Calcul T°cible si T°Ext. ≥ 40°C [ {{ temp_ext | round(0) }} - {{ delta_7 }} = {{ (temp_ext - delta_7) | round(0) }}°C ]**
@@ -161,7 +167,7 @@ streamline_templates:
             {% else %}
               **- Température cible [ {{ temp_cible | round(0) }}°C ]**
               **- Température confort [ {{ temp_confort | round(0) }}°C ]**
-              {% if mode == "heat" %} **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ]**  {% endif %}
+              {% if mode == "heat" %} **- Température confort de nuit [ {{ temp_confort_n | round(0) }}°C ] (21h <-> 7h30)**  {% endif %}
               {% if temp_ext < 17 %} **- Température éCO. : {{ temp_eco_c | round(0) }}°C -> (éCO. si absents)** {% endif %}
             {% endif %}
 
@@ -1061,6 +1067,14 @@ streamline_templates:
           group_by:
             func: avg
             duration: 24h
+        - entity: '[[mean_24h_kwh_entity]]'
+          name: Mean(24h)
+          color: '#F44336'
+          show:
+            in_header: true
+            in_brush: false
+            in_chart: false
+          opacity: 0
         - entity: '[[power_entity]]'
           yaxis_id: Watts
           type: area
@@ -1149,6 +1163,14 @@ streamline_templates:
           group_by:
             func: min
             duration: 24h
+        - entity: '[[mean_730h_kwh_entity]]'
+          name: Mean(730h)
+          color: '#F44336'
+          unit: kWh
+          show:
+            in_header: true
+            in_brush: false
+            in_chart: false
       card_mod:
         style: >
           ha-card { background: none !important; border: none !important;
@@ -1602,23 +1624,29 @@ views:
                       var tempChambre = parseFloat(states['sensor.th_chambre_temperature']?.state ?? 'NaN').toFixed(1);
 
                       function getTemperatureColor(temp) {
-                        if (temp < 5) return '#3674B5'; // Bleu
-                        if (temp < 13) return '#578FCA'; // Light Blue
-                        if (temp < 19) return '#A1E3F9'; // bleu ciel
-                        if (temp < 25) return '#00FF00'; // Lime Green
-                        if (temp < 32) return '#FFD700'; // Or
-                        if (temp < 36) return '#FFA500'; // Orange
-                        if (temp < 40) return '#F44336'; // Rouge
+                        if (temp === 'NaN') return '#808080'; // Gris pour NaN
+                        var tempFloat = parseFloat(temp);
+                        if (tempFloat < 5) return '#3674B5'; // Bleu
+                        if (tempFloat < 13) return '#578FCA'; // Light Blue
+                        if (tempFloat < 19) return '#A1E3F9'; // bleu ciel
+                        if (tempFloat < 25) return 'lightgreen'; // Lime Green
+                        if (tempFloat < 32) return '#FFD700'; // Or
+                        if (tempFloat < 36) return '#FFA500'; // Orange
+                        if (tempFloat < 40) return '#F44336'; // Rouge
                         return '#00FF00'; // Lime Green
                       }
+                      
+                      function formatTemperature(temp) {
+                        return temp === 'NaN' ? 'N/A' : temp + '°C';
+                      }
 
-                      return '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempBalconN) + ';">' + tempBalconN + '°C</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">' + tempSalon + '°C</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">' + tempCellier + '°C</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">' + tempCuisine + '°C</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">' + tempBureau + '°C</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">' + tempSalleDeBain + '°C</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">' + tempChambre + '°C</span>';
+                      return '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempBalconN) + ';">' + formatTemperature(tempBalconN) + '</span>' +
+                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempSalon) + ';">' + formatTemperature(tempSalon) + '</span>' +
+                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempCellier) + ';">' + formatTemperature(tempCellier) + '</span>' +
+                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempCuisine) + ';">' + formatTemperature(tempCuisine) + '</span>' +
+                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempBureau) + ';">' + formatTemperature(tempBureau) + '</span>' +
+                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempSalleDeBain) + ';">' + formatTemperature(tempSalleDeBain) + '</span>' +
+                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempChambre) + ';">' + formatTemperature(tempChambre) + '</span>';
                     ]]]
                   espace: |
                     [[[
@@ -1627,7 +1655,8 @@ views:
                              '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
                              '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
                              '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>';
+                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
+                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>'; // Ajouté le 7ème espace pour correspondre aux 7 lignes de données
                     ]]]
                   humidite: |
                     [[[
@@ -1640,18 +1669,24 @@ views:
                       var humiditeChambre = parseFloat(states['sensor.th_chambre_humidity']?.state ?? 'NaN').toFixed(1);
 
                       function getHumidityColor(humidity) {
-                        if (humidity > 75) return '#F44336'; // Rouge
-                        if (humidity > 55) return '#FFA500'; // Orange
+                        if (humidity === 'NaN') return '#808080'; // Gris pour NaN
+                        var humidityFloat = parseFloat(humidity);
+                        if (humidityFloat > 75) return '#F44336'; // Rouge
+                        if (humidityFloat > 55) return '#FFA500'; // Orange
                         return 'white'; // Blanc
                       }
+                      
+                      function formatHumidity(humidity) {
+                        return humidity === 'NaN' ? 'N/A' : humidity + '%';
+                      }
 
-                      return '<span style="color: ' + getHumidityColor(humiditeBalconN) + '; display: block; text-align: right; line-height: 1.2;">' + humiditeBalconN + '%</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeSalon) + '; display: block; text-align: right; line-height: 1.2;">' + humiditeSalon + '%</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeCellier) + '; display: block; text-align: right; line-height: 1.2;">' + humiditeCellier + '%</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeCuisine) + '; display: block; text-align: right; line-height: 1.2;">' + humiditeCuisine + '%</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeBureau) + '; display: block; text-align: right; line-height: 1.2;">' + humiditeBureau + '%</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeSalleDeBain) + '; display: block; text-align: right; line-height: 1.2;">' + humiditeSalleDeBain + '%</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeChambre) + '; display: block; text-align: right; line-height: 1.2;">' + humiditeChambre + '%</span>';
+                      return '<span style="color: ' + getHumidityColor(humiditeBalconN) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeBalconN) + '</span>' +
+                             '<span style="color: ' + getHumidityColor(humiditeSalon) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeSalon) + '</span>' +
+                             '<span style="color: ' + getHumidityColor(humiditeCellier) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeCellier) + '</span>' +
+                             '<span style="color: ' + getHumidityColor(humiditeCuisine) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeCuisine) + '</span>' +
+                             '<span style="color: ' + getHumidityColor(humiditeBureau) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeBureau) + '</span>' +
+                             '<span style="color: ' + getHumidityColor(humiditeSalleDeBain) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeSalleDeBain) + '</span>' +
+                             '<span style="color: ' + getHumidityColor(humiditeChambre) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeChambre) + '</span>';
                     ]]]
               - type: custom:button-card
                 entities:
@@ -1735,9 +1770,9 @@ views:
                     [[[
                       const colorMap = {
                         'Fan': '#00FF00',
-                        'on': '#00FF00',
+                        'on': 'lightgreen',
                         'off': 'white',
-                        'default': 'purple'
+                        'default': '#aaaaaa'
                       };
 
                       function safeState(entityId, defaultValue = 'on') {
@@ -1822,7 +1857,7 @@ views:
                         return 'N/A';
                       }
 
-                      // Fonction pour gérer la couleur (Purple si N/A) et le formatage
+                      // Fonction pour gérer la couleur (Gris si N/A) et le formatage
                       function formatDisplay(value) {
                         const color = value === 'N/A' ? '#aaaaaa' : 'inherit';
                         const text = value === 'N/A' ? 'N/A' : value + '°C';
@@ -1835,7 +1870,7 @@ views:
 
                       const deltaColor = 
                         !isNaN(deltaADEME) && isCooling && deltaADEME >= -8 && deltaADEME <= -4 
-                          ? 'lime' // Optimal
+                          ? 'lightgreen' // Optimal
                           : !isNaN(deltaADEME) && isCooling
                             ? '#FF0000' // Avertissement
                             : 'white'; // Neutre
@@ -1853,7 +1888,7 @@ views:
                       const consigneChambre = safeState('climate.clim_chambre_rm4_mini');
 
                       return [
-                        `<span style="display: block; text-align: right; line-height: 1.2; color: #00FF00;">${tempMoyenne}°C</span>`,
+                        `<span style="display: block; text-align: right; line-height: 1.2; color: lightgreen;">${tempMoyenne}°C</span>`,
                         `<span style="display: block; text-align: right; line-height: 1.2; color: ${deltaColor};">${ademeDisplayValue}</span>`,
                         '<span style="display: block; text-align: right; line-height: 1.2;">.</span>',
                         formatDisplay(consigneSalon),
@@ -2104,7 +2139,8 @@ views:
                         { name: 'Salon', power: safeState('sensor.salon_power_status'), mode: safeState('climate.clim_salon_rm4_mini') },
                         { name: 'Cuisine', power: safeState('sensor.cuisine_power_status'), mode: safeState('climate.radiateur_cuisine') },
                         { name: 'Bureau', power: safeState('sensor.bureau_power_status'), mode: safeState('climate.clim_bureau_rm4_mini') },
-                        { name: 'SdB', power: safeState('sensor.sdb_power_status'), mode: safeState('sensor.radiateur_sdb_etat') },
+                        { name: 'SdB Sft', power: safeState('sensor.sdb_power_status'), mode: safeState('sensor.radiateur_sdb_etat') },
+                        { name: 'SdB SèS', power: safeState('sensor.sdb_seche_serviettes_power_status'), mode: safeState('sensor.seche_serviettes_sdb_etat') },
                         { name: 'Chambre', power: safeState('sensor.chambre_power_status'), mode: safeState('climate.clim_chambre_rm4_mini') },
                         { name: 'TOTAL', color: 'lightgreen' }
                       ];
@@ -2132,6 +2168,7 @@ views:
                         'sensor.radiateur_elec_cuisine_quotidien',
                         'sensor.clim_du_bureau_quotidien',
                         'sensor.radiateur_sdb_quotidien',
+                        'sensor.seche_serv_sdb_quotidien',
                         'sensor.clim_chambre_quotidien',
                         'sensor.conso_clim_rad_total_quotidien'
                       ];
@@ -2159,6 +2196,7 @@ views:
                         'sensor.radiateur_elec_cuisine_mensuel',
                         'sensor.clim_du_bureau_mensuel',
                         'sensor.radiateur_sdb_mensuel',
+                        'sensor.seche_serv_sdb_mensuel',
                         'sensor.clim_chambre_mensuel',
                         'sensor.conso_clim_rad_total_mensuel'
                       ];
@@ -3437,7 +3475,8 @@ views:
 
                         "piece_tcov_chambre type_tcov_chambre
                         value_tcov_chambre"
-                         "espace_fin espace_fin espace_fin"
+
+                        "espace_fin espace_fin espace_fin"
                     - grid-template-columns: 1fr 1fr 1fr
                     - grid-template-rows: auto
                     - margin-top: 4.5px
@@ -3535,111 +3574,177 @@ views:
                     ]]]
                   piece_pm25_salon: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_salon_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_salon_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var color = (pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '') ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">Salon</span>';
                     ]]]
                   piece_pm25_bureau: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_bureau_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_bureau_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var color = (pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '') ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">Bureau</span>';
                     ]]]
                   piece_pm25_chambre: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_chambre_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_chambre_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var color = (pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '') ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">Chambre</span>';
                     ]]]
                   piece_tcov_salon: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_salon_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_salon_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var color = (tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '') ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">Salon</span>';
                     ]]]
                   piece_tcov_bureau: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_bureau_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_bureau_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var color = (tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '') ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">Bureau</span>';
                     ]]]
                   piece_tcov_chambre: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_chambre_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_chambre_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var color = (tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '') ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">Chambre</span>';
                     ]]]
                   type_pm25_salon: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_salon_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_salon_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var color = (pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '') ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">PM2.5</span>';
                     ]]]
                   type_pm25_bureau: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_bureau_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_bureau_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var color = (pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '') ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">PM2.5</span>';
                     ]]]
                   type_pm25_chambre: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_chambre_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_chambre_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var color = (pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '') ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">PM2.5</span>';
                     ]]]
                   type_tcov_salon: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_salon_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_salon_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var color = (tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '') ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">tCOV</span>';
                     ]]]
                   type_tcov_bureau: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_bureau_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_bureau_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var color = (tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '') ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">tCOV</span>';
                     ]]]
                   type_tcov_chambre: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_chambre_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
+                      var state = states['sensor.qualite_air_chambre_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var color = (tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '') ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
                       return '<span style="color: ' + color + ';">tCOV</span>';
                     ]]]
                   value_pm25_salon: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_salon_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
-                      return '<span style="color: ' + color + ';">' + pm25Value + ' µg/m³</span>';
+                      var state = states['sensor.qualite_air_salon_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var isMissing = pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '';
+                      var color = isMissing ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
+                      var displayValue = isMissing ? 'N/A' : pm25Value + ' µg/m³';
+                      return '<span style="color: ' + color + ';">' + displayValue + '</span>';
                     ]]]
                   value_pm25_bureau: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_bureau_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
-                      return '<span style="color: ' + color + ';">' + pm25Value + ' µg/m³</span>';
+                      var state = states['sensor.qualite_air_bureau_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var isMissing = pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '';
+                      var color = isMissing ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
+                      var displayValue = isMissing ? 'N/A' : pm25Value + ' µg/m³';
+                      return '<span style="color: ' + color + ';">' + displayValue + '</span>';
                     ]]]
                   value_pm25_chambre: |
                     [[[
-                      var pm25Value = states['sensor.qualite_air_chambre_ikea_pm25'].state;
-                      var color = pm25Value > 35 ? 'rgb(244,67,54)' : pm25Value > 11 ? 'orange' : 'white';
-                      return '<span style="color: ' + color + ';">' + pm25Value + ' µg/m³</span>';
+                      var state = states['sensor.qualite_air_chambre_ikea_pm25'];
+                      var pm25Value = state ? state.state : 'unavailable';
+                      var isMissing = pm25Value == 'unknown' || pm25Value == 'unavailable' || pm25Value === '';
+                      var color = isMissing ? '#808080' : 
+                                  (parseFloat(pm25Value) > 35 ? 'rgb(244,67,54)' : 
+                                   parseFloat(pm25Value) > 11 ? 'orange' : 'white');
+                      var displayValue = isMissing ? 'N/A' : pm25Value + ' µg/m³';
+                      return '<span style="color: ' + color + ';">' + displayValue + '</span>';
                     ]]]
                   value_tcov_salon: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_salon_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
-                      return '<span style="color: ' + color + ';">' + tcovValue + ' ppb</span>';
+                      var state = states['sensor.qualite_air_salon_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var isMissing = tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '';
+                      var color = isMissing ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
+                      var displayValue = isMissing ? 'N/A' : tcovValue + ' ppb';
+                      return '<span style="color: ' + color + ';">' + displayValue + '</span>';
                     ]]]
                   value_tcov_bureau: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_bureau_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
-                      return '<span style="color: ' + color + ';">' + tcovValue + ' ppb</span>';
+                      var state = states['sensor.qualite_air_bureau_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var isMissing = tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '';
+                      var color = isMissing ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
+                      var displayValue = isMissing ? 'N/A' : tcovValue + ' ppb';
+                      return '<span style="color: ' + color + ';">' + displayValue + '</span>';
                     ]]]
                   value_tcov_chambre: |
                     [[[
-                      var tcovValue = states['sensor.qualite_air_chambre_ikea_voc_index'].state;
-                      var color = tcovValue > 1000 ? 'rgb(244,67,54)' : tcovValue > 250 ? 'orange' : 'white';
-                      return '<span style="color: ' + color + ';">' + tcovValue + ' ppb</span>';
+                      var state = states['sensor.qualite_air_chambre_ikea_voc_index'];
+                      var tcovValue = state ? state.state : 'unavailable';
+                      var isMissing = tcovValue == 'unknown' || tcovValue == 'unavailable' || tcovValue === '';
+                      var color = isMissing ? '#808080' : 
+                                  (parseFloat(tcovValue) > 1000 ? 'rgb(244,67,54)' : 
+                                   parseFloat(tcovValue) > 250 ? 'orange' : 'white');
+                      var displayValue = isMissing ? 'N/A' : tcovValue + ' ppb';
+                      return '<span style="color: ' + color + ';">' + displayValue + '</span>';
                     ]]]
                   espace_fin: |
                     [[[
@@ -8269,6 +8374,14 @@ views:
                   margin-left: auto;
                   margin-right: auto;
                 }
+          - type: heading
+            icon: mdi:lightning-bolt-outline
+            heading_style: title
+            badges: []
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+            heading: Consomation
           - type: custom:mushroom-chips-card
             chips:
               - type: conditional
@@ -8353,6 +8466,52 @@ views:
                     action: none
               - type: conditional
                 conditions:
+                  - entity: sensor.radiateur_sdb_etat
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heat-wave
+                  icon_color: |
+                    {% if is_state('sensor.radiateur_sdb_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.radiateur_sdb_etat', 'off') %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Salle de Bain: {% if is_state('sensor.radiateur_sdb_etat',
+                    'Heat') %}
+                      Heat
+                    {% else %}
+                      Off
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.seche_serviettes_sdb_etat
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heating-coil
+                  icon_color: >
+                    {% if is_state('sensor.seche_serviettes_sdb_etat', 'Heat')
+                    %}
+                      #ff6100
+                    {% elif is_state('sensor.seche_serviettes_sdb_etat', 'off')
+                    %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Salle de Bain: {% if
+                    is_state('sensor.seche_serviettes_sdb_etat', 'Heat') %}
+                      Heat
+                    {% else %}
+                      Off
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
                   - entity: sensor.chambre_power_status
                     state_not: 'off'
                 chip:
@@ -8384,9 +8543,16 @@ views:
             alignment: center
           - type: custom:apexcharts-card
             graph_span: 24h
+            cache: true
+            span:
+              start: day
             apex_config:
               chart:
-                height: 250px
+                height: 400px
+            now:
+              show: true
+              color: darkred
+              label: Now
             header:
               show: true
               title: ' '
@@ -8396,14 +8562,14 @@ views:
               - id: temperature
                 min: ~10
                 max: ~32
-                decimals: 0
+                decimals: 2
                 apex_config:
                   tickAmount: 10
               - id: conso_clim
                 min: ~150
                 max: auto
                 opposite: true
-                decimals: 0
+                decimals: 2
                 apex_config:
                   tickAmount: 10
             all_series_config:
@@ -8412,46 +8578,68 @@ views:
                 duration: 60m
               show:
                 legend_value: false
-                extremas: true
             series:
               - entity: sensor.temperature_moyenne_interieure
-                name: T° moyenne intèrieur
+                name: T̄ Appart.
                 yaxis_id: temperature
                 stroke_width: 4
                 fill_raw: last
                 color: orange
+                show:
+                  extremas: true
               - entity: sensor.th_balcon_nord_temperature
                 name: T° Bal.Nrd
                 yaxis_id: temperature
                 stroke_width: 4
                 fill_raw: last
                 color: green
+                show:
+                  extremas: true
               - entity: sensor.conso_clim_rad_total
-                name: Conso. Total
+                name: Conso. Instan.
                 yaxis_id: conso_clim
                 type: column
                 opacity: 0.6
                 fill_raw: last
                 color: rgb(68,115,158)
+                unit: W
+                group_by:
+                  func: max
+                  duration: 1h
+                  start_with_last: true
+              - entity: sensor.conso_clim_rad_total_quotidien
+                name: Conso. Total
+                color: rgb(68,115,158)
+                unit: kWh
+                show:
+                  in_brush: false
+                  in_chart: false
               - entity: sensor.conso_clim_rad_total
-                name: Avg(24h)
+                name: Avg (24h)
                 yaxis_id: conso_clim
                 type: line
-                color: '#F44336'
+                stroke_width: 2
+                color: red
                 unit: W
-                fill_raw: last
                 group_by:
                   func: avg
                   duration: 24h
+                show:
+                  in_brush: false
+                  in_chart: true
+              - entity: sensor.clim_rad_total_mean_24h_kwh
+                name: Mean (24h)
+                color: '#F44336'
                 show:
                   in_brush: false
                   in_chart: false
             card_mod:
               style: |
                 ha-card {
-                  background: none !important;
+                  background: none !important;   
                   box-shadow: none !important;
                   border: none !important;
+                  font-size: 12px;
                 }
           - type: heading
             icon: mdi:thermometer
@@ -9457,6 +9645,9 @@ views:
                     entity: sensor.sdb_power_status_affichage
                     state_not: 'off'
                   - condition: state
+                    entity: sensor.sdb_seche_serviettes_power_status_affichage
+                    state_not: 'off'
+                  - condition: state
                     entity: sensor.chambre_power_status_affichage
                     state_not: 'off'
             card:
@@ -9720,6 +9911,54 @@ views:
                     card:
                       type: custom:text-divider-row
                       text: Climatiseur du SALON
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                }
+            cards:
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.clim_salon_arret_securise_en_cours
+                    state: 'on'
+                  - entity: sensor.salon_power_lock
+                    state: 'on'
+                card:
+                  type: custom:mod-card
+                  card_mod:
+                    style:
+                      .: |
+                        :host {
+                          --text-divider-color: rgb(234, 67, 53);
+                          --text-divider-line-size: 5px;
+                        }
+                  card:
+                    type: custom:text-divider-row
+                    text: ⚠️ Clim SALON en cours d'arrêt ⚠️
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.clim_salon_arret_securise_en_cours
+                    state: 'off'
+                  - entity: switch.clim_salon_nous
+                    state: 'off'
+                  - entity: sensor.salon_power_status_affichage
+                    state: 'off'
+                card:
+                  type: custom:mod-card
+                  card_mod:
+                    style:
+                      .: |
+                        :host {
+                          --text-divider-color: #FFA000; /* EMBER */
+                          --text-divider-line-size: 3px;
+                        }
+                  card:
+                    type: custom:text-divider-row
+                    text: La prise extérieur "CLIM SALON" est coupée
           - type: heading
             icon: mdi:sofa
             heading: Clim. Salon
@@ -9756,7 +9995,10 @@ views:
                 icon: mdi:power
                 color: state
                 tap_action:
-                  action: toggle
+                  action: call-service
+                  service: script.j_1_routeur_clim_on_off_intelligent
+                  service_data:
+                    piece: salon
             layout_options:
               grid_columns: full
               grid_rows: 1
@@ -9781,7 +10023,7 @@ views:
                   - high
                   - med
                   - low
-            name: Clim SALON
+            name: Clim SALON (+1°)
             card_mod:
               style: |
                 ha-card {
@@ -10049,6 +10291,54 @@ views:
                     card:
                       type: custom:text-divider-row
                       text: Climatiseur du BUREAU
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                }
+            cards:
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.clim_bureau_arret_securise_en_cours
+                    state: 'on'
+                  - entity: sensor.bureau_power_lock
+                    state: 'on'
+                card:
+                  type: custom:mod-card
+                  card_mod:
+                    style:
+                      .: |
+                        :host {
+                          --text-divider-color: rgb(234, 67, 53);
+                          --text-divider-line-size: 5px;
+                        }
+                  card:
+                    type: custom:text-divider-row
+                    text: ⚠️ Clim BUREAU en cours d'arrêt ⚠️
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.clim_bureau_arret_securise_en_cours
+                    state: 'off'
+                  - entity: switch.clim_bureau_nous
+                    state: 'off'
+                  - entity: sensor.bureau_power_status_affichage
+                    state: 'off'
+                card:
+                  type: custom:mod-card
+                  card_mod:
+                    style:
+                      .: |
+                        :host {
+                          --text-divider-color: #FFA000;
+                          --text-divider-line-size: 3px;
+                        }
+                  card:
+                    type: custom:text-divider-row
+                    text: La prise extérieur "CLIM BUREAU" est coupée
           - type: heading
             icon: mdi:desktop-tower-monitor
             heading: clim. Bureau
@@ -10081,11 +10371,14 @@ views:
               - type: entity
                 show_state: false
                 show_icon: true
-                entity: switch.clim_du_bureau_nous
+                entity: switch.clim_bureau_nous
                 icon: mdi:power
                 color: state
                 tap_action:
-                  action: toggle
+                  action: call-service
+                  service: script.j_1_routeur_clim_on_off_intelligent
+                  service_data:
+                    piece: bureau
             layout_options:
               grid_columns: full
               grid_rows: 1
@@ -10386,6 +10679,54 @@ views:
                     card:
                       type: custom:text-divider-row
                       text: Climatiseur de la CHAMBRE
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                }
+            cards:
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.clim_chambre_arret_securise_en_cours
+                    state: 'on'
+                  - entity: sensor.chambre_power_lock
+                    state: 'on'
+                card:
+                  type: custom:mod-card
+                  card_mod:
+                    style:
+                      .: |
+                        :host {
+                          --text-divider-color: rgb(234, 67, 53);
+                          --text-divider-line-size: 5px;
+                        }
+                  card:
+                    type: custom:text-divider-row
+                    text: ⚠️ Clim CHAMBRE en cours d'arrêt ⚠️
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.clim_chambre_arret_securise_en_cours
+                    state: 'off'
+                  - entity: switch.clim_chambre_nous
+                    state: 'off'
+                  - entity: sensor.chambre_power_status_affichage
+                    state: 'off'
+                card:
+                  type: custom:mod-card
+                  card_mod:
+                    style:
+                      .: |
+                        :host {
+                          --text-divider-color: #FFA000; /* EMBER */
+                          --text-divider-line-size: 3px;
+                        }
+                  card:
+                    type: custom:text-divider-row
+                    text: La prise extérieur "CLIM CHAMBRE" est coupée
           - type: heading
             icon: mdi:bed
             heading: clim. Chambre
@@ -10419,10 +10760,13 @@ views:
                 show_state: false
                 show_icon: true
                 entity: switch.clim_chambre_nous
-                color: state
                 icon: mdi:power
+                color: state
                 tap_action:
-                  action: toggle
+                  action: call-service
+                  service: script.j_1_routeur_clim_on_off_intelligent
+                  service_data:
+                    piece: chambre
             layout_options:
               grid_columns: full
               grid_rows: 1
@@ -10555,6 +10899,207 @@ views:
                 template: calcule_temp_cible
           - type: custom:streamline-card
             template: nav_bar
+          - card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                }
+            type: custom:stack-in-card
+            mode: vertical
+            keep:
+              box_shadow: false
+              margin: false
+              border_radius: false
+              background: false
+              outer_padding: false
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mod-card
+                    card_mod:
+                      style:
+                        .: |
+                          :host {
+                            --text-divider-color: white;
+                            --text-divider-line-size: 5px;
+                          }
+                    card:
+                      type: custom:text-divider-row
+                      text: Seuil de Non Chauffage Bas
+          - type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: 25% 25% 25% 25%
+              grid-template-rows: auto
+              grid-template-areas: |
+                "zone1 zone2 zone3 zone4"
+            cards:
+              - type: custom:button-card
+                view_layout:
+                  grid-area: zone1
+                entity: input_number.seuil_non_chauffage_bas
+                name: 15°
+                show_name: true
+                show_icon: true
+                icon: mdi:thermometer-low
+                tap_action:
+                  action: call-service
+                  service: input_number.set_value
+                  service_data:
+                    entity_id: input_number.seuil_non_chauffage_bas
+                    value: 15
+                styles:
+                  card:
+                    - aspect-ratio: 1/0.5
+                    - border-width: 1px
+                    - border-color: |
+                        [[[
+                          if (entity.state == 15) return "green";
+                          else return "grey";
+                        ]]]
+                    - background-color: |
+                        [[[
+                          if (entity.state == 15) return "rgba(0, 255, 0, 0.1)";
+                          else return "transparent";
+                        ]]]
+                  icon:
+                    - color: |
+                        [[[
+                          if (entity.state == 15) return "green";
+                          else return "grey";
+                        ]]]
+                  name:
+                    - font-weight: bold
+                    - color: |
+                        [[[
+                          if (entity.state == 15) return "green";
+                          else return "grey";
+                        ]]]
+              - type: custom:button-card
+                view_layout:
+                  grid-area: zone2
+                entity: input_number.seuil_non_chauffage_bas
+                name: 16°
+                show_name: true
+                show_icon: true
+                icon: mdi:thermometer
+                tap_action:
+                  action: call-service
+                  service: input_number.set_value
+                  service_data:
+                    entity_id: input_number.seuil_non_chauffage_bas
+                    value: 16
+                styles:
+                  card:
+                    - aspect-ratio: 1/0.5
+                    - border-width: 1px
+                    - border-color: |
+                        [[[
+                          if (entity.state == 16) return "green";
+                          else return "grey";
+                        ]]]
+                    - background-color: |
+                        [[[
+                          if (entity.state == 16) return "rgba(0, 255, 0, 0.1)";
+                          else return "transparent";
+                        ]]]
+                  icon:
+                    - color: |
+                        [[[
+                          if (entity.state == 16) return "green";
+                          else return "grey";
+                        ]]]
+                  name:
+                    - font-weight: bold
+                    - color: |
+                        [[[
+                          if (entity.state == 16) return "green";
+                          else return "grey";
+                        ]]]
+              - type: custom:button-card
+                view_layout:
+                  grid-area: zone3
+                entity: input_number.seuil_non_chauffage_bas
+                name: 17°
+                show_name: true
+                show_icon: true
+                icon: mdi:thermometer
+                tap_action:
+                  action: call-service
+                  service: input_number.set_value
+                  service_data:
+                    entity_id: input_number.seuil_non_chauffage_bas
+                    value: 17
+                styles:
+                  card:
+                    - aspect-ratio: 1/0.5
+                    - border-width: 1px
+                    - border-color: |
+                        [[[
+                          if (entity.state == 17) return "green";
+                          else return "grey";
+                        ]]]
+                    - background-color: |
+                        [[[
+                          if (entity.state == 17) return "rgba(0, 255, 0, 0.1)";
+                          else return "transparent";
+                        ]]]
+                  icon:
+                    - color: |
+                        [[[
+                          if (entity.state == 17) return "green";
+                          else return "grey";
+                        ]]]
+                  name:
+                    - font-weight: bold
+                    - color: |
+                        [[[
+                          if (entity.state == 17) return "green";
+                          else return "grey";
+                        ]]]
+              - type: custom:button-card
+                view_layout:
+                  grid-area: zone4
+                entity: input_number.seuil_non_chauffage_bas
+                name: 18°
+                show_name: true
+                show_icon: true
+                icon: mdi:thermometer-high
+                tap_action:
+                  action: call-service
+                  service: input_number.set_value
+                  service_data:
+                    entity_id: input_number.seuil_non_chauffage_bas
+                    value: 18
+                styles:
+                  card:
+                    - aspect-ratio: 1/0.5
+                    - border-width: 1px
+                    - border-color: |
+                        [[[
+                          if (entity.state == 18) return "green";
+                          else return "grey";
+                        ]]]
+                    - background-color: |
+                        [[[
+                          if (entity.state == 18) return "rgba(0, 255, 0, 0.1)";
+                          else return "transparent";
+                        ]]]
+                  icon:
+                    - color: |
+                        [[[
+                          if (entity.state == 18) return "green";
+                          else return "grey";
+                        ]]]
+                  name:
+                    - font-weight: bold
+                    - color: |
+                        [[[
+                          if (entity.state == 18) return "green";
+                          else return "grey";
+                        ]]]
     title: Clim
     cards: []
   - type: sections
@@ -13359,6 +13904,8 @@ views:
                     - options: {}
                       state: unavailable
                     - options: {}
+                      state: unknown
+                    - options: {}
                       state: <= 0.999
                   include:
                     - options: {}
@@ -13482,82 +14029,82 @@ views:
                 series:
                   - entity: sensor.prise_box_internet_ikea_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Box
                     color: gainsboro
                   - entity: sensor.prise_horloge_ikea_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Horloge
                     color: rgb(183, 183, 183)
                   - entity: sensor.prise_pc_s_gege_ikea_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: PCg
                     color: rgb(202, 135, 135)
                   - entity: sensor.prise_salon_chargeur_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Charge
                     color: rgb(174, 68, 90)
                   - entity: sensor.prise_four_micro_ondes_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Four M.O. (+)
                     color: rgb(98, 78, 136)
                   - entity: sensor.prise_lave_linge_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Linge (+)
                     color: rgb(137, 103, 179)
                   - entity: sensor.prise_lave_vaisselle_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Vaisselle
                     color: rgb(129, 116, 180)
                   - entity: sensor.prise_airfryer_ninja_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Airfryer (+)
                     color: rgb(142, 122, 181)
                   - entity: sensor.four_et_plaque_de_cuisson_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: four Plq-cui.
                     color: rgb(162, 148, 249)
                   - entity: sensor.prise_frigo_cuisine_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: frigo
                     color: cyan
                   - entity: sensor.prise_congelateur_cuisine_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: congél.
                     color: rgb(19, 160, 255)
                   - entity: sensor.prise_bureau_pc_ikea_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: PCe
                     color: orange
                   - entity: sensor.prise_bureau_fer_a_repasser_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: FàR (+)
                     color: gold
                   - entity: sensor.prise_tete_de_lit_chambre_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Têtes L.
                     color: rgb(177,194,158)
                   - entity: sensor.prise_tv_chambre_nous_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: TV
                     color: rgb(30, 81, 40)
                   - entity: sensor.all_standby_energy
                     transform: return x * 1000;
-                    unit: W
+                    unit: Wh
                     name: Veilles
                     color: grey
                 card_mod:
@@ -13601,96 +14148,112 @@ views:
                     name: Box
                     color: gainsboro
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_horloge_ikea_power
                     name: Horloge
                     color: rgb(183, 183, 183)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_pc_s_gege_ikea_power
                     name: PCg
                     color: rgb(202, 135, 135)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_salon_chargeur_nous_power
                     name: Charge
                     color: rgb(174,68,90)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_four_micro_ondes_nous_power
                     name: Four M.O. (+)
                     color: rgb(98, 78, 136)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_lave_linge_nous_power
                     name: Linge (+)
                     color: rgb(137, 103, 179)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_lave_vaisselle_nous_power
                     name: Vaisselle
                     color: rgb(129,116,180)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_airfryer_ninja_nous_power
                     name: Airfryer (+)
                     color: rgb(142, 122, 181)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.four_et_plaque_de_cuisson_power
                     name: Four Plq Cui.
                     color: rgb(162, 148, 249)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_frigo_cuisine_nous_power
                     name: Frigo
                     color: cyan
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_congelateur_cuisine_nous_power
                     name: Congél
                     color: rgb(19, 160, 255)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_bureau_pc_ikea_power
                     name: PCe
                     color: orange
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_bureau_fer_a_repasser_nous_power
                     name: FàR (+)
                     color: gold
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_tete_de_lit_chambre_power
                     name: Têtes L.
                     color: rgb(177,194,158)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_tv_chambre_nous_power
                     name: TV
                     color: rgb(30, 81,40)
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.all_standby_power
                     name: Veilles
                     color: grey
                     yaxis_id: Watts
+                    unit: Wh
                     stroke_width: 2
                     fill_raw: last
                 card_mod:
@@ -14160,16 +14723,321 @@ views:
             badges:
               - type: entity
                 show_state: true
-                show_icon: true
-                entity: sensor.conso_clim_rad_total
-                icon: mdi:lightning-bolt-outline
-                color: red
+                show_icon: false
+                entity: sensor.temperature_delta
+                tap_action:
+                  action: navigate
+                  navigation_path: '#tendances'
             tap_action:
               action: navigate
               navigation_path: /dashboard-tablette/home
             layout_options:
               grid_columns: full
               grid_rows: 1
+          - type: conditional
+            conditions:
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity: sensor.salon_power_status_affichage
+                    state_not: 'off'
+                  - condition: state
+                    entity: sensor.cuisine_power_status_affichage
+                    state_not: 'off'
+                  - condition: state
+                    entity: sensor.bureau_power_status_affichage
+                    state_not: 'off'
+                  - condition: state
+                    entity: sensor.sdb_power_status_affichage
+                    state_not: 'off'
+                  - condition: state
+                    entity: sensor.sdb_seche_serviettes_power_status_affichage
+                    state_not: 'off'
+                  - condition: state
+                    entity: sensor.chambre_power_status_affichage
+                    state_not: 'off'
+            card:
+              type: custom:stack-in-card
+              mode: vertical
+              cards:
+                - type: horizontal-stack
+                  cards:
+                    - type: custom:mod-card
+                      card_mod:
+                        style:
+                          .: |
+                            :host {
+                              --text-divider-color: white;
+                              --text-divider-line-size: 5px;
+                            }
+                      card:
+                        type: custom:text-divider-row
+                        text: Consomation TOTAL Climatisations & Radiateurs
+              card_mod:
+                style: |
+                  ha-card {
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: none !important;
+                  }
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: conditional
+                conditions:
+                  - entity: sensor.salon_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:air-conditioner
+                  icon_color: |
+                    {% if is_state('sensor.clim_salon_etat', 'Cool') %}
+                      #87CEEB
+                    {% elif is_state('sensor.clim_salon_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
+                      #40E0D0
+                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: |
+                    Salon: {% if is_state('sensor.clim_salon_etat', 'Heat') %}
+                      Heat
+                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
+                      Fan
+                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
+                      Off
+                    {% else %}
+                      Cool
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.cuisine_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heating-coil
+                  icon_color: |
+                    {% if is_state('sensor.radiateur_cuisine_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Cuisine: {% if is_state('sensor.radiateur_cuisine_etat',
+                    'Heat') %}
+                      Heat
+                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
+                      Off
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.bureau_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:air-conditioner
+                  icon_color: |
+                    {% if is_state('sensor.clim_bureau_etat', 'Cool') %}
+                      #87CEEB
+                    {% elif is_state('sensor.clim_bureau_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
+                      #40E0D0
+                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: |
+                    Bureau: {% if is_state('sensor.clim_bureau_etat', 'Heat') %}
+                      Heat
+                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
+                      Fan
+                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
+                      Off
+                    {% else %}
+                      Cool
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.radiateur_sdb_etat
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heat-wave
+                  icon_color: |
+                    {% if is_state('sensor.radiateur_sdb_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.radiateur_sdb_etat', 'off') %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Salle de Bain: {% if is_state('sensor.radiateur_sdb_etat',
+                    'Heat') %}
+                      Heat
+                    {% else %}
+                      Off
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.seche_serviettes_sdb_etat
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heating-coil
+                  icon_color: >
+                    {% if is_state('sensor.seche_serviettes_sdb_etat', 'Heat')
+                    %}
+                      #ff6100
+                    {% elif is_state('sensor.seche_serviettes_sdb_etat', 'off')
+                    %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Salle de Bain: {% if
+                    is_state('sensor.seche_serviettes_sdb_etat', 'Heat') %}
+                      Heat
+                    {% else %}
+                      Off
+                    {% endif %}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.chambre_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:air-conditioner
+                  icon_color: |
+                    {% if is_state('sensor.clim_chambre_etat', 'Cool') %}
+                      #87CEEB
+                    {% elif is_state('sensor.clim_chambre_etat', 'Heat') %}
+                      #ff6100
+                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
+                      #40E0D0
+                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
+                      #FF0000
+                    {% endif %}
+                  content: >
+                    Chambre: {% if is_state('sensor.clim_chambre_etat', 'Heat')
+                    %}
+                      Heat
+                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
+                      Fan
+                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
+                      Off
+                    {% else %}
+                      Cool
+                    {% endif %}
+                  tap_action:
+                    action: none
+            alignment: center
+          - type: vertical-stack
+            cards:
+              - type: custom:auto-entities
+                card:
+                  type: custom:bar-card
+                  icon: mdi:lightning-bolt-outline
+                  title_position: inside
+                  height: 38
+                  positions:
+                    icon: inside
+                    indicator: inside
+                    name: inside
+                    value: inside
+                  show_icon: true
+                  align: split
+                  columns: '1'
+                  unit_of_measurement: W
+                  severity:
+                    - color: gainsboro
+                      from: 0
+                      to: 5
+                    - color: rgb(102, 255, 102)
+                      from: 5
+                      to: 49
+                    - color: rgb(0, 102, 0)
+                      from: 50
+                      to: 249
+                    - color: orange
+                      from: 250
+                      to: 499
+                    - color: darkorange
+                      from: 500
+                      to: 749
+                    - color: red
+                      from: 750
+                      to: 999
+                    - color: darkred
+                      from: 1000
+                      to: 6000
+                  card_mod:
+                    style: |
+                      :host {
+                        --ha-card-border-color: none !important;
+                        --card-background-color: none !important;
+                        }
+                      ha-card {
+                        border: none !important;
+                        box-shadow: none !important;
+                        background: none !important;
+                        font-weight: bold;
+                        --mdc-icon-size: 25px;
+                        --paper-item-icon-color: white;
+                      }
+                      bar-card-currentbar, bar-card-backgroundbar {
+                        height: 6px !important;
+                        margin-top: 35px;
+                      }
+                filter:
+                  include:
+                    - options: {}
+                      entity_id: sensor.conso_clim_rad_total
+                sort:
+                  numeric: true
+                  reverse: true
+                  ip: false
+                  ignore_case: false
+                  method: state
+                  show_empty: false
+                  entity_row: true
+            visibility:
+              - condition: numeric_state
+                entity: sensor.conso_clim_rad_total
+                above: 0.1
+          - type: conditional
+            conditions: []
+            card:
+              type: custom:stack-in-card
+              mode: vertical
+              cards:
+                - type: horizontal-stack
+                  cards:
+                    - type: custom:mod-card
+                      card_mod:
+                        style:
+                          .: |
+                            :host {
+                              --text-divider-color: white;
+                              --text-divider-line-size: 5px;
+                            }
+                      card:
+                        type: custom:text-divider-row
+                        text: Consomation Total Journalière
+              card_mod:
+                style: |
+                  ha-card {
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: none !important;
+                  }
           - type: custom:apexcharts-card
             chart_type: donut
             graph_span: 24h
@@ -14208,8 +15076,12 @@ views:
                 color: orange
                 float_precision: 2
               - entity: sensor.prise_radiateur_salle_de_bain_nous_energy
-                name: Salle de Bain (R)
+                name: Souff. SdB (R)
                 color: magenta
+                float_precision: 2
+              - entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+                name: Sèche-S. SdB (R)
+                color: purple
                 float_precision: 2
               - entity: sensor.clim_chambre_nous_energy
                 name: CHAMBRE (C)
@@ -14221,7 +15093,34 @@ views:
                   background: none !important;
                   box-shadow: none !important;
                   border: none !important;
+                  font-size: 11px;
                 }
+          - type: conditional
+            conditions: []
+            card:
+              type: custom:stack-in-card
+              mode: vertical
+              cards:
+                - type: horizontal-stack
+                  cards:
+                    - type: custom:mod-card
+                      card_mod:
+                        style:
+                          .: |
+                            :host {
+                              --text-divider-color: white;
+                              --text-divider-line-size: 5px;
+                            }
+                      card:
+                        type: custom:text-divider-row
+                        text: Consomation Total Mensuel
+              card_mod:
+                style: |
+                  ha-card {
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: none !important;
+                  }
           - type: custom:apexcharts-card
             chart_type: donut
             graph_span: 730h
@@ -14260,8 +15159,12 @@ views:
                 color: orange
                 float_precision: 2
               - entity: sensor.prise_radiateur_salle_de_bain_nous_energy
-                name: Salle de Bain (R)
+                name: Souff. SdB (R)
                 color: magenta
+                float_precision: 2
+              - entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+                name: Sèche-Serv. SdB(R)
+                color: purple
                 float_precision: 2
               - entity: sensor.clim_chambre_nous_energy
                 name: CHAMBRE (C)
@@ -14273,22 +15176,42 @@ views:
                   background: none !important;
                   box-shadow: none !important;
                   border: none !important;
+                  font-size: 11px;
                 }
+          - type: conditional
+            conditions: []
+            card:
+              type: custom:stack-in-card
+              mode: vertical
+              cards:
+                - type: horizontal-stack
+                  cards:
+                    - type: custom:mod-card
+                      card_mod:
+                        style:
+                          .: |
+                            :host {
+                              --text-divider-color: white;
+                              --text-divider-line-size: 5px;
+                            }
+                      card:
+                        type: custom:text-divider-row
+                        text: Tendance
+              card_mod:
+                style: |
+                  ha-card {
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: none !important;
+                  }
           - type: heading
             icon: mdi:thermometer-lines
             heading_style: title
-            badges:
-              - type: entity
-                show_state: true
-                show_icon: false
-                entity: sensor.temperature_delta
-                tap_action:
-                  action: navigate
-                  navigation_path: '#energie'
+            badges: []
             layout_options:
               grid_columns: full
               grid_rows: 1
-            heading: 'Tendances '
+            heading: Tendances
             tap_action:
               action: none
           - type: horizontal-stack
@@ -14405,124 +15328,18 @@ views:
                   margin-left: auto;
                   margin-right: auto;
                 }
-          - type: custom:mushroom-chips-card
-            chips:
-              - type: conditional
-                conditions:
-                  - entity: sensor.salon_power_status
-                    state_not: 'off'
-                chip:
-                  type: template
-                  icon: mdi:air-conditioner
-                  icon_color: |
-                    {% if is_state('sensor.clim_salon_etat', 'Cool') %}
-                      #87CEEB
-                    {% elif is_state('sensor.clim_salon_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: |
-                    Salon: {% if is_state('sensor.clim_salon_etat', 'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
-                  tap_action:
-                    action: none
-              - type: conditional
-                conditions:
-                  - entity: sensor.cuisine_power_status
-                    state_not: 'off'
-                chip:
-                  type: template
-                  icon: mdi:heating-coil
-                  icon_color: |
-                    {% if is_state('sensor.radiateur_cuisine_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Cuisine: {% if is_state('sensor.radiateur_cuisine_etat',
-                    'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
-                      Off
-                    {% endif %}
-                  tap_action:
-                    action: none
-              - type: conditional
-                conditions:
-                  - entity: sensor.bureau_power_status
-                    state_not: 'off'
-                chip:
-                  type: template
-                  icon: mdi:air-conditioner
-                  icon_color: |
-                    {% if is_state('sensor.clim_bureau_etat', 'Cool') %}
-                      #87CEEB
-                    {% elif is_state('sensor.clim_bureau_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: |
-                    Bureau: {% if is_state('sensor.clim_bureau_etat', 'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
-                  tap_action:
-                    action: none
-              - type: conditional
-                conditions:
-                  - entity: sensor.chambre_power_status
-                    state_not: 'off'
-                chip:
-                  type: template
-                  icon: mdi:air-conditioner
-                  icon_color: |
-                    {% if is_state('sensor.clim_chambre_etat', 'Cool') %}
-                      #87CEEB
-                    {% elif is_state('sensor.clim_chambre_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Chambre: {% if is_state('sensor.clim_chambre_etat', 'Heat')
-                    %}
-                      Heat
-                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
-                  tap_action:
-                    action: none
-            alignment: center
           - type: custom:apexcharts-card
             graph_span: 24h
+            cache: true
+            span:
+              start: day
             apex_config:
               chart:
                 height: 400px
+            now:
+              show: true
+              color: darkred
+              label: Now
             header:
               show: true
               title: ' '
@@ -14532,14 +15349,14 @@ views:
               - id: temperature
                 min: ~10
                 max: ~32
-                decimals: 0
+                decimals: 2
                 apex_config:
                   tickAmount: 10
               - id: conso_clim
                 min: ~150
                 max: auto
                 opposite: true
-                decimals: 0
+                decimals: 2
                 apex_config:
                   tickAmount: 10
             all_series_config:
@@ -14548,46 +15365,68 @@ views:
                 duration: 60m
               show:
                 legend_value: false
-                extremas: true
             series:
               - entity: sensor.temperature_moyenne_interieure
-                name: T° moyenne intèrieur
+                name: T̄ Appart.
                 yaxis_id: temperature
                 stroke_width: 4
                 fill_raw: last
                 color: orange
+                show:
+                  extremas: true
               - entity: sensor.th_balcon_nord_temperature
                 name: T° Bal.Nrd
                 yaxis_id: temperature
                 stroke_width: 4
                 fill_raw: last
                 color: green
+                show:
+                  extremas: true
               - entity: sensor.conso_clim_rad_total
-                name: Conso. Total
+                name: Conso. Instan.
                 yaxis_id: conso_clim
                 type: column
                 opacity: 0.6
                 fill_raw: last
                 color: rgb(68,115,158)
+                unit: W
+                group_by:
+                  func: max
+                  duration: 1h
+                  start_with_last: true
+              - entity: sensor.conso_clim_rad_total_quotidien
+                name: Conso. Total
+                color: rgb(68,115,158)
+                unit: kWh
+                show:
+                  in_brush: false
+                  in_chart: false
               - entity: sensor.conso_clim_rad_total
-                name: Avg(24h)
+                name: Avg (24h)
                 yaxis_id: conso_clim
                 type: line
-                color: '#F44336'
+                stroke_width: 2
+                color: red
                 unit: W
-                fill_raw: last
                 group_by:
                   func: avg
                   duration: 24h
+                show:
+                  in_brush: false
+                  in_chart: true
+              - entity: sensor.clim_rad_total_mean_24h_kwh
+                name: Mean (24h)
+                color: '#F44336'
                 show:
                   in_brush: false
                   in_chart: false
             card_mod:
               style: |
                 ha-card {
-                  background: none !important;
+                  background: none !important;   
                   box-shadow: none !important;
                   border: none !important;
+                  font-size: 12px;
                 }
           - type: heading
             icon: mdi:sofa
@@ -14665,16 +15504,17 @@ views:
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
-              - card_title: Conso. Temps Réel Clim. Salon
-              - energy_entity: sensor.clim_salon_nous_power
-              - energy_color: rgb(174,68,90)
-              - current_entity: sensor.clim_salon_nous_current
-              - current_color: rgb(255, 41, 41)
-              - power_entity_avg: sensor.clim_salon_nous_power
-              - power_entity: sensor.clim_salon_nous_power
-              - power_color: rgb(174,68,90)
-              - span_offset: +3m
-              - group_duration: 1s
+              card_title: Conso. Temps Réel Clim. Salon
+              energy_entity: sensor.clim_salon_nous_power
+              energy_color: rgb(174,68,90)
+              current_entity: sensor.clim_salon_nous_current
+              current_color: rgb(255, 41, 41)
+              power_entity_avg: sensor.clim_salon_nous_power
+              mean_24h_kwh_entity: sensor.clim_salon_mean_24h_kwh
+              power_entity: sensor.clim_salon_nous_power
+              power_color: rgb(174,68,90)
+              span_offset: +3m
+              group_duration: 1s
           - type: heading
             icon: mdi:sofa
             heading_style: subtitle
@@ -14721,16 +15561,17 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_clim
             variables:
-              - title: Conso. mensuel Clim Salon
-              - energy_entity: sensor.clim_salon_nous_energy
-              - energy_name: Conso. jours en cours
-              - energy_color: rgb(174,68,90)
-              - avg_color: red
-              - avg_name: Avg(730h)
-              - temp_entity: sensor.th_balcon_nord_temperature
-              - temp_color: rgb(126, 24, 145)
-              - temp_unit: °C
-              - temp_name: T.Mini.(24h)
+              title: Conso. mensuel Clim Salon
+              energy_entity: sensor.clim_salon_nous_energy
+              energy_name: Conso. jours en cours
+              energy_color: rgb(174,68,90)
+              avg_color: red
+              avg_name: Avg(730h)
+              temp_entity: sensor.th_balcon_nord_temperature
+              temp_color: rgb(126, 24, 145)
+              temp_unit: °C
+              temp_name: T.Mini.(24h)
+              mean_730h_kwh_entity: sensor.clim_salon_mean_730h_kwh
           - type: heading
             icon: mdi:fridge
             heading_style: title
@@ -14809,6 +15650,7 @@ views:
               current_entity: sensor.radiateur_elec_cuisine_current
               current_color: rgb(255, 41, 41)
               power_entity_avg: sensor.radiateur_elec_cuisine_power
+              mean_24h_kwh_entity: sensor.radiateur_cuisine_mean_24h_kwh
               power_entity: sensor.radiateur_elec_cuisine_power
               power_color: rgb(168, 136, 181)
               span_offset: +3m
@@ -14859,16 +15701,17 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_clim
             variables:
-              - title: Conso. mensuel Radiateur Cuisine
-              - energy_entity: sensor.radiateur_elec_cuisine_energy
-              - energy_name: Conso. jours en cours
-              - energy_color: rgb(168, 136, 181)
-              - avg_color: red
-              - avg_name: Avg(730h)
-              - temp_entity: sensor.th_balcon_nord_temperature
-              - temp_color: rgb(126, 24, 145)
-              - temp_unit: °C
-              - temp_name: T.Min.(24h)
+              title: Conso. mensuel Radiateur Cuisine
+              energy_entity: sensor.radiateur_elec_cuisine_energy
+              energy_name: Conso. jours en cours
+              energy_color: rgb(168, 136, 181)
+              avg_color: red
+              avg_name: Avg(730h)
+              temp_entity: sensor.th_balcon_nord_temperature
+              temp_color: rgb(126, 24, 145)
+              temp_unit: °C
+              temp_name: T.Min.(24h)
+              mean_730h_kwh_entity: sensor.radiateur_cuisine_mean_730h_kwh
           - type: heading
             icon: mdi:desktop-tower-monitor
             heading_style: title
@@ -14952,6 +15795,7 @@ views:
               current_entity: sensor.clim_bureau_current
               current_color: rgb(255, 41, 41)
               power_entity_avg: sensor.clim_du_bureau_nous_power
+              mean_24h_kwh_entity: sensor.clim_bureau_mean_24h_kwh
               power_entity: sensor.clim_du_bureau_nous_power
               power_color: orange
               span_offset: +3m
@@ -15002,19 +15846,20 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_clim
             variables:
-              - title: Conso. mensuel Clim Bureau
-              - energy_entity: sensor.clim_du_bureau_nous_energy
-              - energy_name: Conso. jours en cours
-              - energy_color: orange
-              - avg_color: red
-              - avg_name: Avg(730h)
-              - temp_entity: sensor.th_balcon_nord_temperature
-              - temp_color: rgb(126, 24, 145)
-              - temp_unit: °C
-              - temp_name: T.Mini.(24h)
+              title: Conso. mensuel Clim Bureau
+              energy_entity: sensor.clim_du_bureau_nous_energy
+              energy_name: Conso. jours en cours
+              energy_color: orange
+              avg_color: red
+              avg_name: Avg(730h)
+              temp_entity: sensor.th_balcon_nord_temperature
+              temp_color: rgb(126, 24, 145)
+              temp_unit: °C
+              temp_name: T.Mini.(24h)
+              mean_730h_kwh_entity: sensor.clim_bureau_mean_730h_kwh
           - type: heading
             icon: hue:room-bathroom
-            heading: Salle de Bain
+            heading: SALLE DE BAIN
             heading_style: title
             badges:
               - type: entity
@@ -15039,6 +15884,35 @@ views:
                   - state
                 name:
                   type: area
+          - card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                }
+            type: custom:stack-in-card
+            mode: vertical
+            keep:
+              box_shadow: false
+              margin: false
+              border_radius: false
+              background: false
+              outer_padding: false
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mod-card
+                    card_mod:
+                      style:
+                        .: |
+                          :host {
+                            --text-divider-color: white;
+                            --text-divider-line-size: 5px;
+                          }
+                    card:
+                      type: custom:text-divider-row
+                      text: Soufflant de la Salle de Bain
           - type: custom:bubble-card
             card_type: climate
             entity: climate.soufflant_salle_de_bain
@@ -15072,7 +15946,7 @@ views:
           - type: custom:streamline-card
             template: clim_voltage_ring-tile
             variables:
-              card_name: Rad. SdB (V)
+              card_name: Souffl. SdB (V)
               entity: sensor.prise_radiateur_salle_de_bain_nous_voltage
             grid_options:
               columns: 6
@@ -15080,7 +15954,7 @@ views:
           - type: custom:streamline-card
             template: clim_ampere_ring-tile
             variables:
-              card_name: Rad. SdB (A)
+              card_name: Souffl. SdB (A)
               entity: sensor.prise_radiateur_salle_de_bain_nous_current
             grid_options:
               columns: 6
@@ -15088,18 +15962,19 @@ views:
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
-              card_title: Radiateur Salle de Bain
+              card_title: Soufflant Salle de Bain
               energy_entity: sensor.prise_radiateur_salle_de_bain_nous_power
               energy_color: magenta
               current_entity: sensor.prise_radiateur_salle_de_bain_nous_current
               current_color: rgb(255, 41, 41)
               power_entity_avg: sensor.prise_radiateur_salle_de_bain_nous_power
+              mean_24h_kwh_entity: sensor.soufflant_sdb_mean_24h_kwh
               power_entity: sensor.prise_radiateur_salle_de_bain_nous_power
               power_color: magenta
               span_offset: +15m
               group_duration: 1m
           - type: heading
-            icon: mdi:bathtub
+            icon: mdi:heat-wave
             heading_style: title
             badges:
               - type: entity
@@ -15144,16 +16019,133 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_clim
             variables:
-              - title: Conso. mensuel Radiateur SdB
-              - energy_entity: sensor.prise_radiateur_salle_de_bain_nous_energy
-              - energy_name: Conso. jours en cours
-              - energy_color: magenta
-              - avg_color: red
-              - avg_name: Avg(730h)
-              - temp_entity: sensor.th_balcon_nord_temperature
-              - temp_color: rgb(126, 24, 145)
-              - temp_unit: °C
-              - temp_name: T.Min.(24h)
+              title: Conso. mensuel Soufflant SdB
+              energy_entity: sensor.prise_radiateur_salle_de_bain_nous_energy
+              energy_name: Conso. jours en cours
+              energy_color: magenta
+              avg_color: red
+              avg_name: Avg(730h)
+              temp_entity: sensor.th_balcon_nord_temperature
+              temp_color: rgb(126, 24, 145)
+              temp_unit: °C
+              temp_name: T.Min.(24h)
+              mean_730h_kwh_entity: sensor.soufflant_sdb_mean_730h_kwh
+          - card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: none !important;
+                }
+            type: custom:stack-in-card
+            mode: vertical
+            keep:
+              box_shadow: false
+              margin: false
+              border_radius: false
+              background: false
+              outer_padding: false
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mod-card
+                    card_mod:
+                      style:
+                        .: |
+                          :host {
+                            --text-divider-color: white;
+                            --text-divider-line-size: 5px;
+                          }
+                    card:
+                      type: custom:text-divider-row
+                      text: sèche-serviettes de la Salle de Bain
+          - type: custom:streamline-card
+            template: clim_voltage_ring-tile
+            variables:
+              card_name: Sèche-serv. SdB (V)
+              entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_voltage
+            grid_options:
+              columns: 6
+              rows: 3
+          - type: custom:streamline-card
+            template: clim_ampere_ring-tile
+            variables:
+              card_name: Sèche-Serv. SdB (A)
+              entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_current
+            grid_options:
+              columns: 6
+              rows: 3
+          - type: custom:streamline-card
+            template: conso_temps_reel_clim_rad
+            variables:
+              card_title: sèche-serviettes de la Salle de Bain
+              energy_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+              energy_color: purple
+              current_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_current
+              current_color: rgb(255, 41, 41)
+              power_entity_avg: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+              mean_24h_kwh_entity: sensor.seche_serv_mean_24h_kwh
+              power_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+              power_color: purple
+              span_offset: +15m
+              group_duration: 1m
+          - type: heading
+            icon: mdi:heating-coil
+            heading_style: title
+            badges:
+              - type: entity
+                show_state: true
+                show_icon: true
+                color: amber
+                state_content:
+                  - name
+                  - state
+                entity: sensor.seche_serv_sdb_quotidien
+                name: Q
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.seche_serv_sdb_hebdomadaire
+                name: H
+                color: orange
+                state_content:
+                  - name
+                  - state
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.seche_serv_sdb_mensuel
+                name: M
+                color: deep-orange
+                state_content:
+                  - name
+                  - state
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.seche_serv_sdb_annuel
+                name: A
+                color: red
+                state_content:
+                  - name
+                  - state
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
+          - type: custom:streamline-card
+            template: conso_mensuelle_clim
+            variables:
+              title: Conso. mensuel sèche-serviettes SdB
+              energy_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+              energy_name: Conso. jours en cours
+              energy_color: purple
+              avg_color: red
+              avg_name: Avg(730h)
+              temp_entity: sensor.th_balcon_nord_temperature
+              temp_color: rgb(126, 24, 145)
+              temp_unit: °C
+              temp_name: T.Min.(24h)
+              mean_730h_kwh_entity: sensor.seche_serv_mean_730h_kwh
           - type: heading
             icon: mdi:bed
             heading_style: title
@@ -15236,6 +16228,7 @@ views:
               current_entity: sensor.clim_chambre_nous_current
               current_color: rgb(255, 41, 41)
               power_entity_avg: sensor.clim_chambre_nous_power
+              mean_24h_kwh_entity: sensor.clim_chambre_mean_24h_kwh
               power_entity: sensor.clim_chambre_nous_power
               power_color: rgb(30,81,40)
               span_offset: +3m
@@ -15286,21 +16279,22 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_clim
             variables:
-              - title: Conso. mensuel Clim de la Chambre
-              - energy_entity: sensor.clim_chambre_nous_energy
-              - energy_name: Conso. jours en cours
-              - energy_color: rgb(30,81,40)
-              - avg_color: red
-              - avg_name: Avg(730h)
-              - temp_entity: sensor.th_balcon_nord_temperature
-              - temp_color: rgb(126, 24, 145)
-              - temp_unit: °C
-              - temp_name: T.Min.(24h)
+              title: Conso. mensuel Clim de la Chambre
+              energy_entity: sensor.clim_chambre_nous_energy
+              energy_name: Conso. jours en cours
+              energy_color: rgb(30,81,40)
+              avg_color: red
+              avg_name: Avg(730h)
+              temp_entity: sensor.th_balcon_nord_temperature
+              temp_color: rgb(126, 24, 145)
+              temp_unit: °C
+              temp_name: T.Min.(24h)
+              mean_730h_kwh_entity: sensor.clim_chambre_mean_730h_kwh
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
                 card_type: pop-up
-                hash: '#energie'
+                hash: '#tendances'
                 show_header: true
                 force_icon: false
                 show_state: false
@@ -15365,11 +16359,9 @@ views:
                       iif(states('sensor.backup_github_status')=='OK','green','red')
                       }}
                     tap_action:
-                      action: call-service
-                      service: shell_command.git_backup_push
-                    hold_action:
                       action: url
-                      url_path: https://github.com/BerrySwann/home-assistant-config/tags
+                      url_path: >-
+                        https://github.com/BerrySwann/home-assistant-config/commits/main
                       new_tab: true
                 card_mod:
                   style: >
@@ -15387,6 +16379,10 @@ views:
                       set iso = now().isocalendar() %} {% set current =
                       "weekly-%04d-W%02d" | format(iso[0], iso[1]) %} {{ 'green'
                       if (tag and tag.startswith(current)) else 'amber' }}
+                    tap_action:
+                      action: url
+                      url_path: https://github.com/BerrySwann/home-assistant-config/tags
+                      new_tab: true
                   - type: template
                     entity: sensor.github_default_branch
                     icon: mdi:source-branch
@@ -15401,11 +16397,18 @@ views:
                       url_path: >-
                         https://github.com/BerrySwann/home-assistant-config/branches
                       new_tab: true
+                  - type: template
+                    icon: mdi:cloud-upload-outline
+                    content: Push
+                    icon_color: deep-orange
+                    tap_action:
+                      action: call-service
+                      service: script.git_backup_and_update
                     hold_action:
-                      action: url
-                      url_path: >-
-                        https://github.com/BerrySwann/home-assistant-config/settings/branches
-                      new_tab: true
+                      action: call-service
+                      service: script.git_backup_weekly_and_update
+                      confirmation:
+                        text: Voulez-vous créer un Tag Hebdomadaire ?
                   - type: template
                     icon: mdi:cloud-download-outline
                     content: Pull
@@ -15417,12 +16420,22 @@ views:
                       url_path: >-
                         https://github.com/BerrySwann/home-assistant-config/commits/main
                       new_tab: true
+                  - type: template
+                    icon: mdi:refresh
+                    content: Reload
+                    icon_color: blue
+                    tap_action:
+                      action: call-service
+                      service: automation.reload
+                    hold_action:
+                      action: call-service
+                      service: script.reload
                 card_mod:
                   style: >
                     ha-card { background: none !important; box-shadow: none
                     !important; border: none !important; }
               - type: custom:mushroom-title-card
-                title: Journal Backup (5 derniers)
+                title: Journal Backup (10 derniers)
                 alignment: center
                 card_mod:
                   style: >
