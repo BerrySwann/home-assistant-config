@@ -186,3 +186,22 @@
     command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp5_input"
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
+
+
+- sensor:
+      name: "VSCode Connections"
+      unique_id: visual_code_serveur_connections
+      # On cherche les connexions établies sur le port interne de VS Code
+      command: "netstat -an | grep :1337 | grep ESTABLISHED | wc -l"
+      value_template: "{{ value | int }}"
+      scan_interval: 60
+      unit_of_measurement: "conn"
+
+- sensor:
+      name: "VSCode Connections exterieur"
+      unique_id: visual_code_serveur_connections_exterieur
+      # On compte les processus "code-server" actifs qui gèrent l'interface
+      command: "ps -ef | grep 'node' | grep 'code-server' | grep -v 'grep' | wc -l"
+      value_template: "{{ value | int }}"
+      scan_interval: 60
+      unit_of_measurement: "proc"

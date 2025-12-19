@@ -2640,3 +2640,38 @@
           message: '[5] prises [ON]'
           title: éCO Prises [2] en [WIFI]"
   mode: queued
+- id: '1766135218137'
+  alias: Système - VS Code (Accès Extérieur)
+  description: ''
+  triggers:
+  - entity_id: sensor.studio_code_server_cpu_percent
+    below: 0.8
+    for:
+      minutes: 15
+    trigger: numeric_state
+  actions:
+  - action: notify.mobile_app_poco_x7_pro
+    data:
+      title: ⚠️ VS Code Inactif (Extérieur)
+      message: Tu es connecté via erodi-ha.com mais VS Code ne consomme rien. Éteindre
+        l'addon ?
+      data:
+        actions:
+        - action: STOP_VSCODE
+          title: Oui, éteindre
+        - action: KEEP_VSCODE
+          title: Non, je travaille
+  - wait_for_trigger:
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: KEEP_VSCODE
+      trigger: event
+    timeout: 00:05:00
+    continue_on_timeout: true
+  - if:
+    - condition: template
+      value_template: '{{ wait.trigger == none }}'
+    then:
+    - action: hassio.addon_stop
+      data:
+        addon: a0d7b954_vscode
