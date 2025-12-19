@@ -132,7 +132,6 @@
       - text
     scan_interval: 60
 
-
 - sensor:
     name: "GitHub Default Branch"
     unique_id: github_default_branch
@@ -143,6 +142,12 @@
     scan_interval: 3600
     value_template: >-
       {{ value if value not in [None, "", "null"] else "unknown" }}
+
+#========================================================
+#
+#     Mini-Pc STATES
+#
+# =======================================================
 
 - sensor:
     name: "Température Carte Mère (sys)"
@@ -187,6 +192,12 @@
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
+#========================================================
+#
+#     Mini-Pc "VSCode Connections"
+#
+# =======================================================
+
 
 - sensor:
       name: "VSCode Connections"
@@ -205,3 +216,20 @@
       value_template: "{{ value | int }}"
       scan_interval: 60
       unit_of_measurement: "proc"
+
+#========================================================
+#
+#     Mini-Pc ""Top Processus CPU"
+#
+# =======================================================
+
+- sensor:
+      name: "Top Processus CPU"
+      unique_id: top_cpu_processes
+      # On utilise 'ps' mais avec des colonnes simples pour éviter les erreurs
+      command: "ps -ao pcpu,comm --sort=-pcpu | head -n 6 | tail -n 5"
+      # On met la liste des processus directement dans l'état du sensor pour le voir
+      value_template: >
+        {% set proc = value.split('\n') %}
+        {{ proc | join(' | ') }}
+      scan_interval: 60
