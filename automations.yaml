@@ -2684,11 +2684,6 @@
     for:
       minutes: 5
     trigger: state
-  - entity_id: sensor.studio_code_server_cpu_percent
-    below: 0.8
-    for:
-      minutes: 20
-    trigger: numeric_state
   actions:
   - action: notify.mobile_app_poco_x7_pro
     data:
