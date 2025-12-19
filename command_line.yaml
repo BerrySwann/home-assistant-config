@@ -216,19 +216,3 @@
       value_template: "{{ value | int }}"
       scan_interval: 60
       unit_of_measurement: "proc"
-
-#========================================================
-#
-#     Mini-Pc ""Top Processus CPU"
-#
-# =======================================================
-
-command_line:
-  - sensor:
-      name: "Top Processus Direct"
-      unique_id: top_process_direct
-      # Commande ultra-simple : liste les processus, trie par CPU, prend le premier
-      command: "ps -eo pcpu,comm | sort -rn | head -n 1"
-      # On prend toute la ligne brute pour voir ce qui sort
-      value_template: "{{ value | truncate(50) }}"
-      scan_interval: 10

@@ -76,7 +76,7 @@
     unique_id: temperature_corrige_mamour_hivers
     unit_of_measurement: "°C"
     state: >
-      {{ (states('sensor.temperature_confort_jour') | float(0)) + 2 }}
+      {{ (states('sensor.temperature_confort_jour') | float(0)) + 1 }}
 
   # --- MOTEUR DE CALCUL : CIBLE ---
   - name: "Temperature Cible"
