@@ -1473,10 +1473,9 @@
     action: switch.turn_off
   mode: single
 - id: '1764784032821'
-  alias: (B - 0) (TEST 2025-12-17) Autmatisation CLIM (21h00 <-> 07h30)
+  alias: (B - 0) (TEST 2025-12-19) Autmatisation CLIM (21h00 <-> 07h30)
   description: '[NUIT] Automatisation pour contrôler de [21h00 <-> 07h30] les climatiseurs.
-    Structure HARMONISÉE avec (A-0). - Gestion différenciée par pièce avec vérification
-    Prise ON + Verrou OFF. - Mode Parallèle pour la réactivité.
+    SÉCURISÉE : Accepte uniquement heat/cool/fan_only/off.
 
     '
   triggers:
@@ -1537,7 +1536,8 @@
   actions:
   - alias: 'INIT : CALCUL DES VARIABLES'
     variables:
-      mode_saison: '{{ states(''sensor.mode_ete_hiver'') }}'
+      mode_saison: "{% set m = states('sensor.mode_ete_hiver') %} {% if m in ['heat',
+        'cool', 'fan_only'] %}\n  {{ m }}\n{% else %}\n  off\n{% endif %}\n"
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
       fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',\n
         \         'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n          'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
@@ -1629,8 +1629,9 @@
                 target:
                   entity_id: climate.clim_salon_rm4_mini
                 data:
-                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
-                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                    and is_state('climate.clim_salon_rm4_mini', 'off') %}\n  off\n{%
+                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_salon_target }}'
               - action: climate.set_fan_mode
                 target:
@@ -1652,8 +1653,9 @@
                 target:
                   entity_id: climate.clim_bureau_rm4_mini
                 data:
-                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
-                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                    and is_state('climate.clim_bureau_rm4_mini', 'off') %}\n  off\n{%
+                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_bureau_target }}'
               - action: climate.set_fan_mode
                 target:
@@ -1675,8 +1677,9 @@
                 target:
                   entity_id: climate.clim_chambre_rm4_mini
                 data:
-                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
-                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                    and is_state('climate.clim_chambre_rm4_mini', 'off') %}\n  off\n{%
+                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_chambre_target }}'
               - action: climate.set_fan_mode
                 target:
@@ -1696,13 +1699,9 @@
               endif %}\n"
   mode: queued
 - id: '1764787136826'
-  alias: (A - 0) (TEST 2025-12-17) Automatisation CLIM (07h30 <-> 21h00)
-  description: '[TEST] Automatisation pour contrôler de [07h30 <-> 21h00] les climatiseurs
-    en fonction de la température intérieure/extérieure [DELTA] et du type de réseau
-    des portables [WIFI/CELLULAR]. L''état des fenêtres [OUVERTE(S)/FERMÉE(S)] est
-    contrôlé. - 07h30 ou Arrivée : Force l''allumage. - Changement Température : Ne
-    met à jour que si déjà allumé. - Gestion différenciée par pièce (Salon/Bureau)
-    selon présence.
+  alias: (A - 0) (TEST 2025-12-19) Automatisation CLIM (07h30 <-> 21h00)
+  description: '[CORRIGÉ] Automatisation pour contrôler de [07h30 <-> 21h00] les climatiseurs.
+    Sécurisation ajoutée contre les modes invalides.
 
     '
   triggers:
@@ -1763,7 +1762,8 @@
   actions:
   - alias: 'INIT : CALCUL DES VARIABLES'
     variables:
-      mode_saison: '{{ states(''sensor.mode_ete_hiver'') }}'
+      mode_saison: "{% set m = states('sensor.mode_ete_hiver') %} {% if m in ['heat',
+        'cool', 'fan_only'] %}\n  {{ m }}\n{% else %}\n  off\n{% endif %}\n"
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
       fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',
         \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
@@ -1875,8 +1875,9 @@
                 target:
                   entity_id: climate.clim_salon_rm4_mini
                 data:
-                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_salon_rm4_mini',
-                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                    and is_state('climate.clim_salon_rm4_mini', 'off') %}\n  off\n{%
+                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_salon_target }}'
               - action: climate.set_fan_mode
                 target:
@@ -1898,8 +1899,9 @@
                 target:
                   entity_id: climate.clim_bureau_rm4_mini
                 data:
-                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_bureau_rm4_mini',
-                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                    and is_state('climate.clim_bureau_rm4_mini', 'off') %}\n  off\n{%
+                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_bureau_target }}'
               - action: climate.set_fan_mode
                 target:
@@ -1921,8 +1923,9 @@
                 target:
                   entity_id: climate.clim_chambre_rm4_mini
                 data:
-                  hvac_mode: "{% if trigger.id == 'sensor_update' and is_state('climate.clim_chambre_rm4_mini',
-                    'off') %}\n  off\n{% else %}\n  {{ mode_saison }}\n{% endif %}\n"
+                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                    and is_state('climate.clim_chambre_rm4_mini', 'off') %}\n  off\n{%
+                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
                   temperature: '{{ t_chambre_target }}'
               - action: climate.set_fan_mode
                 target:
@@ -1935,7 +1938,7 @@
           action: notify.mobile_app_poco_x7_pro
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
-            message: "{%- if 'groupe_1' in groupe_presence and mode_saison ==\n'heat'
+            message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
               %}\n  [éCO HEAT] Les 3 Clims à {{ temp_eco_c }}° (Absent)\n{% else %}\n
               \ Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n
               \ Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{%
