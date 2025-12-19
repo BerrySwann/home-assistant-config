@@ -223,13 +223,12 @@
 #
 # =======================================================
 
-- sensor:
-      name: "Top Processus CPU"
-      unique_id: top_cpu_processes
-      # On utilise 'ps' mais avec des colonnes simples pour éviter les erreurs
-      command: "ps -ao pcpu,comm --sort=-pcpu | head -n 6 | tail -n 5"
-      # On met la liste des processus directement dans l'état du sensor pour le voir
-      value_template: >
-        {% set proc = value.split('\n') %}
-        {{ proc | join(' | ') }}
-      scan_interval: 60
+command_line:
+  - sensor:
+      name: "Top Processus Direct"
+      unique_id: top_process_direct
+      # Commande ultra-simple : liste les processus, trie par CPU, prend le premier
+      command: "ps -eo pcpu,comm | sort -rn | head -n 1"
+      # On prend toute la ligne brute pour voir ce qui sort
+      value_template: "{{ value | truncate(50) }}"
+      scan_interval: 10
