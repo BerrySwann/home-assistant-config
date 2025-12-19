@@ -2640,80 +2640,64 @@
           message: '[5] prises [ON]'
           title: éCO Prises [2] en [WIFI]"
   mode: queued
-- id: '1766135218137'
-  alias: Système - VS Code (Accès Extérieur)
-  description: ''
+- id: '1766136605271'
+  alias: Système - Économie Énergie VS Code
+  description: Coupe VS Code après 20h si le CPU dépasse 10% pour économiser l'électricité
   triggers:
-  - entity_id: sensor.studio_code_server_cpu_percent
+  - trigger: numeric_state
+    entity_id: sensor.system_monitor_utilisation_du_processeur
+    above: 10
+    for:
+      minutes: 10
+  - trigger: numeric_state
+    entity_id: sensor.studio_code_server_cpu_percent
     below: 0.8
     for:
       minutes: 15
-    trigger: numeric_state
+  conditions:
+  - condition: time
+    after: '20:00:00'
+    before: 07:00:00
+  - condition: state
+    entity_id: binary_sensor.studio_code_server_running
+    state: 'on'
   actions:
   - action: notify.mobile_app_poco_x7_pro
     data:
-      title: ⚠️ VS Code Inactif (Extérieur)
-      message: Tu es connecté via erodi-ha.com mais VS Code ne consomme rien. Éteindre
-        l'addon ?
-      data:
-        actions:
-        - action: STOP_VSCODE
-          title: Oui, éteindre
-        - action: KEEP_VSCODE
-          title: Non, je travaille
-  - wait_for_trigger:
-    - event_type: mobile_app_notification_action
-      event_data:
-        action: KEEP_VSCODE
-      trigger: event
-    timeout: 00:05:00
-    continue_on_timeout: true
-  - if:
-    - condition: template
-      value_template: '{{ wait.trigger == none }}'
-    then:
-    - action: hassio.addon_stop
-      data:
-        addon: a0d7b954_vscode
-- id: '1766136605271'
-  alias: VS Code - Surveillance Inactivité
-  description: Demande via notification s'il faut couper VS Code sur le Mini-PC
-  triggers:
-  - entity_id: sensor.ping_https_vscode
-    to: 'False'
-    for:
-      minutes: 5
-    trigger: state
-  actions:
-  - action: notify.mobile_app_poco_x7_pro
-    data:
-      title: "\U0001F4BB Session VS Code"
-      message: L'activité semble nulle sur erodi-ha.com. Statut ?
+      title: "\U0001F50B Alerte Énergie - Mini-PC"
+      message: Il est {{ now().strftime('%H:%M') }}. Le CPU global est à {{ states('sensor.system_monitor_utilisation_du_processeur')
+        }}%.  On coupe VS Code pour économiser ?
       data:
         actions:
         - action: STOP_VSC
-          title: Couper VSC
+          title: Oui, couper
         - action: KEEP_VSC
-          title: Tjrs en cours
+          title: Non, je travaille encore
   - wait_for_trigger:
-    - event_type: mobile_app_notification_action
+    - trigger: event
+      event_type: mobile_app_notification_action
       event_data:
         action: STOP_VSC
-      trigger: event
-    - event_type: mobile_app_notification_action
+    - trigger: event
+      event_type: mobile_app_notification_action
       event_data:
         action: KEEP_VSC
-      trigger: event
     timeout: 00:05:00
-  - if:
-    - condition: template
-      value_template: '{{ wait.trigger.event.data.action == ''STOP_VSC'' }}'
-    then:
-    - action: hassio.addon_stop
-      data:
-        addon: a0d7b954_vscode
-    - action: notify.mobile_app_poco_x7_pro
-      data:
-        message: VS Code a été arrêté sur le Mini-PC.
-    else:
-    - stop: L'utilisateur continue de coder ou n'a pas répondu.
+    continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger == none or wait.trigger.event.data.action
+          == ''STOP_VSC'' }}'
+      sequence:
+      - action: hassio.addon_stop
+        data:
+          addon: a0d7b954_vscode
+      - action: notify.mobile_app_poco_x7_pro
+        data:
+          message: VS Code éteint automatiquement (Économie d'énergie).
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == ''KEEP_VSC'' }}'
+      sequence:
+      - stop: L'utilisateur code encore, on laisse tourner.

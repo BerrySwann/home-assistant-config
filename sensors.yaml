@@ -35,6 +35,30 @@
   precision: 1
 
 #==========================================================================
+# Taches en arrière plan du Mini-PC
+#==========================================================================
+- platform: command_line
+  name: "Top Processus CPU"
+  unique_id: top_cpu_processes
+  # On liste les 5 processus les plus gourmands avec leur nom et % CPU
+  command: "ps -eo pcpu,comm --sort=-pcpu | head -n 6 | tail -n 5"
+  scan_interval: 60
+  value_template: "Actif" # L'état du sensor
+  json_attributes:
+    - command
+
+#==========================================================================
+# Ping VSCode sur erodi-ha.com Mini-PC
+#==========================================================================
+- platform: rest
+  name: "Ping HTTPS VSCode"
+  resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
+  method: GET
+  timeout: 15
+  value_template: "{{ value_json is defined or value is defined }}"
+  scan_interval: 60
+
+#==========================================================================
 # Calcul moyen ECOJOKO
 #==========================================================================
 - platform: statistics
@@ -635,11 +659,3 @@
   state_characteristic: mean
   max_age: { hours: 730 }
   sampling_size: 400
-
-- platform: rest
-  name: "Ping HTTPS VSCode"
-  resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
-  method: GET
-  timeout: 15
-  value_template: "{{ value_json is defined or value is defined }}"
-  scan_interval: 60
