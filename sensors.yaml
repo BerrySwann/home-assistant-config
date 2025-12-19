@@ -46,17 +46,6 @@
   scan_interval: 60
 
 #==========================================================================
-# TOP PROCESSUS (Surveillance CPU Mini-PC x86)
-#==========================================================================
-- platform: command_line
-  name: "Top Processus Direct"
-  unique_id: top_process_direct
-  # Cette commande liste les processus par CPU et rend le nom du premier immédiatement
-  command: "ps -eo pcpu,comm --sort=-pcpu | head -n 2 | tail -n 1 | awk '{print $2}'"
-  value_template: "{{ value }}"
-  scan_interval: 30
-  
-#==========================================================================
 # Calcul moyen ECOJOKO
 #==========================================================================
 - platform: statistics
