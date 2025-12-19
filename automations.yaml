@@ -2675,3 +2675,50 @@
     - action: hassio.addon_stop
       data:
         addon: a0d7b954_vscode
+- id: '1766136605271'
+  alias: VS Code - Surveillance Inactivité
+  description: Demande via notification s'il faut couper VS Code sur le Mini-PC
+  triggers:
+  - entity_id: sensor.ping_https_vscode
+    to: 'False'
+    for:
+      minutes: 5
+    trigger: state
+  - entity_id: sensor.studio_code_server_cpu_percent
+    below: 0.8
+    for:
+      minutes: 20
+    trigger: numeric_state
+  actions:
+  - action: notify.mobile_app_poco_x7_pro
+    data:
+      title: "\U0001F4BB Session VS Code"
+      message: L'activité semble nulle sur erodi-ha.com. Statut ?
+      data:
+        actions:
+        - action: STOP_VSC
+          title: Couper VSC
+        - action: KEEP_VSC
+          title: Tjrs en cours
+  - wait_for_trigger:
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: STOP_VSC
+      trigger: event
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: KEEP_VSC
+      trigger: event
+    timeout: 00:05:00
+  - if:
+    - condition: template
+      value_template: '{{ wait.trigger.event.data.action == ''STOP_VSC'' }}'
+    then:
+    - action: hassio.addon_stop
+      data:
+        addon: a0d7b954_vscode
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        message: VS Code a été arrêté sur le Mini-PC.
+    else:
+    - stop: L'utilisateur continue de coder ou n'a pas répondu.

@@ -635,3 +635,11 @@
   state_characteristic: mean
   max_age: { hours: 730 }
   sampling_size: 400
+
+- platform: rest
+  name: "Ping HTTPS VSCode"
+  resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
+  method: GET
+  timeout: 15
+  value_template: "{{ value_json is defined or value is defined }}"
+  scan_interval: 60
