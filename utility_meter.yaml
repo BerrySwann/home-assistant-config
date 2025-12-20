@@ -217,19 +217,19 @@ eclairage_cuisine_1_quotidien_um:
 #------------------------------------------------------------
 
 eclairage_appart_2_annuel_um:
-  source: sensor.eclairage_apparte_2_energy
+  source: sensor.eclairage_apparte_2_energie
   cycle: yearly
 
 eclairage_appart_2_mensuel_um:
-  source: sensor.eclairage_apparte_2_energy
+  source: sensor.eclairage_apparte_2_energie
   cycle: monthly
 
 eclairage_appart_2_hebdomadaire_um:
-  source: sensor.eclairage_apparte_2_energy
+  source: sensor.eclairage_apparte_2_energie
   cycle: weekly
 
 eclairage_appart_2_quotidien_um:
-  source: sensor.eclairage_apparte_2_energy
+  source: sensor.eclairage_apparte_2_energie
   cycle: daily
 
 #------------------------------------------------------------
