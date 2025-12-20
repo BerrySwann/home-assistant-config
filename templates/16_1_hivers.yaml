@@ -2,10 +2,14 @@
       - name: "Statut Clim Hiver"
         state: "{{ states('sensor.groupe_clim') }}"
         icon: >
-          {% if is_state('weather.ma_maison', 'snowy') %}
-            mdi:snowflake-variant
-          {% elif states('sensor.temperature_exterieure') | float < 5 %}
-            mdi:thermometer-snow
+          {% if is_state('weather.vence', 'snowy') %}
+            mdi:snowflake
+          {% elif states('sensor.temperature_exterieure') | float < 15 %}
+            mdi:snowflake-thermometer
+          {% elif states('sensor.temperature_exterieure') | float > 21 %}
+            mdi:weather-sunny
+          {% elif states('sensor.temperature_exterieure') | float < 32 %}
+            mdi:weather-sunny-alert
           {% else %}
-            mdi:air-conditioner
+            mdi:weather-sunny
           {% endif %}
