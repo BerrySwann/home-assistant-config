@@ -172,9 +172,8 @@ eclairage_salon_5_hebdomadaire_um:
 eclairage_salon_5_quotidien_um:
   source: sensor.eclairage_salon_5_energie
   cycle: daily
-
 #------------------------------------------------------------
-# Eclairage APPARTEMENT (HOME)
+# Eclairage APPARTEMENT (3 Entrée, cuisine & couloir) (HOME)
 #------------------------------------------------------------
 
 eclairage_appart_3_annuel_um:
@@ -191,6 +190,48 @@ eclairage_appart_3_hebdomadaire_um:
 
 eclairage_appart_3_quotidien_um:
   source: sensor.eclairage_appart_3_energie
+  cycle: daily
+
+#------------------------------------------------------------
+# Eclairage CUISINE (1)
+#------------------------------------------------------------
+
+eclairage_cuisine_1_annuel_um:
+  source: eclairage_cuisine_1_energy
+  cycle: yearly
+
+eclairage_cuisine_1_mensuel_um:
+  source: eclairage_cuisine_1_energy
+  cycle: monthly
+
+eclairage_cuisine_1_hebdomadaire_um:
+  source: eclairage_cuisine_1_energy
+  cycle: weekly
+
+eclairage_cuisine_1_quotidien_um:
+  source: eclairage_cuisine_1_energy
+  cycle: daily
+
+
+sensor.eclairage_cuisine_1_energy
+#------------------------------------------------------------
+# Eclairage APPARTEMENT (2 Entrée & couloir) (HOME)
+#------------------------------------------------------------
+
+eclairage_appart_2_annuel_um:
+  source: sensor.eclairage_apparte_2_energy
+  cycle: yearly
+
+eclairage_appart_2_mensuel_um:
+  source: sensor.eclairage_apparte_2_energy
+  cycle: monthly
+
+eclairage_appart_2_hebdomadaire_um:
+  source: sensor.eclairage_apparte_2_energy
+  cycle: weekly
+
+eclairage_appart_2_quotidien_um:
+  source: sensor.eclairage_apparte_2_energy
   cycle: daily
 
 #------------------------------------------------------------

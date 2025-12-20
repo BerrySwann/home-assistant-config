@@ -1,0 +1,43 @@
+- sensor:
+    - name: "Répartition Énergie Chauffage"
+      unique_id: repartition_energie_chauffage
+      unit_of_measurement: "%"
+      icon: mdi:chart-pie
+      state: >
+        {# On récupère le total chauffage que nous avons déjà calculé #}
+        {% set heating = states('sensor.conso_clim_rad_total') | float(0) %}
+        
+        {# On fait la somme de tous les autres appareils identifiés #}
+        {% set other = (
+          states('sensor.prise_mini_pc_ikea_power') | float(0) +
+          states('sensor.prise_frigo_cuisine_nous_power') | float(0) +
+          states('sensor.prise_congelateur_cuisine_nous_power') | float(0) +
+          states('sensor.prise_bureau_pc_ikea_power') | float(0) +
+          states('sensor.prise_tv_chambre_nous_power') | float(0)
+        ) %}
+        
+        {% set total = heating + other %}
+        
+        {% if total > 0 %}
+          {{ ((heating / total) * 100) | round(1) }}
+        {% else %}
+          0
+        {% endif %}
+      attributes:
+        puissance_chauffage: "{{ states('sensor.conso_clim_rad_total') | float(0) }} W"
+        puissance_autres_appareils: >
+          {{ (
+            states('sensor.prise_mini_pc_ikea_power') | float(0) +
+            states('sensor.prise_frigo_cuisine_nous_power') | float(0) +
+            states('sensor.prise_congelateur_cuisine_nous_power') | float(0) +
+            states('sensor.prise_bureau_pc_ikea_power') | float(0) +
+            states('sensor.prise_tv_chambre_nous_power') | float(0)
+          ) | round(1) }} W
+        puissance_totale_identifiee: >
+          {{ (states('sensor.conso_clim_rad_total') | float(0) + 
+              states('sensor.prise_mini_pc_ikea_power') | float(0) +
+              states('sensor.prise_frigo_cuisine_nous_power') | float(0) +
+              states('sensor.prise_congelateur_cuisine_nous_power') | float(0) +
+              states('sensor.prise_bureau_pc_ikea_power') | float(0) +
+              states('sensor.prise_tv_chambre_nous_power') | float(0)
+          ) | round(1) }} W
