@@ -2401,24 +2401,19 @@
       sequence:
       - stop: L'utilisateur code encore, on laisse tourner.
 - id: '1766234836333'
-  alias: Diagnostic Énergie - Log Complet
-  description: Enregistre la consommation de tous les équipements pour analyse
+  alias: DIAG - Enregistrement Journalier
   triggers:
   - hours: /1
     trigger: time_pattern
   actions:
-  - action: shell_command.write_to_analyse_log
-    data:
-      message: '{% set t = now().strftime(''%Y-%m-%d %H:%M:%S'') %} {% set clim_tot
-        = states(''sensor.conso_clim_rad_total'') | float(0) %} {% set pc = states(''sensor.prise_mini_pc_ikea_power'')
-        | float(0) %} {% set frigo = states(''sensor.prise_frigo_cuisine_nous_power'')
-        | float(0) %} {% set congélo = states(''sensor.prise_congelateur_cuisine_nous_power'')
-        | float(0) %} {% set eclairage = states(''sensor.eclairage_appartement_mensuel_um'')
-        | float(0) %} {% set temp_ext = states(''sensor.th_balcon_nord_temperature'')
-        | float(0) %} {% set presence = states(''sensor.groupe_clim'') %}
+  - data:
+      message: '{% set chauf = states(''sensor.diag_conso_chauffage_quotidien'') %}
+        {% set num = states(''sensor.diag_conso_numerique_quotidien'') %} {% set lum
+        = states(''sensor.diag_conso_eclairage_quotidien'') %} {% set ext = states(''sensor.th_balcon_nord_temperature'')
+        %}
 
-        DIAG_COMPLET | {{t}} | Total_Chauf: {{clim_tot}}W | PC: {{pc}}W | Frigo: {{frigo}}W
-        | Congel: {{congélo}}W | Lum_Appart: {{eclairage}}kWh | Ext: {{temp_ext}}°C
-        | Groupe: {{presence}}
+        DIAG | Chauffage: {{chauf}}kWh | Num: {{num}}kWh | Lum: {{lum}}kWh | Ext:
+        {{ext}}°C
 
         '
+    action: notify.diag_log_file

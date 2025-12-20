@@ -93,6 +93,12 @@ telegram_bot:
 # Zone NOTIFY
 # ==========================================================================
 notify:
+# diag_conso_elec.txt
+  - name: diag_log_file
+    platform: file
+    filename: diag_conso_elec.txt
+    timestamp: true
+
 # Telegram
   - platform: telegram
     name: Telegram
