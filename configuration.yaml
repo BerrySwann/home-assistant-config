@@ -94,8 +94,8 @@ telegram_bot:
 # ==========================================================================
 notify:
 # diag_conso_elec.txt
-  - name: diag_log_file
-    platform: file
+  - platform: file
+    name: diag_log_file
     filename: diag_conso_elec.txt
 
 # Telegram
