@@ -18,6 +18,5 @@ git_pull_ff: >-
     echo "❌ Git pull KO: $(date "+%F %T %Z")" >> /config/.logs/ha_git_backup.log;
   fi'
 
-# Ecrire dans le fichier analyse.log pour gimini
-# On utilise des guillemets simples ' autour du message pour protéger le JSON
-write_to_analyse_log: 'python3 /config/.scripts/write_log.py "{{ message }}"'
+# Ecrire dans le fichier diag_conso_elec.txt (Méthode native Linux)
+write_diag_log: "echo '{{ message }}' >> /config/diag_conso_elec.txt"
