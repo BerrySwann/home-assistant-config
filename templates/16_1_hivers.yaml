@@ -13,3 +13,21 @@
           {% else %}
             mdi:weather-sunny
           {% endif %}
+
+- sensor:
+      - name: "icon th balcon nord temperature"
+        unit_of_measurement: "°C"
+        state: "{{ states('sensor.th_balcon_nord_temperature') }}"
+        icon: >
+          {% set temp = states('sensor.th_balcon_nord_temperature') | float(0) %}
+          {% if is_state('weather.vence', 'snowy') %}
+            mdi:snowflake
+          {% elif temp < 15 %}
+            mdi:snowflake-thermometer
+          {% elif temp >= 32 %}
+            mdi:weather-sunny-alert
+          {% elif temp >= 21 %}
+            mdi:weather-sunny
+          {% else %}
+            mdi:thermometer
+          {% endif %}

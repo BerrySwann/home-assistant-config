@@ -2400,3 +2400,25 @@
         value_template: '{{ wait.trigger.event.data.action == ''KEEP_VSC'' }}'
       sequence:
       - stop: L'utilisateur code encore, on laisse tourner.
+- id: '1766234836333'
+  alias: Diagnostic Énergie - Log Complet
+  description: Enregistre la consommation de tous les équipements pour analyse
+  triggers:
+  - hours: /1
+    trigger: time_pattern
+  actions:
+  - action: shell_command.write_to_analyse_log
+    data:
+      message: '{% set t = now().strftime(''%Y-%m-%d %H:%M:%S'') %} {% set clim_tot
+        = states(''sensor.conso_clim_rad_total'') | float(0) %} {% set pc = states(''sensor.prise_mini_pc_ikea_power'')
+        | float(0) %} {% set frigo = states(''sensor.prise_frigo_cuisine_nous_power'')
+        | float(0) %} {% set congélo = states(''sensor.prise_congelateur_cuisine_nous_power'')
+        | float(0) %} {% set eclairage = states(''sensor.eclairage_appartement_mensuel_um'')
+        | float(0) %} {% set temp_ext = states(''sensor.th_balcon_nord_temperature'')
+        | float(0) %} {% set presence = states(''sensor.groupe_clim'') %}
+
+        DIAG_COMPLET | {{t}} | Total_Chauf: {{clim_tot}}W | PC: {{pc}}W | Frigo: {{frigo}}W
+        | Congel: {{congélo}}W | Lum_Appart: {{eclairage}}kWh | Ext: {{temp_ext}}°C
+        | Groupe: {{presence}}
+
+        '

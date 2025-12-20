@@ -46,6 +46,7 @@ git_backup_weekly_refresh:
       message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
     action: persistent_notification.create
   description: ''
+
 j_1_routeur_clim_on_off_intelligent:
   alias: J - 1 - ROUTEUR - Clim ON/OFF Intelligent
   description: '[ROUTEUR] À mettre derrière le bouton du Dashboard. 1. Anti-Tremblote
@@ -85,6 +86,7 @@ j_1_routeur_clim_on_off_intelligent:
       action: script.j_2_secu_arret_clim_protege
       data:
         piece: '{{ p }}'
+
 j_2_secu_arret_clim_protege:
   alias: J - 2 - SECU - Arrêt Clim Protégé
   description: '[EXÉCUTANT] Utilise Power Status pour la détection de chauffe et Power
