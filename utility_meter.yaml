@@ -197,23 +197,21 @@ eclairage_appart_3_quotidien_um:
 #------------------------------------------------------------
 
 eclairage_cuisine_1_annuel_um:
-  source: eclairage_cuisine_1_energy
+  source: sensor.eclairage_cuisine_1_energie
   cycle: yearly
 
 eclairage_cuisine_1_mensuel_um:
-  source: eclairage_cuisine_1_energy
+  source: sensor.eclairage_cuisine_1_energie
   cycle: monthly
 
 eclairage_cuisine_1_hebdomadaire_um:
-  source: eclairage_cuisine_1_energy
+  source: sensor.eclairage_cuisine_1_energie
   cycle: weekly
 
 eclairage_cuisine_1_quotidien_um:
-  source: eclairage_cuisine_1_energy
+  source: sensor.eclairage_cuisine_1_energie
   cycle: daily
 
-
-sensor.eclairage_cuisine_1_energy
 #------------------------------------------------------------
 # Eclairage APPARTEMENT (2 Entrée & couloir) (HOME)
 #------------------------------------------------------------
