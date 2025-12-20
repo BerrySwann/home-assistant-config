@@ -2402,19 +2402,22 @@
       - stop: L'utilisateur code encore, on laisse tourner.
 - id: '1766234836333'
   alias: DIAG - Enregistrement Journalier
-  description: Log via Notify File (Méthode Native)
+  description: Log via File Integration (Méthode UI)
   triggers:
   - hours: /1
     trigger: time_pattern
   actions:
-  - action: notify.diag_log_file
+  - action: notify.send_message
+    target:
+      entity_id: notify.diag_conso_elec
     data:
       message: '{% set chauf = states(''sensor.diag_conso_chauffage_quotidien'') |
         float(0) %} {% set num = states(''sensor.diag_conso_numerique_quotidien'')
         | float(0) %} {% set lum = states(''sensor.diag_conso_eclairage_quotidien'')
         | float(0) %} {% set ext = states(''sensor.th_balcon_nord_temperature'') |
-        float(0) %}
+        float(0) %} {% set t = now().strftime(''%d/%m %H:%M'') %}
 
-        | Chauffage: {{chauf}}kWh | Num: {{num}}kWh | Lum: {{lum}}kWh | Ext: {{ext}}°C
+        DIAG | {{t}} | Chauffage: {{chauf}}kWh | Num: {{num}}kWh | Lum: {{lum}}kWh
+        | Ext: {{ext}}°C
 
         '
