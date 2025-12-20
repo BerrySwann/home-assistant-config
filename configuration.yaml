@@ -97,7 +97,6 @@ notify:
   - name: diag_log_file
     platform: file
     filename: diag_conso_elec.txt
-    timestamp: true
 
 # Telegram
   - platform: telegram

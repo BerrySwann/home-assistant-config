@@ -2406,14 +2406,15 @@
   - hours: /1
     trigger: time_pattern
   actions:
-  - data:
-      message: '{% set chauf = states(''sensor.diag_conso_chauffage_quotidien'') %}
-        {% set num = states(''sensor.diag_conso_numerique_quotidien'') %} {% set lum
-        = states(''sensor.diag_conso_eclairage_quotidien'') %} {% set ext = states(''sensor.th_balcon_nord_temperature'')
-        %}
-
-        DIAG | Chauffage: {{chauf}}kWh | Num: {{num}}kWh | Lum: {{lum}}kWh | Ext:
-        {{ext}}°C
+  - action: system_log.write
+    data:
+      level: info
+      logger: custom_diag_energie
+      message: '{% set chauf = states(''sensor.diag_conso_chauffage_quotidien'') |
+        float(0) %} {% set num = states(''sensor.diag_conso_numerique_quotidien'')
+        | float(0) %} {% set lum = states(''sensor.diag_conso_eclairage_quotidien'')
+        | float(0) %} {% set ext = states(''sensor.th_balcon_nord_temperature'') |
+        float(0) %} DIAG_VENCE | Chauffage: {{chauf}}kWh | Num: {{num}}kWh | Lum:
+        {{lum}}kWh | Ext: {{ext}}°C
 
         '
-    action: notify.diag_log_file
