@@ -92,4 +92,4 @@
         states('sensor.clim_du_bureau_nous_power') | float(0) +
         states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) +
         states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) +
-        states('sensor.clim_chambre_nous_power') | float(0)) | round(1) }}
+        states('sensor.clim_chambre_nous_power') | float(0)) | round(3) }}

@@ -1,73 +1,85 @@
 #========================================================================
-# DIAGNOSTIC ÉNERGÉTIQUE - SYNTHÈSE DES PÔLES
+# DIAGNOSTIC ÉNERGÉTIQUE - 6 POSTES (CUISSON & FROID SÉPARÉS)
 #========================================================================
 
 - sensor:
-    #--- PÔLE 1 : CHAUFFAGE & CLIM (Somme des climatisations et radiateurs) ---
-    - name: "Diag Conso Chauffage Quotidien"
-      unique_id: diag_conso_chauffage_quotidien
+    #--- POSTE 1 : HYGIÈNE (Linge, Vaisselle, Repassage) ---
+    - name: "Diag Poste 1 Hygiene Quotidien"
+      unique_id: diag_poste_1_hygiene_quotidien
+      unit_of_measurement: "kWh"
+      device_class: energy
+      state_class: total_increasing
+      icon: mdi:washing-machine
+      state: >
+        {{ (states('sensor.prise_lave_linge_nous_daily') | float(0) + 
+            states('sensor.prise_lave_vaisselle_nous_daily') | float(0) +
+            states('sensor.prise_bureau_fer_a_repasser_nous_daily') | float(0)) | round(3) }}
+
+    #--- POSTE 2 : CUISSON (Four, Plaques, Micro-ondes, Airfryer) ---
+    - name: "Diag Poste 2 Cuisson Quotidien"
+      unique_id: diag_poste_2_cuisson_quotidien
+      unit_of_measurement: "kWh"
+      device_class: energy
+      state_class: total_increasing
+      icon: mdi:stove
+      state: >
+        {{ (states('sensor.prise_four_micro_ondes_nous_daily') | float(0) +
+            states('sensor.prise_airfryer_ninja_nous_daily') | float(0) +
+            states('sensor.four_et_plaque_de_cuisson_daily') | float(0)) | round(3) }}
+
+    #--- POSTE 3 : FROID (Frigo, Congélateur) ---
+    - name: "Diag Poste 3 Froid Quotidien"
+      unique_id: diag_poste_3_froid_quotidien
+      unit_of_measurement: "kWh"
+      device_class: energy
+      state_class: total_increasing
+      icon: mdi:fridge
+      state: >
+        {{ (states('sensor.prise_frigo_cuisine_nous_daily') | float(0) + 
+            states('sensor.prise_congelateur_cuisine_nous_daily') | float(0)) | round(3) }}
+
+    #--- POSTE 4 : CHAUFFAGE (Total Clim + Rads) ---
+    - name: "Diag Poste 4 Chauffage Quotidien"
+      unique_id: diag_poste_4_chauffage_quotidien
       unit_of_measurement: "kWh"
       device_class: energy
       state_class: total_increasing
       icon: mdi:fire
       state: >
-        {{ (states('sensor.clim_salon_quotidien') | float(0) +
-            states('sensor.radiateur_elec_cuisine_quotidien') | float(0) +
-            states('sensor.clim_du_bureau_5_quotidien') | float(0) +
-            states('sensor.radiateur_sdb_2_quotidien') | float(0) +
-            states('sensor.seche_serv_sdb_quotidien') | float(0) +
-            states('sensor.clim_chambre_4_quotidien') | float(0)) | round(3) }}
+        {{ states('sensor.conso_clim_rad_total_quotidien') | float(0) | round(3) }}
 
-    #--- PÔLE 2 : LOISIRS NUMÉRIQUES (Le pôle qui consomme plus que le chauffage !) ---
-    - name: "Diag Conso Numérique Quotidien"
-      unique_id: diag_conso_numerique_quotidien
+    #--- POSTE 5 : MULTIMÉDIA (PC, Box, TV) ---
+    - name: "Diag Poste 5 Multimedia Quotidien"
+      unique_id: diag_poste_5_multimedia_quotidien
       unit_of_measurement: "kWh"
       device_class: energy
       state_class: total_increasing
-      icon: mdi:computer
+      icon: mdi:monitor-dashboard
       state: >
-        {{ (states('sensor.prise_pc_e_daily') | float(0) + 
-            states('sensor.prise_pc_g_daily') | float(0) + 
-            states('sensor.prise_box_internet_ikea_daily') | float(0) +
+        {{ (states('sensor.prise_box_internet_ikea_daily') | float(0) + 
+            states('sensor.prise_pc_s_gege_ikea_daily') | float(0) + 
+            states('sensor.prise_bureau_pc_ikea_daily') | float(0) +
             states('sensor.prise_tv_chambre_nous_daily') | float(0)) | round(3) }}
 
-    #--- PÔLE 3 : ÉCLAIRAGE TOTAL (Basé sur tes compteurs par pièces) ---
-    - name: "Diag Conso Eclairage Quotidien"
-      unique_id: diag_conso_eclairage_quotidien
+    #--- POSTE 6 : LUMIÈRE (Total Éclairage) ---
+    - name: "Diag Poste 6 Lumiere Quotidien"
+      unique_id: diag_poste_6_lumiere_quotidien
       unit_of_measurement: "kWh"
       device_class: energy
       state_class: total_increasing
-      icon: mdi:lightbulb-outline
+      icon: mdi:lightbulb
       state: >
-        {{ (states('sensor.eclairage_salon_5_quotidien') | float(0) +
-            states('sensor.eclairage_cuisine_1_quotidien') | float(0) +
-            states('sensor.eclairage_appart_2_quotidien') | float(0) +
-            states('sensor.eclairage_bureau_5_quotidien') | float(0) +
-            states('sensor.eclairage_sdb_2_quotidien') | float(0) +
-            states('sensor.eclairage_chambre_4_quotidien') | float(0)) | round(3) }}
-
-    #--- PÔLE 4 : VIE DOMESTIQUE (Froid et machines) ---
-    - name: "Diag Conso Domestique Quotidien"
-      unique_id: diag_conso_domestique_quotidien
-      unit_of_measurement: "kWh"
-      device_class: energy
-      state_class: total_increasing
-      icon: mdi:home-lightning-bolt
-      state: >
-        {{ (states('sensor.prise_frigo_cuisine_nous_daily') | float(0) + 
-            states('sensor.prise_congelateur_cuisine_nous_daily') | float(0) +
-            states('sensor.prise_lave_linge_nous_daily') | float(0) +
-            states('sensor.prise_lave_vaisselle_nous_daily') | float(0)) | round(3) }}
-
-    #--- TOTAL GÉNÉRAL IDENTIFIÉ (Pour le suivi global) ---
+        {{ states('sensor.conso_eclairage_total_quotidien') | float(0) | round(3) }}
+            
+    #--- TOTAL GÉNÉRAL IDENTIFIÉ ---
     - name: "Diag Conso Totale Identifiee Quotidienne"
       unique_id: diag_conso_totale_identifiee_quotidienne
       unit_of_measurement: "kWh"
       device_class: energy
-      icon: mdi:sigma
       state: >
-        {% set chauffage = states('sensor.diag_conso_chauffage_quotidien') | float(0) %}
-        {% set numerique = states('sensor.diag_conso_numerique_quotidien') | float(0) %}
-        {% set lumiere = states('sensor.diag_conso_eclairage_quotidien') | float(0) %}
-        {% set domestique = states('sensor.diag_conso_domestique_quotidien') | float(0) %}
-        {{ (chauffage + numerique + lumiere + domestique) | round(2) }}
+        {{ (states('sensor.diag_poste_1_hygiene_quotidien') | float(0) + 
+            states('sensor.diag_poste_2_cuisson_quotidien') | float(0) + 
+            states('sensor.diag_poste_3_froid_quotidien') | float(0) + 
+            states('sensor.diag_poste_4_chauffage_quotidien') | float(0) + 
+            states('sensor.diag_poste_5_multimedia_quotidien') | float(0) + 
+            states('sensor.diag_poste_6_lumiere_quotidien') | float(0)) | round(2) }}
