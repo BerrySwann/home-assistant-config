@@ -258,7 +258,7 @@
 # SALLE DE BAIN (2) ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
 #========================================================================
 - sensor:
-  - name: "Eclairage Salle de Bain (2) ANNUEL"
+  - name: "Eclairage SdB (2) ANNUEL"
     unique_id: eclairage_sdb_2_annuel
     device_class: energy
     unit_of_measurement: kWh
@@ -269,7 +269,7 @@
       {% else %} 
         0.00 
       {% endif %}
-  - name: "Eclairage Salle de Bain (2) MENSUEL"
+  - name: "Eclairage SdB (2) MENSUEL"
     unique_id: eclairage_sdb_2_mensuel
     device_class: energy
     unit_of_measurement: kWh
@@ -280,7 +280,7 @@
       {% else %} 
         0.00 
       {% endif %}
-  - name: "Eclairage Salle de Bain (2) HEBDOMADAIRE"
+  - name: "Eclairage SdB (2) HEBDOMADAIRE"
     unique_id: eclairage_sdb_2_hebdomadaire
     device_class: energy
     unit_of_measurement: kWh
@@ -291,7 +291,7 @@
       {% else %} 
         0.00 
       {% endif %}
-  - name: "Eclairage Salle de Bain (2) QUOTIDIEN"
+  - name: "Eclairage SdB (2) QUOTIDIEN"
     unique_id: eclairage_sdb_2_quotidien
     device_class: energy
     unit_of_measurement: kWh
