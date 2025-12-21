@@ -293,11 +293,8 @@ eclairage_chambre_4_quotidien_um:
   cycle: daily
 
 #============================================================================
-#
 # TOTO ECOJOKO -> Jour / Mois (compteur ELEC)
-#
 #============================================================================
-
 ecojoko_energy_daily:
   source: sensor.ecojoko_consommation_reseau
   cycle: daily
@@ -306,100 +303,173 @@ ecojoko_energy_monthly:
   source: sensor.ecojoko_consommation_reseau
   cycle: monthly
 
-# ==========================================================================
-# UTILITY METERS (daily) — 1 compteur / prise
-# UTILITY METER — sensor.<base>_daily = daily(sensor.<base>_kwh)
-# ==========================================================================
+#============================================================================
+# MINI-PC (Ajouté car il manquait dans ta liste !)
+#============================================================================
+mini_pc_daily:
+  source: sensor.prise_mini_pc_ikea_energy
+  cycle: daily
 
+mini_pc_monthly:
+  source: sensor.prise_mini_pc_ikea_energy
+  cycle: monthly
+
+#============================================================================
+# PRISES CONNECTÉES (Daily + Monthly)
+#============================================================================
 prise_box_internet_ikea_daily:
   source: sensor.prise_box_internet_ikea_kwh
   cycle: daily
+prise_box_internet_ikea_monthly:
+  source: sensor.prise_box_internet_ikea_kwh
+  cycle: monthly
 
 prise_horloge_ikea_daily:
   source: sensor.prise_horloge_ikea_kwh
   cycle: daily
+prise_horloge_ikea_monthly:
+  source: sensor.prise_horloge_ikea_kwh
+  cycle: monthly
 
 prise_pc_s_gege_ikea_daily:
   source: sensor.prise_pc_s_gege_ikea_kwh
   cycle: daily
+prise_pc_s_gege_ikea_monthly:
+  source: sensor.prise_pc_s_gege_ikea_kwh
+  cycle: monthly
 
 prise_salon_chargeur_nous_daily:
   source: sensor.prise_salon_chargeur_nous_kwh
   cycle: daily
+prise_salon_chargeur_nous_monthly:
+  source: sensor.prise_salon_chargeur_nous_kwh
+  cycle: monthly
 
 prise_four_micro_ondes_nous_daily:
   source: sensor.prise_four_micro_ondes_nous_kwh
   cycle: daily
+prise_four_micro_ondes_nous_monthly:
+  source: sensor.prise_four_micro_ondes_nous_kwh
+  cycle: monthly
 
 prise_lave_linge_nous_daily:
   source: sensor.prise_lave_linge_nous_kwh
   cycle: daily
+prise_lave_linge_nous_monthly:
+  source: sensor.prise_lave_linge_nous_kwh
+  cycle: monthly
 
 prise_lave_vaisselle_nous_daily:
   source: sensor.prise_lave_vaisselle_nous_kwh
   cycle: daily
+prise_lave_vaisselle_nous_monthly:
+  source: sensor.prise_lave_vaisselle_nous_kwh
+  cycle: monthly
 
 prise_airfryer_ninja_nous_daily:
   source: sensor.prise_airfryer_ninja_nous_kwh
   cycle: daily
+prise_airfryer_ninja_nous_monthly:
+  source: sensor.prise_airfryer_ninja_nous_kwh
+  cycle: monthly
 
 four_et_plaque_de_cuisson_daily:
   source: sensor.four_et_plaque_de_cuisson_kwh
   cycle: daily
+four_et_plaque_de_cuisson_monthly:
+  source: sensor.four_et_plaque_de_cuisson_kwh
+  cycle: monthly
 
 prise_frigo_cuisine_nous_daily:
   source: sensor.prise_frigo_cuisine_nous_kwh
   cycle: daily
+prise_frigo_cuisine_nous_monthly:
+  source: sensor.prise_frigo_cuisine_nous_kwh
+  cycle: monthly
 
 prise_congelateur_cuisine_nous_daily:
   source: sensor.prise_congelateur_cuisine_nous_kwh
   cycle: daily
+prise_congelateur_cuisine_nous_monthly:
+  source: sensor.prise_congelateur_cuisine_nous_kwh
+  cycle: monthly
 
 prise_bureau_pc_ikea_daily:
   source: sensor.prise_bureau_pc_ikea_kwh
   cycle: daily
+prise_bureau_pc_ikea_monthly:
+  source: sensor.prise_bureau_pc_ikea_kwh
+  cycle: monthly
 
 prise_bureau_fer_a_repasser_nous_daily:
   source: sensor.prise_bureau_fer_a_repasser_nous_kwh
   cycle: daily
+prise_bureau_fer_a_repasser_nous_monthly:
+  source: sensor.prise_bureau_fer_a_repasser_nous_kwh
+  cycle: monthly
 
 prise_tete_de_lit_chambre_daily:
   source: sensor.prise_tete_de_lit_chambre_kwh
   cycle: daily
+prise_tete_de_lit_chambre_monthly:
+  source: sensor.prise_tete_de_lit_chambre_kwh
+  cycle: monthly
 
 prise_tv_chambre_nous_daily:
   source: sensor.prise_tv_chambre_nous_kwh
   cycle: daily
+prise_tv_chambre_nous_monthly:
+  source: sensor.prise_tv_chambre_nous_kwh
+  cycle: monthly
 
 all_standby_daily:
   source: sensor.all_standby_kwh
   cycle: daily
+all_standby_monthly:
+  source: sensor.all_standby_kwh
+  cycle: monthly
 
-# ==========================================================================
-# UTILITY METERS (daily) — 1 compteur / clim - radiateur - soufflant - sèche serviettes
-# UTILITY METER — sensor.<base>_daily = daily(sensor.<base>_kwh)
-# ==========================================================================
-
+#============================================================================
+# CHAUFFAGE & CLIM (Daily + Monthly)
+#============================================================================
 clim_salon_daily:
   source: sensor.clim_salon_kwh
   cycle: daily
+clim_salon_monthly:
+  source: sensor.clim_salon_kwh
+  cycle: monthly
 
 radiateur_cuisine_daily:
   source: sensor.radiateur_cuisine_kwh
   cycle: daily
+radiateur_cuisine_monthly:
+  source: sensor.radiateur_cuisine_kwh
+  cycle: monthly
 
 clim_bureau_daily:
   source: sensor.clim_bureau_kwh
   cycle: daily
+clim_bureau_monthly:
+  source: sensor.clim_bureau_kwh
+  cycle: monthly
 
 soufflant_sdb_daily:
   source: sensor.soufflant_sdb_kwh
   cycle: daily
+soufflant_sdb_monthly:
+  source: sensor.soufflant_sdb_kwh
+  cycle: monthly
 
 seche_serv_daily:
   source: sensor.seche_serv_sdb_kwh
   cycle: daily
+seche_serv_monthly:
+  source: sensor.seche_serv_sdb_kwh
+  cycle: monthly
 
 clim_chambre_daily:
   source: sensor.clim_chambre_kwh
   cycle: daily
+clim_chambre_monthly:
+  source: sensor.clim_chambre_kwh
+  cycle: monthly
