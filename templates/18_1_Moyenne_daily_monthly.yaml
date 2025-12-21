@@ -1,180 +1,308 @@
 #============================================================================
-# MOYENNES HORAIRES (kWh/h) - JOUR & MOIS
+# PUISSANCE DE CROISIÈRE (Watts) - MOYENNE RÉELLE JOUR & MOIS
 #============================================================================
 
 - sensor:
     # --- BOX INTERNET ---
-    - name: "Box Internet Moyenne Horaire Jour"
-      unique_id: box_internet_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Box Internet Puissance Moyenne Jour"
+      unique_id: box_internet_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_box_internet_ikea_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Box Internet Moyenne Horaire Mois"
-      unique_id: box_internet_avg_hour_monthly
-      unit_of_measurement: "kWh/h"
+    - name: "Box Internet Puissance Moyenne Mois"
+      unique_id: box_internet_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_box_internet_ikea_monthly') | float(0) %}
-        {% set h_mois = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
-        {{ (conso / h_mois if h_mois > 0.1 else 0) | round(4) }}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- HORLOGE ---
-    - name: "Horloge Moyenne Horaire Jour"
-      unique_id: horloge_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Horloge Puissance Moyenne Jour"
+      unique_id: horloge_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_horloge_ikea_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Horloge Moyenne Horaire Mois"
-      unique_id: horloge_avg_hour_monthly
-      unit_of_measurement: "kWh/h"
+    - name: "Horloge Puissance Moyenne Mois"
+      unique_id: horloge_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_horloge_ikea_monthly') | float(0) %}
-        {% set h_mois = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
-        {{ (conso / h_mois if h_mois > 0.1 else 0) | round(4) }}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- PC GÉRALDINE ---
-    - name: "PC Géraldine Moyenne Horaire Jour"
-      unique_id: pc_gege_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "PC Geraldine Puissance Moyenne Jour"
+      unique_id: pc_gege_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_pc_s_gege_ikea_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "PC Géraldine Moyenne Horaire Mois"
-      unique_id: pc_gege_avg_hour_monthly
-      unit_of_measurement: "kWh/h"
+    - name: "PC Geraldine Puissance Moyenne Mois"
+      unique_id: pc_gege_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_pc_s_gege_ikea_monthly') | float(0) %}
-        {% set h_mois = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
-        {{ (conso / h_mois if h_mois > 0.1 else 0) | round(4) }}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- CHARGEURS SALON ---
-    - name: "Chargeurs Salon Moyenne Horaire Jour"
-      unique_id: chargeurs_salon_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Chargeurs Salon Puissance Moyenne Jour"
+      unique_id: chargeurs_salon_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_salon_chargeur_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Chargeurs Salon Moyenne Horaire Mois"
-      unique_id: chargeurs_salon_avg_hour_monthly
-      unit_of_measurement: "kWh/h"
+    - name: "Chargeurs Salon Puissance Moyenne Mois"
+      unique_id: chargeurs_salon_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_salon_chargeur_nous_monthly') | float(0) %}
-        {% set h_mois = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
-        {{ (conso / h_mois if h_mois > 0.1 else 0) | round(4) }}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- FOUR MICRO-ONDES ---
-    - name: "Four Micro-Ondes Moyenne Horaire Jour"
-      unique_id: four_mo_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Four MO Puissance Moyenne Jour"
+      unique_id: four_mo_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_four_micro_ondes_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Four MO Puissance Moyenne Mois"
+      unique_id: four_mo_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_four_micro_ondes_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- LAVE-LINGE ---
-    - name: "Lave-Linge Moyenne Horaire Jour"
-      unique_id: lave_linge_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Lave Linge Puissance Moyenne Jour"
+      unique_id: lave_linge_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_lave_linge_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Lave Linge Puissance Moyenne Mois"
+      unique_id: lave_linge_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_lave_linge_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- LAVE-VAISSELLE ---
-    - name: "Lave-Vaisselle Moyenne Horaire Jour"
-      unique_id: lave_vaisselle_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Lave Vaisselle Puissance Moyenne Jour"
+      unique_id: lave_vaisselle_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_lave_vaisselle_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Lave Vaisselle Puissance Moyenne Mois"
+      unique_id: lave_vaisselle_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_lave_vaisselle_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- AIRFRYER ---
-    - name: "Airfryer Moyenne Horaire Jour"
-      unique_id: airfryer_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Airfryer Puissance Moyenne Jour"
+      unique_id: airfryer_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_airfryer_ninja_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Airfryer Puissance Moyenne Mois"
+      unique_id: airfryer_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_airfryer_ninja_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- FOUR & PLAQUE CUISSON ---
-    - name: "Plaques Cuisson Moyenne Horaire Jour"
-      unique_id: plaques_cuisson_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Plaques Puissance Moyenne Jour"
+      unique_id: plaques_cuisson_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.four_et_plaque_de_cuisson_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Plaques Puissance Moyenne Mois"
+      unique_id: plaques_cuisson_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.four_et_plaque_de_cuisson_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- FRIGO ---
-    - name: "Frigo Moyenne Horaire Jour"
-      unique_id: frigo_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Frigo Puissance Moyenne Jour"
+      unique_id: frigo_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_frigo_cuisine_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Frigo Puissance Moyenne Mois"
+      unique_id: frigo_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_frigo_cuisine_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- CONGÉLATEUR ---
-    - name: "Congelateur Moyenne Horaire Jour"
-      unique_id: congelateur_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Congelateur Puissance Moyenne Jour"
+      unique_id: congelateur_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_congelateur_cuisine_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Congelateur Puissance Moyenne Mois"
+      unique_id: congelateur_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_congelateur_cuisine_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- PC BUREAU ---
-    - name: "PC Bureau Moyenne Horaire Jour"
-      unique_id: pc_bureau_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "PC Bureau Puissance Moyenne Jour"
+      unique_id: pc_bureau_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_bureau_pc_ikea_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "PC Bureau Puissance Moyenne Mois"
+      unique_id: pc_bureau_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_bureau_pc_ikea_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- FER À REPASSER ---
-    - name: "Fer Repasser Moyenne Horaire Jour"
-      unique_id: fer_repasser_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Fer Repasser Puissance Moyenne Jour"
+      unique_id: fer_repasser_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_bureau_fer_a_repasser_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Fer Repasser Puissance Moyenne Mois"
+      unique_id: fer_repasser_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_bureau_fer_a_repasser_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- TÊTES DE LIT ---
-    - name: "Tetes Lit Moyenne Horaire Jour"
-      unique_id: tetes_lit_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Tetes Lit Puissance Moyenne Jour"
+      unique_id: tetes_lit_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_tete_de_lit_chambre_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Tetes Lit Puissance Moyenne Mois"
+      unique_id: tetes_lit_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_tete_de_lit_chambre_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- TV CHAMBRE ---
-    - name: "TV Chambre Moyenne Horaire Jour"
-      unique_id: tv_chambre_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "TV Chambre Puissance Moyenne Jour"
+      unique_id: tv_chambre_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.prise_tv_chambre_nous_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "TV Chambre Puissance Moyenne Mois"
+      unique_id: tv_chambre_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.prise_tv_chambre_nous_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- ALL STANDBY ---
-    - name: "Veilles Moyenne Horaire Jour"
-      unique_id: veilles_avg_hour_daily
-      unit_of_measurement: "kWh/h"
+    - name: "Veilles Puissance Moyenne Jour"
+      unique_id: veilles_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
       state: >
         {% set conso = states('sensor.all_standby_daily') | float(0) %}
-        {% set heures = now().hour + (now().minute / 60) %}
-        {{ (conso / heures if heures > 0.1 else 0) | round(4) }}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "Veilles Puissance Moyenne Mois"
+      unique_id: veilles_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.all_standby_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
