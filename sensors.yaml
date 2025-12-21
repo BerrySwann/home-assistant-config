@@ -17,8 +17,8 @@
 # Calcul moyen Prise Mini-PC
 #==========================================================================
 - platform: statistics
-  name: Mini PC mean 24h Wh
-  unique_id: mini_pc_mean_24h_wh
+  name: Mini PC mean 24h W
+  unique_id: mini_pc_mean_24h_w
   entity_id: sensor.prise_mini_pc_ikea_power
   state_characteristic: mean
   max_age:
@@ -123,6 +123,7 @@
 - platform: integration
   source: sensor.prise_box_internet_ikea_power
   name: prise_box_internet_ikea_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -130,6 +131,7 @@
 - platform: integration
   source: sensor.prise_horloge_ikea_power
   name: prise_horloge_ikea_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -138,6 +140,7 @@
 - platform: integration
   source: sensor.prise_pc_s_gege_ikea_power
   name: prise_pc_s_gege_ikea_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -145,6 +148,7 @@
 - platform: integration
   source: sensor.prise_salon_chargeur_nous_power
   name: prise_salon_chargeur_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -153,6 +157,7 @@
 - platform: integration
   source: sensor.prise_four_micro_ondes_nous_power
   name: prise_four_micro_ondes_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -160,6 +165,7 @@
 - platform: integration
   source: sensor.prise_lave_linge_nous_power
   name: prise_lave_linge_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -167,6 +173,7 @@
 - platform: integration
   source: sensor.prise_lave_vaisselle_nous_power
   name: prise_lave_vaisselle_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -174,6 +181,7 @@
 - platform: integration
   source: sensor.prise_airfryer_ninja_nous_power
   name: prise_airfryer_ninja_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -181,6 +189,7 @@
 - platform: integration
   source: sensor.four_et_plaque_de_cuisson_power
   name: four_et_plaque_de_cuisson_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -188,6 +197,7 @@
 - platform: integration
   source: sensor.prise_frigo_cuisine_nous_power
   name: prise_frigo_cuisine_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -195,6 +205,7 @@
 - platform: integration
   source: sensor.prise_congelateur_cuisine_nous_power
   name: prise_congelateur_cuisine_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -203,6 +214,7 @@
 - platform: integration
   source: sensor.prise_bureau_pc_ikea_power
   name: prise_bureau_pc_ikea_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -210,6 +222,7 @@
 - platform: integration
   source: sensor.prise_bureau_fer_a_repasser_nous_power
   name: prise_bureau_fer_a_repasser_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -218,6 +231,7 @@
 - platform: integration
   source: sensor.prise_tete_de_lit_chambre_power
   name: prise_tete_de_lit_chambre_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -225,30 +239,16 @@
 - platform: integration
   source: sensor.prise_tv_chambre_nous_power
   name: prise_tv_chambre_nous_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
-
-- platform: statistics
-  name: prise_tv_chambre_nous mean 24h (kWh)
-  unique_id: prise_tv_chambre_nous_mean_24h_kwh
-  entity_id: sensor.prise_tv_chambre_nous_daily
-  state_characteristic: mean
-  max_age: { hours: 24 }
-  sampling_size: 96
-
-- platform: statistics
-  name: prise_tv_chambre_nous mean 730h (kWh)
-  unique_id: prise_tv_chambre_nous_mean_730h_kwh
-  entity_id: sensor.prise_tv_chambre_nous_daily
-  state_characteristic: mean
-  max_age: { hours: 730 }
-  sampling_size: 400
 
 # All Standby
 - platform: integration
   source: sensor.all_standby_power
   name: all_standby_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -257,6 +257,7 @@
 - platform: integration
   source: sensor.clim_salon_nous_power
   name: clim_salon_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -264,6 +265,7 @@
 - platform: integration
   source: sensor.radiateur_elec_cuisine_power
   name: radiateur_cuisine_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -271,6 +273,7 @@
 - platform: integration
   source: sensor.clim_du_bureau_nous_power
   name: clim_bureau_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -278,6 +281,7 @@
 - platform: integration
   source: sensor.prise_radiateur_salle_de_bain_nous_power
   name: soufflant_sdb_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -285,6 +289,7 @@
 - platform: integration
   source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
   name: seche_serv_sdb_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -292,6 +297,7 @@
 - platform: integration
   source: sensor.clim_chambre_nous_power
   name: clim_chambre_kwh
+  method: left
   unit_prefix: k
   unit_time: h
   round: 3
@@ -512,6 +518,22 @@
   sampling_size: 400
 
 # Chambre
+- platform: statistics
+  name: prise_tv_chambre_nous mean 24h (kWh)
+  unique_id: prise_tv_chambre_nous_mean_24h_kwh
+  entity_id: sensor.prise_tv_chambre_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 24 }
+  sampling_size: 96
+
+- platform: statistics
+  name: prise_tv_chambre_nous mean 730h (kWh)
+  unique_id: prise_tv_chambre_nous_mean_730h_kwh
+  entity_id: sensor.prise_tv_chambre_nous_daily
+  state_characteristic: mean
+  max_age: { hours: 730 }
+  sampling_size: 400
+
 - platform: statistics
   name: prise_tete_de_lit_chambre mean 24h (kWh)
   unique_id: prise_tete_de_lit_chambre_mean_24h_kwh
