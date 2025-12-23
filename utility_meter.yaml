@@ -1,8 +1,11 @@
+#==================================================================
 # Utility_merter.yaml
-
+#==================================================================
+#
 # toto éclaire (foudres - Point d'impact)
+#
+#==================================================================
 
-#utility_meter:
 eclair_yearly:
   source: sensor.blitzortung_lightning_counter
   cycle: yearly
@@ -174,10 +177,10 @@ eclairage_salon_5_hebdomadaire_um:
 eclairage_salon_5_quotidien_um:
   source: sensor.eclairage_salon_5_energie
   cycle: daily
+
 #------------------------------------------------------------
 # Eclairage APPARTEMENT (3 Entrée, cuisine & couloir) (HOME)
 #------------------------------------------------------------
-
 eclairage_appart_3_annuel_um:
   source: sensor.eclairage_appart_3_energie
   cycle: yearly
@@ -306,7 +309,7 @@ ecojoko_energy_monthly:
   cycle: monthly
 
 #============================================================================
-# MINI-PC (Ajouté car il manquait dans ta liste !)
+# MINI-PC 
 #============================================================================
 mini_pc_daily:
   source: sensor.prise_mini_pc_ikea_energy

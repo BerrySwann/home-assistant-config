@@ -16,7 +16,6 @@
 #==========================================================================
 # STATISTIQUES MINI-PC (Santé du système)
 #==========================================================================
-
 # On garde uniquement la moyenne de PUISSANCE (W)
 - platform: statistics
   name: "Mini PC Charge moyenne 24h (W)"
@@ -234,6 +233,8 @@
   round: 3
 
 # Clim / Radiateur / Soufflant / Sèche serviette
+
+# Salon
 - platform: integration
   source: sensor.clim_salon_nous_power
   name: clim_salon_kwh
@@ -242,6 +243,7 @@
   unit_time: h
   round: 3
 
+# Cusine
 - platform: integration
   source: sensor.radiateur_elec_cuisine_power
   name: radiateur_cuisine_kwh
@@ -250,6 +252,7 @@
   unit_time: h
   round: 3
 
+# Bureau
 - platform: integration
   source: sensor.clim_du_bureau_nous_power
   name: clim_bureau_kwh
@@ -258,6 +261,7 @@
   unit_time: h
   round: 3
 
+# Soufflant
 - platform: integration
   source: sensor.prise_radiateur_salle_de_bain_nous_power
   name: soufflant_sdb_kwh
@@ -266,6 +270,7 @@
   unit_time: h
   round: 3
 
+# Sèche-Serviette
 - platform: integration
   source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
   name: seche_serv_sdb_kwh
@@ -274,6 +279,7 @@
   unit_time: h
   round: 3
 
+# Chambre
 - platform: integration
   source: sensor.clim_chambre_nous_power
   name: clim_chambre_kwh
