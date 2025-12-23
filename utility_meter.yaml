@@ -312,11 +312,11 @@ ecojoko_energy_monthly:
 # MINI-PC 
 #============================================================================
 mini_pc_daily:
-  source: sensor.prise_mini_pc_ikea_energy
+  source: sensor.prise_mini_pc_ikea_kwh  # Corrigé : pointe vers l'entité de sensors.yaml
   cycle: daily
 
 mini_pc_monthly:
-  source: sensor.prise_mini_pc_ikea_energy
+  source: sensor.prise_mini_pc_ikea_kwh  # Corrigé : pointe vers l'entité de sensors.yaml
   cycle: monthly
 
 #============================================================================

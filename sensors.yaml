@@ -24,7 +24,16 @@
   state_characteristic: mean
   max_age: { hours: 24 }
   precision: 1
-  
+
+# INTEGRATION (énergie_kWh à partir de la puissance W)
+- platform: integration
+  source: sensor.prise_mini_pc_ikea_power
+  name: prise_mini_pc_ikea_kwh
+  method: left
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
 #==========================================================================
 # Ping VSCode sur erodi-ha.com Mini-PC
 #==========================================================================

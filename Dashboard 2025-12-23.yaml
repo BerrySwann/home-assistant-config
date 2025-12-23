@@ -184,10 +184,16 @@ streamline_templates:
             absents)
 
 
+
             **DELTA: {{ states('sensor.temperature_delta') | default('N/A') }}**
+
 
             **MODE: {{ states('sensor.mode_ete_hiver') | upper | default('N/A')
             }}**
+
+
+            **Groupe = {{ states('sensor.groupe_clim') | default('N/A') }} -
+            Presence = {{ states('sensor.presence_clim')  | default('N/A') }}**
           card_mod:
             style: |
               ha-card {
@@ -822,7 +828,6 @@ streamline_templates:
       experimental:
         color_threshold: true
         brush: true
-      graph_span: 24h
       cache: true
       span:
         offset: +2m
@@ -876,25 +881,22 @@ streamline_templates:
           name: Intensité
           yaxis_id: A
           type: line
-          color: '#F44336'
+          color: red
           unit: A
-          stroke_width: 0.5
+          stroke_width: 1.5
           group_by:
             func: last
             duration: 1m
-        - entity: '[[energy_entity]]'
-          name: Avg(24h)
+        - entity: '[[avg_daily_entity]]'
+          name: Moy. /H.
           yaxis_id: Watts
           type: line
           color: '#F44336'
           unit: W
-          stroke_width: 2
+          stroke_width: 2.5
           stroke_dash: 8
-          group_by:
-            func: avg
-            duration: 24h
-        - entity: '[[mean_24h_kwh_entity]]'
-          name: Mean(24h)
+        - entity: '[[conso_daily_kwh_entity]]'
+          name: Conso. /Jrs
           color: '#F44336'
           show:
             in_header: true
@@ -912,7 +914,7 @@ streamline_templates:
             in_chart: false
           group_by:
             func: last
-            duration: 10m
+            duration: 1m
       card_mod:
         style: >
           ha-card { background: none !important; border: none !important;
@@ -967,19 +969,19 @@ streamline_templates:
             func: diff
             duration: 24h
             start_with_last: true
-        - entity: '[[energy_entity]]'
-          name: Avg(730h)
+        - entity: '[[avg_monthly_entity]]'
+          name: Moy. (Mois)
           yaxis_id: Avg
           type: line
           color: red
-          unit: Wh
-          stroke_width: 2
+          unit: W
+          stroke_width: 2.5
           stroke_dash: 8
           group_by:
-            func: avg
-            duration: 730h
-        - entity: '[[mean_730h_kwh_entity]]'
-          name: Mean(730h)
+            func: last
+            duration: 1d
+        - entity: '[[conso_monthly_kwh_entity]]'
+          name: Conso.(Mois)
           color: '#F44336'
           unit: kWh
           show:
@@ -996,7 +998,6 @@ streamline_templates:
       experimental:
         color_threshold: true
         brush: true
-      graph_span: 24h
       cache: true
       span:
         offset: +2m
@@ -1036,11 +1037,11 @@ streamline_templates:
         selection_span: 1h
       series:
         - entity: '[[energy_entity]]'
-          name: Conso. Instantané
+          name: Instantané
           yaxis_id: Watts
           type: area
           color: '[[energy_color]]'
-          stroke_width: 2
+          stroke_width: 1
           opacity: 0.4
           fill_raw: last
           group_by:
@@ -1050,43 +1051,40 @@ streamline_templates:
           name: Intensité
           yaxis_id: A
           type: line
-          color: '[[current_color]]'
+          color: red
           unit: A
-          stroke_width: 1
+          stroke_width: 1.5
           group_by:
             func: last
             duration: 1m
-        - entity: '[[power_entity_avg]]'
-          name: Avg(24h)
+        - entity: '[[avg_daily_entity]]'
+          name: Moy. /H.
           yaxis_id: Watts
           type: line
-          color: red
+          color: '#F44336'
           unit: W
-          stroke_width: 2
+          stroke_width: 2.5
           stroke_dash: 8
-          group_by:
-            func: avg
-            duration: 24h
-        - entity: '[[mean_24h_kwh_entity]]'
-          name: Mean(24h)
+        - entity: '[[conso_daily_kwh_entity]]'
+          name: Conso. /Jrs
           color: '#F44336'
           show:
             in_header: true
             in_brush: false
             in_chart: false
           opacity: 0
-        - entity: '[[power_entity]]'
+        - entity: '[[energy_entity]]'
           yaxis_id: Watts
           type: area
-          color: '[[power_color]]'
-          stroke_width: 1
+          color: '[[energy_color]]'
+          stroke_width: 0.5
           opacity: 0.4
           show:
             in_brush: true
             in_chart: false
           group_by:
             func: last
-            duration: 10m
+            duration: 1m
       card_mod:
         style: >
           ha-card { background: none !important; border: none !important;
@@ -1116,13 +1114,19 @@ streamline_templates:
           opposite: false
           apex_config:
             tickAmount: 10
-        - id: Aux
+        - id: Avg
           min: 0
           max: auto
-          decimals: 1
+          decimals: 0
           opposite: true
           apex_config:
             tickAmount: 10
+        - id: TH
+          show: false
+          min: auto
+          max: auto
+          decimals: 2
+          opposite: true
       all_series_config:
         show:
           legend_value: true
@@ -1131,40 +1135,42 @@ streamline_templates:
         selection_span: 24h
       series:
         - entity: '[[energy_entity]]'
-          name: '[[energy_name]]'
+          name: Conso. par jour
           yaxis_id: W_day
           type: column
           color: '[[energy_color]]'
-          unit: W
+          unit: Wh
           transform: return x * 1000;
           group_by:
             func: diff
             duration: 24h
             start_with_last: true
-        - entity: '[[energy_entity]]'
-          name: '[[avg_name]]'
-          yaxis_id: Aux
+        - entity: '[[temp_entity]]'
+          name: T.Mini. /24h
+          yaxis_id: TH
           type: line
-          color: '[[avg_color]]'
+          curve: stepline
+          color: '[[temp_color]]'
+          unit: °C
+          float_precision: 2
+          stroke_width: 2.5
+          group_by:
+            func: last
+            duration: 24h
+            start_with_last: true
+        - entity: '[[avg_monthly_entity]]'
+          name: Moy. (Mois)
+          yaxis_id: Avg
+          type: line
+          color: red
           unit: W
-          stroke_width: 2
+          stroke_width: 2.5
           stroke_dash: 8
           group_by:
-            func: avg
-            duration: 730h
-        - entity: '[[temp_entity]]'
-          name: '[[temp_name]]'
-          yaxis_id: Aux
-          type: line
-          color: '[[temp_color]]'
-          unit: '[[temp_unit]]'
-          stroke_width: 3
-          curve: stepline
-          group_by:
-            func: min
-            duration: 24h
-        - entity: '[[mean_730h_kwh_entity]]'
-          name: Mean(730h)
+            func: last
+            duration: 1d
+        - entity: '[[conso_monthly_kwh_entity]]'
+          name: Conso.(Mois)
           color: '#F44336'
           unit: kWh
           show:
@@ -1210,6 +1216,66 @@ views:
                   box-shadow: none !important;
                   border: none !important;
                 }
+          - type: vertical-stack
+            cards:
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.studio_code_server_cpu_percent
+                    above: 1
+                card:
+                  type: custom:button-card
+                  entity: sensor.127_0_0_1_cpu_load
+                  name: Visual Server Code
+                  icon: mdi:microsoft-visual-studio-code
+                  show_state: true
+                  show_label: false
+                  state_display: '[[[ return parseFloat(entity.state).toFixed(2) ]]]'
+                  layout: icon_name_state
+                  tap_action:
+                    action: call-service
+                    confirmation:
+                      text: |-
+                        ⚠️ VS Code semble bloqué ?
+
+                        Voulez-vous forcer le redémarrage de l'Add-on ?
+                    service: hassio.addon_restart
+                    service_data:
+                      addon: a0d7b954_vscode
+                  styles:
+                    card:
+                      - border-radius: 12px
+                      - height: 50px
+                      - padding: 0px 15px
+                      - background-color: |
+                          [[[
+                            return (states['sensor.studio_code_server_cpu_percent'].state > 20) 
+                            ? '#f44336' : '#03a9f4';
+                          ]]]
+                      - animation: |
+                          [[[
+                            return (states['sensor.studio_code_server_cpu_percent'].state > 20) 
+                            ? 'blink 1s ease infinite' : 'none';
+                          ]]]
+                    grid:
+                      - grid-template-columns: 35px auto 60px
+                    icon:
+                      - width: 24px
+                      - color: white
+                    name:
+                      - color: white
+                      - font-weight: bold
+                      - font-size: 14px
+                      - justify-self: start
+                    state:
+                      - color: white
+                      - font-weight: bold
+                      - font-size: 14px
+                      - justify-self: end
+                  extra_styles: |
+                    @keyframes blink {
+                      50% { opacity: 0.5; }
+                    }
           - type: vertical-stack
             cards:
               - type: conditional
@@ -1567,7 +1633,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -1737,7 +1803,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -1911,7 +1977,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -2078,7 +2144,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -2095,15 +2161,15 @@ views:
                       - font-weight: bold
                     piece:
                       - justify-self: start
-                      - margin-left: 8px
+                      - margin-left: 3px
                       - text-align: left
                     quotidien:
                       - justify-self: start
-                      - margin-left: 12px
+                      - margin-left: 7px
                       - text-align: left
                     mensuel:
                       - justify-self: end
-                      - margin-right: 4px
+                      - margin-right: 2px
                       - text-align: right
                 custom_fields:
                   titre: Consommation CLIM
@@ -2209,6 +2275,15 @@ views:
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/energie-lampes
+                triggers_update:
+                  - sensor.conso_eclairage_total_quotidien
+                  - sensor.conso_eclairage_total_mensuel
+                  - sensor.lumiere_appartement_etat
+                  - sensor.lumiere_salon_etat
+                  - sensor.lumiere_cuisine_etat
+                  - sensor.lumiere_bureau_etat
+                  - sensor.lumiere_salle_de_bain_etat
+                  - sensor.lumiere_chambre_etat
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2218,7 +2293,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -2247,86 +2322,81 @@ views:
                       - text-align: right
                 custom_fields:
                   titre: |
-                    [[[
-                      return 'Consommation LAMPES'
-                    ]]]
+                    [[[ return 'Consommation LAMPES' ]]]
                   piece: |
                     [[[
-                      // Petite sécurité (?.state) ajoutée pour éviter le crash si une entité manque
-                      return `
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_appartement_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Appart.</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_salon_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Salon</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_cuisine_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Cuisine</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_bureau_etat']?.state === 'Éco.' ? 'white' : states['sensor.lumiere_bureau_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Bureau</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_salle_de_bain_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">SdB</span>
-                        <span style="display: block; text-align: left; line-height: 1.2; color: ${states['sensor.lumiere_chambre_etat']?.state === 'Éco.' ? 'white' : states['sensor.lumiere_chambre_etat']?.state !== 'Éteint' ? 'lightgreen' : 'white'};">Chambre</span>
-                      `;
+                      function getCol(entityId, isEcoSensitive = false) {
+                        const s = states[entityId]?.state;
+                        if (!s || s === 'Éteint') return 'white';
+                        if (isEcoSensitive && s === 'Éco.') return 'white';
+                        return 'lightgreen';
+                      }
+
+                      const pieces = [
+                        { name: 'Appart.', color: getCol('sensor.lumiere_appartement_etat') },
+                        { name: 'Salon', color: getCol('sensor.lumiere_salon_etat') },
+                        { name: 'Cuisine', color: getCol('sensor.lumiere_cuisine_etat') },
+                        { name: 'Bureau', color: getCol('sensor.lumiere_bureau_etat', true) },
+                        { name: 'SdB', color: getCol('sensor.lumiere_salle_de_bain_etat') },
+                        { name: 'Chambre', color: getCol('sensor.lumiere_chambre_etat', true) },
+                        { name: 'TOTAL', color: 'lightgreen' }
+                      ];
+
+                      return pieces.map(p => 
+                        `<span style="display: block; text-align: left; line-height: 1.2; color: ${p.color};">${p.name}</span>`
+                      ).join('');
                     ]]]
                   quotidien: |
                     [[[
                       function safeState(entityId) {
                         const entity = states[entityId];
+                        if (!entity || ['unavailable', 'unknown'].includes(entity.state)) return '<span style="color: #aaaaaa;">N/A</span>';
+                        var val = parseFloat(entity.state);
+                        if (isNaN(val)) return '<span style="color: #aaaaaa;">N/A</span>';
                         
-                        // Si l'entité n'existe pas ou est indisponible -> N/A gris
-                        if (!entity || entity.state === 'unavailable' || entity.state === 'unknown' || entity.state === 'N/A') {
-                           return '<span style="color: #aaaaaa;">N/A</span>';
-                        }
-
-                        var value = parseFloat(entity.state);
-                        
-                        // Si ce n'est pas un nombre valide -> N/A gris
-                        if (isNaN(value)) {
-                          return '<span style="color: #aaaaaa;">N/A</span>';
-                        }
-
-                        // Calcul Wh vs kWh
-                        if (value < 1) {
-                          return (value * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
-                        } else {
-                          return value.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
-                        }
+                        if (val < 1) return (val * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
+                        return val.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
                       }
 
-                      return `
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_appart_2_energy_daily')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salon_5_energy_daily')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_cuisine_1_energy_daily')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_bureau_5_energy_daily')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salle_de_bain_2_quotidien')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_chambre_4_energy_daily')}</span>
-                      `;
+                      const sensors = [
+                        'sensor.eclairage_appart_2_quotidien',
+                        'sensor.eclairage_salon_5_quotidien',
+                        'sensor.eclairage_cuisine_1_quotidien',
+                        'sensor.eclairage_bureau_5_quotidien',
+                        'sensor.eclairage_sdb_2_quotidien',
+                        'sensor.eclairage_chambre_4_quotidien',
+                        'sensor.conso_eclairage_total_quotidien'
+                      ];
+
+                      return sensors.map((s, i) => 
+                        `<span style="display: block; text-align: right; line-height: 1.2; ${i === sensors.length - 1 ? 'color: lightgreen;' : ''}">${safeState(s)}</span>`
+                      ).join('');
                     ]]]
                   mensuel: |
                     [[[
                       function safeState(entityId) {
                         const entity = states[entityId];
+                        if (!entity || ['unavailable', 'unknown'].includes(entity.state)) return '<span style="color: #aaaaaa;">N/A</span>';
+                        var val = parseFloat(entity.state);
+                        if (isNaN(val)) return '<span style="color: #aaaaaa;">N/A</span>';
                         
-                        // Si l'entité n'existe pas ou est indisponible -> N/A gris
-                        if (!entity || entity.state === 'unavailable' || entity.state === 'unknown' || entity.state === 'N/A') {
-                           return '<span style="color: #aaaaaa;">N/A</span>';
-                        }
-
-                        var value = parseFloat(entity.state);
-                        
-                        if (isNaN(value)) {
-                          return '<span style="color: #aaaaaa;">N/A</span>';
-                        }
-
-                        if (value < 1) {
-                          return (value * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
-                        } else {
-                          return value.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
-                        }
+                        if (val < 1) return (val * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
+                        return val.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
                       }
 
-                      return `
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_appart_2_energy_monthly')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salon_5_energy_monthly')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_cuisine_1_energy_monthly')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_bureau_5_energy_monthly')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_salle_de_bain_2_mensuel')}</span>
-                        <span style="display: block; text-align: right; line-height: 1.2;">${safeState('sensor.eclairage_chambre_4_energy_monthly')}</span>
-                      `;
+                      const sensors = [
+                        'sensor.eclairage_appart_2_mensuel',
+                        'sensor.eclairage_salon_5_mensuel',
+                        'sensor.eclairage_cuisine_1_mensuel',
+                        'sensor.eclairage_bureau_5_mensuel',
+                        'sensor.eclairage_sdb_2_mensuel',
+                        'sensor.eclairage_chambre_4_mensuel',
+                        'sensor.conso_eclairage_total_mensuel'
+                      ];
+
+                      return sensors.map((s, i) => 
+                        `<span style="display: block; text-align: right; line-height: 1.2; ${i === sensors.length - 1 ? 'color: lightgreen;' : ''}">${safeState(s)}</span>`
+                      ).join('');
                     ]]]
               - type: custom:button-card
                 tap_action:
@@ -2341,7 +2411,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -2527,7 +2597,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -2623,7 +2693,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -2925,7 +2995,7 @@ views:
                           if (entity.state == '0') return 'white';
                           else return 'orange';
                         ]]]
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                     - font-weight: bold
                   grid:
@@ -2978,7 +3048,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: >
@@ -3221,7 +3291,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: |
@@ -3362,7 +3432,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 12px
+                    - font-size: 11px
                     - line-height: 1.2
                   custom_fields:
                     graph:
@@ -3454,7 +3524,7 @@ views:
                     - border-color: white
                     - border-style: double
                     - color: white
-                    - font-size: 11.5px
+                    - font-size: 11px
                     - line-height: 1.2
                   grid:
                     - grid-template-areas: >
@@ -3887,7 +3957,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.th_balcon_nord_temperature
+                entity: sensor.icon_th_balcon_nord_temperature
                 color: green
             tap_action:
               action: navigate
@@ -13785,6 +13855,90 @@ views:
                   box-shadow: none !important;
                   border: none !important;
                 }
+          - type: custom:auto-entities
+            card:
+              type: custom:bar-card
+              title: SYNTHÈSE USAGES (6 POSTES)
+              height: 35px
+              decimal: 2
+              unit_of_measurement: kWh
+              min: 0
+              max: 15
+              positions:
+                icon: inside
+                indicator: inside
+                name: inside
+                value: inside
+              card_mod:
+                style: |
+                  bar-card-value {
+                    font-size: 14px;
+                    font-weight: bold;
+                    margin-right: 10px;
+                  }
+                  bar-card-title {
+                    font-size: 15px;
+                    font-weight: bold;
+                    padding-bottom: 10px;
+                    text-align: left;
+                    padding-left: 10px;
+                  }
+                  bar-card-currentbar, bar-card-backgroundbar {
+                      height: 8px !important;
+                      border-radius: 4px;
+                      margin-top: 24px;
+                  }
+                  ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: 2px solid white !important;
+                      border-radius: 10px !important;
+                      padding: 10px !important;
+                  }
+                  ha-icon {
+                    color: white !important;
+                    padding-bottom: 15px;
+                  }
+                  bar-card-name {
+                    padding-bottom: 15px;
+                    font-weight: bold;
+                  }
+            filter:
+              include:
+                - entity_id: sensor.diag_poste_1_hygiene_quotidien
+                  options:
+                    name: Hygiène
+                    icon: mdi:water
+                    color: '#00BFFF'
+                - entity_id: sensor.diag_poste_2_cuisson_quotidien
+                  options:
+                    name: Cuisson
+                    icon: mdi:stove
+                    color: '#FF4500'
+                - entity_id: sensor.diag_poste_3_froid_quotidien
+                  options:
+                    name: Froid
+                    icon: mdi:snowflake
+                    color: '#87CEEB'
+                - entity_id: sensor.diag_poste_4_chauffage_quotidien
+                  options:
+                    name: Chauffage
+                    icon: mdi:fire
+                    color: '#FFA500'
+                - entity_id: sensor.diag_poste_5_multimedia_quotidien
+                  options:
+                    name: Multimedia
+                    icon: mdi:desktop-tower-monitor
+                    color: '#9370DB'
+                - entity_id: sensor.diag_poste_6_lumiere_quotidien
+                  options:
+                    name: Lumière
+                    icon: mdi:lightbulb
+                    color: '#ADFF2F'
+            sort:
+              method: state
+              numeric: true
+              reverse: true
         column_span: 1
     title: Energie HOME
     cards: []
@@ -14017,9 +14171,6 @@ views:
                   show_states: true
                   colorize_states: true
                 all_series_config:
-                  group_by:
-                    func: diff
-                    duration: 24h
                   show:
                     legend_value: false
                     extremas: false
@@ -14027,82 +14178,82 @@ views:
                   loading: true
                   last_updated: false
                 series:
-                  - entity: sensor.prise_box_internet_ikea_energy
+                  - entity: sensor.prise_box_internet_ikea_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: Box
+                    name: Box (+)
                     color: gainsboro
-                  - entity: sensor.prise_horloge_ikea_energy
+                  - entity: sensor.prise_horloge_ikea_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: Horloge
+                    name: Horloge (+)
                     color: rgb(183, 183, 183)
-                  - entity: sensor.prise_pc_s_gege_ikea_energy
+                  - entity: sensor.prise_pc_s_gege_ikea_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: PCg
                     color: rgb(202, 135, 135)
-                  - entity: sensor.prise_salon_chargeur_nous_energy
+                  - entity: sensor.prise_salon_chargeur_nous_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: Charge
+                    name: Charge (+)
                     color: rgb(174, 68, 90)
-                  - entity: sensor.prise_four_micro_ondes_nous_energy
+                  - entity: sensor.prise_four_micro_ondes_nous_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: Four M.O. (+)
                     color: rgb(98, 78, 136)
-                  - entity: sensor.prise_lave_linge_nous_energy
+                  - entity: sensor.prise_lave_linge_nous_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: Linge (+)
                     color: rgb(137, 103, 179)
-                  - entity: sensor.prise_lave_vaisselle_nous_energy
+                  - entity: sensor.prise_lave_vaisselle_nous_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: Vaisselle
                     color: rgb(129, 116, 180)
-                  - entity: sensor.prise_airfryer_ninja_nous_energy
+                  - entity: sensor.prise_airfryer_ninja_nous_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: Airfryer (+)
                     color: rgb(142, 122, 181)
-                  - entity: sensor.four_et_plaque_de_cuisson_energy
+                  - entity: sensor.four_et_plaque_de_cuisson_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: four Plq-cui.
+                    name: Four/Plq.
                     color: rgb(162, 148, 249)
-                  - entity: sensor.prise_frigo_cuisine_nous_energy
+                  - entity: sensor.prise_frigo_cuisine_nous_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: frigo
+                    name: Frigo
                     color: cyan
-                  - entity: sensor.prise_congelateur_cuisine_nous_energy
+                  - entity: sensor.prise_congelateur_cuisine_nous_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: congél.
+                    name: Congél.
                     color: rgb(19, 160, 255)
-                  - entity: sensor.prise_bureau_pc_ikea_energy
+                  - entity: sensor.prise_bureau_pc_ikea_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: PCe
                     color: orange
-                  - entity: sensor.prise_bureau_fer_a_repasser_nous_energy
+                  - entity: sensor.prise_bureau_fer_a_repasser_nous_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: FàR (+)
                     color: gold
-                  - entity: sensor.prise_tete_de_lit_chambre_energy
+                  - entity: sensor.prise_tete_de_lit_chambre_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: Têtes L.
-                    color: rgb(177,194,158)
-                  - entity: sensor.prise_tv_chambre_nous_energy
+                    name: Têtes L. (+)
+                    color: rgb(177, 194, 158)
+                  - entity: sensor.prise_tv_chambre_nous_daily
                     transform: return x * 1000;
                     unit: Wh
-                    name: TV
+                    name: TV (+)
                     color: rgb(30, 81, 40)
-                  - entity: sensor.all_standby_energy
+                  - entity: sensor.all_standby_daily
                     transform: return x * 1000;
                     unit: Wh
                     name: Veilles
@@ -14145,14 +14296,14 @@ views:
                     extremas: true
                 series:
                   - entity: sensor.prise_box_internet_ikea_power
-                    name: Box
+                    name: Box (+)
                     color: gainsboro
                     yaxis_id: Watts
                     unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_horloge_ikea_power
-                    name: Horloge
+                    name: Horloge (+)
                     color: rgb(183, 183, 183)
                     yaxis_id: Watts
                     unit: Wh
@@ -14166,7 +14317,7 @@ views:
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_salon_chargeur_nous_power
-                    name: Charge
+                    name: Charge (+)
                     color: rgb(174,68,90)
                     yaxis_id: Watts
                     unit: Wh
@@ -14236,14 +14387,14 @@ views:
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_tete_de_lit_chambre_power
-                    name: Têtes L.
+                    name: Têtes L. (+)
                     color: rgb(177,194,158)
                     yaxis_id: Watts
                     unit: Wh
                     stroke_width: 2
                     fill_raw: last
                   - entity: sensor.prise_tv_chambre_nous_power
-                    name: TV
+                    name: TV (+)
                     color: rgb(30, 81,40)
                     yaxis_id: Watts
                     unit: Wh
@@ -14289,19 +14440,21 @@ views:
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: Box Internet
+                                - card_title: Box Internet (Hue)
                                 - energy_entity: sensor.prise_box_internet_ikea_power
                                 - energy_color: gainsboro
                                 - current_entity: sensor.prise_box_internet_ikea_current
-                                - mean_24h_kwh_entity: sensor.prise_box_internet_ikea_mean_24h_kwh
+                                - avg_daily_entity: sensor.box_internet_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_box_internet_ikea_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: Horloge Entrée
+                                - card_title: Horloge Entrée (Chargeur)
                                 - energy_entity: sensor.prise_horloge_ikea_power
                                 - energy_color: rgb(183, 183, 183)
                                 - current_entity: sensor.prise_horloge_ikea_current
-                                - mean_24h_kwh_entity: sensor.prise_horloge_ikea_mean_24h_kwh
+                                - avg_daily_entity: sensor.horloge_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_horloge_ikea_daily
                         attributes:
                           label: Entrée
                           icon: mdi:door
@@ -14315,18 +14468,20 @@ views:
                                 - energy_entity: sensor.prise_pc_s_gege_ikea_power
                                 - energy_color: rgb(202, 135, 135)
                                 - current_entity: sensor.prise_pc_s_gege_ikea_current
-                                - mean_24h_kwh_entity: sensor.prise_pc_s_gege_ikea_mean_24h_kwh
+                                - avg_daily_entity: sensor.pc_geraldine_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_pc_s_gege_ikea_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
                                 - card_title: >-
-                                    Prise Salon (Chargeurs, Vapote, Aspi.,
-                                    Roomba & Fontaine)
+                                    Prise Salon (Chargeurs, Vapote, Aspi. &
+                                    iRobot)
                                 - energy_entity: sensor.prise_salon_chargeur_nous_power
                                 - energy_color: rgb(174, 68, 90)
                                 - current_entity: sensor.prise_salon_chargeur_nous_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.prise_salon_chargeur_nous_mean_24h_kwh
+                                - avg_daily_entity: >-
+                                    sensor.chargeurs_salon_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_salon_chargeur_nous_daily
                         attributes:
                           label: Salon
                           icon: mdi:sofa
@@ -14336,12 +14491,12 @@ views:
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: Four Micro-Ondes
+                                - card_title: Four Micro-Ondes (Alexa)
                                 - energy_entity: sensor.prise_four_micro_ondes_nous_power
                                 - energy_color: rgb(98, 78, 136)
                                 - current_entity: sensor.prise_four_micro_ondes_nous_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.prise_four_micro_ondes_nous_mean_24h_kwh
+                                - avg_daily_entity: sensor.four_mo_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_four_micro_ondes_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -14351,7 +14506,8 @@ views:
                                 - energy_entity: sensor.prise_lave_linge_nous_power
                                 - energy_color: rgb(137, 103, 179)
                                 - current_entity: sensor.prise_lave_linge_nous_current
-                                - mean_24h_kwh_entity: sensor.prise_lave_linge_nous_mean_24h_kwh
+                                - avg_daily_entity: sensor.lave_linge_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_lave_linge_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -14359,8 +14515,8 @@ views:
                                 - energy_entity: sensor.prise_lave_vaisselle_nous_power
                                 - energy_color: rgb(129, 116, 180)
                                 - current_entity: sensor.prise_lave_vaisselle_nous_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.prise_lave_vaisselle_nous_mean_24h_kwh
+                                - avg_daily_entity: sensor.lave_vaisselle_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_lave_vaisselle_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -14368,8 +14524,8 @@ views:
                                 - energy_entity: sensor.prise_airfryer_ninja_nous_power
                                 - energy_color: rgb(142, 122, 181)
                                 - current_entity: sensor.prise_airfryer_ninja_nous_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.prise_airfryer_ninja_nous_mean_24h_kwh
+                                - avg_daily_entity: sensor.airfryer_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_airfryer_ninja_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
@@ -14377,25 +14533,27 @@ views:
                                 - energy_entity: sensor.four_et_plaque_de_cuisson_power
                                 - energy_color: rgb(162, 148, 249)
                                 - current_entity: sensor.four_et_plaque_de_cuisson_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.four_et_plaque_de_cuisson_mean_24h_kwh
+                                - avg_daily_entity: sensor.plaques_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.four_et_plaque_de_cuisson_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
                                 - card_title: Frigo
                                 - energy_entity: sensor.prise_frigo_cuisine_nous_power
                                 - energy_color: cyan
-                                - current_entity: sensor.prise_frigo_cuisine_current
-                                - mean_24h_kwh_entity: sensor.prise_frigo_cuisine_nous_mean_24h_kwh
+                                - current_entity: sensor.prise_frigo_cuisine_nous_current
+                                - avg_daily_entity: sensor.frigo_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_frigo_cuisine_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
                                 - card_title: Congélateur
                                 - energy_entity: sensor.prise_congelateur_cuisine_nous_power
                                 - energy_color: rgb(19, 160, 255)
-                                - current_entity: sensor.prise_congelateur_cuisine_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.prise_congelateur_cuisine_nous_mean_24h_kwh
+                                - current_entity: >-
+                                    sensor.prise_congelateur_cuisine_nous_current
+                                - avg_daily_entity: sensor.congelateur_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_congelateur_cuisine_nous_daily
                         attributes:
                           label: Cuisine
                           icon: mdi:fridge
@@ -14409,18 +14567,20 @@ views:
                                 - energy_entity: sensor.prise_bureau_pc_ikea_power
                                 - energy_color: orange
                                 - current_entity: sensor.prise_bureau_pc_ikea_current
-                                - mean_24h_kwh_entity: sensor.prise_bureau_pc_ikea_mean_24h_kwh
+                                - avg_daily_entity: sensor.pc_bureau_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_bureau_pc_ikea_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: Fer à Repasser Bureau (FàR)
+                                - card_title: Fer à Repasser Bureau (Store)
                                 - energy_entity: >-
                                     sensor.prise_bureau_fer_a_repasser_nous_power
                                 - energy_color: gold
                                 - current_entity: >-
                                     sensor.prise_bureau_fer_a_repasser_nous_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.prise_bureau_fer_a_repasser_nous_mean_24h_kwh
+                                - avg_daily_entity: sensor.fer_repasser_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: >-
+                                    sensor.prise_bureau_fer_a_repasser_nous_daily
                         attributes:
                           label: BUREAU
                           icon: mdi:desktop-tower-monitor
@@ -14430,20 +14590,23 @@ views:
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: Têtes de Lit chambre
+                                - card_title: >-
+                                    Têtes de Lit chambre (Chargeurs, Alexa,
+                                    etc...)
                                 - energy_entity: sensor.prise_tete_de_lit_chambre_power
                                 - energy_color: rgb(177, 194, 158)
                                 - current_entity: sensor.prise_tete_de_lit_chambre_current
-                                - mean_24h_kwh_entity: >-
-                                    sensor.prise_tete_de_lit_chambre_mean_24h_kwh
+                                - avg_daily_entity: sensor.tetes_lit_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_tete_de_lit_chambre_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
                               variables:
-                                - card_title: TV Chambre
+                                - card_title: TV Chambre (Casques, TireTV, ect...)
                                 - energy_entity: sensor.prise_tv_chambre_nous_power
                                 - energy_color: rgb(30, 81, 40)
                                 - current_entity: sensor.prise_tv_chambre_nous_current
-                                - mean_24h_kwh_entity: sensor.prise_tv_chambre_nous_mean_24h_kwh
+                                - avg_daily_entity: sensor.tv_chambre_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.prise_tv_chambre_nous_daily
                         attributes:
                           label: Chambre
                           icon: mdi:bed
@@ -14457,7 +14620,8 @@ views:
                                 - energy_entity: sensor.all_standby_power
                                 - energy_color: grey
                                 - current_entity: sensor.all_standby_current
-                                - mean_24h_kwh_entity: sensor.all_standby_mean_24h_kwh
+                                - avg_daily_entity: sensor.veilles_puissance_moyenne_jour
+                                - conso_daily_kwh_entity: sensor.all_standby_daily
                         attributes:
                           label: Vieilles
                           icon: mdi:sleep
@@ -14480,8 +14644,7 @@ views:
               grid_rows: 1
           - type: custom:apexcharts-card
             chart_type: donut
-            graph_span: 730h
-            cache: false
+            cache: true
             span:
               start: month
             apex_config:
@@ -14489,13 +14652,10 @@ views:
                 height: 580px
             header:
               show: true
-              title: Conso. mensuel
+              title: Conso. mensuel (kWh)
               show_states: true
               colorize_states: true
             all_series_config:
-              group_by:
-                func: diff
-                duration: 730h
               show:
                 legend_value: false
                 extremas: false
@@ -14503,52 +14663,52 @@ views:
               loading: true
               last_updated: false
             series:
-              - entity: sensor.prise_box_internet_ikea_energy
+              - entity: sensor.prise_box_internet_ikea_monthly
                 name: Box (+)
                 color: gainsboro
-              - entity: sensor.prise_horloge_ikea_energy
-                name: Horloge
+              - entity: sensor.prise_horloge_ikea_monthly
+                name: Horloge (+)
                 color: rgb(183, 183, 183)
-              - entity: sensor.prise_pc_s_gege_ikea_energy
+              - entity: sensor.prise_pc_s_gege_ikea_monthly
                 name: PCg
                 color: rgb(202, 135, 135)
-              - entity: sensor.prise_salon_chargeur_nous_energy
+              - entity: sensor.prise_salon_chargeur_nous_monthly
                 name: Chargeurs (+)
-                color: rgb(174,68,90)
-              - entity: sensor.prise_lave_linge_nous_energy
+                color: rgb(174, 68, 90)
+              - entity: sensor.prise_four_micro_ondes_nous_monthly
                 name: Four M-O (+)
                 color: rgb(98, 78, 136)
-              - entity: sensor.prise_lave_linge_nous_energy
+              - entity: sensor.prise_lave_linge_nous_monthly
                 name: Linge (+)
                 color: rgb(137, 103, 179)
-              - entity: sensor.prise_lave_vaisselle_nous_energy
+              - entity: sensor.prise_lave_vaisselle_nous_monthly
                 name: Vaisselle
                 color: rgb(129, 116, 180)
-              - entity: sensor.prise_airfryer_ninja_nous_energy
+              - entity: sensor.prise_airfryer_ninja_nous_monthly
                 name: Airfryer (+)
                 color: rgb(142, 122, 181)
-              - entity: sensor.four_et_plaque_de_cuisson_energy
+              - entity: sensor.four_et_plaque_de_cuisson_monthly
                 name: Four & Plq Cui.
                 color: rgb(162, 148, 249)
-              - entity: sensor.prise_frigo_cuisine_nous_energy
+              - entity: sensor.prise_frigo_cuisine_nous_monthly
                 name: frigo
                 color: cyan
-              - entity: sensor.prise_congelateur_cuisine_nous_energy
+              - entity: sensor.prise_congelateur_cuisine_nous_monthly
                 name: congél.
                 color: rgb(19, 160, 255)
-              - entity: sensor.prise_bureau_pc_ikea_energy
+              - entity: sensor.prise_bureau_pc_ikea_monthly
                 name: PCe
                 color: orange
-              - entity: sensor.prise_bureau_fer_a_repasser_nous_energy
+              - entity: sensor.prise_bureau_fer_a_repasser_nous_monthly
                 name: FàR (+)
                 color: gold
-              - entity: sensor.prise_tete_de_lit_chambre_energy
-                name: Têtes L.
+              - entity: sensor.prise_tete_de_lit_chambre_monthly
+                name: Têtes L. (+)
                 color: rgb(177, 194, 158)
-              - entity: sensor.prise_tv_chambre_nous_energy
-                name: TV
+              - entity: sensor.prise_tv_chambre_nous_monthly
+                name: TV (+)
                 color: rgb(30, 81, 40)
-              - entity: sensor.all_standby_energy
+              - entity: sensor.all_standby_monthly
                 name: Veilles
                 color: grey
             card_mod:
@@ -14562,151 +14722,154 @@ views:
             icon: phu:rooms-hallway
             heading: Entrée
             heading_style: title
-            badges: []
-            card_mod: null
-            style: |
-              ha-card {
-                background: transparent !important;
-                box-shadow: none !important;
-                border: none !important;
-              }
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              title: Conso. mensuel Box Internet
+              title: Box Internet (Hue)
               energy_entity: sensor.prise_box_internet_ikea_energy
               color: gainsboro
-              mean_730h_kwh_entity: sensor.prise_box_internet_ikea_mean_730h_kwh
+              avg_monthly_entity: sensor.box_internet_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_box_internet_ikea_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Horloge Entrée
-              - energy_entity: sensor.prise_horloge_ikea_energy
-              - color: rgb(183, 183, 183)
-              - mean_730h_kwh_entity: sensor.prise_horloge_ikea_mean_730h_kwh
+              title: Horloge Entrée (Chargeur)
+              energy_entity: sensor.prise_horloge_ikea_energy
+              color: rgb(183, 183, 183)
+              avg_monthly_entity: sensor.horloge_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_horloge_ikea_monthly
           - type: heading
             icon: mdi:sofa
-            heading_style: title
-            badges: []
             heading: Salon
+            heading_style: title
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Pc's(g) Salon
-              - energy_entity: sensor.prise_pc_s_gege_ikea_energy
-              - color: rgb(202, 135, 135)
-              - mean_730h_kwh_entity: sensor.prise_pc_s_gege_ikea_mean_730h_kwh
+              title: PC's Géraldine
+              energy_entity: sensor.prise_pc_s_gege_ikea_energy
+              color: rgb(202, 135, 135)
+              avg_monthly_entity: sensor.pc_geraldine_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_pc_s_gege_ikea_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel PC-S (Charg, Vap, Aspi, iRobot & Fontaine)
-              - energy_entity: sensor.prise_salon_chargeur_nous_energy
-              - color: rgb(174,68,90)
-              - mean_730h_kwh_entity: sensor.prise_salon_chargeur_nous_mean_730h_kwh
+              title: Prise Salon (Chargeurs, Vapote, Aspi. & iRobot)
+              energy_entity: sensor.prise_salon_chargeur_nous_energy
+              color: rgb(174, 68, 90)
+              avg_monthly_entity: sensor.chargeurs_salon_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_salon_chargeur_nous_monthly
           - type: heading
             icon: mdi:fridge
             heading: Cuisine
             heading_style: title
-            badges: []
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Four Micro-Ondes (Alexa)
-              - energy_entity: sensor.prise_four_micro_ondes_nous_energy
-              - color: rgb(98, 78, 136)
-              - mean_730h_kwh_entity: sensor.prise_four_micro_ondes_nous_mean_730h_kwh
+              title: Four Micro-Ondes (Alexa)
+              energy_entity: sensor.prise_four_micro_ondes_nous_energy
+              color: rgb(98, 78, 136)
+              avg_monthly_entity: sensor.four_mo_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_four_micro_ondes_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Lave-Linge (Grille-pain, Théière, M-café)
-              - energy_entity: sensor.prise_lave_linge_nous_energy
-              - color: rgb(137, 103, 179)
-              - mean_730h_kwh_entity: sensor.prise_lave_linge_nous_mean_730h_kwh
+              title: Lave-Linge (grille pain, Théière, machine à café)
+              energy_entity: sensor.prise_lave_linge_nous_energy
+              color: rgb(137, 103, 179)
+              avg_monthly_entity: sensor.lave_linge_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_lave_linge_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Lave-Vaisselle
-              - energy_entity: sensor.prise_lave_vaisselle_nous_energy
-              - color: rgb(129, 116, 180)
-              - mean_730h_kwh_entity: sensor.prise_lave_vaisselle_nous_mean_730h_kwh
+              title: Lave-Vaisselle
+              energy_entity: sensor.prise_lave_vaisselle_nous_energy
+              color: rgb(129, 116, 180)
+              avg_monthly_entity: sensor.lave_vaisselle_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_lave_vaisselle_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel NINJA Airfryer (Cookéo, Etc...)
-              - energy_entity: sensor.prise_airfryer_ninja_nous_energy
-              - color: rgb(142, 122, 181)
-              - mean_730h_kwh_entity: sensor.prise_airfryer_ninja_nous_mean_730h_kwh
+              title: Airfryer (Cookéo, mixer, ect...)
+              energy_entity: sensor.prise_airfryer_ninja_nous_energy
+              color: rgb(142, 122, 181)
+              avg_monthly_entity: sensor.airfryer_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_airfryer_ninja_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Four & plaque de Cuisson
-              - energy_entity: sensor.four_et_plaque_de_cuisson_energy
-              - color: rgb(142, 122, 181)
-              - mean_730h_kwh_entity: sensor.four_et_plaque_de_cuisson_mean_730h_kwh
+              title: Four et plaque de Cuisson
+              energy_entity: sensor.four_et_plaque_de_cuisson_energy
+              color: rgb(162, 148, 249)
+              avg_monthly_entity: sensor.plaques_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.four_et_plaque_de_cuisson_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Frigo
-              - energy_entity: sensor.prise_frigo_cuisine_nous_energy
-              - color: cyan
-              - mean_730h_kwh_entity: sensor.prise_frigo_cuisine_nous_mean_730h_kwh
+              title: Frigo
+              energy_entity: sensor.prise_frigo_cuisine_nous_energy
+              color: cyan
+              avg_monthly_entity: sensor.frigo_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_frigo_cuisine_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Congélateur
-              - energy_entity: sensor.prise_congelateur_cuisine_nous_energy
-              - color: rgb(19, 160, 255)
-              - mean_730h_kwh_entity: sensor.prise_congelateur_cuisine_nous_mean_730h_kwh
+              title: Congélateur
+              energy_entity: sensor.prise_congelateur_cuisine_nous_energy
+              color: rgb(19, 160, 255)
+              avg_monthly_entity: sensor.congelateur_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_congelateur_cuisine_nous_monthly
           - type: heading
             icon: mdi:desktop-tower-monitor
-            heading_style: title
-            badges: []
             heading: Bureau
+            heading_style: title
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Bureau PC(e)
-              - energy_entity: sensor.prise_bureau_pc_ikea_energy
-              - color: orange
-              - mean_730h_kwh_entity: sensor.prise_bureau_pc_ikea_mean_730h_kwh
+              title: PCe Bureau
+              energy_entity: sensor.prise_bureau_pc_ikea_energy
+              color: orange
+              avg_monthly_entity: sensor.pc_bureau_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_bureau_pc_ikea_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Fer à Repasser (FàR) & Store
-              - energy_entity: sensor.prise_bureau_fer_a_repasser_nous_energy
-              - color: gold
-              - mean_730h_kwh_entity: sensor.prise_bureau_fer_a_repasser_nous_mean_730h_kwh
+              title: Fer à Repasser Bureau (Store)
+              energy_entity: sensor.prise_bureau_fer_a_repasser_nous_energy
+              color: gold
+              avg_monthly_entity: sensor.fer_repasser_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_bureau_fer_a_repasser_nous_monthly
           - type: heading
             icon: mdi:bed
             heading: Chambre
             heading_style: title
-            badges: []
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel Têtes de Lit chambre
-              - energy_entity: sensor.prise_tete_de_lit_chambre_energy
-              - color: rgb(177, 194, 158)
-              - mean_730h_kwh_entity: sensor.prise_tete_de_lit_chambre_mean_730h_kwh
+              title: Têtes de Lit chambre (Chargeurs, Alexa, etc...)
+              energy_entity: sensor.prise_tete_de_lit_chambre_energy
+              color: rgb(177, 194, 158)
+              avg_monthly_entity: sensor.tetes_lit_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_tete_de_lit_chambre_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel TV Chambre
-              - energy_entity: sensor.prise_tv_chambre_nous_energy
-              - color: rgb(30,81,40)
-              - mean_730h_kwh_entity: sensor.prise_tv_chambre_nous_mean_730h_kwh
+              title: TV Chambre (Casques, TireTV, ect...)
+              energy_entity: sensor.prise_tv_chambre_nous_energy
+              color: rgb(30, 81, 40)
+              avg_monthly_entity: sensor.tv_chambre_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.prise_tv_chambre_nous_monthly
           - type: heading
             icon: mdi:sleep
             heading: All Standby
             heading_style: title
-            badges: []
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              - title: Conso. mensuel All Standby
-              - energy_entity: sensor.all_standby_energy
-              - color: grey
-              - mean_730h_kwh_entity: sensor.all_standby_mean_730h_kwh
+              title: Vieilles
+              energy_entity: sensor.all_standby_energy
+              color: grey
+              avg_monthly_entity: sensor.veilles_puissance_moyenne_mois
+              conso_monthly_kwh_entity: sensor.all_standby_monthly
     title: Energie HOME Mensuel
     cards: []
     path: energie-mensuel
@@ -15008,10 +15171,10 @@ views:
                   method: state
                   show_empty: false
                   entity_row: true
-            visibility:
-              - condition: numeric_state
-                entity: sensor.conso_clim_rad_total
-                above: 0.1
+                visibility:
+                  - condition: numeric_state
+                    entity: sensor.conso_clim_rad_total
+                    above: 0.1
           - type: conditional
             conditions: []
             card:
@@ -15040,8 +15203,7 @@ views:
                   }
           - type: custom:apexcharts-card
             chart_type: donut
-            graph_span: 24h
-            cache: false
+            cache: true
             span:
               start: day
             apex_config:
@@ -15049,13 +15211,10 @@ views:
                 height: 600px
             header:
               show: true
-              title: Conso. journalière
+              title: Conso. journalière (Start Day)
               show_states: true
               colorize_states: true
             all_series_config:
-              group_by:
-                func: diff
-                duration: 24h
               show:
                 legend_value: false
                 extremas: false
@@ -15063,27 +15222,27 @@ views:
               loading: true
               last_updated: false
             series:
-              - entity: sensor.clim_salon_nous_energy
+              - entity: sensor.clim_salon_daily
                 name: SALON (C)
                 color: rgb(174,68,90)
                 float_precision: 2
-              - entity: sensor.radiateur_elec_cuisine_energy
+              - entity: sensor.radiateur_cuisine_daily
                 name: CUISINE (R)
                 color: rgb(168, 136, 181)
                 float_precision: 2
-              - entity: sensor.clim_du_bureau_nous_energy
+              - entity: sensor.clim_bureau_daily
                 name: BUREAU (C)
                 color: orange
                 float_precision: 2
-              - entity: sensor.prise_radiateur_salle_de_bain_nous_energy
+              - entity: sensor.soufflant_sdb_daily
                 name: Souff. SdB (R)
                 color: magenta
                 float_precision: 2
-              - entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+              - entity: sensor.seche_serv_daily
                 name: Sèche-S. SdB (R)
                 color: purple
                 float_precision: 2
-              - entity: sensor.clim_chambre_nous_energy
+              - entity: sensor.clim_chambre_daily
                 name: CHAMBRE (C)
                 color: rgb(30,81,40)
                 float_precision: 2
@@ -15123,8 +15282,7 @@ views:
                   }
           - type: custom:apexcharts-card
             chart_type: donut
-            graph_span: 730h
-            cache: false
+            cache: true
             span:
               start: month
             apex_config:
@@ -15136,9 +15294,6 @@ views:
               show_states: true
               colorize_states: true
             all_series_config:
-              group_by:
-                func: diff
-                duration: 730h
               show:
                 legend_value: false
                 extremas: false
@@ -15146,27 +15301,27 @@ views:
               loading: true
               last_updated: false
             series:
-              - entity: sensor.clim_salon_nous_energy
+              - entity: sensor.clim_salon_monthly
                 name: SALON (C)
                 color: rgb(174,68,90)
                 float_precision: 2
-              - entity: sensor.radiateur_elec_cuisine_energy
+              - entity: sensor.radiateur_cuisine_monthly
                 name: CUISINE (R)
                 color: rgb(168, 136, 181)
                 float_precision: 2
-              - entity: sensor.clim_du_bureau_nous_energy
+              - entity: sensor.clim_bureau_monthly
                 name: BUREAU (C)
                 color: orange
                 float_precision: 2
-              - entity: sensor.prise_radiateur_salle_de_bain_nous_energy
+              - entity: sensor.soufflant_sdb_monthly
                 name: Souff. SdB (R)
                 color: magenta
                 float_precision: 2
-              - entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+              - entity: sensor.seche_serv_monthly
                 name: Sèche-Serv. SdB(R)
                 color: purple
                 float_precision: 2
-              - entity: sensor.clim_chambre_nous_energy
+              - entity: sensor.clim_chambre_monthly
                 name: CHAMBRE (C)
                 color: rgb(30,81,40)
                 float_precision: 2
@@ -15509,8 +15664,8 @@ views:
               energy_color: rgb(174,68,90)
               current_entity: sensor.clim_salon_nous_current
               current_color: rgb(255, 41, 41)
-              power_entity_avg: sensor.clim_salon_nous_power
-              mean_24h_kwh_entity: sensor.clim_salon_mean_24h_kwh
+              avg_daily_entity: sensor.clim_salon_avg_watts_daily
+              conso_daily_kwh_entity: sensor.clim_salon_daily
               power_entity: sensor.clim_salon_nous_power
               power_color: rgb(174,68,90)
               span_offset: +3m
@@ -15565,13 +15720,10 @@ views:
               energy_entity: sensor.clim_salon_nous_energy
               energy_name: Conso. jours en cours
               energy_color: rgb(174,68,90)
-              avg_color: red
-              avg_name: Avg(730h)
+              avg_monthly_entity: sensor.clim_salon_avg_watts_monthly
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
-              temp_unit: °C
-              temp_name: T.Mini.(24h)
-              mean_730h_kwh_entity: sensor.clim_salon_mean_730h_kwh
+              conso_monthly_kwh_entity: sensor.clim_salon_monthly
           - type: heading
             icon: mdi:fridge
             heading_style: title
@@ -15649,8 +15801,8 @@ views:
               energy_color: rgb(168, 136, 181)
               current_entity: sensor.radiateur_elec_cuisine_current
               current_color: rgb(255, 41, 41)
-              power_entity_avg: sensor.radiateur_elec_cuisine_power
-              mean_24h_kwh_entity: sensor.radiateur_cuisine_mean_24h_kwh
+              avg_daily_entity: sensor.radiateur_cuisine_avg_watts_daily
+              conso_daily_kwh_entity: sensor.radiateur_cuisine_daily
               power_entity: sensor.radiateur_elec_cuisine_power
               power_color: rgb(168, 136, 181)
               span_offset: +3m
@@ -15705,13 +15857,10 @@ views:
               energy_entity: sensor.radiateur_elec_cuisine_energy
               energy_name: Conso. jours en cours
               energy_color: rgb(168, 136, 181)
-              avg_color: red
-              avg_name: Avg(730h)
+              avg_monthly_entity: sensor.radiateur_cuisine_avg_watts_monthly
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
-              temp_unit: °C
-              temp_name: T.Min.(24h)
-              mean_730h_kwh_entity: sensor.radiateur_cuisine_mean_730h_kwh
+              conso_monthly_kwh_entity: sensor.radiateur_cuisine_monthly
           - type: heading
             icon: mdi:desktop-tower-monitor
             heading_style: title
@@ -15794,8 +15943,8 @@ views:
               energy_color: orange
               current_entity: sensor.clim_bureau_current
               current_color: rgb(255, 41, 41)
-              power_entity_avg: sensor.clim_du_bureau_nous_power
-              mean_24h_kwh_entity: sensor.clim_bureau_mean_24h_kwh
+              avg_daily_entity: sensor.clim_bureau_avg_watts_daily
+              conso_daily_kwh_entity: sensor.clim_bureau_daily
               power_entity: sensor.clim_du_bureau_nous_power
               power_color: orange
               span_offset: +3m
@@ -15850,13 +15999,10 @@ views:
               energy_entity: sensor.clim_du_bureau_nous_energy
               energy_name: Conso. jours en cours
               energy_color: orange
-              avg_color: red
-              avg_name: Avg(730h)
+              avg_monthly_entity: sensor.clim_bureau_avg_watts_monthly
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
-              temp_unit: °C
-              temp_name: T.Mini.(24h)
-              mean_730h_kwh_entity: sensor.clim_bureau_mean_730h_kwh
+              conso_monthly_kwh_entity: sensor.clim_bureau_monthly
           - type: heading
             icon: hue:room-bathroom
             heading: SALLE DE BAIN
@@ -15962,15 +16108,15 @@ views:
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
-              card_title: Soufflant Salle de Bain
+              card_title: Conso. Temps Réel Soufflant Salle de Bain
               energy_entity: sensor.prise_radiateur_salle_de_bain_nous_power
               energy_color: magenta
               current_entity: sensor.prise_radiateur_salle_de_bain_nous_current
               current_color: rgb(255, 41, 41)
-              power_entity_avg: sensor.prise_radiateur_salle_de_bain_nous_power
-              mean_24h_kwh_entity: sensor.soufflant_sdb_mean_24h_kwh
+              avg_daily_entity: sensor.soufflant_sdb_avg_watts_daily
+              conso_daily_kwh_entity: sensor.soufflant_sdb_daily
               power_entity: sensor.prise_radiateur_salle_de_bain_nous_power
-              power_color: magenta
+              power_color: rgb(126, 24, 145)
               span_offset: +15m
               group_duration: 1m
           - type: heading
@@ -16023,13 +16169,10 @@ views:
               energy_entity: sensor.prise_radiateur_salle_de_bain_nous_energy
               energy_name: Conso. jours en cours
               energy_color: magenta
-              avg_color: red
-              avg_name: Avg(730h)
+              avg_monthly_entity: sensor.soufflant_sdb_avg_watts_monthly
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
-              temp_unit: °C
-              temp_name: T.Min.(24h)
-              mean_730h_kwh_entity: sensor.soufflant_sdb_mean_730h_kwh
+              conso_monthly_kwh_entity: sensor.soufflant_sdb_monthly
           - card_mod:
               style: |
                 ha-card {
@@ -16078,15 +16221,15 @@ views:
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
-              card_title: sèche-serviettes de la Salle de Bain
+              card_title: Conso. Temps Réel Sèche-serv. Salle de Bain
               energy_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
-              energy_color: purple
+              energy_color: rgb(218, 112, 214)
               current_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_current
               current_color: rgb(255, 41, 41)
-              power_entity_avg: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
-              mean_24h_kwh_entity: sensor.seche_serv_mean_24h_kwh
+              avg_daily_entity: sensor.seche_serv_avg_watts_daily
+              conso_daily_kwh_entity: sensor.seche_serv_daily
               power_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
-              power_color: purple
+              power_color: rgb(255, 215, 0)
               span_offset: +15m
               group_duration: 1m
           - type: heading
@@ -16135,17 +16278,14 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_clim
             variables:
-              title: Conso. mensuel sèche-serviettes SdB
+              title: Conso. mensuel Sèche-serviettes SdB
               energy_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
               energy_name: Conso. jours en cours
-              energy_color: purple
-              avg_color: red
-              avg_name: Avg(730h)
+              energy_color: rgb(218, 112, 214)
+              avg_monthly_entity: sensor.seche_serv_avg_watts_monthly
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
-              temp_unit: °C
-              temp_name: T.Min.(24h)
-              mean_730h_kwh_entity: sensor.seche_serv_mean_730h_kwh
+              conso_monthly_kwh_entity: sensor.seche_serv_monthly
           - type: heading
             icon: mdi:bed
             heading_style: title
@@ -16227,8 +16367,8 @@ views:
               energy_color: rgb(30,81,40)
               current_entity: sensor.clim_chambre_nous_current
               current_color: rgb(255, 41, 41)
-              power_entity_avg: sensor.clim_chambre_nous_power
-              mean_24h_kwh_entity: sensor.clim_chambre_mean_24h_kwh
+              avg_daily_entity: sensor.clim_chambre_avg_watts_daily
+              conso_daily_kwh_entity: sensor.clim_chambre_daily
               power_entity: sensor.clim_chambre_nous_power
               power_color: rgb(30,81,40)
               span_offset: +3m
@@ -16283,13 +16423,10 @@ views:
               energy_entity: sensor.clim_chambre_nous_energy
               energy_name: Conso. jours en cours
               energy_color: rgb(30,81,40)
-              avg_color: red
-              avg_name: Avg(730h)
+              avg_monthly_entity: sensor.clim_chambre_avg_watts_monthly
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
-              temp_unit: °C
-              temp_name: T.Min.(24h)
-              mean_730h_kwh_entity: sensor.clim_chambre_mean_730h_kwh
+              conso_monthly_kwh_entity: sensor.clim_chambre_monthly
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -16779,7 +16916,7 @@ views:
                 state_content:
                   - name
                   - state
-                entity: sensor.eclairage_salon_quotidien
+                entity: sensor.eclairage_salon_5_quotidien
                 name: Q
               - type: entity
                 show_state: true
@@ -16793,7 +16930,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_salon_mensuel
+                entity: sensor.eclairage_salon_5_mensuel
                 name: M
                 color: deep-orange
                 state_content:
@@ -17004,7 +17141,7 @@ views:
                 state_content:
                   - name
                   - state
-                entity: sensor.eclairage_appart_quotidien
+                entity: sensor.eclairage_appart_3_quotidien
                 name: Q
               - type: entity
                 show_state: true
@@ -17018,7 +17155,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_appart_mensuel
+                entity: sensor.eclairage_appart_3_mensuel
                 name: M
                 color: deep-orange
                 state_content:
@@ -17246,7 +17383,7 @@ views:
                 state_content:
                   - name
                   - state
-                entity: sensor.eclairage_bureau_quotidien
+                entity: sensor.eclairage_bureau_5_quotidien
                 name: Q
               - type: entity
                 show_state: true
@@ -17260,7 +17397,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_bureau_mensuel
+                entity: sensor.eclairage_bureau_5_mensuel
                 name: M
                 color: deep-orange
                 state_content:
@@ -17453,12 +17590,12 @@ views:
                 state_content:
                   - name
                   - state
-                entity: sensor.eclairage_salle_de_bain_2_quotidien
+                entity: sensor.eclairage_sdb_2_quotidien
                 name: Q
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_salle_de_bain_2_hebdomadaire
+                entity: sensor.eclairage_sdb_2_hebdomadaire
                 name: H
                 color: orange
                 state_content:
@@ -17467,7 +17604,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_salle_de_bain_2_mensuel
+                entity: sensor.eclairage_sdb_2_mensuel
                 name: M
                 color: deep-orange
                 state_content:
@@ -17476,7 +17613,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_salle_de_bain_2_annuel
+                entity: sensor.eclairage_sdb_2_annuel
                 name: A
                 color: red
                 state_content:
@@ -17681,7 +17818,7 @@ views:
                 state_content:
                   - name
                   - state
-                entity: sensor.eclairage_chambre_quotidien
+                entity: sensor.eclairage_chambre_4_quotidien
                 name: Q
               - type: entity
                 show_state: true
@@ -17695,7 +17832,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.eclairage_chambre_mensuel
+                entity: sensor.eclairage_chambre_4_mensuel
                 name: M
                 color: deep-orange
                 state_content:
@@ -20122,17 +20259,15 @@ views:
                     apex_config:
                       tickAmount: 10
                 all_series_config:
-                  curve: stepline
                   show:
                     legend_value: false
                     extremas: true
-                brush:
-                  selection_span: 2h
                 series:
                   - entity: sensor.system_monitor_utilisation_du_processeur
                     name: Instantané
                     yaxis_id: Use
                     type: area
+                    curve: stepline
                     stroke_width: 1.5
                     opacity: 0.4
                     color: rgb(68,115,158)
@@ -20150,13 +20285,14 @@ views:
                   - entity: sensor.system_monitor_utilisation_du_processeur
                     name: Moy.(24hrs)
                     type: line
+                    curve: smooth
                     stroke_dash: 5
-                    color: '#F44336'
-                    stroke_width: 2
+                    color: red
+                    stroke_width: 2.5
                     fill_raw: last
                     group_by:
                       func: avg
-                      duration: 24h
+                      duration: 2h
                   - entity: sensor.system_monitor_utilisation_du_processeur
                     name: Moy.(730hrs)
                     color: '#FF5252'
@@ -20167,24 +20303,6 @@ views:
                     show:
                       in_brush: false
                       in_chart: false
-                  - entity: sensor.system_monitor_utilisation_du_processeur
-                    color: rgb(68,115,158)
-                    type: area
-                    stroke_width: 0.5
-                    opacity: 0.4
-                    group_by:
-                      func: last
-                      duration: 10m
-                    show:
-                      in_brush: true
-                      in_chart: false
-                card_mod:
-                  style: |
-                    ha-card { 
-                      background: none !important; 
-                      box-shadow: none !important; 
-                      border: none !important; 
-                    }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -20233,22 +20351,12 @@ views:
                     intersect: false
                 yaxis:
                   - id: Temp
-                    min: 0
+                    min: auto
                     max: auto
                     decimals: 0
                     opposite: true
                     apex_config:
                       tickAmount: 6
-                all_series_config:
-                  curve: smooth
-                  group_by:
-                    func: last
-                    duration: 1m
-                  show:
-                    legend_value: false
-                    extremas: true
-                brush:
-                  selection_span: 2h
                 series:
                   - entity: sensor.system_monitor_temperature_du_processeur
                     name: Instantané
@@ -20257,24 +20365,23 @@ views:
                     stroke_width: 1.5
                     opacity: 0.3
                     fill_raw: last
-                    color: rgb(255,193,7)
                     color_threshold:
                       - value: 0
-                        color: rgb(255,193,7)
-                      - value: 65
+                        color: '#4CAF50'
+                      - value: 55
                         color: '#FFC107'
-                      - value: 75
+                      - value: 70
                         color: '#F44336'
                   - entity: sensor.system_monitor_temperature_du_processeur
                     name: Moy.(24h)
                     yaxis_id: Temp
                     type: line
                     stroke_dash: 5
-                    stroke_width: 1.5
-                    color: rgb(244,67,54)
+                    stroke_width: 2.5
+                    color: red
                     group_by:
                       func: avg
-                      duration: 24h
+                      duration: 1h
                   - entity: sensor.system_monitor_temperature_du_processeur
                     name: Moy.(730hrs)
                     color: '#FF5252'
@@ -20285,24 +20392,6 @@ views:
                     show:
                       in_brush: false
                       in_chart: false
-                  - entity: sensor.system_monitor_temperature_du_processeur
-                    color: rgb(255,193,7)
-                    type: area
-                    opacity: 0.2
-                    stroke_width: 0.5
-                    show:
-                      in_brush: true
-                      in_chart: false
-                    group_by:
-                      func: last
-                      duration: 10m
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: none !important;
-                      box-shadow: none !important;
-                      border: none !important;
-                    }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -20314,7 +20403,7 @@ views:
                 show_last_changed: false
                 show_attribute: false
                 button_type: name
-                name: Consommation
+                name: Consommation Mini-PC
                 icon: mdi:lightning-bolt-circle
                 show_icon: true
                 show_name: true
@@ -20325,26 +20414,32 @@ views:
               - type: custom:streamline-card
                 template: conso_temps_reel_appareil
                 variables:
-                  - card_title: Prise Mini P.C.
-                  - energy_entity: sensor.prise_mini_pc_ikea_power
-                  - energy_color: gainsboro
-                  - current_entity: sensor.prise_mini_pc_ikea_current
-                  - mean_24h_kwh_entity: sensor.mini_pc_mean_24h_wh
+                  card_title: Prise Mini P.C.
+                  energy_entity: sensor.prise_mini_pc_ikea_power
+                  energy_color: gainsboro
+                  current_entity: sensor.prise_mini_pc_ikea_current
+                  avg_daily_entity: sensor.mini_pc_avg_watts_daily
+                  conso_daily_kwh_entity: sensor.mini_pc_daily
                 card_mod:
                   style: >
                     ha-card { background: none !important; border: none
-                    !important; box-shadow: none !important; }
+                    !important;
+
+                    box-shadow: none !important; }
               - type: custom:streamline-card
                 template: conso_mensuelle_appareil
                 variables:
-                  title: Conso. mensuel Prise Mini P.C.
+                  title: Conso. mensuelle Mini P.C.
                   energy_entity: sensor.prise_mini_pc_ikea_energy
                   color: gainsboro
-                  mean_730h_kwh_entity: sensor.mini_pc_mean_730h_wh
+                  avg_monthly_entity: sensor.mini_pc_avg_watts_monthly
+                  conso_monthly_kwh_entity: sensor.mini_pc_monthly
                 card_mod:
                   style: >
                     ha-card { background: none !important; border: none
-                    !important; box-shadow: none !important; }
+                    !important;
+
+                    box-shadow: none !important; }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
