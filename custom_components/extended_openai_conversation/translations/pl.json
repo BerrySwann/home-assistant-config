@@ -1,0 +1,71 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "Nie udało się połączyć",
+            "invalid_auth": "Błąd authentykacji",
+            "unknown": "Nieznany błąd"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "name": "Imię",
+                    "api_key": "Klucz API",
+                    "base_url": "Bazowy URL",
+                    "api_version": "Wersja API",
+                    "organization": "Organizacja",
+                    "skip_authentication": "Pomiń authentykację"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_tokens": "Maksymalna liczba tokenów w odpowiedzi",
+                    "model": "Model",
+                    "prompt": "Prompt",
+                    "temperature": "Temperatura",
+                    "top_p": "Top P",
+                    "max_function_calls_per_conversation": "Maksymalna liczba wywołań funkcji na rozmowę",
+                    "functions": "Funkcje",
+                    "attach_username": "Dodaj nazwę użytkownika do wiadomości",
+                    "use_tools": "Używaj narzędzi",
+                    "context_threshold": "Limit kontekstu",
+                    "context_truncate_strategy": "Co zrobić z kontekstem, gdy przekroczony limit"
+                }
+            }
+        }
+    },
+    "services": {
+        "query_image": {
+            "name": "Query image",
+            "description": "Take in images and answer questions about them",
+            "fields": {
+                "config_entry": {
+                    "name": "Config Entry",
+                    "description": "The config entry to use for this service"
+                },
+                "model": {
+                    "name": "Model",
+                    "description": "The model",
+                    "example": "gpt-4-vision-preview"
+                },
+                "prompt": {
+                    "name": "Prompt",
+                    "description": "The text to ask about image",
+                    "example": "What’s in this image?"
+                },
+                "images": {
+                    "name": "Images",
+                    "description": "A list of images that would be asked"
+                },
+                "max_tokens": {
+                    "name": "Max Tokens",
+                    "description": "The maximum tokens",
+                    "example": "300"
+                }
+            }
+        }
+    }
+}
