@@ -4,7 +4,7 @@
 
 - sensor:
     # --- BOX INTERNET ---
-    - name: "Box Internet Puissance Moyenne Jour"
+    - name: "box_internet_avg_watts_daily"
       unique_id: box_internet_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -13,7 +13,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Box Internet Puissance Moyenne Mois"
+    - name: "box_internet_avg_watts_monthly"
       unique_id: box_internet_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -23,7 +23,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- HORLOGE ---
-    - name: "Horloge Puissance Moyenne Jour"
+    - name: "horloge_avg_watts_daily"
       unique_id: horloge_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -32,7 +32,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Horloge Puissance Moyenne Mois"
+    - name: "horloge_avg_watts_monthly"
       unique_id: horloge_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -42,7 +42,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- PC GÉRALDINE ---
-    - name: "PC Geraldine Puissance Moyenne Jour"
+    - name: "pc_gege_avg_watts_daily"
       unique_id: pc_gege_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -51,7 +51,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "PC Geraldine Puissance Moyenne Mois"
+    - name: "pc_gege_avg_watts_monthly"
       unique_id: pc_gege_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -61,7 +61,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- CHARGEURS SALON ---
-    - name: "Chargeurs Salon Puissance Moyenne Jour"
+    - name: "chargeurs_salon_avg_watts_daily"
       unique_id: chargeurs_salon_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -70,7 +70,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Chargeurs Salon Puissance Moyenne Mois"
+    - name: "chargeurs_salon_avg_watts_monthly"
       unique_id: chargeurs_salon_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -80,7 +80,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- FOUR MICRO-ONDES ---
-    - name: "Four MO Puissance Moyenne Jour"
+    - name: "four_mo_avg_watts_daily"
       unique_id: four_mo_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -89,7 +89,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Four MO Puissance Moyenne Mois"
+    - name: "four_mo_avg_watts_monthly"
       unique_id: four_mo_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -99,7 +99,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- LAVE-LINGE ---
-    - name: "Lave Linge Puissance Moyenne Jour"
+    - name: "lave_linge_avg_watts_daily"
       unique_id: lave_linge_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -108,7 +108,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Lave Linge Puissance Moyenne Mois"
+    - name: "lave_linge_avg_watts_monthly"
       unique_id: lave_linge_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -118,7 +118,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- LAVE-VAISSELLE ---
-    - name: "Lave Vaisselle Puissance Moyenne Jour"
+    - name: "lave_vaisselle_avg_watts_daily"
       unique_id: lave_vaisselle_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -127,7 +127,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Lave Vaisselle Puissance Moyenne Mois"
+    - name: "lave_vaisselle_avg_watts_monthly"
       unique_id: lave_vaisselle_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -137,7 +137,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- AIRFRYER ---
-    - name: "Airfryer Puissance Moyenne Jour"
+    - name: "airfryer_avg_watts_daily"
       unique_id: airfryer_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -146,7 +146,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Airfryer Puissance Moyenne Mois"
+    - name: "airfryer_avg_watts_monthly"
       unique_id: airfryer_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -155,8 +155,8 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- FOUR & PLAQUE CUISSON ---
-    - name: "Plaques Puissance Moyenne Jour"
+    # --- PLAQUES & FOUR ---
+    - name: "plaques_cuisson_avg_watts_daily"
       unique_id: plaques_cuisson_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -165,7 +165,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Plaques Puissance Moyenne Mois"
+    - name: "plaques_cuisson_avg_watts_monthly"
       unique_id: plaques_cuisson_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -175,7 +175,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- FRIGO ---
-    - name: "Frigo Puissance Moyenne Jour"
+    - name: "frigo_avg_watts_daily"
       unique_id: frigo_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -184,7 +184,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Frigo Puissance Moyenne Mois"
+    - name: "frigo_avg_watts_monthly"
       unique_id: frigo_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -194,7 +194,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- CONGÉLATEUR ---
-    - name: "Congelateur Puissance Moyenne Jour"
+    - name: "congelateur_avg_watts_daily"
       unique_id: congelateur_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -203,7 +203,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Congelateur Puissance Moyenne Mois"
+    - name: "congelateur_avg_watts_monthly"
       unique_id: congelateur_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -213,7 +213,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- PC BUREAU ---
-    - name: "PC Bureau Puissance Moyenne Jour"
+    - name: "pc_bureau_avg_watts_daily"
       unique_id: pc_bureau_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -222,7 +222,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "PC Bureau Puissance Moyenne Mois"
+    - name: "pc_bureau_avg_watts_monthly"
       unique_id: pc_bureau_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -232,7 +232,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- FER À REPASSER ---
-    - name: "Fer Repasser Puissance Moyenne Jour"
+    - name: "fer_repasser_avg_watts_daily"
       unique_id: fer_repasser_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -241,7 +241,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Fer Repasser Puissance Moyenne Mois"
+    - name: "fer_repasser_avg_watts_monthly"
       unique_id: fer_repasser_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -251,7 +251,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- TÊTES DE LIT ---
-    - name: "Tetes Lit Puissance Moyenne Jour"
+    - name: "tetes_lit_avg_watts_daily"
       unique_id: tetes_lit_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -260,7 +260,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Tetes Lit Puissance Moyenne Mois"
+    - name: "tetes_lit_avg_watts_monthly"
       unique_id: tetes_lit_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -270,7 +270,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- TV CHAMBRE ---
-    - name: "TV Chambre Puissance Moyenne Jour"
+    - name: "tv_chambre_avg_watts_daily"
       unique_id: tv_chambre_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -279,7 +279,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "TV Chambre Puissance Moyenne Mois"
+    - name: "tv_chambre_avg_watts_monthly"
       unique_id: tv_chambre_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -289,7 +289,7 @@
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- ALL STANDBY ---
-    - name: "Veilles Puissance Moyenne Jour"
+    - name: "veilles_avg_watts_daily"
       unique_id: veilles_avg_watts_daily
       unit_of_measurement: "W"
       device_class: power
@@ -298,7 +298,7 @@
         {% set h = now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
 
-    - name: "Veilles Puissance Moyenne Mois"
+    - name: "veilles_avg_watts_monthly"
       unique_id: veilles_avg_watts_monthly
       unit_of_measurement: "W"
       device_class: power
@@ -307,11 +307,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-#=========================================================================================
-#
-# --- MINI PC ---
-#
-#=========================================================================================
+    # --- MINI PC ---
     - name: "mini_pc_avg_watts_daily"
       unique_id: mini_pc_avg_watts_daily
       unit_of_measurement: "W"
@@ -330,13 +326,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-#=========================================================================================
-#
-# CLIM / RADIATEUR / SOUFFLANT / SECHE SERVIETTE
-#
-#=========================================================================================
-
-# --- CLIM SALON ---
+    # --- CLIM SALON ---
     - name: "clim_salon_avg_watts_daily"
       unique_id: clim_salon_avg_watts_daily
       unit_of_measurement: "W"
@@ -412,7 +402,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- SECHE-SERVIETTES ---
+    # --- SECHE-SERVIETTE ---
     - name: "seche_serv_avg_watts_daily"
       unique_id: seche_serv_avg_watts_daily
       unit_of_measurement: "W"
