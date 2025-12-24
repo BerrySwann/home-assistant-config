@@ -407,6 +407,12 @@ devices:
     friendly_name: Prise radiateur Salle de Bain (INSPELNING IKEA)
   '0xc09b9efffeaedaac':
     friendly_name: contact fenetre bureau (SONOFF)
+  '0x449fdafffe340855':
+    friendly_name: contact fenetre cuisine (SONOFF)
+  '0x449fdafffe33f7ce':
+    friendly_name: contact fenetre chambre (SONOFF)
+  '0x449fdafffe3406a2':
+    friendly_name: contact fenetre salon (SONOFF)
 groups:
   '1':
     friendly_name: Bureau z2m
