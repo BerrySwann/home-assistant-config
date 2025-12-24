@@ -14,7 +14,7 @@
       entity_id: sensor.blitzortung_lightning_localisation
     action: homeassistant.update_entity
     data: {}
-  - action: notify.mobile_app_poco_x7_pro
+  - action: notify.mobile_app_poco_x7_pro_eric
     metadata: {}
     data:
       title: /!\ Attention foudre /!\
@@ -223,7 +223,7 @@
         metadata: {}
         data:
           message: Le chauffage de la Cuisine est en fonctionnement
-      - action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro_eric
         metadata: {}
         data:
           message: /!\ Chauffage Cuisine "ON" /!\
@@ -256,7 +256,7 @@
         metadata: {}
         data:
           message: Le chauffage de la Cuisine est à l'arrêt
-      - action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro_eric
         metadata: {}
         data:
           message: /!\ Chauffage Cuisine "OFF" /!\
@@ -506,7 +506,7 @@
     value_template: '{{ sensors != '''' and (day | int == 0 or day | int == now().isoweekday())
       }}'
   actions:
-  - action: notify.mobile_app_poco_x7_pro
+  - action: notify.mobile_app_poco_x7_pro_eric
     data:
       title: Problème capteur Zigbee
       message: 'Des capteurs Zigbee ne sont plus joignables : {{ sensors }}'
@@ -549,7 +549,7 @@
           - switch.hue_smart_eco_pc_bureau
           - switch.prise_tete_de_lit_chambre
         action: homeassistant.turn_off
-      - action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: '[5] prises [OFF]'
           title:
@@ -571,7 +571,7 @@
           entity_id:
           - switch.hue_smart_eco_pc_bureau
         action: homeassistant.turn_off
-      - action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: '[4] prises [ON]'
           title:
@@ -593,7 +593,7 @@
           - light.hue_smart_salon
           - switch.prise_tete_de_lit_chambre
         action: homeassistant.turn_off
-      - action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: '[2] prises [ON]'
           title:
@@ -612,7 +612,7 @@
           - switch.hue_smart_eco_pc_bureau
           - switch.prise_tete_de_lit_chambre
         action: homeassistant.turn_on
-      - action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: '[5] prises [ON]'
           title:
@@ -667,7 +667,7 @@
       value_template: '{{ force_off_list | length > 0 }}'
     then:
     - alias: 'NOTIF : INTERDICTION DÉMARRAGE'
-      action: notify.mobile_app_poco_x7_pro
+      action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: ⛔ SÉCURITÉ CLIM
         message: "Tentative de démarrage interdite (Prise coupée ou Arrêt en cours).
@@ -684,7 +684,7 @@
       value_template: '{{ force_mode_list | length > 0 }}'
     then:
     - alias: 'NOTIF : CORRECTION MODE'
-      action: notify.mobile_app_poco_x7_pro
+      action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: "\U0001F527 CORRECTION MODE"
         message: "Mauvais mode détecté. Correction vers {{ mode_saison | upper }}
@@ -711,7 +711,7 @@
       message: 'Le mode a changé pour: {{ states(''sensor.mode_ete_hiver_etat'') |
         upper }}'
       title: CHANGEMENT DE MODE
-    action: notify.mobile_app_poco_x7_pro
+    action: notify.mobile_app_poco_x7_pro_eric
   mode: single
 - id: '1754214931347'
   alias: (F) (CLIM) Notification de fermeture des fenêtres
@@ -736,7 +736,7 @@
         a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_chambre_ikea_contact'
         %}\n  La fenêtre de la Chambre a été fermée.\n{% endif %} {% if states('sensor.nbre_de_fenetres_fermees')
         == '4' %}\n  Toutes les fenêtres sont maintenant fermées.\n{% endif %}"
-    action: notify.mobile_app_poco_x7_pro
+    action: notify.mobile_app_poco_x7_pro_eric
   mode: queued
 - id: '1754230309244'
   alias: (G) (CLIM) Automatisation Arrêt Clim Notification
@@ -772,7 +772,7 @@
     entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
     state: 'off'
   actions:
-  - action: notify.mobile_app_poco_x7_pro
+  - action: notify.mobile_app_poco_x7_pro_eric
     data:
       title: ARRÊT CLIM
       message: "{% set pieces = {\n  'climate.clim_salon_rm4_mini': 'du Salon',\n
@@ -865,7 +865,7 @@
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
         in ['unknown', 'unavailable'] }}\n"
     then:
-    - action: notify.mobile_app_poco_x7_pro
+    - action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: '[ANJ] Erreur Capteurs'
         message: 'Un capteur (Température, Wifi ou Message) est indisponible. Vérifiez
@@ -873,7 +873,7 @@
 
           '
     else:
-    - action: notify.mobile_app_poco_x7_pro
+    - action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: '[Automa. Notif. Jrs]'
         message: '{{ states(''sensor.message_clim_personnalise_7h30_21h00'') }}'
@@ -906,28 +906,28 @@
       sequence:
       - data:
           message: '[Présence] Personne n''est à la maison (mode CELLULAR/WIFI_?!)'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''MAMOUR'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Seul Mamour est à la maison (Wi-Fi)'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''ERIC'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Seul Eric est à la maison (Wi-Fi)'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''Clim [2] en [WIFI]'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Présence] Mamour et Eric sont à la maison (Wi-Fi)'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''Up >>>'' in trigger.to_state.state }}'
@@ -937,7 +937,7 @@
             }}'
       - data:
           message: '[Tendance] Température extérieure en hausse : {{ temp_ext }}°'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''Down <<<'' in trigger.to_state.state }}'
@@ -947,7 +947,7 @@
             }}'
       - data:
           message: '[Tendance] Température extérieure en baisse : {{ temp_ext }}°'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''stable'' in trigger.to_state.state }}'
@@ -957,7 +957,7 @@
             '')[1].strip() }}'
       - data:
           message: '[Tendance] Température extérieure stable : {{ temp_ext }}°'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''Heat'' in trigger.to_state.state }}'
@@ -966,7 +966,7 @@
           message_part: '{{ trigger.to_state.state.split(''|'')[2] }}'
       - data:
           message: '[Mode] Chauffage activé : {{ message_part }}'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''Cool'' in trigger.to_state.state }}'
@@ -975,14 +975,14 @@
           message_part: '{{ trigger.to_state.state.split(''|'')[2] }}'
       - data:
           message: '[Mode] Rafraîchissement activé : {{ message_part }}'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     - conditions:
       - condition: template
         value_template: '{{ ''Fan'' in trigger.to_state.state }}'
       sequence:
       - data:
           message: '[Mode] Ventilation activée'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
 - id: '1760723744000'
   alias: (J) Synchro & Notif Clim si Prise Coupée
   description: Met à jour l'état du thermostat et notifie proprement si la prise est
@@ -1009,7 +1009,7 @@
       after: 07:30:00
       before: '21:00:00'
     then:
-    - action: notify.mobile_app_poco_x7_pro
+    - action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: CLIM COUPÉE
         message: "{% set piece = 'inconnue' %} \n{% if 'salon' in trigger.entity_id
@@ -1384,8 +1384,8 @@
         domain: switch
       - data:
           message: /!\ RADIATEUR est "OFF" FORCE /!\
-        action: notify.mobile_app_poco_x7_pro
-      - action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: /!\ RADIATEUR est "OFF" FORCE /!\
     - conditions:
@@ -1406,8 +1406,8 @@
         domain: switch
       - data:
           message: /!\ RADIATEUR est "OFF" FORCE /!\
-        action: notify.mobile_app_poco_x7_pro
-      - action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: /!\ RADIATEUR est "OFF" FORCE /!\
     - conditions:
@@ -1422,8 +1422,8 @@
           entity_id: climate.radiateur_cuisine
       - data:
           message: /!\ RADIATEUR est "ON" /!\
-        action: notify.mobile_app_poco_x7_pro
-      - action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: /!\ RADIATEUR est "ON" /!\
     - conditions:
@@ -1438,8 +1438,8 @@
           entity_id: climate.radiateur_cuisine
       - data:
           message: /!\ RADIATEUR est "OFF" /!\
-        action: notify.mobile_app_poco_x7_pro
-      - action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: /!\ RADIATEUR est "OFF" /!\
   mode: single
@@ -1583,7 +1583,7 @@
             [\"La fenêtre \" ~ article ~ \" \" ~ piece_lower | upper ~ \" a été ouverte\"]
             %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
             \ Une fenêtre est ouverte (Détection générique).\n{% endif %}\n"
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
     default:
     - alias: 'VÉRIFICATION : HORAIRE'
       choose:
@@ -1689,7 +1689,7 @@
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
-          action: notify.mobile_app_poco_x7_pro
+          action: notify.mobile_app_poco_x7_pro_eric
           data:
             title: '[AN] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
@@ -1795,7 +1795,7 @@
         data:
           hvac_mode: 'off'
       - alias: 'NOTIF : ALERTE FENÊTRE'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
         data:
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
@@ -1935,7 +1935,7 @@
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
-          action: notify.mobile_app_poco_x7_pro
+          action: notify.mobile_app_poco_x7_pro_eric
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
@@ -2036,7 +2036,7 @@
         entity_id: climate.clim_chambre_rm4_mini
       data:
         hvac_mode: 'off'
-  - action: notify.mobile_app_poco_x7_pro
+  - action: notify.mobile_app_poco_x7_pro_eric
     data:
       title: Delta T° < -1°C
       message: 'Les clim ont été éteinte. ({{ states(''sensor.temperature_delta_valeur'')
@@ -2089,12 +2089,12 @@
         in ['unknown', 'unavailable'] or\n   states('sensor.th_balcon_nord_temperature')
         in ['unknown', 'unavailable'] }}\n"
     then:
-    - action: notify.mobile_app_poco_x7_pro
+    - action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: '[ANN] Erreur Capteurs'
         message: 'Erreur : Un capteur TENDANCE est indisponible ! Vérifiez les dépendances.'
     else:
-    - action: notify.mobile_app_poco_x7_pro
+    - action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: '[Automa. Notif. Nuit]'
         message: '{{ states(''sensor.message_clim_personnalise_21h00_7h30'') }}'
@@ -2193,7 +2193,7 @@
         data:
           hvac_mode: 'off'
       - alias: 'NOTIF : ALERTE FENÊTRE'
-        action: notify.mobile_app_poco_x7_pro
+        action: notify.mobile_app_poco_x7_pro_eric
         data:
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
@@ -2330,7 +2330,7 @@
         - alias: DÉLAI DE SÉCURITÉ
           delay: 00:00:02
         - alias: 'NOTIF : ETAT'
-          action: notify.mobile_app_poco_x7_pro
+          action: notify.mobile_app_poco_x7_pro_eric
           data:
             title: '[AJ] {{ states(''sensor.presence_clim'') }}'
             message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
@@ -2361,7 +2361,7 @@
     entity_id: binary_sensor.studio_code_server_running
     state: 'on'
   actions:
-  - action: notify.mobile_app_poco_x7_pro
+  - action: notify.mobile_app_poco_x7_pro_eric
     data:
       title: "\U0001F50B Alerte Énergie - Mini-PC"
       message: Il est {{ now().strftime('%H:%M') }}. Le CPU global est à {{ states('sensor.system_monitor_utilisation_du_processeur')
@@ -2392,7 +2392,7 @@
       - action: hassio.addon_stop
         data:
           addon: a0d7b954_vscode
-      - action: notify.mobile_app_poco_x7_pro
+      - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: VS Code éteint automatiquement (Économie d'énergie).
     - conditions:
