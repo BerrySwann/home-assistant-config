@@ -3,6 +3,14 @@
 #============================================================================
 
 - sensor:
+    # --- MINI PC ---
+    - name: "mini_pc_avg_watts_daily"
+      unique_id: "mini_pc_avg_watts_daily"
+      unit_of_measurement: "W"
+      device_class: power
+      state_class: measurement
+      state: >
+        {{ states('sensor.mini_pc_daily') | float(0) }}
     # --- BOX INTERNET ---
     - name: "box_internet_avg_watts_daily"
       unique_id: box_internet_avg_watts_daily

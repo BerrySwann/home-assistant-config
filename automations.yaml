@@ -878,18 +878,16 @@
         title: '[Automa. Notif. Jrs]'
         message: '{{ states(''sensor.message_clim_personnalise_7h30_21h00'') }}'
   mode: queued
-- id: '1759042747368'
+- id: db_purge_mariadb_repack
   alias: DB Purge MariaDB + Repack
-  description: ''
+  description: Ménage nocturne pour réduire la taille de la base de données
   triggers:
   - at: 03:30:00
     trigger: time
-  conditions: []
   actions:
   - data:
-      keep_days: 32
+      keep_days: 7
       repack: true
-      apply_filter: true
     action: recorder.purge
   mode: single
 - id: '1760088843808'
