@@ -2433,23 +2433,19 @@
     at: '20:00:00'
   actions:
   - variables:
-      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
-        | list }}
-
-        '
-      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
-        ''le'', ''11'') | list }}
-
-        '
+      low_batt: "{% set sensors = expand('group.hue_devices', 'group.ikea_devices',
+        'group.sonoff_devices') %} {% set ns = namespace(ids=[]) %} {% for s in sensors
+        %}\n  {% if s.state | is_number and s.state | int <= 11 %}\n    {% set ns.ids
+        = ns.ids + [s.entity_id] %}\n  {% endif %}\n{% endfor %} {{ ns.ids }}\n"
   - if:
     - condition: template
       value_template: '{{ low_batt | count > 0 }}'
     then:
-    - action: notify.mobile_app_poco_x7_pro
+    - action: notify.mobile_app_poco_x7_pro_eric
       data:
-        title: ⚠️ Alerte Pile Faible (<11%)
-        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
-          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        title: Alerte Pile Faible (<11%)
+        message: "{% for id in low_batt %}\n  - {{ state_attr(id, 'friendly_name')
+          }} : {{ states(id) }}%\n{% endfor %}\n"
         data:
           tag: alert-batterie
           color: '#f44336'

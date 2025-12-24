@@ -405,6 +405,8 @@ devices:
     friendly_name: Inter Radiateur Salle de Bain (IKEA RODRET)
   '0x94a081fffe5c2490':
     friendly_name: Prise radiateur Salle de Bain (INSPELNING IKEA)
+  '0xc09b9efffeaedaac':
+    friendly_name: contact fenetre bureau (SONOFF)
 groups:
   '1':
     friendly_name: Bureau z2m
