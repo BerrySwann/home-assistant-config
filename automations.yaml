@@ -2421,3 +2421,419 @@
         | Lum:{{p6}} | Ext:{{ext}}°C
 
         '
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+- id: systeme_watchdog_piles_triple_check
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      all_sensors: '{{ expand(''group.hue_devices'', ''group.ikea_devices'', ''group.sonoff_devices'')
+        | list }}
+
+        '
+      low_batt: '{{ all_sensors | selectattr(''state'', ''is_number'') | selectattr(''state'',
+        ''le'', ''11'') | list }}
+
+        '
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro
+      data:
+        title: ⚠️ Alerte Pile Faible (<11%)
+        message: "Alerte sur ton tableau de bord : {% for item in low_batt %}\n  -
+          {{ item.name }} : {{ item.state }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
