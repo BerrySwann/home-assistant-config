@@ -882,7 +882,7 @@
   alias: DB Purge MariaDB + Repack
   description: Ménage nocturne pour réduire la taille de la base de données
   triggers:
-  - at: 03:30:00
+  - at: 00:30:00
     trigger: time
   actions:
   - data:
