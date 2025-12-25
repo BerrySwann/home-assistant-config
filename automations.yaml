@@ -2503,3 +2503,34 @@
           device: radiateur_sdb
           num_repeats: 1
       - delay: '00:00:01.0'
+- id: '1766678478256'
+  alias: '⚡ Bureau : Coupure Smart PC (Groupes Présence)'
+  description: Coupe la prise si le PC est éteint ET que je ne suis plus dans les
+    groupes de présence
+  triggers:
+  - entity_id: sensor.prise_bureau_pc_ikea_power
+    below: 10
+    for:
+      minutes: 10
+    trigger: numeric_state
+  conditions:
+  - condition: state
+    entity_id: switch.hue_smart_eco_pc_bureau
+    state: 'on'
+  - condition: template
+    value_template: '{{ (now() - states.switch.hue_smart_eco_pc_bureau.last_changed).total_seconds()
+      > 900 }}'
+  - condition: template
+    value_template: '{{ ''groupe_3'' not in groupe_presence and ''groupe_4'' not in
+      groupe_presence }}
+
+      '
+  actions:
+  - target:
+      entity_id: switch.hue_smart_eco_pc_bureau
+    action: switch.turn_off
+  - data:
+      title: "\U0001F50C Éco Bureau"
+      message: 'PC éteint et fin de présence (Groupe 3/4) : Prise coupée.'
+    action: notify.mobile_app_poco_x7_pro_eric
+  mode: single
