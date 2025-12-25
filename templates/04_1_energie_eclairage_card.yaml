@@ -8,7 +8,670 @@
 #
 #========================================================================
 
+- sensor:
+    # ==========================================
+    # 1. ENTRÉE
+    # ==========================================
+    - name: "eclairage_hue_white_lamp_entree_annuel"
+      unique_id: "eclairage_hue_white_lamp_entree_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_entree_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_entree_mensuel"
+      unique_id: "eclairage_hue_white_lamp_entree_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_entree_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_entree_hebdomadaire"
+      unique_id: "eclairage_hue_white_lamp_entree_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_entree_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_entree_quotidien"
+      unique_id: "eclairage_hue_white_lamp_entree_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_entree_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
+    # ==========================================
+    # 2. SALON
+    # ==========================================
+    # --- TABLE SALON ---
+    - name: "eclairage_hue_white_lamp_table_salon_annuel"
+      unique_id: "eclairage_hue_white_lamp_table_salon_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_table_salon_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_table_salon_mensuel"
+      unique_id: "eclairage_hue_white_lamp_table_salon_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_table_salon_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_table_salon_hebdomadaire"
+      unique_id: "eclairage_hue_white_lamp_table_salon_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_table_salon_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_table_salon_quotidien"
+      unique_id: "eclairage_hue_white_lamp_table_salon_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_table_salon_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- AMBIANCE LAMP SALON 1 ---
+    - name: "eclairage_hue_ambiance_lamp_salon_1_annuel"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_1_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_1_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_1_mensuel"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_1_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_1_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_1_hebdomadaire"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_1_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_1_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_1_quotidien"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_1_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_1_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- AMBIANCE LAMP SALON 2 ---
+    - name: "eclairage_hue_ambiance_lamp_salon_2_annuel"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_2_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_2_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_2_mensuel"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_2_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_2_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_2_hebdomadaire"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_2_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_2_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_2_quotidien"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_2_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_2_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- AMBIANCE LAMP SALON 3 ---
+    - name: "eclairage_hue_ambiance_lamp_salon_3_annuel"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_3_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_3_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_3_mensuel"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_3_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_3_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_3_hebdomadaire"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_3_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_3_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_ambiance_lamp_salon_3_quotidien"
+      unique_id: "eclairage_hue_ambiance_lamp_salon_3_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_3_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- COLOR CANDLE SALON 1 ---
+    - name: "eclairage_hue_color_candle_salon_1_annuel"
+      unique_id: "eclairage_hue_color_candle_salon_1_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_salon_1_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_salon_1_mensuel"
+      unique_id: "eclairage_hue_color_candle_salon_1_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_salon_1_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_salon_1_hebdomadaire"
+      unique_id: "eclairage_hue_color_candle_salon_1_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_salon_1_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_salon_1_quotidien"
+      unique_id: "eclairage_hue_color_candle_salon_1_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_salon_1_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # ==========================================
+    # 3. CUISINE
+    # ==========================================
+    - name: "eclairage_hue_white_lamp_cuisine_annuel"
+      unique_id: "eclairage_hue_white_lamp_cuisine_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_cuisine_mensuel"
+      unique_id: "eclairage_hue_white_lamp_cuisine_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_cuisine_hebdomadaire"
+      unique_id: "eclairage_hue_white_lamp_cuisine_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_cuisine_quotidien"
+      unique_id: "eclairage_hue_white_lamp_cuisine_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # ==========================================
+    # 4. COULOIR
+    # ==========================================
+    - name: "eclairage_hue_white_lamp_couloir_annuel"
+      unique_id: "eclairage_hue_white_lamp_couloir_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_couloir_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_couloir_mensuel"
+      unique_id: "eclairage_hue_white_lamp_couloir_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_couloir_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_couloir_hebdomadaire"
+      unique_id: "eclairage_hue_white_lamp_couloir_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_couloir_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_couloir_quotidien"
+      unique_id: "eclairage_hue_white_lamp_couloir_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_couloir_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # ==========================================
+    # 5. BUREAU
+    # ==========================================
+    # --- HUE PLAY 1 ---
+    - name: "eclairage_hue_play_1_pc_bureau_annuel"
+      unique_id: "eclairage_hue_play_1_pc_bureau_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_1_pc_bureau_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_1_pc_bureau_mensuel"
+      unique_id: "eclairage_hue_play_1_pc_bureau_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_1_pc_bureau_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_1_pc_bureau_hebdomadaire"
+      unique_id: "eclairage_hue_play_1_pc_bureau_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_1_pc_bureau_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_1_pc_bureau_quotidien"
+      unique_id: "eclairage_hue_play_1_pc_bureau_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_1_pc_bureau_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- HUE PLAY 2 ---
+    - name: "eclairage_hue_play_2_pc_bureau_annuel"
+      unique_id: "eclairage_hue_play_2_pc_bureau_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_2_pc_bureau_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_2_pc_bureau_mensuel"
+      unique_id: "eclairage_hue_play_2_pc_bureau_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_2_pc_bureau_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_2_pc_bureau_hebdomadaire"
+      unique_id: "eclairage_hue_play_2_pc_bureau_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_2_pc_bureau_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_2_pc_bureau_quotidien"
+      unique_id: "eclairage_hue_play_2_pc_bureau_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_2_pc_bureau_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- HUE PLAY 3 ---
+    - name: "eclairage_hue_play_3_pc_bureau_annuel"
+      unique_id: "eclairage_hue_play_3_pc_bureau_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_3_pc_bureau_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_3_pc_bureau_mensuel"
+      unique_id: "eclairage_hue_play_3_pc_bureau_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_3_pc_bureau_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_3_pc_bureau_hebdomadaire"
+      unique_id: "eclairage_hue_play_3_pc_bureau_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_3_pc_bureau_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_play_3_pc_bureau_quotidien"
+      unique_id: "eclairage_hue_play_3_pc_bureau_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_play_3_pc_bureau_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- LAMPE BUREAU 1 ---
+    - name: "eclairage_lampe_bureau_1_hue_annuel"
+      unique_id: "eclairage_lampe_bureau_1_hue_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_1_hue_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_bureau_1_hue_mensuel"
+      unique_id: "eclairage_lampe_bureau_1_hue_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_1_hue_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_bureau_1_hue_hebdomadaire"
+      unique_id: "eclairage_lampe_bureau_1_hue_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_1_hue_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_bureau_1_hue_quotidien"
+      unique_id: "eclairage_lampe_bureau_1_hue_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_1_hue_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- LAMPE BUREAU 2 ---
+    - name: "eclairage_lampe_bureau_2_hue_annuel"
+      unique_id: "eclairage_lampe_bureau_2_hue_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_2_hue_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_bureau_2_hue_mensuel"
+      unique_id: "eclairage_lampe_bureau_2_hue_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_2_hue_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_bureau_2_hue_hebdomadaire"
+      unique_id: "eclairage_lampe_bureau_2_hue_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_2_hue_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_bureau_2_hue_quotidien"
+      unique_id: "eclairage_lampe_bureau_2_hue_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_bureau_2_hue_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # ==========================================
+    # 6. SALLE DE BAIN
+    # ==========================================
+    # --- RELAIS SONOFF ---
+    - name: "eclairage_relais_lumiere_sdb_sonoff_annuel"
+      unique_id: "eclairage_relais_lumiere_sdb_sonoff_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_relais_lumiere_sdb_sonoff_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_relais_lumiere_sdb_sonoff_mensuel"
+      unique_id: "eclairage_relais_lumiere_sdb_sonoff_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_relais_lumiere_sdb_sonoff_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_relais_lumiere_sdb_sonoff_hebdomadaire"
+      unique_id: "eclairage_relais_lumiere_sdb_sonoff_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_relais_lumiere_sdb_sonoff_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_relais_lumiere_sdb_sonoff_quotidien"
+      unique_id: "eclairage_relais_lumiere_sdb_sonoff_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_relais_lumiere_sdb_sonoff_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- LAMPE HUE SDB ---
+    - name: "eclairage_lampe_salle_de_bain_hue_annuel"
+      unique_id: "eclairage_lampe_salle_de_bain_hue_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_salle_de_bain_hue_mensuel"
+      unique_id: "eclairage_lampe_salle_de_bain_hue_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_salle_de_bain_hue_hebdomadaire"
+      unique_id: "eclairage_lampe_salle_de_bain_hue_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_lampe_salle_de_bain_hue_quotidien"
+      unique_id: "eclairage_lampe_salle_de_bain_hue_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # ==========================================
+    # 7. CHAMBRE
+    # ==========================================
+    # --- WHITE LAMP 1 ---
+    - name: "eclairage_hue_white_lamp_chambre_1_annuel"
+      unique_id: "eclairage_hue_white_lamp_chambre_1_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_1_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_chambre_1_mensuel"
+      unique_id: "eclairage_hue_white_lamp_chambre_1_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_1_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_chambre_1_hebdomadaire"
+      unique_id: "eclairage_hue_white_lamp_chambre_1_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_1_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_chambre_1_quotidien"
+      unique_id: "eclairage_hue_white_lamp_chambre_1_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_1_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- WHITE LAMP 2 ---
+    - name: "eclairage_hue_white_lamp_chambre_2_annuel"
+      unique_id: "eclairage_hue_white_lamp_chambre_2_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_2_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_chambre_2_mensuel"
+      unique_id: "eclairage_hue_white_lamp_chambre_2_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_2_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_chambre_2_hebdomadaire"
+      unique_id: "eclairage_hue_white_lamp_chambre_2_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_2_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_white_lamp_chambre_2_quotidien"
+      unique_id: "eclairage_hue_white_lamp_chambre_2_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_white_lamp_chambre_2_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- BOUGIE ERIC ---
+    - name: "eclairage_hue_color_candle_chambre_eric_annuel"
+      unique_id: "eclairage_hue_color_candle_chambre_eric_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_eric_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_chambre_eric_mensuel"
+      unique_id: "eclairage_hue_color_candle_chambre_eric_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_eric_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_chambre_eric_hebdomadaire"
+      unique_id: "eclairage_hue_color_candle_chambre_eric_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_eric_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_chambre_eric_quotidien"
+      unique_id: "eclairage_hue_color_candle_chambre_eric_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_eric_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+
+    # --- BOUGIE GEGE ---
+    - name: "eclairage_hue_color_candle_chambre_gege_annuel"
+      unique_id: "eclairage_hue_color_candle_chambre_gege_annuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_annuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_chambre_gege_mensuel"
+      unique_id: "eclairage_hue_color_candle_chambre_gege_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_mensuel_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_chambre_gege_hebdomadaire"
+      unique_id: "eclairage_hue_color_candle_chambre_gege_hebdomadaire"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_hebdomadaire_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
+    - name: "eclairage_hue_color_candle_chambre_gege_quotidien"
+      unique_id: "eclairage_hue_color_candle_chambre_gege_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: >
+        {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_quotidien_um') %}
+        {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
 #========================================================================
 # SALON (5) ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )

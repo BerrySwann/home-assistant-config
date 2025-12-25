@@ -30,3 +30,199 @@
         states('sensor.eclairage_bureau_5_mensuel') | float(0) +
         states('sensor.eclairage_sdb_2_mensuel') | float(0) +
         states('sensor.eclairage_chambre_4_mensuel') | float(0)) | round(3) }}
+
+- sensor:
+    # ==========================================
+    # SYNTHÈSE PAR PIÈCE - QUOTIDIEN
+    # ==========================================
+
+    - name: eclairage_entree_total_quotidien
+      unique_id: eclairage_entree_total_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {{ states('sensor.eclairage_hue_white_lamp_entree_quotidien') | float(0) | round(3) }}
+
+    - name: eclairage_salon_total_quotidien
+      unique_id: eclairage_salon_total_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_hue_white_lamp_table_salon_quotidien'),
+          states('sensor.eclairage_hue_ambiance_lamp_salon_1_quotidien'),
+          states('sensor.eclairage_hue_ambiance_lamp_salon_2_quotidien'),
+          states('sensor.eclairage_hue_ambiance_lamp_salon_3_quotidien'),
+          states('sensor.eclairage_hue_color_candle_salon_1_quotidien')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    - name: eclairage_cuisine_total_quotidien
+      unique_id: eclairage_cuisine_total_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {{ states('sensor.eclairage_hue_white_lamp_cuisine_quotidien') | float(0) | round(3) }}
+
+    - name: eclairage_couloir_total_quotidien
+      unique_id: eclairage_couloir_total_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {{ states('sensor.eclairage_hue_white_lamp_couloir_quotidien') | float(0) | round(3) }}
+
+    - name: eclairage_bureau_total_quotidien
+      unique_id: eclairage_bureau_total_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_hue_play_1_pc_bureau_quotidien'),
+          states('sensor.eclairage_hue_play_2_pc_bureau_quotidien'),
+          states('sensor.eclairage_hue_play_3_pc_bureau_quotidien'),
+          states('sensor.eclairage_lampe_bureau_1_hue_quotidien'),
+          states('sensor.eclairage_lampe_bureau_2_hue_quotidien')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    - name: eclairage_salle_de_bain_total_quotidien
+      unique_id: eclairage_salle_de_bain_total_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_relais_lumiere_sdb_sonoff_quotidien'),
+          states('sensor.eclairage_lampe_salle_de_bain_hue_quotidien')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    - name: eclairage_chambre_total_quotidien
+      unique_id: eclairage_chambre_total_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_hue_white_lamp_chambre_1_quotidien'),
+          states('sensor.eclairage_hue_white_lamp_chambre_2_quotidien'),
+          states('sensor.eclairage_hue_color_candle_chambre_eric_quotidien'),
+          states('sensor.eclairage_hue_color_candle_chambre_gege_quotidien')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    # ==========================================
+    # SYNTHÈSE PAR PIÈCE - MENSUEL
+    # ==========================================
+
+    - name: eclairage_entree_total_mensuel
+      unique_id: eclairage_entree_total_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {{ states('sensor.eclairage_hue_white_lamp_entree_mensuel') | float(0) | round(3) }}
+
+    - name: eclairage_salon_total_mensuel
+      unique_id: eclairage_salon_total_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_hue_white_lamp_table_salon_mensuel'),
+          states('sensor.eclairage_hue_ambiance_lamp_salon_1_mensuel'),
+          states('sensor.eclairage_hue_ambiance_lamp_salon_2_mensuel'),
+          states('sensor.eclairage_hue_ambiance_lamp_salon_3_mensuel'),
+          states('sensor.eclairage_hue_color_candle_salon_1_mensuel')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    - name: eclairage_cuisine_total_mensuel
+      unique_id: eclairage_cuisine_total_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {{ states('sensor.eclairage_hue_white_lamp_cuisine_mensuel') | float(0) | round(3) }}
+
+    - name: eclairage_couloir_total_mensuel
+      unique_id: eclairage_couloir_total_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {{ states('sensor.eclairage_hue_white_lamp_couloir_mensuel') | float(0) | round(3) }}
+
+    - name: eclairage_bureau_total_mensuel
+      unique_id: eclairage_bureau_total_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_hue_play_1_pc_bureau_mensuel'),
+          states('sensor.eclairage_hue_play_2_pc_bureau_mensuel'),
+          states('sensor.eclairage_hue_play_3_pc_bureau_mensuel'),
+          states('sensor.eclairage_lampe_bureau_1_hue_mensuel'),
+          states('sensor.eclairage_lampe_bureau_2_hue_mensuel')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    - name: eclairage_salle_de_bain_total_mensuel
+      unique_id: eclairage_salle_de_bain_total_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_relais_lumiere_sdb_sonoff_mensuel'),
+          states('sensor.eclairage_lampe_salle_de_bain_hue_mensuel')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    - name: eclairage_chambre_total_mensuel
+      unique_id: eclairage_chambre_total_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_hue_white_lamp_chambre_1_mensuel'),
+          states('sensor.eclairage_hue_white_lamp_chambre_2_mensuel'),
+          states('sensor.eclairage_hue_color_candle_chambre_eric_mensuel'),
+          states('sensor.eclairage_hue_color_candle_chambre_gege_mensuel')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+- sensor:
+    # ==========================================
+    # GRAND TOTAL ÉCLAIRAGE APPART. - QUOTIDIEN
+    # ==========================================
+    - name: "eclairage_appart_total_quotidien"
+      unique_id: "eclairage_appart_total_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:lightbulb-group
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_entree_total_quotidien'),
+          states('sensor.eclairage_salon_total_quotidien'),
+          states('sensor.eclairage_cuisine_total_quotidien'),
+          states('sensor.eclairage_couloir_total_quotidien'),
+          states('sensor.eclairage_bureau_total_quotidien'),
+          states('sensor.eclairage_salle_de_bain_total_quotidien'),
+          states('sensor.eclairage_chambre_total_quotidien')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+
+    # ==========================================
+    # GRAND TOTAL ÉCLAIRAGE APPART. - MENSUEL
+    # ==========================================
+    - name: "eclairage_appart_total_mensuel"
+      unique_id: "eclairage_appart_total_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:lightbulb-group-outline
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_entree_total_mensuel'),
+          states('sensor.eclairage_salon_total_mensuel'),
+          states('sensor.eclairage_cuisine_total_mensuel'),
+          states('sensor.eclairage_couloir_total_mensuel'),
+          states('sensor.eclairage_bureau_total_mensuel'),
+          states('sensor.eclairage_salle_de_bain_total_mensuel'),
+          states('sensor.eclairage_chambre_total_mensuel')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
