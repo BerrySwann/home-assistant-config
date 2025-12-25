@@ -1197,17 +1197,20 @@
   mode: single
 - id: '1763661737799'
   alias: A - Démarrage Radiateur Salle de Bain
-  description: Allumage prise + radiateur + mise à jour état climate
+  description: 'Allumage sécurisé : adapte la puissance ou refuse si > 24°C'
   triggers:
   - trigger: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'on'
+  conditions:
+  - condition: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    below: 24
   actions:
-  - delay: '00:00:00.4'
   - action: switch.turn_on
     target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
-  - delay: '00:00:00.4'
+  - delay: '00:00:01.0'
   - action: remote.send_command
     target:
       entity_id: remote.radiateur_sdb_rm4_mini
@@ -1215,29 +1218,38 @@
       command: on_off
       device: radiateur_sdb
       num_repeats: 1
-  - delay: '00:00:00.4'
-  - action: remote.send_command
-    target:
-      entity_id: remote.radiateur_sdb_rm4_mini
-    data:
-      command: 1000w
-      device: radiateur_sdb
-      num_repeats: 2
-  - delay: '00:00:00.4'
-  - action: remote.send_command
-    target:
-      entity_id: remote.radiateur_sdb_rm4_mini
-    data:
-      command: swing
-      device: radiateur_sdb
-      num_repeats: 1
-  - delay: '00:00:01.0'
+  - delay: '00:00:00.6'
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_salle_de_bain_temperature
+        above: 21.9
+      sequence:
+      - action: remote.send_command
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+          num_repeats: 1
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_salle_de_bain_temperature
+        below: 22
+      sequence:
+      - action: remote.send_command
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+          num_repeats: 2
+  - delay: '00:00:00.6'
   - action: climate.set_hvac_mode
-    target:
-      entity_id: climate.soufflant_salle_de_bain
     data:
       hvac_mode: heat
-  mode: single
+    target:
+      entity_id: climate.soufflant_salle_de_bain
 - id: '1763755093414'
   alias: Bouton IKEA RODRET - Gestion ON/OFF (JSON)
   description: ''
@@ -2455,3 +2467,39 @@
         data:
           tag: alert-batterie
           color: '#f44336'
+- id: '1766658095181'
+  alias: D - Watchdog Sécurité Radiateur SDB
+  description: Reset physique si T > 24°C, uniquement si la prise est alimentée
+  triggers:
+  - trigger: state
+    entity_id: sensor.th_salle_de_bain_temperature
+  conditions:
+  - condition: state
+    entity_id: switch.prise_radiateur_salle_de_bain_nous
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    state: 'on'
+  - condition: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    above: 24
+  - condition: template
+    value_template: "{{ (states('sensor.th_salle_de_bain_temperature') | float) >=
+      \n   (trigger.from_state.state | float + 0.5) }}\n"
+  actions:
+  - action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: ⚠️ Watchdog SDB
+      message: Dérive thermique détectée à {{ states('sensor.th_salle_de_bain_temperature')
+        }}°C. Reset IR lancé.
+  - repeat:
+      count: 2
+      sequence:
+      - action: remote.send_command
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: on_off
+          device: radiateur_sdb
+          num_repeats: 1
+      - delay: '00:00:01.0'
