@@ -2419,8 +2419,8 @@
 - id: '1766234836333'
   alias: DIAG - Enregistrement Journalier (6 Postes)
   triggers:
-  - hours: /1
-    trigger: time_pattern
+  - trigger: time_pattern
+    minutes: /15
   actions:
   - action: notify.send_message
     target:
@@ -2510,7 +2510,7 @@
   triggers:
   - trigger: numeric_state
     entity_id: sensor.prise_bureau_pc_ikea_power
-    below: 10
+    below: 50
     for:
       minutes: 10
   conditions:
@@ -2520,11 +2520,6 @@
   - condition: template
     value_template: '{{ (now() - states.switch.hue_smart_eco_pc_bureau.last_changed).total_seconds()
       > 900 }}'
-  - condition: template
-    value_template: '{% set gp = states(''sensor.groupe_clim'') %} {{ ''groupe_3''
-      not in gp and ''groupe_4'' not in gp }}
-
-      '
   actions:
   - action: switch.turn_off
     target:
