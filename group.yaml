@@ -40,3 +40,7 @@
         - sensor.th_salle_de_bain_battery
         - sensor.th_salon_battery
         - sensor.th_cellier_battery
+        - sensor.contact_fenetre_salon_sonoff_battery
+        - sensor.contact_fenetre_cuisine_sonoff_battery
+        - sensor.contact_fenetre_bureau_sonoff_battery
+        - sensor.contact_fenetre_chambre_sonoff_battery
