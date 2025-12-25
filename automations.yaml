@@ -261,168 +261,6 @@
         data:
           message: /!\ Chauffage Cuisine "OFF" /!\
   mode: single
-- id: '1737483248264'
-  alias: Gestion Optimisée du Store Bureau
-  description: Gère l'ouverture et la fermeture du store du bureau en fonction de
-    la température et de l'heure, avec des conditions spécifiques pour le contact
-    de la fenêtre et la position du store.
-  triggers:
-  - at: 07:00:00
-    trigger: time
-  - event: sunset
-    trigger: sun
-  - trigger: state
-    entity_id:
-    - sensor.temperature_cible
-  - entity_id: sensor.th_balcon_nord_temperature
-    above: 18
-    trigger: numeric_state
-  - entity_id:
-    - sensor.th_balcon_nord_temperature
-    above: 25
-    trigger: numeric_state
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: time
-        after: 07:00:00
-      - condition: sun
-        before: sunset
-      - condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        above: 18
-        below: 25
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
-        state: 'off'
-      - condition: numeric_state
-        entity_id: cover.store_bureau
-        attribute: current_position
-        below: 50
-      sequence:
-      - target:
-          entity_id: cover.store_bureau
-        action: cover.open_cover
-        data: {}
-      alias: OUVERTURE DU STORE SI APRES 7h & 4 CONDITIONS
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        above: 24.99
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
-        state: 'off'
-      - condition: numeric_state
-        entity_id: cover.store_bureau
-        attribute: current_position
-        above: 50
-      sequence:
-      - target:
-          entity_id: cover.store_bureau
-        action: cover.close_cover
-        data: {}
-      alias: FERMETURE DU STORE SI T° >25°  & 2 CONDITIONS
-    - conditions:
-      - condition: sun
-        after: sunset
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
-        state: 'off'
-      sequence:
-      - target:
-          entity_id: cover.store_bureau
-        action: cover.close_cover
-        data: {}
-      alias: FERMETURE DU STORE AU COUCHE DU SOLEIL  & 1 CONDITION
-    default: []
-  mode: single
-- id: '1740857967163'
-  alias: Gestion Optimisée du Store Salon
-  description: Gère l'ouverture et la fermeture du store du salon en fonction de la
-    température et de l'heure, avec des conditions spécifiques pour le contact de
-    la fenêtre et la position du store.
-  triggers:
-  - minutes: /5
-    trigger: time_pattern
-  - entity_id: sensor.th_balcon_nord_temperature
-    trigger: state
-  - event: sunrise
-    trigger: sun
-  - event: sunset
-    trigger: sun
-  - entity_id:
-    - sensor.poco_x7_pro_mamour_network_type
-    from: cellular
-    to: wifi
-    trigger: state
-  - entity_id:
-    - sensor.poco_x7_pro_mamour_network_type
-    from: wifi
-    to: cellular
-    trigger: state
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - alias: OUVERTURE DU STORE AU LEVER DU SOLEIL  & 2 CONDITIONS
-        condition: state
-        entity_id: sensor.poco_x7_pro_mamour_network_type
-        state: wifi
-      - condition: state
-        entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
-        state: Freebox_GG
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-        state: 'off'
-      - condition: sun
-        after: sunrise
-        before: sunset
-      - condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        below: 34
-      - condition: numeric_state
-        entity_id: cover.store_salon
-        above: 50
-      sequence:
-      - target:
-          entity_id: cover.store_salon
-        action: cover.open_cover
-        data: {}
-    - conditions:
-      - alias: FERMETURE DU STORE A 50% SI T° >34°  & 3 CONDITIONS
-        condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        above: 34
-      - condition: state
-        entity_id: sensor.poco_x7_pro_mamour_network_type
-        state: cellular
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-        state: 'off'
-      - condition: sun
-        after: sunrise
-        before: sunset
-      sequence:
-      - target:
-          entity_id: cover.store_salon
-        data:
-          position: 50
-        action: cover.set_cover_position
-    - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL  & 1 CONDITION
-      conditions:
-      - condition: sun
-        after: sunset
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-        state: 'off'
-      sequence:
-      - target:
-          entity_id: cover.store_salon
-        action: cover.close_cover
-        data: {}
-    default: []
-  mode: single
 - id: '1742931674050'
   alias: Mettre à jour le temps du dernier impact de foudre
   description: Met à jour le temps du dernier impact de foudre lorsque le capteur
@@ -1017,161 +855,93 @@
           {{ piece }} vient d'être éteinte.\n"
   mode: parallel
 - id: '1761235548897'
-  alias: (TEST) Gestion Optimisée du Store Bureau
-  description: 'Gère l''ouverture et la fermeture du store du bureau en fonction de
-    la température et de l''heure, avec des conditions spécifiques pour le contact
-    de la fenêtre et la position du store.
-
-    '
+  alias: Gestion Optimisée du Store Bureau
+  description: 'Priorité Sommeil et Anti-Reflet. Sécurité : Bloque tout mouvement
+    si la fenêtre est ouverte.'
   triggers:
-  - at: 07:00:00
+  - id: reveil
     trigger: time
-  - event: sunset
-    trigger: sun
+    at: 07:00:00
   - trigger: state
-    entity_id:
-    - sensor.temperature_cible
-  - entity_id: sensor.th_balcon_nord_temperature
-    above: 18
-    below: 26
-    trigger: numeric_state
-  conditions: []
+    entity_id: sensor.th_balcon_nord_temperature
+  - trigger: sun
+    event: sunset
+  - id: fenetre
+    trigger: state
+    entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
+    to: 'off'
+  conditions:
+  - alias: Si la fenêtre est ouverte, on ne touche à rien
+    condition: state
+    entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
+    state: 'off'
   actions:
   - choose:
-    - alias: OUVERTURE DU STORE SI APRES 7h & CONDITIONS EN AND
+    - alias: 'SCÉNARIO A : Ouverture Travail'
       conditions:
-      - condition: and
-        conditions:
-        - condition: time
-          after: 07:00:00
-        - condition: sun
-          before: sunset
-        - condition: numeric_state
-          entity_id: sensor.th_balcon_nord_temperature
-          above: 18
-          below: 25
-        - condition: state
-          entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
-          state: 'off'
-        - condition: numeric_state
-          entity_id: cover.store_bureau
-          attribute: current_position
-          above: 50
-      sequence:
-      - target:
-          entity_id: cover.store_bureau
-        action: cover.open_cover
-        data: {}
-    - alias: FERMETURE DU STORE SI T° >25° & CONDITIONS EN AND
-      conditions:
-      - condition: and
-        conditions:
-        - condition: numeric_state
-          entity_id: sensor.th_balcon_nord_temperature
-          above: 25
-        - condition: state
-          entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
-          state: 'off'
-        - condition: numeric_state
-          entity_id: cover.store_bureau
-          attribute: current_position
-          above: 50
-      sequence:
-      - target:
-          entity_id: cover.store_bureau
-        action: cover.close_cover
-        data: {}
-    - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL & 1 CONDITION
-      conditions:
-      - condition: and
-        conditions:
-        - condition: sun
-          after: sunset
-        - condition: state
-          entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
-          state: 'off'
-      sequence:
-      - target:
-          entity_id: cover.store_bureau
-        action: cover.close_cover
-        data: {}
-    default: []
-  mode: single
-- id: '1761236981200'
-  alias: Gestion Optimisée du Store Salon
-  description: 'Gestion du store basée sur le Groupe Clim : A: Ouverture si T° clémente.
-    B: Canicule (>34) -> 50% si Groupe 1/3, Fermé si Groupe 2/4. C: Fermeture nuit.
-    D: Froid (<17) -> Fermé si Groupe 1 (Absent).'
-  triggers:
-  - entity_id: sensor.th_balcon_nord_temperature
-    trigger: state
-  - event: sunrise
-    trigger: sun
-  - event: sunset
-    trigger: sun
-  - entity_id: sensor.groupe_clim
-    trigger: state
-  conditions: []
-  actions:
-  - choose:
-    - alias: 'Canicule : Gestion par Groupe Clim'
-      conditions:
-      - condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        above: 34
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-        state: 'off'
+      - condition: time
+        after: 07:00:00
       - condition: sun
-        after: sunrise
         before: sunset
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        above: 18
+        below: 25
+      - condition: numeric_state
+        entity_id: cover.store_bureau
+        attribute: current_position
+        below: 1
       sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: sensor.groupe_clim
-            state:
-            - groupe_1
-            - groupe_3
-          sequence:
-          - action: cover.set_cover_position
-            target:
-              entity_id: cover.store_salon
-            data:
-              position: 50
-        - conditions:
-          - condition: state
-            entity_id: sensor.groupe_clim
-            state:
-            - groupe_2
-            - groupe_4
-          sequence:
-          - action: cover.close_cover
-            target:
-              entity_id: cover.store_salon
-    - alias: 'Froid : Fermé si Absent'
+      - action: cover.open_cover
+        target:
+          entity_id: cover.store_bureau
+    - alias: 'SCÉNARIO B : Fermeture Chaleur'
       conditions:
       - condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
-        below: 17
-      - condition: state
-        entity_id: sensor.groupe_clim
-        state: groupe_1
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-        state: 'off'
+        above: 25
       - condition: sun
-        after: sunrise
         before: sunset
       sequence:
       - action: cover.close_cover
         target:
-          entity_id: cover.store_salon
-    - alias: Ouverture si conditions clémentes
+          entity_id: cover.store_bureau
+    - alias: 'SCÉNARIO C : Fermeture Nuit'
       conditions:
-      - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-        state: 'off'
+      - condition: sun
+        after: sunset
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.store_bureau
+  mode: single
+- id: '1761236981200'
+  alias: Gestion Optimisée du Store Salon
+  description: 'SÉCURITÉ BALCON : Bloque tout mouvement si la fenêtre est ouverte.'
+  triggers:
+  - id: re-evaluation
+    trigger: state
+    entity_id:
+    - sensor.th_balcon_nord_temperature
+    - sensor.groupe_clim
+  - id: fenetre
+    trigger: state
+    entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
+  - id: matin
+    trigger: sun
+    event: sunrise
+  - id: soir
+    trigger: sun
+    event: sunset
+  conditions:
+  - alias: Si la fenêtre est ouverte, on ne touche à rien (Personne sur le balcon)
+    condition: state
+    entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
+    state: 'off'
+  actions:
+  - choose:
+    - alias: 'SCÉNARIO A : Ouverture'
+      conditions:
       - condition: sun
         after: sunrise
         before: sunset
@@ -1184,17 +954,67 @@
         - condition: state
           entity_id: sensor.groupe_clim
           state: groupe_1
+      - condition: numeric_state
+        entity_id: cover.store_salon
+        attribute: current_position
+        below: 1
       sequence:
       - action: cover.open_cover
         target:
           entity_id: cover.store_salon
-    - alias: Fermeture nuit
+    - alias: 'SCÉNARIO B : Canicule (T > 34°C)'
+      conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        above: 34
+      - condition: sun
+        after: sunrise
+        before: sunset
+      sequence:
+      - choose:
+        - alias: 'G1 ou G3 : Fermeture Totale'
+          conditions:
+          - condition: state
+            entity_id: sensor.groupe_clim
+            state:
+            - groupe_1
+            - groupe_3
+          sequence:
+          - action: cover.close_cover
+            target:
+              entity_id: cover.store_salon
+        - alias: 'G2 ou G4 : Position 50%'
+          conditions:
+          - condition: state
+            entity_id: sensor.groupe_clim
+            state:
+            - groupe_2
+            - groupe_4
+          sequence:
+          - action: cover.set_cover_position
+            target:
+              entity_id: cover.store_salon
+            data:
+              position: 50
+    - alias: 'SCÉNARIO C : Fermeture Nuit'
       conditions:
       - condition: sun
         after: sunset
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.store_salon
+    - alias: 'SCÉNARIO D : Froid (T < 17°C + Absence)'
+      conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        below: 17
       - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-        state: 'off'
+        entity_id: sensor.groupe_clim
+        state: groupe_1
+      - condition: sun
+        after: sunrise
+        before: sunset
       sequence:
       - action: cover.close_cover
         target:
@@ -2545,4 +2365,45 @@
   - target:
       entity_id: switch.hue_smart_eco_pc_bureau
     action: switch.turn_on
+  mode: single
+- id: '1766693057961'
+  alias: Gestion Auto Prise TV Chambre
+  description: Allumage à 21h et extinction totale si TV éteinte (Conso < 5W)
+  triggers:
+  - id: allumage_soir
+    trigger: time
+    at: '21:00:00'
+  - id: extinction_veille
+    trigger: numeric_state
+    entity_id: sensor.prise_tv_chambre_nous_device_power
+    below: 5
+    for:
+      minutes: 2
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: allumage_soir
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.prise_tv_chambre_nous
+      - action: light.turn_on
+        target:
+          entity_id: light.hue_smart_tv_chambre
+    - conditions:
+      - condition: trigger
+        id: extinction_veille
+      - condition: time
+        after: '21:05:00'
+      - condition: state
+        entity_id: switch.prise_tv_chambre_nous
+        state: 'on'
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.prise_tv_chambre_nous
+      - action: light.turn_off
+        target:
+          entity_id: light.hue_smart_tv_chambre
   mode: single
