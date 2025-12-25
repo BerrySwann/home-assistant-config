@@ -294,7 +294,7 @@
         above: 18
         below: 25
       - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
         state: 'off'
       - condition: numeric_state
         entity_id: cover.store_bureau
@@ -311,7 +311,7 @@
         entity_id: sensor.th_balcon_nord_temperature
         above: 24.99
       - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
         state: 'off'
       - condition: numeric_state
         entity_id: cover.store_bureau
@@ -327,7 +327,7 @@
       - condition: sun
         after: sunset
       - condition: state
-        entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+        entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
         state: 'off'
       sequence:
       - target:
@@ -373,7 +373,7 @@
         entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
         state: Freebox_GG
       - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
         state: 'off'
       - condition: sun
         after: sunrise
@@ -398,7 +398,7 @@
         entity_id: sensor.poco_x7_pro_mamour_network_type
         state: cellular
       - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
         state: 'off'
       - condition: sun
         after: sunrise
@@ -414,7 +414,7 @@
       - condition: sun
         after: sunset
       - condition: state
-        entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
         state: 'off'
       sequence:
       - target:
@@ -512,7 +512,7 @@
       message: 'Des capteurs Zigbee ne sont plus joignables : {{ sensors }}'
   variables:
     day: 0
-    hours: 4
+    hours: 8
     exclude:
       entity_id: []
     sensors: "{% set result = namespace(sensors=[]) %} {% for state in states.sensor
@@ -718,10 +718,10 @@
   description: Envoie une notification lorsqu'une fenêtre est fermée.
   triggers:
   - entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    - binary_sensor.contact_fenetre_salon_sonoff_contact
+    - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+    - binary_sensor.contact_fenetre_bureau_sonoff_contact
+    - binary_sensor.contact_fenetre_chambre_sonoff_contact
     from: 'on'
     to: 'off'
     trigger: state
@@ -729,11 +729,11 @@
   - delay: 00:00:02
   - data:
       title: Fermeture en cours
-      message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_ikea_contact'
-        %}\n  La fenêtre du Salon a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_cuisine_ikea_contact'
+      message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_sonoff_contact'
+        %}\n  La fenêtre du Salon a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_cuisine_sonoff_contact'
         %}\n  La fenêtre de la Cuisine a été fermée.\n{% elif trigger.entity_id ==
-        'binary_sensor.contact_fenetre_bureau_ikea_contact' %}\n  La fenêtre du Bureau
-        a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_chambre_ikea_contact'
+        'binary_sensor.contact_fenetre_bureau_sonoff_contact' %}\n  La fenêtre du Bureau
+        a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_chambre_sonoff_contact'
         %}\n  La fenêtre de la Chambre a été fermée.\n{% endif %} {% if states('sensor.nbre_de_fenetres_fermees')
         == '4' %}\n  Toutes les fenêtres sont maintenant fermées.\n{% endif %}"
     action: notify.mobile_app_poco_x7_pro_eric
@@ -760,16 +760,16 @@
     entity_id: switch.clim_chambre_nous
     state: 'on'
   - condition: state
-    entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+    entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
     state: 'off'
   - condition: state
-    entity_id: binary_sensor.contact_fenetre_cuisine_ikea_contact
+    entity_id: binary_sensor.contact_fenetre_cuisine_sonoff_contact
     state: 'off'
   - condition: state
-    entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+    entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
     state: 'off'
   - condition: state
-    entity_id: binary_sensor.contact_fenetre_chambre_ikea_contact
+    entity_id: binary_sensor.contact_fenetre_chambre_sonoff_contact
     state: 'off'
   actions:
   - action: notify.mobile_app_poco_x7_pro_eric
@@ -1051,7 +1051,7 @@
           above: 18
           below: 25
         - condition: state
-          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
           state: 'off'
         - condition: numeric_state
           entity_id: cover.store_bureau
@@ -1070,7 +1070,7 @@
           entity_id: sensor.th_balcon_nord_temperature
           above: 25
         - condition: state
-          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
           state: 'off'
         - condition: numeric_state
           entity_id: cover.store_bureau
@@ -1088,7 +1088,7 @@
         - condition: sun
           after: sunset
         - condition: state
-          entity_id: binary_sensor.contact_fenetre_bureau_ikea_contact
+          entity_id: binary_sensor.contact_fenetre_bureau_sonoff_contact
           state: 'off'
       sequence:
       - target:
@@ -1137,7 +1137,7 @@
           entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
           state: Freebox_GG
         - condition: state
-          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
           state: 'off'
         - condition: sun
           after: sunrise
@@ -1166,7 +1166,7 @@
           entity_id: sensor.poco_x7_pro_mamour_network_type
           state: cellular
         - condition: state
-          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
           state: 'off'
         - condition: sun
           after: sunrise
@@ -1186,7 +1186,7 @@
         - condition: sun
           after: sunset
         - condition: state
-          entity_id: binary_sensor.contact_fenetre_salon_ikea_contact
+          entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
           state: 'off'
       sequence:
       - target:
@@ -1500,20 +1500,20 @@
     trigger: state
   - alias: 'FENÊTRES : Fermeture (Rétablissement)'
     entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    - binary_sensor.contact_fenetre_salon_sonoff_contact
+    - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+    - binary_sensor.contact_fenetre_bureau_sonoff_contact
+    - binary_sensor.contact_fenetre_chambre_sonoff_contact
     from: 'on'
     to: 'off'
     id: window_close
     trigger: state
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    - binary_sensor.contact_fenetre_salon_sonoff_contact
+    - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+    - binary_sensor.contact_fenetre_bureau_sonoff_contact
+    - binary_sensor.contact_fenetre_chambre_sonoff_contact
     from: 'off'
     to: 'on'
     id: window_open
@@ -1537,9 +1537,9 @@
       mode_saison: "{% set m = states('sensor.mode_ete_hiver') %} {% if m in ['heat',
         'cool', 'fan_only'] %}\n  {{ m }}\n{% else %}\n  off\n{% endif %}\n"
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
-      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',\n
-        \         'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n          'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-        \         'binary_sensor.contact_fenetre_chambre_ikea_contact')\n      | selectattr('state',
+      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',\n
+        \         'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
+        \         'binary_sensor.contact_fenetre_chambre_sonoff_contact')\n      | selectattr('state',
         'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
@@ -1567,9 +1567,9 @@
       - alias: 'NOTIF : ALERTE FENÊTRE'
         data:
           title: CLIM COUPÉE
-          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %}  {% set ouverts
+          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %}  {% set ouverts
             = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}  {% set
             messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n  {% for
             fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
@@ -1727,20 +1727,20 @@
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    - binary_sensor.contact_fenetre_salon_sonoff_contact
+    - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+    - binary_sensor.contact_fenetre_bureau_sonoff_contact
+    - binary_sensor.contact_fenetre_chambre_sonoff_contact
     from: 'off'
     to: 'on'
     id: window_open
   - alias: 'FENÊTRES : Fermeture (Rétablissement)'
     trigger: state
     entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    - binary_sensor.contact_fenetre_salon_sonoff_contact
+    - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+    - binary_sensor.contact_fenetre_bureau_sonoff_contact
+    - binary_sensor.contact_fenetre_chambre_sonoff_contact
     from: 'on'
     to: 'off'
     id: window_close
@@ -1763,9 +1763,9 @@
       mode_saison: "{% set m = states('sensor.mode_ete_hiver') %} {% if m in ['heat',
         'cool', 'fan_only'] %}\n  {{ m }}\n{% else %}\n  off\n{% endif %}\n"
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
-      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',
-        \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
-        \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n      |
+      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',
+        \n          'binary_sensor.contact_fenetre_cuisine_sonoff_contact', \n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',
+        \n          'binary_sensor.contact_fenetre_chambre_sonoff_contact') \n      |
         selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
@@ -1796,9 +1796,9 @@
         action: notify.mobile_app_poco_x7_pro_eric
         data:
           title: CLIM COUPÉE
-          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %} {% set ouverts
+          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set ouverts
             = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% set
             messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n  {% for
             fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
@@ -2127,20 +2127,20 @@
   - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
     trigger: state
     entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    - binary_sensor.contact_fenetre_salon_sonoff_contact
+    - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+    - binary_sensor.contact_fenetre_bureau_sonoff_contact
+    - binary_sensor.contact_fenetre_chambre_sonoff_contact
     from: 'off'
     to: 'on'
     id: window_open
   - alias: 'FENÊTRES : Fermeture (Rétablissement)'
     trigger: state
     entity_id:
-    - binary_sensor.contact_fenetre_salon_ikea_contact
-    - binary_sensor.contact_fenetre_cuisine_ikea_contact
-    - binary_sensor.contact_fenetre_bureau_ikea_contact
-    - binary_sensor.contact_fenetre_chambre_ikea_contact
+    - binary_sensor.contact_fenetre_salon_sonoff_contact
+    - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+    - binary_sensor.contact_fenetre_bureau_sonoff_contact
+    - binary_sensor.contact_fenetre_chambre_sonoff_contact
     from: 'on'
     to: 'off'
     id: window_close
@@ -2162,9 +2162,9 @@
     variables:
       mode_saison: '{{ states(''sensor.mode_ete_hiver'') }}'
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
-      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_ikea_contact',
-        \n          'binary_sensor.contact_fenetre_cuisine_ikea_contact', \n          'binary_sensor.contact_fenetre_bureau_ikea_contact',
-        \n          'binary_sensor.contact_fenetre_chambre_ikea_contact') \n      |
+      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',
+        \n          'binary_sensor.contact_fenetre_cuisine_sonoff_contact', \n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',
+        \n          'binary_sensor.contact_fenetre_chambre_sonoff_contact') \n      |
         selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
@@ -2194,9 +2194,9 @@
         action: notify.mobile_app_poco_x7_pro_eric
         data:
           title: CLIM COUPÉE
-          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_cuisine_ikea_contact',\n  'binary_sensor.contact_fenetre_bureau_ikea_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_ikea_contact'\n] %} {% set ouverts
+          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set ouverts
             = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% set
             messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n  {% for
             fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
