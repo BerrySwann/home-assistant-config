@@ -1098,102 +1098,107 @@
     default: []
   mode: single
 - id: '1761236981200'
-  alias: (TEST) Gestion Optimisée du Store Salon
-  description: 'Gère l''ouverture et la fermeture du store du salon en fonction de
-    la température et de l''heure, avec des conditions spécifiques pour le contact
-    de la fenêtre et la position du store.
-
-    '
+  alias: Gestion Optimisée du Store Salon
+  description: 'Gestion du store basée sur le Groupe Clim : A: Ouverture si T° clémente.
+    B: Canicule (>34) -> 50% si Groupe 1/3, Fermé si Groupe 2/4. C: Fermeture nuit.
+    D: Froid (<17) -> Fermé si Groupe 1 (Absent).'
   triggers:
-  - minutes: /1
-    trigger: time_pattern
   - entity_id: sensor.th_balcon_nord_temperature
     trigger: state
   - event: sunrise
     trigger: sun
   - event: sunset
     trigger: sun
-  - entity_id:
-    - sensor.poco_x7_pro_mamour_network_type
-    from: cellular
-    to: wifi
-    trigger: state
-  - entity_id:
-    - sensor.poco_x7_pro_mamour_network_type
-    from: wifi
-    to: cellular
+  - entity_id: sensor.groupe_clim
     trigger: state
   conditions: []
   actions:
   - choose:
-    - alias: OUVERTURE DU STORE AU LEVER DU SOLEIL & CONDITIONS EN AND
+    - alias: 'Canicule : Gestion par Groupe Clim'
       conditions:
-      - condition: and
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        above: 34
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
+        state: 'off'
+      - condition: sun
+        after: sunrise
+        before: sunset
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: sensor.groupe_clim
+            state:
+            - groupe_1
+            - groupe_3
+          sequence:
+          - action: cover.set_cover_position
+            target:
+              entity_id: cover.store_salon
+            data:
+              position: 50
+        - conditions:
+          - condition: state
+            entity_id: sensor.groupe_clim
+            state:
+            - groupe_2
+            - groupe_4
+          sequence:
+          - action: cover.close_cover
+            target:
+              entity_id: cover.store_salon
+    - alias: 'Froid : Fermé si Absent'
+      conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        below: 17
+      - condition: state
+        entity_id: sensor.groupe_clim
+        state: groupe_1
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
+        state: 'off'
+      - condition: sun
+        after: sunrise
+        before: sunset
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.store_salon
+    - alias: Ouverture si conditions clémentes
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
+        state: 'off'
+      - condition: sun
+        after: sunrise
+        before: sunset
+      - condition: numeric_state
+        entity_id: sensor.th_balcon_nord_temperature
+        above: 17
+        below: 34
+      - condition: not
         conditions:
         - condition: state
-          entity_id: sensor.poco_x7_pro_mamour_network_type
-          state: wifi
-        - condition: state
-          entity_id: sensor.poco_x7_pro_mamour_wi_fi_connection
-          state: Freebox_GG
-        - condition: state
-          entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-          state: 'off'
-        - condition: sun
-          after: sunrise
-          before: sunset
-        - condition: numeric_state
-          entity_id: sensor.th_balcon_nord_temperature
-          below: 32
-        - condition: state
-          entity_id: cover.store_salon
-          state: closed
-        enabled: false
+          entity_id: sensor.groupe_clim
+          state: groupe_1
       sequence:
-      - target:
+      - action: cover.open_cover
+        target:
           entity_id: cover.store_salon
-        action: cover.open_cover
-        data: {}
-        enabled: false
-    - alias: FERMETURE DU STORE A 50% SI T° >32° & CONDITIONS EN AND
+    - alias: Fermeture nuit
       conditions:
-      - condition: and
-        conditions:
-        - condition: numeric_state
-          entity_id: sensor.th_balcon_nord_temperature
-          above: 32
-        - condition: state
-          entity_id: sensor.poco_x7_pro_mamour_network_type
-          state: cellular
-        - condition: state
-          entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-          state: 'off'
-        - condition: sun
-          after: sunrise
-          before: sunset
-        enabled: false
+      - condition: sun
+        after: sunset
+      - condition: state
+        entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
+        state: 'off'
       sequence:
-      - target:
+      - action: cover.close_cover
+        target:
           entity_id: cover.store_salon
-        data:
-          position: 50
-        action: cover.set_cover_position
-        enabled: false
-    - alias: FERMETURE DU STORE AU COUCHER DU SOLEIL & CONDITIONS EN AND
-      conditions:
-      - condition: and
-        conditions:
-        - condition: sun
-          after: sunset
-        - condition: state
-          entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-          state: 'off'
-      sequence:
-      - target:
-          entity_id: cover.store_salon
-        action: cover.close_cover
-        data: {}
-    default: []
   mode: single
 - id: '1763661737799'
   alias: A - Démarrage Radiateur Salle de Bain
