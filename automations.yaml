@@ -2367,13 +2367,17 @@
     action: switch.turn_on
   mode: single
 - id: '1766693057961'
-  alias: Gestion Auto Prise TV Chambre
-  description: Allumage à 21h et extinction totale si TV éteinte (Conso < 5W)
+  alias: 'Gestion TV Chambre : Coupure Totale + Notif'
+  description: Allumage auto à 21h ou manuel via RODRET.  Extinction totale (TV +
+    Accessoires) avec notification sur Poco.
   triggers:
-  - id: allumage_soir
+  - id: bouton_mqtt
+    trigger: mqtt
+    topic: zigbee2mqtt/Inter TV Chambre (IKEA RODRET)
+  - id: allumage_auto
     trigger: time
     at: '21:00:00'
-  - id: extinction_veille
+  - id: extinction_conso
     trigger: numeric_state
     entity_id: sensor.prise_tv_chambre_nous_device_power
     below: 5
@@ -2382,8 +2386,12 @@
   actions:
   - choose:
     - conditions:
-      - condition: trigger
-        id: allumage_soir
+      - or:
+        - condition: template
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
+            == ''on'' }}'
+        - condition: trigger
+          id: allumage_auto
       sequence:
       - action: switch.turn_on
         target:
@@ -2392,18 +2400,24 @@
         target:
           entity_id: light.hue_smart_tv_chambre
     - conditions:
-      - condition: trigger
-        id: extinction_veille
-      - condition: time
-        after: '21:05:00'
-      - condition: state
-        entity_id: switch.prise_tv_chambre_nous
-        state: 'on'
+      - or:
+        - condition: template
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
+            == ''off'' }}'
+        - condition: trigger
+          id: extinction_conso
       sequence:
-      - action: switch.turn_off
-        target:
-          entity_id: switch.prise_tv_chambre_nous
       - action: light.turn_off
         target:
           entity_id: light.hue_smart_tv_chambre
-  mode: single
+      - action: switch.turn_off
+        target:
+          entity_id: switch.prise_tv_chambre_nous
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: Économie d'énergie TV
+          message: Pôle multimédia coupé (veille détectée). Bonne nuit !
+          data:
+            icon: mdi:power-plug-off
+            tag: notif_tv_chambre
+  mode: restart
