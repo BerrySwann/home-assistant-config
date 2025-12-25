@@ -5,10 +5,10 @@
     state: >-
       {{
         [
-          states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'off',
-          states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'off',
-          states('binary_sensor.contact_fenetre_bureau_ikea_contact') == 'off',
-          states('binary_sensor.contact_fenetre_chambre_ikea_contact') == 'off',
+          states('binary_sensor.contact_fenetre_salon_sonoff_contact') == 'off',
+          states('binary_sensor.contact_fenetre_cuisine_sonoff_contact') == 'off',
+          states('binary_sensor.contact_fenetre_bureau_sonoff_contact') == 'off',
+          states('binary_sensor.contact_fenetre_chambre_sonoff_contact') == 'off',
         ].count(true)
       }}
     attributes:
@@ -21,10 +21,10 @@
     state: >-
       {{
         [
-          states('binary_sensor.contact_fenetre_salon_ikea_contact') == 'on',
-          states('binary_sensor.contact_fenetre_cuisine_ikea_contact') == 'on',
-          states('binary_sensor.contact_fenetre_bureau_ikea_contact') == 'on',
-          states('binary_sensor.contact_fenetre_chambre_ikea_contact') == 'on',
+          states('binary_sensor.contact_fenetre_salon_sonoff_contact') == 'on',
+          states('binary_sensor.contact_fenetre_cuisine_sonoff_contact') == 'on',
+          states('binary_sensor.contact_fenetre_bureau_sonoff_contact') == 'on',
+          states('binary_sensor.contact_fenetre_chambre_sonoff_contact') == 'on',
         ].count(true)
       }}
     attributes:
