@@ -297,6 +297,366 @@ eclairage_chambre_4_quotidien_um:
   source: sensor.eclairage_chambre_4_energie
   cycle: daily
 
+# ==========================================
+# 1. ENTRÉE
+# ==========================================
+eclairage_hue_white_lamp_entree_annuel:
+  source: sensor.hue_white_lamp_entree_energy
+  name: eclairage_hue_white_lamp_entree_annuel
+  cycle: yearly
+eclairage_hue_white_lamp_entree_mensuel:
+  source: sensor.hue_white_lamp_entree_energy
+  name: eclairage_hue_white_lamp_entree_mensuel
+  cycle: monthly
+eclairage_hue_white_lamp_entree_hebdomadaire:
+  source: sensor.hue_white_lamp_entree_energy
+  name: eclairage_hue_white_lamp_entree_hebdomadaire
+  cycle: weekly
+eclairage_hue_white_lamp_entree_quotidien:
+  source: sensor.hue_white_lamp_entree_energy
+  name: eclairage_hue_white_lamp_entree_quotidien
+  cycle: daily
+
+# ==========================================
+# 2. SALON
+# ==========================================
+# --- TABLE SALON ---
+eclairage_hue_white_lamp_table_salon_annuel:
+  source: sensor.hue_white_lamp_table_salon_energy
+  name: eclairage_hue_white_lamp_table_salon_annuel
+  cycle: yearly
+eclairage_hue_white_lamp_table_salon_mensuel:
+  source: sensor.hue_white_lamp_table_salon_energy
+  name: eclairage_hue_white_lamp_table_salon_mensuel
+  cycle: monthly
+eclairage_hue_white_lamp_table_salon_hebdomadaire:
+  source: sensor.hue_white_lamp_table_salon_energy
+  name: eclairage_hue_white_lamp_table_salon_hebdomadaire
+  cycle: weekly
+eclairage_hue_white_lamp_table_salon_quotidien:
+  source: sensor.hue_white_lamp_table_salon_energy
+  name: eclairage_hue_white_lamp_table_salon_quotidien
+  cycle: daily
+
+# --- AMBIANCE LAMP SALON 1 ---
+eclairage_hue_ambiance_lamp_salon_1_annuel:
+  source: sensor.hue_ambiance_lamp_salon_1_energy
+  name: eclairage_hue_ambiance_lamp_salon_1_annuel
+  cycle: yearly
+eclairage_hue_ambiance_lamp_salon_1_mensuel:
+  source: sensor.hue_ambiance_lamp_salon_1_energy
+  name: eclairage_hue_ambiance_lamp_salon_1_mensuel
+  cycle: monthly
+eclairage_hue_ambiance_lamp_salon_1_hebdomadaire:
+  source: sensor.hue_ambiance_lamp_salon_1_energy
+  name: eclairage_hue_ambiance_lamp_salon_1_hebdomadaire
+  cycle: weekly
+eclairage_hue_ambiance_lamp_salon_1_quotidien:
+  source: sensor.hue_ambiance_lamp_salon_1_energy
+  name: eclairage_hue_ambiance_lamp_salon_1_quotidien
+  cycle: daily
+
+# --- AMBIANCE LAMP SALON 2 ---
+eclairage_hue_ambiance_lamp_salon_2_annuel:
+  source: sensor.hue_ambiance_lamp_salon_2_energy
+  name: eclairage_hue_ambiance_lamp_salon_2_annuel
+  cycle: yearly
+eclairage_hue_ambiance_lamp_salon_2_mensuel:
+  source: sensor.hue_ambiance_lamp_salon_2_energy
+  name: eclairage_hue_ambiance_lamp_salon_2_mensuel
+  cycle: monthly
+eclairage_hue_ambiance_lamp_salon_2_hebdomadaire:
+  source: sensor.hue_ambiance_lamp_salon_2_energy
+  name: eclairage_hue_ambiance_lamp_salon_2_hebdomadaire
+  cycle: weekly
+eclairage_hue_ambiance_lamp_salon_2_quotidien:
+  source: sensor.hue_ambiance_lamp_salon_2_energy
+  name: eclairage_hue_ambiance_lamp_salon_2_quotidien
+  cycle: daily
+
+# --- AMBIANCE LAMP SALON 3 ---
+eclairage_hue_ambiance_lamp_salon_3_annuel:
+  source: sensor.hue_ambiance_lamp_salon_3_energy
+  name: eclairage_hue_ambiance_lamp_salon_3_annuel
+  cycle: yearly
+eclairage_hue_ambiance_lamp_salon_3_mensuel:
+  source: sensor.hue_ambiance_lamp_salon_3_energy
+  name: eclairage_hue_ambiance_lamp_salon_3_mensuel
+  cycle: monthly
+eclairage_hue_ambiance_lamp_salon_3_hebdomadaire:
+  source: sensor.hue_ambiance_lamp_salon_3_energy
+  name: eclairage_hue_ambiance_lamp_salon_3_hebdomadaire
+  cycle: weekly
+eclairage_hue_ambiance_lamp_salon_3_quotidien:
+  source: sensor.hue_ambiance_lamp_salon_3_energy
+  name: eclairage_hue_ambiance_lamp_salon_3_quotidien
+  cycle: daily
+
+# --- COLOR CANDLE SALON 1 ---
+eclairage_hue_color_candle_salon_1_annuel:
+  source: sensor.hue_color_candle_salon_1_energy
+  name: eclairage_hue_color_candle_salon_1_annuel
+  cycle: yearly
+eclairage_hue_color_candle_salon_1_mensuel:
+  source: sensor.hue_color_candle_salon_1_energy
+  name: eclairage_hue_color_candle_salon_1_mensuel
+  cycle: monthly
+eclairage_hue_color_candle_salon_1_hebdomadaire:
+  source: sensor.hue_color_candle_salon_1_energy
+  name: eclairage_hue_color_candle_salon_1_hebdomadaire
+  cycle: weekly
+eclairage_hue_color_candle_salon_1_quotidien:
+  source: sensor.hue_color_candle_salon_1_energy
+  name: eclairage_hue_color_candle_salon_1_quotidien
+  cycle: daily
+
+# ==========================================
+# 3. CUISINE
+# ==========================================
+eclairage_hue_white_lamp_cuisine_annuel:
+  source: sensor.hue_white_lamp_cuisine_energy
+  name: eclairage_hue_white_lamp_cuisine_annuel
+  cycle: yearly
+eclairage_hue_white_lamp_cuisine_mensuel:
+  source: sensor.hue_white_lamp_cuisine_energy
+  name: eclairage_hue_white_lamp_cuisine_mensuel
+  cycle: monthly
+eclairage_hue_white_lamp_cuisine_hebdomadaire:
+  source: sensor.hue_white_lamp_cuisine_energy
+  name: eclairage_hue_white_lamp_cuisine_hebdomadaire
+  cycle: weekly
+eclairage_hue_white_lamp_cuisine_quotidien:
+  source: sensor.hue_white_lamp_cuisine_energy
+  name: eclairage_hue_white_lamp_cuisine_quotidien
+  cycle: daily
+
+# ==========================================
+# 4. COULOIR
+# ==========================================
+eclairage_hue_white_lamp_couloir_annuel:
+  source: sensor.hue_white_lamp_couloir_energy
+  name: eclairage_hue_white_lamp_couloir_annuel
+  cycle: yearly
+eclairage_hue_white_lamp_couloir_mensuel:
+  source: sensor.hue_white_lamp_couloir_energy
+  name: eclairage_hue_white_lamp_couloir_mensuel
+  cycle: monthly
+eclairage_hue_white_lamp_couloir_hebdomadaire:
+  source: sensor.hue_white_lamp_couloir_energy
+  name: eclairage_hue_white_lamp_couloir_hebdomadaire
+  cycle: weekly
+eclairage_hue_white_lamp_couloir_quotidien:
+  source: sensor.hue_white_lamp_couloir_energy
+  name: eclairage_hue_white_lamp_couloir_quotidien
+  cycle: daily
+
+# ==========================================
+# 5. BUREAU
+# ==========================================
+# HUE PLAY 1
+eclairage_hue_play_1_pc_bureau_annuel:
+  source: sensor.hue_play_1_pc_bureau_energy
+  name: eclairage_hue_play_1_pc_bureau_annuel
+  cycle: yearly
+eclairage_hue_play_1_pc_bureau_mensuel:
+  source: sensor.hue_play_1_pc_bureau_energy
+  name: eclairage_hue_play_1_pc_bureau_mensuel
+  cycle: monthly
+eclairage_hue_play_1_pc_bureau_hebdomadaire:
+  source: sensor.hue_play_1_pc_bureau_energy
+  name: eclairage_hue_play_1_pc_bureau_hebdomadaire
+  cycle: weekly
+eclairage_hue_play_1_pc_bureau_quotidien:
+  source: sensor.hue_play_1_pc_bureau_energy
+  name: eclairage_hue_play_1_pc_bureau_quotidien
+  cycle: daily
+
+# HUE PLAY 2
+eclairage_hue_play_2_pc_bureau_annuel:
+  source: sensor.hue_play_2_pc_bureau_energy
+  name: eclairage_hue_play_2_pc_bureau_annuel
+  cycle: yearly
+eclairage_hue_play_2_pc_bureau_mensuel:
+  source: sensor.hue_play_2_pc_bureau_energy
+  name: eclairage_hue_play_2_pc_bureau_mensuel
+  cycle: monthly
+eclairage_hue_play_2_pc_bureau_hebdomadaire:
+  source: sensor.hue_play_2_pc_bureau_energy
+  name: eclairage_hue_play_2_pc_bureau_hebdomadaire
+  cycle: weekly
+eclairage_hue_play_2_pc_bureau_quotidien:
+  source: sensor.hue_play_2_pc_bureau_energy
+  name: eclairage_hue_play_2_pc_bureau_quotidien
+  cycle: daily
+
+# HUE PLAY 3
+eclairage_hue_play_3_pc_bureau_annuel:
+  source: sensor.hue_play_3_pc_bureau_energy
+  name: eclairage_hue_play_3_pc_bureau_annuel
+  cycle: yearly
+eclairage_hue_play_3_pc_bureau_mensuel:
+  source: sensor.hue_play_3_pc_bureau_energy
+  name: eclairage_hue_play_3_pc_bureau_mensuel
+  cycle: monthly
+eclairage_hue_play_3_pc_bureau_hebdomadaire:
+  source: sensor.hue_play_3_pc_bureau_energy
+  name: eclairage_hue_play_3_pc_bureau_hebdomadaire
+  cycle: weekly
+eclairage_hue_play_3_pc_bureau_quotidien:
+  source: sensor.hue_play_3_pc_bureau_energy
+  name: eclairage_hue_play_3_pc_bureau_quotidien
+  cycle: daily
+
+# LAMPE BUREAU 1
+eclairage_lampe_bureau_1_hue_annuel:
+  source: sensor.lampe_bureau_1_hue_energy
+  name: eclairage_lampe_bureau_1_hue_annuel
+  cycle: yearly
+eclairage_lampe_bureau_1_hue_mensuel:
+  source: sensor.lampe_bureau_1_hue_energy
+  name: eclairage_lampe_bureau_1_hue_mensuel
+  cycle: monthly
+eclairage_lampe_bureau_1_hue_hebdomadaire:
+  source: sensor.lampe_bureau_1_hue_energy
+  name: eclairage_lampe_bureau_1_hue_hebdomadaire
+  cycle: weekly
+eclairage_lampe_bureau_1_hue_quotidien:
+  source: sensor.lampe_bureau_1_hue_energy
+  name: eclairage_lampe_bureau_1_hue_quotidien
+  cycle: daily
+
+# LAMPE BUREAU 2
+eclairage_lampe_bureau_2_hue_annuel:
+  source: sensor.lampe_bureau_2_hue_energy
+  name: eclairage_lampe_bureau_2_hue_annuel
+  cycle: yearly
+eclairage_lampe_bureau_2_hue_mensuel:
+  source: sensor.lampe_bureau_2_hue_energy
+  name: eclairage_lampe_bureau_2_hue_mensuel
+  cycle: monthly
+eclairage_lampe_bureau_2_hue_hebdomadaire:
+  source: sensor.lampe_bureau_2_hue_energy
+  name: eclairage_lampe_bureau_2_hue_hebdomadaire
+  cycle: weekly
+eclairage_lampe_bureau_2_hue_quotidien:
+  source: sensor.lampe_bureau_2_hue_energy
+  name: eclairage_lampe_bureau_2_hue_quotidien
+  cycle: daily
+
+# ==========================================
+# 6. SALLE DE BAIN
+# ==========================================
+# MIROIR (RELAIS SONOFF)
+eclairage_relais_lumiere_sdb_sonoff_annuel:
+  source: sensor.relais_lumiere_sdb_sonoff_energy
+  name: eclairage_relais_lumiere_sdb_sonoff_annuel
+  cycle: yearly
+eclairage_relais_lumiere_sdb_sonoff_mensuel:
+  source: sensor.relais_lumiere_sdb_sonoff_energy
+  name: eclairage_relais_lumiere_sdb_sonoff_mensuel
+  cycle: monthly
+eclairage_relais_lumiere_sdb_sonoff_hebdomadaire:
+  source: sensor.relais_lumiere_sdb_sonoff_energy
+  name: eclairage_relais_lumiere_sdb_sonoff_hebdomadaire
+  cycle: weekly
+eclairage_relais_lumiere_sdb_sonoff_quotidien:
+  source: sensor.relais_lumiere_sdb_sonoff_energy
+  name: eclairage_relais_lumiere_sdb_sonoff_quotidien
+  cycle: daily
+
+# LAMPE HUE
+eclairage_lampe_salle_de_bain_hue_annuel:
+  source: sensor.lampe_salle_de_bain_hue_energy
+  name: eclairage_lampe_salle_de_bain_hue_annuel
+  cycle: yearly
+eclairage_lampe_salle_de_bain_hue_mensuel:
+  source: sensor.lampe_salle_de_bain_hue_energy
+  name: eclairage_lampe_salle_de_bain_hue_mensuel
+  cycle: monthly
+eclairage_lampe_salle_de_bain_hue_hebdomadaire:
+  source: sensor.lampe_salle_de_bain_hue_energy
+  name: eclairage_lampe_salle_de_bain_hue_hebdomadaire
+  cycle: weekly
+eclairage_lampe_salle_de_bain_hue_quotidien:
+  source: sensor.lampe_salle_de_bain_hue_energy
+  name: eclairage_lampe_salle_de_bain_hue_quotidien
+  cycle: daily
+
+# ==========================================
+# 7. CHAMBRE
+# ==========================================
+# WHITE LAMP 1
+eclairage_hue_white_lamp_chambre_1_annuel:
+  source: sensor.hue_white_lamp_chambre_1_energy
+  name: eclairage_hue_white_lamp_chambre_1_annuel
+  cycle: yearly
+eclairage_hue_white_lamp_chambre_1_mensuel:
+  source: sensor.hue_white_lamp_chambre_1_energy
+  name: eclairage_hue_white_lamp_chambre_1_mensuel
+  cycle: monthly
+eclairage_hue_white_lamp_chambre_1_hebdomadaire:
+  source: sensor.hue_white_lamp_chambre_1_energy
+  name: eclairage_hue_white_lamp_chambre_1_hebdomadaire
+  cycle: weekly
+eclairage_hue_white_lamp_chambre_1_quotidien:
+  source: sensor.hue_white_lamp_chambre_1_energy
+  name: eclairage_hue_white_lamp_chambre_1_quotidien
+  cycle: daily
+
+# WHITE LAMP 2
+eclairage_hue_white_lamp_chambre_2_annuel:
+  source: sensor.hue_white_lamp_chambre_2_energy
+  name: eclairage_hue_white_lamp_chambre_2_annuel
+  cycle: yearly
+eclairage_hue_white_lamp_chambre_2_mensuel:
+  source: sensor.hue_white_lamp_chambre_2_energy
+  name: eclairage_hue_white_lamp_chambre_2_mensuel
+  cycle: monthly
+eclairage_hue_white_lamp_chambre_2_hebdomadaire:
+  source: sensor.hue_white_lamp_chambre_2_energy
+  name: eclairage_hue_white_lamp_chambre_2_hebdomadaire
+  cycle: weekly
+eclairage_hue_white_lamp_chambre_2_quotidien:
+  source: sensor.hue_white_lamp_chambre_2_energy
+  name: eclairage_hue_white_lamp_chambre_2_quotidien
+  cycle: daily
+
+# BOUGEE ERIC
+eclairage_hue_color_candle_chambre_eric_annuel:
+  source: sensor.hue_color_candle_chambre_eric_energy
+  name: eclairage_hue_color_candle_chambre_eric_annuel
+  cycle: yearly
+eclairage_hue_color_candle_chambre_eric_mensuel:
+  source: sensor.hue_color_candle_chambre_eric_energy
+  name: eclairage_hue_color_candle_chambre_eric_mensuel
+  cycle: monthly
+eclairage_hue_color_candle_chambre_eric_hebdomadaire:
+  source: sensor.hue_color_candle_chambre_eric_energy
+  name: eclairage_hue_color_candle_chambre_eric_hebdomadaire
+  cycle: weekly
+eclairage_hue_color_candle_chambre_eric_quotidien:
+  source: sensor.hue_color_candle_chambre_eric_energy
+  name: eclairage_hue_color_candle_chambre_eric_quotidien
+  cycle: daily
+
+# BOUGIE GEGE
+eclairage_hue_color_candle_chambre_gege_annuel:
+  source: sensor.hue_color_candle_chambre_gege_energy
+  name: eclairage_hue_color_candle_chambre_gege_annuel
+  cycle: yearly
+eclairage_hue_color_candle_chambre_gege_mensuel:
+  source: sensor.hue_color_candle_chambre_gege_energy
+  name: eclairage_hue_color_candle_chambre_gege_mensuel
+  cycle: monthly
+eclairage_hue_color_candle_chambre_gege_hebdomadaire:
+  source: sensor.hue_color_candle_chambre_gege_energy
+  name: eclairage_hue_color_candle_chambre_gege_hebdomadaire
+  cycle: weekly
+eclairage_hue_color_candle_chambre_gege_quotidien:
+  source: sensor.hue_color_candle_chambre_gege_energy
+  name: eclairage_hue_color_candle_chambre_gege_quotidien
+  cycle: daily
+
 #============================================================================
 # TOTO ECOJOKO -> Jour / Mois (compteur ELEC)
 #============================================================================
