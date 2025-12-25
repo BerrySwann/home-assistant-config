@@ -732,8 +732,8 @@
       message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_sonoff_contact'
         %}\n  La fenêtre du Salon a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_cuisine_sonoff_contact'
         %}\n  La fenêtre de la Cuisine a été fermée.\n{% elif trigger.entity_id ==
-        'binary_sensor.contact_fenetre_bureau_sonoff_contact' %}\n  La fenêtre du Bureau
-        a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_chambre_sonoff_contact'
+        'binary_sensor.contact_fenetre_bureau_sonoff_contact' %}\n  La fenêtre du
+        Bureau a été fermée.\n{% elif trigger.entity_id == 'binary_sensor.contact_fenetre_chambre_sonoff_contact'
         %}\n  La fenêtre de la Chambre a été fermée.\n{% endif %} {% if states('sensor.nbre_de_fenetres_fermees')
         == '4' %}\n  Toutes les fenêtres sont maintenant fermées.\n{% endif %}"
     action: notify.mobile_app_poco_x7_pro_eric
@@ -1197,40 +1197,46 @@
   mode: single
 - id: '1763661737799'
   alias: A - Démarrage Radiateur Salle de Bain
-  description: Allumage prise + radiateur quand input_boolean passe à ON
+  description: Allumage prise + radiateur + mise à jour état climate
   triggers:
-  - entity_id: input_boolean.inter_radiateur_salle_de_bain
+  - trigger: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'on'
-    trigger: state
   actions:
   - delay: '00:00:00.4'
-  - target:
+  - action: switch.turn_on
+    target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
-    action: switch.turn_on
   - delay: '00:00:00.4'
-  - target:
+  - action: remote.send_command
+    target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: on_off
       device: radiateur_sdb
       num_repeats: 1
-    action: remote.send_command
   - delay: '00:00:00.4'
-  - target:
+  - action: remote.send_command
+    target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: 1000w
       device: radiateur_sdb
       num_repeats: 2
-    action: remote.send_command
   - delay: '00:00:00.4'
-  - target:
+  - action: remote.send_command
+    target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: swing
       device: radiateur_sdb
       num_repeats: 1
-    action: remote.send_command
+  - delay: '00:00:01.0'
+  - action: climate.set_hvac_mode
+    target:
+      entity_id: climate.soufflant_salle_de_bain
+    data:
+      hvac_mode: heat
   mode: single
 - id: '1763755093414'
   alias: Bouton IKEA RODRET - Gestion ON/OFF (JSON)
@@ -1256,21 +1262,20 @@
         action: input_boolean.turn_off
 - id: '1763755874751'
   alias: B - Gestion Résistances Radiateur SDB
-  description: Gestion des résistances selon la température, uniquement si le chauffage
-    est activé
+  description: Baisse à 1000W au-delà de 22.9°C et repasse à 2000W sous 20.9°C
   triggers:
-  - entity_id: sensor.th_salle_de_bain_temperature
+  - trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
     above: 22.9
     for:
       minutes: 1
     id: temp_23
-    trigger: numeric_state
-  - entity_id: sensor.th_salle_de_bain_temperature
+  - trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
     below: 20.9
     for:
       minutes: 1
     id: temp_21
-    trigger: numeric_state
   conditions:
   - condition: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
@@ -1281,32 +1286,32 @@
       - condition: trigger
         id: temp_23
       sequence:
-      - target:
+      - action: remote.send_command
+        target:
           entity_id: remote.radiateur_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
           num_repeats: 1
-        action: remote.send_command
     - conditions:
       - condition: trigger
         id: temp_21
       sequence:
-      - target:
+      - action: remote.send_command
+        target:
           entity_id: remote.radiateur_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-        action: remote.send_command
       - delay: '00:00:00.4'
-      - target:
+      - action: remote.send_command
+        target:
           entity_id: remote.radiateur_sdb_rm4_mini
         data:
           command: swing
           device: radiateur_sdb
           num_repeats: 1
-        action: remote.send_command
   mode: single
 - id: '1763827578680'
   alias: A - Chauffage Cuisine (entre 4h45 & 7h LMMJ ou 5:45h & 8h VSD avec T° 19,9°
@@ -1443,32 +1448,33 @@
   mode: single
 - id: '1763927002568'
   alias: C - Arrêt Radiateur Salle de Bain
-  description: 'Extinction du radiateur (commande on_off) puis coupure de la prise
-    après 1 minute, uniquement si le chauffage est activé et la prise allumée.
-
-    '
+  description: Extinction du radiateur, mise à jour du climate et coupure prise après
+    1 min
   triggers:
-  - entity_id: input_boolean.inter_radiateur_salle_de_bain
+  - trigger: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'off'
-    trigger: state
   conditions:
-  - condition: and
-    conditions:
-    - condition: state
-      entity_id: switch.prise_radiateur_salle_de_bain_nous
-      state: 'on'
+  - condition: state
+    entity_id: switch.prise_radiateur_salle_de_bain_nous
+    state: 'on'
   actions:
-  - target:
+  - action: climate.set_hvac_mode
+    target:
+      entity_id: climate.soufflant_salle_de_bain
+    data:
+      hvac_mode: 'off'
+  - action: remote.send_command
+    target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: on_off
       device: radiateur_sdb
       num_repeats: 1
-    action: remote.send_command
   - delay: 00:01:00
-  - target:
+  - action: switch.turn_off
+    target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
-    action: switch.turn_off
   mode: single
 - id: '1764784032821'
   alias: (B - 0) (TEST 2025-12-19) Autmatisation CLIM (21h00 <-> 07h30)
@@ -1539,8 +1545,8 @@
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
       fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',\n
         \         'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-        \         'binary_sensor.contact_fenetre_chambre_sonoff_contact')\n      | selectattr('state',
-        'eq', 'on') | list | count > 0 }}\n"
+        \         'binary_sensor.contact_fenetre_chambre_sonoff_contact')\n      |
+        selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
@@ -1569,11 +1575,11 @@
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %}  {% set ouverts
-            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}  {% set
-            messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n  {% for
-            fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
-            %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
+            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %}  {% set
+            ouverts = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}
+            \ {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
+            \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
+            | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
             (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
             replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
             | lower %}\n    {% set article = 'du' if piece_lower == 'bureau' or piece_lower
@@ -1798,11 +1804,11 @@
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set ouverts
-            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% set
-            messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n  {% for
-            fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
-            %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
+            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set
+            ouverts = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}
+            {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
+            \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
+            | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
             (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
             replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
             | lower %}\n    {% set article = 'du' if piece_lower == 'bureau' or piece_lower
@@ -2196,11 +2202,11 @@
           title: CLIM COUPÉE
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set ouverts
-            = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %} {% set
-            messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n  {% for
-            fenetre in ouverts %}\n    {% set nom_complet = fenetre.name | string
-            %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
+            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set
+            ouverts = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}
+            {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
+            \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
+            | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
             (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
             replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
             | lower %}\n    {% set article = 'du' if piece_lower == 'bureau' or piece_lower
