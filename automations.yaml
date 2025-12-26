@@ -2379,7 +2379,7 @@
   - id: extinction_conso
     trigger: numeric_state
     entity_id: sensor.prise_tv_chambre_nous_device_power
-    below: 5
+    below: 50
     for:
       minutes: 2
   actions:
