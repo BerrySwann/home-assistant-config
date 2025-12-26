@@ -161,12 +161,12 @@
     unit_of_measurement: "°C"
     icon: "mdi:home-thermometer"
     state: >
-      {{ (states('sensor.th_salon_temperature') | float(0) +
+      {{ ((states('sensor.th_salon_temperature') | float(0) +
           states('sensor.th_cellier_temperature') | float(0) +
           states('sensor.th_cuisine_temperature') | float(0) +
           states('sensor.th_bureau_temperature') | float(0) +
           states('sensor.th_salle_de_bain_temperature') | float(0) +
-          states('sensor.th_chambre_temperature') | float(0)) / 6 | round(1) }}
+          states('sensor.th_chambre_temperature') | float(0)) / 6) | round(1) }}
 
   - name: "Temperature Delta (valeur)"
     unique_id: temperature_delta_value
