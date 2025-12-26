@@ -2351,7 +2351,7 @@
   - action: notify.mobile_app_poco_x7_pro_eric
     data:
       title: ÉCO PC Bureau
-      message: Prise coupée.
+      message: Prise PC éteinte
   mode: single
 - id: '1766680176801'
   alias: 'Bureau : Allumage Manu PC (MQTT) Poussoir (IKEA TRADFRI)'
@@ -2366,9 +2366,9 @@
     action: switch.turn_on
   mode: single
 - id: '1766693057961'
-  alias: 'Gestion TV Chambre : Coupure Totale + Notif'
-  description: Allumage auto à 21h ou manuel via RODRET.  Extinction totale (TV +
-    Accessoires) avec notification sur Poco.
+  alias: 'Gestion TV Chambre : Scène de Fin + Notif'
+  description: Éteint les lumières et notifie, mais laisse la prise ON pour le suivi
+    conso.
   triggers:
   - id: bouton_mqtt
     trigger: mqtt
@@ -2378,8 +2378,8 @@
     at: '21:00:00'
   - id: extinction_conso
     trigger: numeric_state
-    entity_id: sensor.prise_tv_chambre_nous_device_power
-    below: 50
+    entity_id: sensor.prise_tv_chambre_nous_power
+    below: 20
     for:
       minutes: 2
   actions:
@@ -2387,36 +2387,33 @@
     - conditions:
       - or:
         - condition: template
-          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
-            == ''on'' }}'
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.to_json is
+            defined and trigger.payload_json.action == ''on'' }}'
         - condition: trigger
           id: allumage_auto
       sequence:
-      - action: switch.turn_on
-        target:
-          entity_id: switch.prise_tv_chambre_nous
       - action: light.turn_on
         target:
           entity_id: light.hue_smart_tv_chambre
+      - action: switch.turn_on
+        target:
+          entity_id: switch.prise_tv_chambre_nous
     - conditions:
       - or:
         - condition: template
-          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
-            == ''off'' }}'
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.to_json is
+            defined and trigger.payload_json.action == ''off'' }}'
         - condition: trigger
           id: extinction_conso
       sequence:
       - action: light.turn_off
         target:
           entity_id: light.hue_smart_tv_chambre
-      - action: switch.turn_off
-        target:
-          entity_id: switch.prise_tv_chambre_nous
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: Économie d'énergie TV
-          message: Pôle multimédia coupé (veille détectée). Bonne nuit !
+          title: 'TV Chambre : Veille détectée'
+          message: Ambiance éteinte. La prise reste ON pour le suivi 18_1.
           data:
-            icon: mdi:power-plug-off
+            icon: mdi:eye-outline
             tag: notif_tv_chambre
-  mode: restart
+  mode: parallel
