@@ -2260,9 +2260,7 @@
         | float(0) %} {% set t = now().strftime(''%d/%m %H:%M'') %}
 
         {{t}} | Hyg:{{p1}} | Cuis:{{p2}} | Froid:{{p3}} | Chauff:{{p4}} | Multi:{{p5}}
-        | Lum:{{p6}} | Ext:{{ext}}°C
-
-        '
+        | Lum:{{p6}} | Ext:{{ext}}°C'
 - id: '1766234836334'
   alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
   description: Vérification 3x/jour basée sur les groupes de la vue synthétique
@@ -2327,32 +2325,6 @@
           device: radiateur_sdb
           num_repeats: 1
       - delay: '00:00:01.0'
-- id: '1766678478256'
-  alias: 'Bureau : Coupure Smart PC (Groupes Présence)'
-  description: Coupe la prise si le PC est éteint ET que je ne suis plus dans les
-    groupes de présence
-  triggers:
-  - trigger: numeric_state
-    entity_id: sensor.prise_bureau_pc_ikea_power
-    below: 50
-    for:
-      minutes: 10
-  conditions:
-  - condition: state
-    entity_id: switch.hue_smart_eco_pc_bureau
-    state: 'on'
-  - condition: template
-    value_template: '{{ (now() - states.switch.hue_smart_eco_pc_bureau.last_changed).total_seconds()
-      > 900 }}'
-  actions:
-  - action: switch.turn_off
-    target:
-      entity_id: switch.hue_smart_eco_pc_bureau
-  - action: notify.mobile_app_poco_x7_pro_eric
-    data:
-      title: ÉCO PC Bureau
-      message: Prise PC éteinte
-  mode: single
 - id: '1766680176801'
   alias: 'Bureau : Allumage Manu PC (MQTT) Poussoir (IKEA TRADFRI)'
   description: Allume la prise PC dès que le bouton IKEA envoie le signal ON via MQTT
@@ -2417,3 +2389,225 @@
             icon: mdi:eye-outline
             tag: notif_tv_chambre
   mode: parallel
+- id: automation_eco_prises_v3_dynamique
+  alias: Automation éCO. Prises
+  description: Pilotage dynamique. Groupe 1 = OFF total.  Groupes 2/3/4 avec règles
+    21h et HC + comptage réel des prises.
+  triggers:
+  - trigger: state
+    entity_id: sensor.groupe_clim
+  - trigger: time
+    at:
+    - 01:00:00
+    - 07:30:00
+    - '13:00:00'
+    - '14:30:00'
+    - '21:00:00'
+  actions:
+  - variables:
+      h: '{{ now().strftime(''%H:%M'') }}'
+      is_hc: '{{ (''01:00'' <= h < ''07:30'') or (''13:00'' <= h < ''14:30'') }}'
+      is_pres_win: '{{ ''07:30'' <= h < ''21:00'' }}'
+      g: '{{ states(''sensor.groupe_clim'') }}'
+      pres_active: '{{ g in [''groupe_2'', ''groupe_4''] }}'
+      target_horloge: '{{ ''on'' if (pres_active and is_pres_win) else ''off'' }}'
+      target_vapote: '{{ ''on'' if (pres_active and is_pres_win) or is_hc else ''off''
+        }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ g == ''groupe_1'' }}'
+      sequence:
+      - action: homeassistant.turn_off
+        target:
+          entity_id:
+          - switch.prise_horloge_ikea
+          - light.hue_smart_salon
+          - switch.ecran_p_c_3_play_hue
+          - switch.hue_smart_eco_pc_bureau
+          - switch.prise_tete_de_lit_chambre
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: '{{ states(''sensor.presence_clim'') }}'
+          message: '[5] prises [OFF]'
+    - conditions:
+      - condition: template
+        value_template: '{{ g in [''groupe_2'', ''groupe_3'', ''groupe_4''] }}'
+      sequence:
+      - action: homeassistant.turn_{{ target_vapote }}
+        target:
+          entity_id: light.hue_smart_salon
+      - if:
+        - condition: template
+          value_template: '{{ g == ''groupe_2'' }}'
+        then:
+        - action: homeassistant.turn_{{ target_horloge }}
+          target:
+            entity_id: switch.prise_horloge_ikea
+        - action: homeassistant.turn_on
+          target:
+            entity_id:
+            - switch.ecran_p_c_3_play_hue
+            - switch.prise_tete_de_lit_chambre
+        - action: homeassistant.turn_off
+          target:
+            entity_id: switch.hue_smart_eco_pc_bureau
+      - if:
+        - condition: template
+          value_template: '{{ g == ''groupe_3'' }}'
+        then:
+        - action: homeassistant.turn_off
+          target:
+            entity_id:
+            - switch.prise_horloge_ikea
+            - switch.prise_tete_de_lit_chambre
+        - action: homeassistant.turn_on
+          target:
+            entity_id:
+            - switch.ecran_p_c_3_play_hue
+            - switch.hue_smart_eco_pc_bureau
+      - if:
+        - condition: template
+          value_template: '{{ g == ''groupe_4'' }}'
+        then:
+        - action: homeassistant.turn_{{ target_horloge }}
+          target:
+            entity_id: switch.prise_horloge_ikea
+        - action: homeassistant.turn_on
+          target:
+            entity_id:
+            - switch.ecran_p_c_3_play_hue
+            - switch.hue_smart_eco_pc_bureau
+            - switch.prise_tete_de_lit_chambre
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: '{{ states(''sensor.presence_clim'') }}'
+          message: "{% set prises = [\n  'switch.prise_horloge_ikea',\n  'light.hue_smart_salon',\n
+            \ 'switch.ecran_p_c_3_play_hue',\n  'switch.hue_smart_eco_pc_bureau',\n
+            \ 'switch.prise_tete_de_lit_chambre'\n] %} {% set count_on = prises |
+            select('is_state', 'on') | list | count %} [{{ count_on }}] prises [ON]\n"
+  mode: queued
+- id: automation_eco_prises_v3_dynamique
+  alias: Automation éCO. Prises
+  description: Pilotage dynamique. Groupe 1 = OFF total.  Groupes 2/3/4 avec règles
+    21h et HC + comptage réel des prises.
+  triggers:
+  - trigger: state
+    entity_id: sensor.groupe_clim
+  - trigger: time
+    at:
+    - 01:00:00
+    - 07:30:00
+    - '13:00:00'
+    - '14:30:00'
+    - '21:00:00'
+  actions:
+  - variables:
+      h: '{{ now().strftime(''%H:%M'') }}'
+      is_hc: '{{ (''01:00'' <= h < ''07:30'') or (''13:00'' <= h < ''14:30'') }}'
+      is_pres_win: '{{ ''07:30'' <= h < ''21:00'' }}'
+      g: '{{ states(''sensor.groupe_clim'') }}'
+      pres_active: '{{ g in [''groupe_2'', ''groupe_4''] }}'
+      target_horloge: '{{ ''on'' if (pres_active and is_pres_win) else ''off'' }}'
+      target_vapote: '{{ ''on'' if (pres_active and is_pres_win) or is_hc else ''off''
+        }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ g == ''groupe_1'' }}'
+      sequence:
+      - action: homeassistant.turn_off
+        target:
+          entity_id:
+          - switch.prise_horloge_ikea
+          - light.hue_smart_salon
+          - switch.ecran_p_c_3_play_hue
+          - switch.hue_smart_eco_pc_bureau
+          - switch.prise_tete_de_lit_chambre
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: '{{ states(''sensor.presence_clim'') }}'
+          message: '[5] prises [OFF]'
+    - conditions:
+      - condition: template
+        value_template: '{{ g in [''groupe_2'', ''groupe_3'', ''groupe_4''] }}'
+      sequence:
+      - action: homeassistant.turn_{{ target_vapote }}
+        target:
+          entity_id: light.hue_smart_salon
+      - if:
+        - condition: template
+          value_template: '{{ g == ''groupe_2'' }}'
+        then:
+        - action: homeassistant.turn_{{ target_horloge }}
+          target:
+            entity_id: switch.prise_horloge_ikea
+        - action: homeassistant.turn_on
+          target:
+            entity_id:
+            - switch.ecran_p_c_3_play_hue
+            - switch.prise_tete_de_lit_chambre
+        - action: homeassistant.turn_off
+          target:
+            entity_id: switch.hue_smart_eco_pc_bureau
+      - if:
+        - condition: template
+          value_template: '{{ g == ''groupe_3'' }}'
+        then:
+        - action: homeassistant.turn_off
+          target:
+            entity_id:
+            - switch.prise_horloge_ikea
+            - switch.prise_tete_de_lit_chambre
+        - action: homeassistant.turn_on
+          target:
+            entity_id:
+            - switch.ecran_p_c_3_play_hue
+            - switch.hue_smart_eco_pc_bureau
+      - if:
+        - condition: template
+          value_template: '{{ g == ''groupe_4'' }}'
+        then:
+        - action: homeassistant.turn_{{ target_horloge }}
+          target:
+            entity_id: switch.prise_horloge_ikea
+        - action: homeassistant.turn_on
+          target:
+            entity_id:
+            - switch.ecran_p_c_3_play_hue
+            - switch.hue_smart_eco_pc_bureau
+            - switch.prise_tete_de_lit_chambre
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: '{{ states(''sensor.presence_clim'') }}'
+          message: "{% set prises = [\n  'switch.prise_horloge_ikea',\n  'light.hue_smart_salon',\n
+            \ 'switch.ecran_p_c_3_play_hue',\n  'switch.hue_smart_eco_pc_bureau',\n
+            \ 'switch.prise_tete_de_lit_chambre'\n] %} {% set count_on = prises |
+            select('is_state', 'on') | list | count %} [{{ count_on }}] prises [ON]\n"
+  mode: queued
+- id: '1763755093414'
+  alias: Bouton IKEA RODRET - Gestion ON/OFF (JSON)
+  description: Pilotage de la TV Chambre via le bouton RODRET (MQTT)
+  triggers:
+    - trigger: mqtt
+      topic: zigbee2mqtt/Inter TV Chambre (IKEA RODRET)
+  actions:
+    - choose:
+        # --- Appui sur "ON" (bouton du haut) ---
+        - conditions:
+            - condition: template
+              value_template: "{{ trigger.payload_json.action == 'on' }}"
+          sequence:
+            - action: switch.turn_on
+              target:
+                entity_id: switch.prise_tv_chambre # À vérifier selon ton entité exacte
+
+        # --- Appui sur "OFF" (bouton du bas) ---
+        - conditions:
+            - condition: template
+              value_template: "{{ trigger.payload_json.action == 'off' }}"
+          sequence:
+            - action: switch.turn_off
+              target:
+                entity_id: switch.prise_tv_chambre
+  mode: restart
