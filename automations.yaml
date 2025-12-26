@@ -917,7 +917,7 @@
   mode: single
 - id: '1761236981200'
   alias: Gestion Optimisée du Store Salon
-  description: 'SÉCURITÉ BALCON : Bloque tout mouvement si la fenêtre est ouverte.'
+  description: 'Correction : Ouverture en G2/G4 même si froid, Fermeture en G1/G3'
   triggers:
   - id: re-evaluation
     trigger: state
@@ -934,7 +934,7 @@
     trigger: sun
     event: sunset
   conditions:
-  - alias: Si la fenêtre est ouverte, on ne touche à rien (Personne sur le balcon)
+  - alias: Sécurité Fenêtre
     condition: state
     entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
     state: 'off'
@@ -947,13 +947,12 @@
         before: sunset
       - condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
-        above: 17
         below: 34
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: sensor.groupe_clim
-          state: groupe_1
+      - condition: state
+        entity_id: sensor.groupe_clim
+        state:
+        - groupe_2
+        - groupe_4
       - condition: numeric_state
         entity_id: cover.store_salon
         attribute: current_position
@@ -962,7 +961,7 @@
       - action: cover.open_cover
         target:
           entity_id: cover.store_salon
-    - alias: 'SCÉNARIO B : Canicule (T > 34°C)'
+    - alias: 'SCÉNARIO B : Canicule'
       conditions:
       - condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
@@ -972,8 +971,7 @@
         before: sunset
       sequence:
       - choose:
-        - alias: 'G1 ou G3 : Fermeture Totale'
-          conditions:
+        - conditions:
           - condition: state
             entity_id: sensor.groupe_clim
             state:
@@ -983,8 +981,7 @@
           - action: cover.close_cover
             target:
               entity_id: cover.store_salon
-        - alias: 'G2 ou G4 : Position 50%'
-          conditions:
+        - conditions:
           - condition: state
             entity_id: sensor.groupe_clim
             state:
@@ -1004,14 +1001,16 @@
       - action: cover.close_cover
         target:
           entity_id: cover.store_salon
-    - alias: 'SCÉNARIO D : Froid (T < 17°C + Absence)'
+    - alias: 'SCÉNARIO D : Froid (G1 ou G3)'
       conditions:
       - condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
         below: 17
       - condition: state
         entity_id: sensor.groupe_clim
-        state: groupe_1
+        state:
+        - groupe_1
+        - groupe_3
       - condition: sun
         after: sunrise
         before: sunset
