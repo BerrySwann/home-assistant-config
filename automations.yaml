@@ -2164,3 +2164,29 @@
       keep_days: 7
       repack: true
   mode: single
+- id: '1766779772267'
+  alias: DIAG - Enregistrement Journalier (6 Postes)
+  description: Log toutes les 15 min la consommation des 6 postes et la température
+    extérieure dans un fichier.
+  triggers:
+  - trigger: time_pattern
+    minutes: /15
+  conditions: []
+  actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.file
+    data:
+      message: '{% set p1 = states(''sensor.diag_poste_1_hygiene_quotidien'') | float(0)
+        | round(2) %} {% set p2 = states(''sensor.diag_poste_2_cuisson_quotidien'')
+        | float(0) | round(2) %} {% set p3 = states(''sensor.diag_poste_3_froid_quotidien'')
+        | float(0) | round(2) %} {% set p4 = states(''sensor.diag_poste_4_chauffage_quotidien'')
+        | float(0) | round(2) %} {% set p5 = states(''sensor.diag_poste_5_multimedia_quotidien'')
+        | float(0) | round(2) %} {% set p6 = states(''sensor.diag_poste_6_lumiere_quotidien'')
+        | float(0) | round(2) %} {% set ext = states(''sensor.th_balcon_nord_temperature'')
+        | float(0) %} {% set t = now().strftime(''%d/%m %H:%M'') %} {{t}} | Hyg:{{p1}}
+        | Cuis:{{p2}} | Froid:{{p3}} | Chauff:{{p4}} | Multi:{{p5}} | Lum:{{p6}} |
+        Ext:{{ext}}°C
+
+        '
+  mode: single
