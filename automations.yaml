@@ -1803,7 +1803,21 @@
     target:
       entity_id: switch.hue_smart_eco_pc_bureau
   mode: single
-- id: '1746383758535'
+- id: '1766778922895'
+  alias: Update previous temperature
+  description: Enregistre la température toutes les 30 minutes pour calculer la tendance.
+  triggers:
+  - trigger: time_pattern
+    minutes: /30
+  conditions: []
+  actions:
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.th_balcon_nord_temperature_previous
+    data:
+      value: '{{ states(''sensor.th_balcon_nord_temperature'') | float(0) }}'
+  mode: single
+- id: '1766779005298'
   alias: Update previous humidity
   description: Enregistre l'humidité toutes les 30 minutes pour calculer la tendance.
   triggers:
@@ -1816,4 +1830,337 @@
       entity_id: input_number.th_balcon_nord_humidity_previous
     data:
       value: '{{ states(''sensor.th_balcon_nord_humidity'') | float(0) }}'
+  mode: single
+- id: '1766779091118'
+  alias: Alerte Météo France actualisation des "CARTES"
+  description: 'Force la mise à jour des images d''alerte Météo France au démarrage,  aux
+    heures clés, ou toutes les 5 min si elles sont indisponibles.
+
+    '
+  triggers:
+  - trigger: homeassistant
+    event: start
+    id: Start
+  - trigger: time
+    at: 06:32:00
+    id: Heure632
+  - trigger: time
+    at: '16:32:00'
+    id: Heure1632
+  - trigger: time_pattern
+    minutes: /5
+    id: Toutesles5minutes
+  conditions:
+  - condition: or
+    conditions:
+    - condition: trigger
+      id:
+      - Start
+      - Heure632
+      - Heure1632
+    - alias: Vérif si Today est HS
+      condition: and
+      conditions:
+      - condition: trigger
+        id: Toutesles5minutes
+      - condition: state
+        entity_id: sensor.meteo_france_alertes_image_today
+        state: unavailable
+    - alias: Vérif si Tomorrow est HS
+      condition: and
+      conditions:
+      - condition: trigger
+        id: Toutesles5minutes
+      - condition: state
+        entity_id: sensor.meteo_france_alertes_image_tomorrow
+        state: unavailable
+  actions:
+  - alias: Premier essai de mise à jour
+    action: homeassistant.update_entity
+    target:
+      entity_id:
+      - sensor.meteo_france_alertes_image_today
+      - sensor.meteo_france_alertes_image_tomorrow
+  - delay: 00:00:05
+  - alias: Répéter MAJ Today si toujours indisponible
+    repeat:
+      count: 1
+      sequence:
+      - if:
+        - condition: state
+          entity_id: sensor.meteo_france_alertes_image_today
+          state: unavailable
+        then:
+        - action: homeassistant.update_entity
+          target:
+            entity_id: sensor.meteo_france_alertes_image_today
+        - delay: 00:00:05
+  - alias: Répéter MAJ Tomorrow si toujours indisponible
+    repeat:
+      count: 1
+      sequence:
+      - if:
+        - condition: state
+          entity_id: sensor.meteo_france_alertes_image_tomorrow
+          state: unavailable
+        then:
+        - action: homeassistant.update_entity
+          target:
+            entity_id: sensor.meteo_france_alertes_image_tomorrow
+        - delay: 00:00:05
+  - alias: Rafraîchir les caméras finales
+    action: homeassistant.update_entity
+    target:
+      entity_id:
+      - camera.mf_alerte_today
+      - camera.mf_alerte_tomorrow
+  mode: single
+- id: '1766779193916'
+  alias: Notification de la foudre
+  description: Alerte sur Poco X7 Pro avec distance, ville ou direction et décompte
+    des impacts.
+  triggers:
+  - trigger: state
+    entity_id: sensor.blitzortung_lightning_counter
+  conditions:
+  - condition: numeric_state
+    entity_id: sensor.blitzortung_lightning_counter
+    above: 0
+  actions:
+  - action: homeassistant.update_entity
+    target:
+      entity_id: sensor.blitzortung_lightning_localisation
+  - action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: /! Attention foudre /!/
+      message: "{% set distance = states('sensor.blitzortung_lightning_distance')
+        | float(0) %} {% set azimuth = states('sensor.blitzortung_lightning_azimuth')
+        | float(0) %} {% set impactCount = states('sensor.blitzortung_lightning_counter')
+        | int(0) %} {% set timeSinceLastLightning = states('input_text.dernier_impact_de_foudre_temps_ecoule')
+        %} {% set localisation = states('sensor.blitzortung_lightning_localisation')
+        %} {% set city = None %} {% if localisation and localisation != '0' %}\n  {%
+        set location = state_attr('sensor.blitzortung_lightning_localisation', 'features')
+        %}\n  {% if location and location[0] and location[0].properties and location[0].properties.geocoding
+        and location[0].properties.geocoding.city %}\n    {% set city = location[0].properties.geocoding.city
+        %}\n  {% endif %}\n{% endif %} {% if distance > 0 %}\n  {% if city %}\n    {%
+        set msg = 'Un éclair a été détecté à ' ~ distance ~ ' Km de la maison à '
+        ~ city ~ '.' %}\n  {% elif azimuth is not none %}\n    {% if 348.75 <= azimuth
+        or azimuth < 11.25 %} {% set msg = 'Un éclair a été détecté à ' ~ distance
+        ~ ' Km au nord.' %}\n    {% elif 11.25 <= azimuth < 33.75 %} {% set msg =
+        'Un éclair a été détecté à ' ~ distance ~ ' Km au nord-nord-est.' %}\n    {%
+        elif 33.75 <= azimuth < 56.25 %} {% set msg = 'Un éclair a été détecté à '
+        ~ distance ~ ' Km au nord-est.' %}\n    {% elif 56.25 <= azimuth < 78.75 %}
+        {% set msg = 'Un éclair a été détecté à ' ~ distance ~ ' Km à l\\'est-nord-est.'
+        %}\n    {% elif 78.75 <= azimuth < 101.25 %} {% set msg = 'Un éclair a été
+        détecté à ' ~ distance ~ ' Km à l\\'est.' %}\n    {% elif 101.25 <= azimuth
+        < 123.75 %} {% set msg = 'Un éclair a été détecté à ' ~ distance ~ ' Km à
+        l\\'est-sud-est.' %}\n    {% elif 123.75 <= azimuth < 146.25 %} {% set msg
+        = 'Un éclair a été détecté à ' ~ distance ~ ' Km au sud-est.' %}\n    {% elif
+        146.25 <= azimuth < 168.75 %} {% set msg = 'Un éclair a été détecté à ' ~
+        distance ~ ' Km au sud-south-est.' %}\n    {% elif 168.75 <= azimuth < 191.25
+        %} {% set msg = 'Un éclair a été détecté à ' ~ distance ~ ' Km au sud.' %}\n
+        \   {% elif 191.25 <= azimuth < 213.75 %} {% set msg = 'Un éclair a été détecté
+        à ' ~ distance ~ ' Km au sud-sud-ouest.' %}\n    {% elif 213.75 <= azimuth
+        < 236.25 %} {% set msg = 'Un éclair a été détecté à ' ~ distance ~ ' Km au
+        sud-ouest.' %}\n    {% elif 236.25 <= azimuth < 258.75 %} {% set msg = 'Un
+        éclair a été détecté à ' ~ distance ~ ' Km à l\\'ouest-sud-ouest.' %}\n    {%
+        elif 258.75 <= azimuth < 281.25 %} {% set msg = 'Un éclair a été détecté à
+        ' ~ distance ~ ' Km à l\\'ouest.' %}\n    {% elif 281.25 <= azimuth < 303.75
+        %} {% set msg = 'Un éclair a été détecté à ' ~ distance ~ ' Km à l\\'ouest-nord-ouest.'
+        %}\n    {% elif 303.75 <= azimuth < 326.25 %} {% set msg = 'Un éclair a été
+        détecté à ' ~ distance ~ ' Km au nord-ouest.' %}\n    {% elif 326.25 <= azimuth
+        < 348.75 %} {% set msg = 'Un éclair a été détecté à ' ~ distance ~ ' Km au
+        nord-nord-ouest.' %}\n    {% endif %}\n  {% else %}\n    {% set msg = 'Un
+        éclair a été détecté à ' ~ distance ~ ' Km.' %}\n  {% endif %}\n{% else %}\n
+        \ {% set msg = 'Pas d\\'impact de foudre détecté.' %}\n{% endif %} {{ msg
+        }} {{ timeSinceLastLightning }}. {% if impactCount > 0 %}\n  {{ impactCount
+        }} impact(s) détecté(s).\n{% endif %}\n"
+  - delay: 00:01:00
+  mode: single
+- id: '1766779275821'
+  alias: Mettre à jour le texte du temps écoulé
+  description: Met à jour le texte du temps écoulé depuis le dernier impact de foudre
+    toutes les 30 secondes.
+  triggers:
+  - trigger: time_pattern
+    seconds: /30
+  conditions: []
+  actions:
+  - action: input_text.set_value
+    target:
+      entity_id: input_text.dernier_impact_de_foudre_temps_ecoule
+    data:
+      value: "{% set last_lightning = states('input_datetime.dernier_eclair') %} {%
+        if last_lightning not in ['unknown', 'unavailable', 'none', ''] %}\n  {% set
+        last_lightning_ts = as_timestamp(last_lightning) %}\n  {% set time_since_last
+        = as_timestamp(now()) - last_lightning_ts %}\n  {% set minutes = ((time_since_last
+        % 3600) // 60) | int %}\n  {% set hours = ((time_since_last // 3600) % 24)
+        | int %}\n  {% set days = (time_since_last // 86400) | int %}\n  {% if days
+        > 0 %}\n    Dernier impact il y a {{ days }} jours, {{ hours }} h et {{ minutes
+        }} min\n  {% elif hours > 0 %}\n    Dernier impact il y a {{ hours }} h et
+        {{ minutes }} min\n  {% else %}\n    Dernier impact il y a {{ minutes }} min\n
+        \ {% endif %}\n{% else %}\n  Dernier impact de foudre : Inconnu\n{% endif
+        %}\n"
+  mode: single
+- id: '1766779355162'
+  alias: Mettre à jour le temps du dernier impact de foudre
+  description: Met à jour l'input_datetime au moment précis où un éclair est détecté.
+  triggers:
+  - trigger: state
+    entity_id: sensor.blitzortung_lightning_counter
+  conditions:
+  - condition: template
+    value_template: '{{ states(''sensor.blitzortung_lightning_counter'') | int(0)
+      > 0 }}'
+  actions:
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.dernier_eclair
+    data:
+      datetime: '{{ now().isoformat() }}'
+  mode: single
+- id: '1766779443735'
+  alias: Z2M last_seen
+  description: Surveillance des capteurs Zigbee injoignables (plus de 8h ou indisponibles)
+  triggers:
+  - trigger: time
+    at: 06:00:00
+  - trigger: time_pattern
+    minutes: /15
+  conditions:
+  - condition: template
+    value_template: '{{ sensors != '''' and (day | int == 0 or day | int == now().isoweekday())
+      }}'
+  actions:
+  - action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: ⚠️ Problème capteur Zigbee
+      message: 'Des capteurs Zigbee ne répondent plus : {{ sensors }}'
+  variables:
+    day: 0
+    hours: 8
+    exclude:
+      entity_id: []
+    sensors: "{% set result = namespace(sensors=[]) %} {% for state in states.sensor
+      \n   | rejectattr('attributes.device_class', 'undefined') \n   | selectattr('attributes.device_class',
+      '==', 'timestamp') %}\n  {% if 'last_seen' in state.entity_id and state.entity_id
+      not in exclude.entity_id %}\n    {% set last_seen = states(state.entity_id)
+      %}\n    {% if last_seen == 'unavailable' or last_seen == 'unknown' %}\n      {%
+      set result.sensors = result.sensors + [state.name | replace(' last seen', '')
+      ~ ' (Indisponible)'] %}\n    {% elif (as_timestamp(now()) - as_timestamp(last_seen))
+      > (hours | int * 3600) %}\n      {% set result.sensors = result.sensors + [state.name
+      | replace(' last seen', '') ~ ' (' ~ relative_time(strptime(last_seen, '%Y-%m-%dT%H:%M:%S%z'))
+      ~ ')'] %}\n    {% endif %}\n  {% endif %}\n{% endfor %} {{ result.sensors |
+      join(', ') }}\n"
+  mode: single
+- id: '1766779542822'
+  alias: Système - Watchdog Piles (HUE/IKEA/SONOFF)
+  description: Vérification 3x/jour basée sur les groupes de la vue synthétique (seuil
+    11%)
+  triggers:
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '14:00:00'
+  - trigger: time
+    at: '20:00:00'
+  actions:
+  - variables:
+      low_batt: "{% set sensors = expand('group.hue_devices', 'group.ikea_devices',
+        'group.sonoff_devices') %} {% set ns = namespace(ids=[]) %} {% for s in sensors
+        %}\n  {% if s.state | is_number and s.state | int <= 11 %}\n    {% set ns.ids
+        = ns.ids + [s.entity_id] %}\n  {% endif %}\n{% endfor %} {{ ns.ids }}\n"
+  - if:
+    - condition: template
+      value_template: '{{ low_batt | count > 0 }}'
+    then:
+    - action: notify.mobile_app_poco_x7_pro_eric
+      data:
+        title: "\U0001FAAB Alerte Pile Faible (<11%)"
+        message: "{% for id in low_batt %}\n  - {{ state_attr(id, 'friendly_name')
+          }} : {{ states(id) }}%\n{% endfor %}\n"
+        data:
+          tag: alert-batterie
+          color: '#f44336'
+  mode: single
+- id: '1766779612030'
+  alias: Système - Économie Énergie VS Code
+  description: Coupe VS Code après 20h si le CPU dépasse 10% ou s'il est inactif,
+    avec confirmation.
+  triggers:
+  - trigger: numeric_state
+    entity_id: sensor.system_monitor_utilisation_du_processeur
+    above: 10
+    for:
+      minutes: 10
+  - trigger: numeric_state
+    entity_id: sensor.studio_code_server_cpu_percent
+    below: 0.8
+    for:
+      minutes: 15
+  conditions:
+  - condition: time
+    after: '20:00:00'
+    before: 07:00:00
+  - condition: state
+    entity_id: binary_sensor.studio_code_server_running
+    state: 'on'
+  actions:
+  - action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: "\U0001F50B Alerte Énergie - Mini-PC"
+      message: 'Il est {{ now().strftime(''%H:%M'') }}. Le CPU global est à {{ states(''sensor.system_monitor_utilisation_du_processeur'')
+        }}%. On coupe VS Code pour économiser ?
+
+        '
+      data:
+        actions:
+        - action: STOP_VSC
+          title: Oui, couper
+        - action: KEEP_VSC
+          title: Non, je travaille encore
+  - wait_for_trigger:
+    - trigger: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: STOP_VSC
+    - trigger: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: KEEP_VSC
+    timeout: 00:05:00
+    continue_on_timeout: true
+  - choose:
+    - alias: 'Action : STOP (ou timeout)'
+      conditions:
+      - condition: template
+        value_template: '{{ wait.trigger == none or wait.trigger.event.data.action
+          == ''STOP_VSC'' }}'
+      sequence:
+      - action: hassio.addon_stop
+        data:
+          addon: a0d7b954_vscode
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          message: VS Code éteint automatiquement (Économie d'énergie).
+    - alias: 'Action : KEEP'
+      conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == ''KEEP_VSC'' }}'
+      sequence:
+      - stop: L'utilisateur code encore, on laisse tourner.
+  mode: single
+- id: '1766779705982'
+  alias: DB Purge MariaDB + Repack
+  description: Ménage nocturne pour réduire la taille de la base de données (7 jours
+    de rétention + Repack)
+  triggers:
+  - trigger: time
+    at: 00:30:00
+  conditions: []
+  actions:
+  - action: recorder.purge
+    data:
+      keep_days: 7
+      repack: true
   mode: single
