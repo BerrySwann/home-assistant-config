@@ -2593,21 +2593,18 @@
       topic: zigbee2mqtt/Inter TV Chambre (IKEA RODRET)
   actions:
     - choose:
-        # --- Appui sur "ON" (bouton du haut) ---
         - conditions:
             - condition: template
               value_template: "{{ trigger.payload_json.action == 'on' }}"
           sequence:
             - action: switch.turn_on
               target:
-                entity_id: switch.prise_tv_chambre # À vérifier selon ton entité exacte
-
-        # --- Appui sur "OFF" (bouton du bas) ---
+                entity_id: switch.prise_tv_chambre_nous
         - conditions:
             - condition: template
               value_template: "{{ trigger.payload_json.action == 'off' }}"
           sequence:
             - action: switch.turn_off
               target:
-                entity_id: switch.prise_tv_chambre
+                entity_id: switch.prise_tv_chambre_nous
   mode: restart
