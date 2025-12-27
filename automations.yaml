@@ -1382,11 +1382,11 @@
       message: '[Backup] H+10 exécuté'
   mode: single
 - id: '1766776680925'
-  alias: '[Backup] Git weekly (dim 03:40)'
-  description: Push + tag weekly chaque dimanche à 03:40
+  alias: '[Backup] Git weekly (dim 01:30)'
+  description: Push + tag weekly chaque dimanche à 01:30
   triggers:
   - trigger: time
-    at: 03:40:00
+    at: 01:30:00
   conditions:
   - condition: time
     weekday:
@@ -1397,6 +1397,10 @@
     data:
       level: info
       message: '[Backup] Weekly exécuté'
+  - action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: "\U0001F680 Sauvegarde Git"
+      message: Backup hebdo & tag -> GitHub.
   mode: single
 - id: '1766776781417'
   alias: E - Minuterie Sèche Serviettes Salle de Bain (1h)
@@ -2175,7 +2179,7 @@
   actions:
   - action: recorder.purge
     data:
-      keep_days: 7
+      keep_days: 32
       repack: true
   mode: single
 - id: '1766779772267'

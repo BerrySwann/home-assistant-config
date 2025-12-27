@@ -133,14 +133,25 @@ fi
 # │ Tag hebdomadaire (optionnel)                                             │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 if [[ "$IS_WEEKLY" == "true" ]]; then
+  # On s'assure d'avoir les derniers tags du GitHub avant de vérifier
+  git fetch --tags -q
+
   TAG_BASE="weekly-$(date +'%G-W%V')"
   TAG="$TAG_BASE"
+
+  # Vérification de l'existence du tag (local ou distant)
   if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
     TAG="${TAG_BASE}-$(date +'%H%M')"
   fi
+
   git tag -a "$TAG" -m "Weekly backup $(date +'%F')${HA_VER:+ (HA ${HA_VER})}"
-  git push origin --tags
-  log "🏷️  Tag créé: $TAG"
+  
+  # On ne pousse que le tag spécifique pour éviter de polluer
+  if git push origin "$TAG"; then
+    log "🏷️  Tag créé et poussé : $TAG"
+  else
+    log "❌ Erreur lors du push du tag : $TAG"
+  fi
 fi
 
 # Note : Le log final ici est supprimé, car il est désormais géré dans les blocs if/else
