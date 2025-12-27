@@ -73,8 +73,10 @@
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
       temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
-      temp_cor_mamour_h: '{{ states(''sensor.temperature_corrige_mamour_hivers'')
-        | float(0) }}'
+      temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(0)
+        }}'
+      temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(0)
+        }}'
       t_salon_target: '{{ temp_cible }}'
       t_bureau_target: '{{ temp_cible }}'
       t_chambre_target: '{{ temp_cible }}'
@@ -140,24 +142,25 @@
               value_template: '{{ ''groupe_2'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_cor_mamour_h if mode_saison == ''heat'' else
-                  temp_confort }}'
+                t_salon_target:
+                  '[object Object]':
           - alias: 'SCÉNARIO : ERIC (BUREAU CONFORT)'
             conditions:
             - condition: template
               value_template: '{{ ''groupe_3'' in groupe_presence }}'
             sequence:
             - variables:
-                t_bureau_target: '{{ temp_confort }}'
+                t_bureau_target:
+                  '[object Object]':
           - alias: 'SCÉNARIO : TOUS (SALON+BUREAU CONFORT)'
             conditions:
             - condition: template
               value_template: '{{ ''groupe_4'' in groupe_presence }}'
             sequence:
             - variables:
-                t_salon_target: '{{ temp_cor_mamour_h if mode_saison == ''heat'' else
-                  temp_confort }}'
-                t_bureau_target: '{{ temp_confort - 1 }}'
+                t_salon_target:
+                  '[object Object]':
+                t_bureau_target: '{{ temp_conf_e }}'
         - alias: 'ACTION : ENVOI COMMANDES PAR PIÈCE'
           parallel:
           - alias: LOGIQUE SALON

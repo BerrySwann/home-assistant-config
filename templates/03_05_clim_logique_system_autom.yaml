@@ -73,10 +73,9 @@
 
   # --- CALCUL : Correction Mamour Hivers ---
   - name: "Temperature Corrigé Mamour Hivers"
-    unique_id: temperature_corrige_mamour_hivers
+    unique_id: "temperature_corrige_mamour_hivers"
     unit_of_measurement: "°C"
     device_class: temperature
-    
     state: >
       {% set temp_conf_m = states('sensor.temperature_confort_jour') | float(0) %}
       {% if states('sensor.mode_ete_hiver') == 'cool' %}
@@ -87,7 +86,7 @@
 
   # --- CALCUL : Correction Eric Hivers ---
   - name: "Temperature Corrigé Eric Hivers"
-    unique_id: temperature_corrige_eric_hivers
+    unique_id: "temperature_corrige_eric_hivers"
     unit_of_measurement: "°C"
     device_class: temperature
     state: >
