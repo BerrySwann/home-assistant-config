@@ -1136,8 +1136,8 @@
           message: /!\ Chauffage Cuisine 'OFF' /!\
   mode: single
 - id: '1766776187713'
-  alias: A - Démarrage Radiateur Salle de Bain
-  description: 'Allumage sécurisé : adapte la puissance ou refuse si > 24°C'
+  alias: A - Démarrage Radiateur Salle de Bain (Version Optimisée)
+  description: Allumage sécurisé avec gestion puissance, swing et vérification température
   triggers:
   - trigger: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
@@ -1151,7 +1151,12 @@
     action: switch.turn_on
     target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
-  - delay: 00:00:01
+  - alias: Attente boot radiateur
+    delay: 00:00:02
+  - alias: Vérification que la prise est bien alimentée
+    condition: state
+    entity_id: switch.prise_radiateur_salle_de_bain_nous
+    state: 'on'
   - alias: 'Commande IR : Power ON'
     action: remote.send_command
     target:
@@ -1160,7 +1165,7 @@
       command: on_off
       device: radiateur_sdb
       num_repeats: 1
-  - delay: '00:00:00.6'
+  - delay: '00:00:00.8'
   - alias: Logique de puissance selon température
     choose:
     - conditions:
@@ -1187,7 +1192,16 @@
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-  - delay: '00:00:00.6'
+  - delay: '00:00:00.8'
+  - alias: 'Commande IR : Swing'
+    action: remote.send_command
+    target:
+      entity_id: remote.radiateur_sdb_rm4_mini
+    data:
+      command: swing
+      device: radiateur_sdb
+      num_repeats: 1
+  - delay: '00:00:00.8'
   - alias: Mise à jour de l'état du thermostat virtuel
     action: climate.set_hvac_mode
     data:
