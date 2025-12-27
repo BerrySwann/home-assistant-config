@@ -1131,9 +1131,6 @@
           entity_id: climate.radiateur_cuisine
         data:
           hvac_mode: 'off'
-      - action: notify.alexa_media_echo_dot_cuisine
-        data:
-          message: Le chauffage de la Cuisine est à l'arrêt
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: /!\ Chauffage Cuisine 'OFF' /!\
