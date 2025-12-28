@@ -2211,3 +2211,96 @@
 
         '
   mode: single
+- id: '1766948061120'
+  alias: 'Gestion PC bureau : Scène de Fin + Notif'
+  description: 'Éteint la prise du PC et notifie, mais laisse la prise ON pour le
+    suivi conso  lorsqu''une veille est détectée.
+
+    '
+  triggers:
+  - id: bouton_mqtt
+    trigger: mqtt
+    topic: zigbee2mqtt/Poussoir (IKEA TRADFRI)/action
+  - id: extinction_conso
+    trigger: numeric_state
+    entity_id: sensor.prise_bureau_pc_ikea_power
+    below: 80
+    for:
+      minutes: 2
+  actions:
+  - choose:
+    - alias: 'ALLUMAGE : Bouton ON ou 21h00'
+      conditions:
+      - or:
+        - condition: template
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
+            == ''on'' }}'
+        - condition: trigger
+          id: bouton_mqtt
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.hue_smart_eco_pc_bureau
+      - action: switch.turn_on
+        target:
+          entity_id: switch.prise_bureau_pc_ikea
+    - alias: 'EXTINCTION PRISE PC: Bouton OFF ou Veille (< 80W)'
+      conditions:
+      - or:
+        - condition: template
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
+            == ''off'' }}'
+        - condition: trigger
+          id: extinction_conso
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.hue_smart_eco_pc_bureau
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: Veille détectée
+          message: PC Bureau [OFF]
+          data:
+            icon: mdi:eye-outline
+            tag: notif_tv_chambre
+  mode: parallel
+- id: '1766948374171'
+  alias: Allumage Lumière Entrée
+  description: 'Gestion de l''éclairage de l''entrée basée sur les transitions des
+    groupes  de présence et la période de la journée.
+
+    '
+  triggers:
+  - alias: SURVEILLANCE DU CHANGEMENT DE GROUPE DE PRÉSENCE
+    trigger: state
+    entity_id: sensor.groupe_clim
+  actions:
+  - alias: CHOIX DE LA LOGIQUE SELON LA TRANSITION DÉTECTÉE
+    choose:
+    - alias: 'CAS 1 : ARRIVÉE INITIALE EN PÉRIODE DIURNE (G1 -> PRÉSENCE)'
+      conditions:
+      - alias: 'VÉRIFICATION : PASSAGE DE ABSENT À PRÉSENT'
+        condition: template
+        value_template: "{{ trigger.from_state.state == 'groupe_1' and \n   trigger.to_state.state
+          in ['groupe_2', 'groupe_3', 'groupe_4'] }}"
+      - alias: 'VÉRIFICATION : PÉRIODE DIURNE (SOLEIL LEVÉ)'
+        condition: state
+        entity_id: sun.sun
+        state: above_horizon
+      sequence:
+      - alias: 'ACTION : ALLUMAGE DE LA LUMIÈRE ENTRÉE'
+        action: light.turn_on
+        target:
+          entity_id: light.entree
+    - alias: 'CAS 2 : RETOUR DE MAMOUR (TRANSITION G3 VERS G4)'
+      conditions:
+      - alias: 'VÉRIFICATION : PASSAGE DE ERIC SEUL À DUO'
+        condition: template
+        value_template: "{{ trigger.from_state.state == 'groupe_3' and \n   trigger.to_state.state
+          == 'groupe_4' }}"
+      sequence:
+      - alias: 'ACTION : ALLUMAGE DE LA LUMIÈRE ENTRÉE'
+        action: light.turn_on
+        target:
+          entity_id: light.entree
+  mode: queued
