@@ -3,6 +3,18 @@
 #========================================================================
 
 - sensor:
+    - name: "Max Conso Quotidien Dynamique"
+      unique_id: max_conso_Quotidien_dynamique
+      unit_of_measurement: "kWh"
+      state: >
+        {% set p1 = states('sensor.diag_poste_1_hygiene_quotidien') | float(0) %}
+        {% set p2 = states('sensor.diag_poste_2_cuisson_quotidien') | float(0) %}
+        {% set p3 = states('sensor.diag_poste_3_froid_quotidien') | float(0) %}
+        {% set p4 = states('sensor.diag_poste_4_chauffage_quotidien') | float(0) %}
+        {% set p5 = states('sensor.diag_poste_5_multimedia_quotidien') | float(0) %}
+        {% set p6 = states('sensor.diag_poste_6_lumiere_quotidien') | float(0) %}
+        {{ ([p1, p2, p3, p4, p5, p6] | max + 0.5) | round(0) }}
+
     #--- POSTE 1 : HYGIÈNE (Linge, Vaisselle, Repassage) ---
     - name: "Diag Poste 1 Hygiene Quotidien"
       unique_id: diag_poste_1_hygiene_quotidien

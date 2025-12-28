@@ -3,7 +3,7 @@
 #============================================================================
 
 - sensor:
-    # --- RCOJOKO ---
+    # --- ECOJOKO ---
     - name: "ecojoko_avg_watts_daily"
       unique_id: ecojoko_avg_watts_daily
       unit_of_measurement: "W"
