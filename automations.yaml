@@ -2264,3 +2264,67 @@
             icon: mdi:eye-outline
             tag: notif_tv_chambre
   mode: parallel
+- id: allumage_lumiere_entree
+  alias: Allumage Lumière Entrée
+  description: 'Allumage automatique de l''entrée lors d''une arrivée : 1. Si l''appartement
+    était vide (G1) et que quelqu''un arrive en journée (Diurne). 2. Si Eric est seul
+    (G3) et que Mamour le rejoint (G4).
+
+    '
+  triggers:
+  - trigger: state
+    entity_id: sensor.groupe_clim
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.from_state.state == ''groupe_1'' and trigger.to_state.state
+          in [''groupe_2'', ''groupe_3'', ''groupe_4''] }}'
+      - condition: state
+        entity_id: sun.sun
+        state: above_horizon
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.entree
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.from_state.state == ''groupe_3'' and trigger.to_state.state
+          == ''groupe_4'' }}'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.entree
+  mode: single
+- id: allumage_lumiere_entree
+  alias: Allumage Lumière Entrée
+  description: 'Allumage automatique de l''entrée lors d''une arrivée : 1. Si l''appartement
+    était vide (G1) et que quelqu''un arrive en journée (Diurne). 2. Si Eric est seul
+    (G3) et que Mamour le rejoint (G4).
+
+    '
+  triggers:
+  - trigger: state
+    entity_id: sensor.groupe_clim
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.from_state.state == ''groupe_1'' and trigger.to_state.state
+          in [''groupe_2'', ''groupe_3'', ''groupe_4''] }}'
+      - condition: state
+        entity_id: sun.sun
+        state: above_horizon
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.entree
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.from_state.state == ''groupe_3'' and trigger.to_state.state
+          == ''groupe_4'' }}'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.entree
+  mode: single
