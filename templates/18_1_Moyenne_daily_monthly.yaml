@@ -3,6 +3,25 @@
 #============================================================================
 
 - sensor:
+    # --- RCOJOKO ---
+    - name: "ecojoko_avg_watts_daily"
+      unique_id: ecojoko_avg_watts_daily
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.ecojoko_energy_daily') | float(0) %}
+        {% set h = now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+
+    - name: "ecojoko_avg_watts_monthly"
+      unique_id: ecojoko_avg_watts_monthly
+      unit_of_measurement: "W"
+      device_class: power
+      state: >
+        {% set conso = states('sensor.ecojoko_energy_monthly') | float(0) %}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
+
     # --- MINI PC ---
     - name: "mini_pc_avg_watts_daily"
       unique_id: mini_pc_avg_watts_daily
