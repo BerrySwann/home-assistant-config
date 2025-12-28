@@ -2213,46 +2213,37 @@
   mode: single
 - id: extinction_automatique_prise_pc
   alias: extinction_automatique_prise_pc
-  description: Allumage par bouton IKEA et extinction auto si conso < 70W
+  description: 'Structure TV adaptée au PC : ON/OFF via bouton IKEA et extinction
+    < 80W'
   triggers:
   - id: bouton_mqtt
     trigger: mqtt
     topic: zigbee2mqtt/Poussoir (IKEA TRADFRI)/action
-  - id: extinction_auto
+  - id: extinction_conso
     trigger: numeric_state
     entity_id: sensor.prise_bureau_pc_ikea_power
-    below: 70
-    for:
-      minutes: 2
-  - id: verif_allumage
-    trigger: state
-    entity_id: switch.hue_smart_eco_pc_bureau
-    to: 'on'
+    below: 80
     for:
       minutes: 2
   actions:
   - choose:
-    - alias: Action Allumage
+    - alias: 'ALLUMAGE : Bouton [ON]'
       conditions:
-      - condition: trigger
-        id: bouton_mqtt
       - condition: template
-        value_template: '{{ trigger.payload == ''on'' }}'
+        value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload == ''on''
+          }}'
       sequence:
       - action: switch.turn_on
         target:
           entity_id: switch.hue_smart_eco_pc_bureau
-    - alias: Action Extinction
+    - alias: 'EXTINCTION : Bouton [OFF] ou Veille (< 80W)'
       conditions:
-      - condition: state
-        entity_id: switch.hue_smart_eco_pc_bureau
-        state: 'on'
-      - condition: numeric_state
-        entity_id: sensor.prise_bureau_pc_ikea_power
-        below: 70
-      - condition: template
-        value_template: '{{ trigger.id in [''extinction_auto'', ''verif_allumage'']
-          }}'
+      - or:
+        - condition: template
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload ==
+            ''off'' }}'
+        - condition: trigger
+          id: extinction_conso
       sequence:
       - action: switch.turn_off
         target:
@@ -2260,8 +2251,8 @@
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
           title: éCO Prise PC
-          message: 'Prise éteinte : consommation stable sous 70W.'
+          message: La prise du PC a été éteinte (Bouton ou Veille < 80W).
           data:
-            icon: mdi:eye-outline
+            icon: mdi:power-off
             tag: notif_pc_bureau
-  mode: restart
+  mode: parallel
