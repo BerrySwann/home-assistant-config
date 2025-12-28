@@ -1805,8 +1805,8 @@
           entity_id: light.hue_smart_tv_chambre
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: 'TV Chambre : Veille détectée'
-          message: Ambiance éteinte. La prise reste ON pour le suivi 18_1.
+          title: Veille détectée
+          message: Prise TV [OFF]
           data:
             icon: mdi:eye-outline
             tag: notif_tv_chambre
@@ -2212,9 +2212,11 @@
         '
   mode: single
 - id: extinction_automatique_prise_pc
-  alias: extinction_automatique_prise_pc
-  description: 'Structure TV adaptée au PC : ON/OFF via bouton IKEA et extinction
-    < 80W'
+  alias: 'Gestion PC bureau : Scène de Fin + Notif'
+  description: 'Éteint la prise du PC et notifie, mais laisse la prise ON pour le
+    suivi conso  lorsqu''une veille est détectée.
+
+    '
   triggers:
   - id: bouton_mqtt
     trigger: mqtt
@@ -2227,21 +2229,27 @@
       minutes: 2
   actions:
   - choose:
-    - alias: 'ALLUMAGE : Bouton [ON]'
+    - alias: 'ALLUMAGE : Bouton ON ou 21h00'
       conditions:
-      - condition: template
-        value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload == ''on''
-          }}'
+      - or:
+        - condition: template
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
+            == ''on'' }}'
+        - condition: trigger
+          id: bouton_mqtt
       sequence:
       - action: switch.turn_on
         target:
           entity_id: switch.hue_smart_eco_pc_bureau
-    - alias: 'EXTINCTION : Bouton [OFF] ou Veille (< 80W)'
+      - action: switch.turn_on
+        target:
+          entity_id: sensor.prise_bureau_pc_ikea_power
+    - alias: 'EXTINCTION PRISE PC: Bouton OFF ou Veille (< 80W)'
       conditions:
       - or:
         - condition: template
-          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload ==
-            ''off'' }}'
+          value_template: '{{ trigger.id == ''bouton_mqtt'' and trigger.payload_json.action
+            == ''off'' }}'
         - condition: trigger
           id: extinction_conso
       sequence:
@@ -2250,9 +2258,9 @@
           entity_id: switch.hue_smart_eco_pc_bureau
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: éCO Prise PC
-          message: La prise du PC a été éteinte (Bouton ou Veille < 80W).
+          title: Veille détectée
+          message: PC Bureau [OFF]
           data:
-            icon: mdi:power-off
-            tag: notif_pc_bureau
+            icon: mdi:eye-outline
+            tag: notif_tv_chambre
   mode: parallel
