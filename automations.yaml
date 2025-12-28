@@ -1097,6 +1097,9 @@
     - alias: 'DÉMARRAGE : Mode Chauffage'
       conditions:
       - condition: zone
+        entity_id: person.mamour
+        zone: zone.home
+      - condition: zone
         entity_id: person.eric
         zone: zone.home
       - condition: time
@@ -1111,14 +1114,14 @@
           entity_id: climate.radiateur_cuisine
         data:
           hvac_mode: heat
-      - action: notify.alexa_media_echo_dot_cuisine
-        data:
-          message: Le chauffage de la Cuisine est en fonctionnement
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
           message: /!\ Chauffage Cuisine 'ON' /!\
     - alias: 'ARRÊT : Température atteinte'
       conditions:
+      - condition: zone
+        entity_id: person.mamour
+        zone: zone.home
       - condition: zone
         entity_id: person.eric
         zone: zone.home
@@ -2210,7 +2213,7 @@
   mode: single
 - id: extinction_automatique_prise_pc
   alias: extinction_automatique_prise_pc
-  description: Allumage par bouton IKEA et extinction auto si conso < 50W
+  description: Allumage par bouton IKEA et extinction auto si conso < 70W
   triggers:
   - id: bouton_mqtt
     trigger: mqtt
@@ -2218,12 +2221,18 @@
   - id: extinction_auto
     trigger: numeric_state
     entity_id: sensor.prise_bureau_pc_ikea_power
-    below: 50
+    below: 70
+    for:
+      minutes: 2
+  - id: verif_allumage
+    trigger: state
+    entity_id: switch.hue_smart_eco_pc_bureau
+    to: 'on'
     for:
       minutes: 2
   actions:
   - choose:
-    - alias: 'ALLUMAGE : Bouton IKEA'
+    - alias: Action Allumage
       conditions:
       - condition: trigger
         id: bouton_mqtt
@@ -2233,13 +2242,17 @@
       - action: switch.turn_on
         target:
           entity_id: switch.hue_smart_eco_pc_bureau
-    - alias: 'EXTINCTION PC : Veille détectée'
+    - alias: Action Extinction
       conditions:
-      - condition: trigger
-        id: extinction_auto
       - condition: state
         entity_id: switch.hue_smart_eco_pc_bureau
         state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.prise_bureau_pc_ikea_power
+        below: 70
+      - condition: template
+        value_template: '{{ trigger.id in [''extinction_auto'', ''verif_allumage'']
+          }}'
       sequence:
       - action: switch.turn_off
         target:
@@ -2247,7 +2260,7 @@
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
           title: éCO Prise PC
-          message: La prise du PC a été éteinte (Consommation < 50W).
+          message: 'Prise éteinte : consommation stable sous 70W.'
           data:
             icon: mdi:eye-outline
             tag: notif_pc_bureau
