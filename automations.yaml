@@ -2097,7 +2097,7 @@
     then:
     - action: notify.mobile_app_poco_x7_pro_eric
       data:
-        title: "\U0001FAAB Alerte Pile Faible (<11%)"
+        title: "\U0001FAAB Alerte Pile Faible (<10%)"
         message: "{% for id in low_batt %}\n  - {{ state_attr(id, 'friendly_name')
           }} : {{ states(id) }}%\n{% endfor %}\n"
         data:
