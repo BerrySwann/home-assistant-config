@@ -1,30 +1,30 @@
 - id: '1766771160614'
-  alias: (A - 0) (TEST 2025-12-19) Automatisation CLIM (07h30 <-> 21h00)
-  description: '[CORRIGÉ] Automatisation pour contrôler de [07h30 <-> 21h00] les climatiseurs.
-    Sécurisation ajoutée contre les modes invalides.'
+  alias: (A - 0) Automatisation CLIM (07h30 <-> 21h00)
+  description: '[VERSION FINALE] Pilotage des clims basé sur la présence et la saison.  Indentation
+    corrigée et alias harmonisés.'
   triggers:
-  - alias: 'SYSTEM : Redémarrage Home Assistant'
+  - alias: 'SYSTEM : REDÉMARRAGE HOME ASSISTANT'
     trigger: homeassistant
     event: start
     id: force_run
-  - alias: 'HORAIRE : Démarrage 7h30'
+  - alias: 'HORAIRE : DÉMARRAGE 7H30'
     trigger: time
     at: 07:30:00
     id: force_run
-  - alias: 'RÉSEAU : Changement Wifi <-> Cellular'
+  - alias: 'RÉSEAU : CHANGEMENT WIFI <-> CELLULAR'
     trigger: state
     entity_id:
     - sensor.poco_x7_pro_mamour_network_type
     - sensor.poco_x7_pro_network_type
     id: force_run
-  - alias: 'PRISES : Changement ON/OFF'
+  - alias: 'PRISES : CHANGEMENT ÉTAT ON/OFF'
     trigger: state
     entity_id:
     - switch.clim_salon_nous
     - switch.clim_bureau_nous
     - switch.clim_chambre_nous
     id: force_run
-  - alias: 'FENÊTRES : Ouverture (Coupure Urgence)'
+  - alias: 'FENÊTRES : OUVERTURE (COUPURE URGENCE)'
     trigger: state
     entity_id:
     - binary_sensor.contact_fenetre_salon_sonoff_contact
@@ -34,7 +34,7 @@
     from: 'off'
     to: 'on'
     id: window_open
-  - alias: 'FENÊTRES : Fermeture (Rétablissement)'
+  - alias: 'FENÊTRES : FERMETURE (RÉTABLISSEMENT)'
     trigger: state
     entity_id:
     - binary_sensor.contact_fenetre_salon_sonoff_contact
@@ -44,7 +44,7 @@
     from: 'on'
     to: 'off'
     id: window_close
-  - alias: 'ENVIRONNEMENT : Températures ou Mode'
+  - alias: 'ENVIRONNEMENT : MISE À JOUR TEMPÉRATURES OU MODE'
     trigger: state
     entity_id:
     - sensor.th_balcon_nord_temperature
@@ -53,14 +53,14 @@
     - sensor.temperature_confort_jour
     id: sensor_update
   conditions:
-  - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT DE JOUR'
+  - alias: 'SÉCURITÉ : EXÉCUTION UNIQUEMENT EN PÉRIODE DIURNE'
     condition: time
     after: 07:30:00
     before: '21:00:00'
   actions:
-  - alias: 'INIT : CALCUL DES VARIABLES'
+  - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
-      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %} {% if m in [''heat'',
+      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
         ''cool'', ''fan_only''] %} {{ m }} {% else %} off {% endif %}
 
         '
@@ -72,22 +72,36 @@
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(0) }}'
-      temp_confort: '{{ states(''sensor.temperature_confort_jour'') | float(19) }}'
-      temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(0)
+      temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(19)
         }}'
-      temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(0)
+      temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(19)
         }}'
-      t_salon_target: '{{ temp_cible }}'
-      t_bureau_target: '{{ temp_cible }}'
-      t_chambre_target: '{{ temp_cible }}'
-  - alias: 'LOGIQUE : SÉCURITÉ VS STANDARD'
+      t_salon_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if mode_saison
+        == ''heat'' else temp_cible }} {% elif ''groupe_2'' in groupe_presence or
+        ''groupe_4'' in groupe_presence %} {{ temp_conf_m }} {% else %} {{ temp_cible
+        }} {% endif %}
+
+        '
+      t_bureau_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
+        mode_saison == ''heat'' else temp_cible }} {% elif ''groupe_3'' in groupe_presence
+        or ''groupe_4'' in groupe_presence %} {{ temp_conf_e }} {% else %} {{ temp_cible
+        }} {% endif %}
+
+        '
+      t_chambre_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
+        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_cible }} {%
+        endif %}
+
+        '
+  - alias: 'LOGIQUE : SÉCURITÉ FENÊTRES VS GESTION STANDARD'
     choose:
-    - alias: 'URGENCE : FENÊTRE OUVERTE'
+    - alias: 'CAS URGENCE : FENÊTRE OUVERTE DÉTECTÉE'
       conditions:
-      - condition: template
+      - alias: 'VÉRIFICATION : ÉTAT DES CAPTEURS FENÊTRES'
+        condition: template
         value_template: '{{ fenetres_ouvertes }}'
       sequence:
-      - alias: 'ACTION : ARRÊT FORCE'
+      - alias: 'ACTION : ARRÊT FORCÉ DES UNITÉS CLIM'
         action: climate.set_hvac_mode
         target:
           entity_id:
@@ -96,156 +110,94 @@
           - climate.clim_chambre_rm4_mini
         data:
           hvac_mode: 'off'
-      - alias: 'NOTIF : ALERTE FENÊTRE'
+      - alias: 'NOTIF : ALERTE POCO - FENÊTRE OUVERTE'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: CLIM COUPÉE
-          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set
-            ouverts = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}
-            {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
-            \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
-            | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
-            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
-            replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
-            | lower %}\n    {% set article = 'du' if piece_lower == 'bureau' or piece_lower
-            == 'salon' else 'de la' %}\n    {% set messages.list = messages.list +
-            [\"La fenêtre \" ~ article ~ \" \" ~ piece_lower | upper ~ \" a été ouverte\"]
-            %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
-            \ Aucune fenêtre n'est actuellement ouverte.\n{% endif %}\n"
+          title: CLIM COUPÉE ⚠️
+          message: Une ou plusieurs fenêtres sont ouvertes. Les climatisations ont
+            été coupées.
     default:
-    - alias: 'VÉRIFICATION : HORAIRE'
-      choose:
-      - conditions:
-        - condition: time
-          after: 07:30:00
-          before: '21:00:00'
-        sequence:
-        - alias: 'CALCUL : DÉFINITION CIBLES PAR PIÈCE'
-          choose:
-          - alias: 'SCÉNARIO : ABSENT (ECO/CIBLE)'
-            conditions:
-            - condition: template
-              value_template: '{{ ''groupe_1'' in groupe_presence }}'
-            sequence:
-            - variables:
-                t_salon_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
-                  }}'
-                t_bureau_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
-                  }}'
-                t_chambre_target: '{{ temp_eco_c if mode_saison == ''heat'' else temp_cible
-                  }}'
-          - alias: 'SCÉNARIO : MAMOUR (SALON CONFORT)'
-            conditions:
-            - condition: template
-              value_template: '{{ ''groupe_2'' in groupe_presence }}'
-            sequence:
-            - variables:
-                t_salon_target:
-                  '[object Object]':
-          - alias: 'SCÉNARIO : ERIC (BUREAU CONFORT)'
-            conditions:
-            - condition: template
-              value_template: '{{ ''groupe_3'' in groupe_presence }}'
-            sequence:
-            - variables:
-                t_bureau_target:
-                  '[object Object]':
-          - alias: 'SCÉNARIO : TOUS (SALON+BUREAU CONFORT)'
-            conditions:
-            - condition: template
-              value_template: '{{ ''groupe_4'' in groupe_presence }}'
-            sequence:
-            - variables:
-                t_salon_target:
-                  '[object Object]':
-                t_bureau_target: '{{ temp_conf_e }}'
-        - alias: 'ACTION : ENVOI COMMANDES PAR PIÈCE'
-          parallel:
-          - alias: LOGIQUE SALON
-            choose:
-            - alias: 'Conditions Salon : Prise ON et Sécurité OFF'
-              conditions:
-              - condition: state
-                entity_id: switch.clim_salon_nous
-                state: 'on'
-              - condition: state
-                entity_id: input_boolean.clim_salon_arret_securise_en_cours
-                state: 'off'
-              sequence:
-              - action: climate.set_temperature
-                target:
-                  entity_id: climate.clim_salon_rm4_mini
-                data:
-                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
-                    and is_state('climate.clim_salon_rm4_mini', 'off') %}\n  off\n{%
-                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
-                  temperature: '{{ t_salon_target }}'
-              - action: climate.set_fan_mode
-                target:
-                  entity_id: climate.clim_salon_rm4_mini
-                data:
-                  fan_mode: auto
-          - alias: LOGIQUE BUREAU
-            choose:
-            - alias: 'Conditions Bureau : Prise ON et Sécurité OFF'
-              conditions:
-              - condition: state
-                entity_id: switch.clim_bureau_nous
-                state: 'on'
-              - condition: state
-                entity_id: input_boolean.clim_bureau_arret_securise_en_cours
-                state: 'off'
-              sequence:
-              - action: climate.set_temperature
-                target:
-                  entity_id: climate.clim_bureau_rm4_mini
-                data:
-                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
-                    and is_state('climate.clim_bureau_rm4_mini', 'off') %}\n  off\n{%
-                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
-                  temperature: '{{ t_bureau_target }}'
-              - action: climate.set_fan_mode
-                target:
-                  entity_id: climate.clim_bureau_rm4_mini
-                data:
-                  fan_mode: auto
-          - alias: LOGIQUE CHAMBRE
-            choose:
-            - alias: 'Conditions Chambre : Prise ON et Sécurité OFF'
-              conditions:
-              - condition: state
-                entity_id: switch.clim_chambre_nous
-                state: 'on'
-              - condition: state
-                entity_id: input_boolean.clim_chambre_arret_securise_en_cours
-                state: 'off'
-              sequence:
-              - action: climate.set_temperature
-                target:
-                  entity_id: climate.clim_chambre_rm4_mini
-                data:
-                  hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
-                    and is_state('climate.clim_chambre_rm4_mini', 'off') %}\n  off\n{%
-                    else %}\n  {{ mode_saison }}\n{% endif %}\n"
-                  temperature: '{{ t_chambre_target }}'
-              - action: climate.set_fan_mode
-                target:
-                  entity_id: climate.clim_chambre_rm4_mini
-                data:
-                  fan_mode: auto
-        - alias: DÉLAI DE SÉCURITÉ
-          delay: 00:00:02
-        - alias: 'NOTIF : ETAT'
-          action: notify.mobile_app_poco_x7_pro_eric
-          data:
-            title: '[AJ] {{ states(''sensor.presence_clim'') }}'
-            message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat'
-              -%}\n  [éCO HEAT] Les 3 Clims à {{ temp_eco_c }}° (Absent)\n{%- else
-              -%}\n  Mode : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target
-              }}°\n  Bureau: {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target
-              }}°\n{%- endif -%}\n"
+    - alias: 'ACTION : ENVOI DES COMMANDES AUX PIÈCES EN PARALLÈLE'
+      parallel:
+      - alias: LOGIQUE SALON
+        choose:
+        - alias: 'VÉRIFICATION : SÉCURITÉ SALON (PRISE + ARRET)'
+          conditions:
+          - condition: state
+            entity_id: switch.clim_salon_nous
+            state: 'on'
+          - condition: state
+            entity_id: input_boolean.clim_salon_arret_securise_en_cours
+            state: 'off'
+          sequence:
+          - alias: 'COMMANDE : TEMPÉRATURE SALON'
+            action: climate.set_temperature
+            target:
+              entity_id: climate.clim_salon_rm4_mini
+            data:
+              hvac_mode: '{{ ''off'' if (trigger.id == ''sensor_update'' and is_state(''climate.clim_salon_rm4_mini'',
+                ''off'')) else mode_saison }}'
+              temperature: '{{ t_salon_target }}'
+          - alias: 'COMMANDE : VENTILATION SALON'
+            action: climate.set_fan_mode
+            target:
+              entity_id: climate.clim_salon_rm4_mini
+            data:
+              fan_mode: auto
+      - alias: LOGIQUE BUREAU
+        choose:
+        - alias: 'VÉRIFICATION : SÉCURITÉ BUREAU (PRISE + ARRET)'
+          conditions:
+          - condition: state
+            entity_id: switch.clim_bureau_nous
+            state: 'on'
+          - condition: state
+            entity_id: input_boolean.clim_bureau_arret_securise_en_cours
+            state: 'off'
+          sequence:
+          - alias: 'COMMANDE : TEMPÉRATURE BUREAU'
+            action: climate.set_temperature
+            target:
+              entity_id: climate.clim_bureau_rm4_mini
+            data:
+              hvac_mode: '{{ ''off'' if (trigger.id == ''sensor_update'' and is_state(''climate.clim_bureau_rm4_mini'',
+                ''off'')) else mode_saison }}'
+              temperature: '{{ t_bureau_target }}'
+          - alias: 'COMMANDE : VENTILATION BUREAU'
+            action: climate.set_fan_mode
+            target:
+              entity_id: climate.clim_bureau_rm4_mini
+            data:
+              fan_mode: auto
+      - alias: LOGIQUE CHAMBRE
+        choose:
+        - alias: 'VÉRIFICATION : SÉCURITÉ CHAMBRE (PRISE + ARRET)'
+          conditions:
+          - condition: state
+            entity_id: switch.clim_chambre_nous
+            state: 'on'
+          - condition: state
+            entity_id: input_boolean.clim_chambre_arret_securise_en_cours
+            state: 'off'
+          sequence:
+          - alias: 'COMMANDE : TEMPÉRATURE CHAMBRE'
+            action: climate.set_temperature
+            target:
+              entity_id: climate.clim_chambre_rm4_mini
+            data:
+              hvac_mode: '{{ ''off'' if (trigger.id == ''sensor_update'' and is_state(''climate.clim_chambre_rm4_mini'',
+                ''off'')) else mode_saison }}'
+              temperature: '{{ t_chambre_target }}'
+    - alias: 'PAUSE : SÉCURITÉ RÉCEPTION'
+      delay: 00:00:02
+    - alias: 'NOTIF : RÉSUMÉ DE L''ÉTAT ACTUEL'
+      action: notify.mobile_app_poco_x7_pro_eric
+      data:
+        title: '[AJ] {{ states(''sensor.presence_clim'') }}'
+        message: 'Mode : {{ mode_saison | upper }} | S: {{ t_salon_target }}° | B:
+          {{ t_bureau_target }}° | C: {{ t_chambre_target }}°
+
+          '
   mode: queued
 - id: '1766771294543'
   alias: (B - 0) (TEST 2025-12-19) Autmatisation CLIM (21h00 <-> 07h30)
@@ -1142,54 +1094,45 @@
           message: /!\ Chauffage Cuisine 'OFF' /!\
   mode: single
 - id: '1766776187713'
-  alias: A - Démarrage Radiateur Salle de Bain (Version Optimisée)
-  description: Allumage sécurisé avec gestion puissance, swing et vérification température
+  alias: A - DÉMARRAGE ET INITIALISATION RADIATEUR SDB
+  description: Gère l'allumage physique, l'amorçage IR et le réglage initial de puissance.
   triggers:
-  - trigger: state
+  - alias: 'DÉCLENCHEMENT : PASSAGE À ON DU BOOLEAN SDB'
+    trigger: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'on'
   conditions:
-  - condition: numeric_state
+  - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 24°C'
+    condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 24
   actions:
-  - alias: 'Sécurité : Allumage de la prise physique'
+  - alias: 'MATÉRIEL : ALLUMAGE DE LA PRISE PHYSIQUE'
     action: switch.turn_on
     target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
-  - alias: Attente boot radiateur
+  - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
     delay: 00:00:02
-  - alias: Vérification que la prise est bien alimentée
+  - alias: 'SÉCURITÉ : VÉRIFICATION ALIMENTATION PRISE'
     condition: state
     entity_id: switch.prise_radiateur_salle_de_bain_nous
     state: 'on'
-  - alias: 'Commande IR : Power ON'
+  - alias: 'IR : ENVOI COMMANDE POWER ON'
     action: remote.send_command
     target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: on_off
       device: radiateur_sdb
-      num_repeats: 1
-  - delay: '00:00:00.8'
-  - alias: Logique de puissance selon température
+  - alias: 'PAUSE : ATTENTE RÉCEPTION IR'
+    delay: 00:00:01
+  - alias: 'PUISSANCE INITIALE : CHOIX SELON TEMPÉRATURE ACTUELLE'
     choose:
-    - conditions:
+    - alias: 'CAS FROID : INFÉRIEUR À 21°C -> 2000W'
+      conditions:
       - condition: numeric_state
         entity_id: sensor.th_salle_de_bain_temperature
-        above: 21.9
-      sequence:
-      - action: remote.send_command
-        target:
-          entity_id: remote.radiateur_sdb_rm4_mini
-        data:
-          command: 1000w
-          device: radiateur_sdb
-          num_repeats: 1
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.th_salle_de_bain_temperature
-        below: 22
+        below: 21
       sequence:
       - action: remote.send_command
         target:
@@ -1198,48 +1141,64 @@
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-  - delay: '00:00:00.8'
-  - alias: 'Commande IR : Swing'
+    - alias: 'CAS MODÉRÉ : SUPÉRIEUR À 21°C -> 1000W'
+      conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_salle_de_bain_temperature
+        above: 20.9
+      sequence:
+      - action: remote.send_command
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+  - alias: 'IR : ACTIVATION DU SWING'
     action: remote.send_command
     target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: swing
       device: radiateur_sdb
-      num_repeats: 1
-  - delay: '00:00:00.8'
-  - alias: Mise à jour de l'état du thermostat virtuel
+  - alias: 'ETAT : SYNCHRONISATION DU THERMOSTAT VIRTUEL'
     action: climate.set_hvac_mode
     data:
       hvac_mode: heat
     target:
       entity_id: climate.soufflant_salle_de_bain
 - id: '1766776271080'
-  alias: B - Gestion Résistances Radiateur SDB
-  description: Baisse à 1000W au-delà de 22.9°C et repasse à 2000W sous 20.9°C
+  alias: B - RÉGULATION DYNAMIQUE PUISSANCE SDB
+  description: Ajuste la résistance (1000W/2000W) en cours de fonctionnement pour
+    maintenir le confort.
   triggers:
-  - trigger: numeric_state
+  - alias: 'SEUIL HAUT : TEMPÉRATURE > 22.9°C'
+    trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     above: 22.9
-    for:
-      minutes: 1
-    id: temp_23
-  - trigger: numeric_state
+    for: 00:01:00
+    id: vers_1000w
+  - alias: 'SEUIL BAS : TEMPÉRATURE < 20.9°C'
+    trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 20.9
-    for:
-      minutes: 1
-    id: temp_21
+    for: 00:01:00
+    id: vers_2000w
   conditions:
-  - condition: state
+  - alias: 'VÉRIFICATION : RADIATEUR ACTIF ET PRISE ALLUMÉE'
+    condition: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
     state: 'on'
+  - alias: 'SÉCURITÉ : PRISE PHYSIQUE DOIT ÊTRE ON'
+    condition: state
+    entity_id: switch.prise_radiateur_salle_de_bain_nous
+    state: 'on'
   actions:
-  - choose:
-    - alias: Mode 1000W (Plus chaud que 23°C)
+  - alias: 'ACTION : AJUSTEMENT DE LA RÉSISTANCE'
+    choose:
+    - alias: PASSAGE À 1000W (ÉCONOMIE)
       conditions:
       - condition: trigger
-        id: temp_23
+        id: vers_1000w
       sequence:
       - action: remote.send_command
         target:
@@ -1247,11 +1206,10 @@
         data:
           command: 1000w
           device: radiateur_sdb
-          num_repeats: 1
-    - alias: Mode 2000W + Swing (Plus froid que 21°C)
+    - alias: PASSAGE À 2000W (BOOST) + RELANCE SWING
       conditions:
       - condition: trigger
-        id: temp_21
+        id: vers_2000w
       sequence:
       - action: remote.send_command
         target:
@@ -1260,87 +1218,72 @@
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-      - delay: '00:00:00.4'
+      - delay: 00:00:01
       - action: remote.send_command
         target:
           entity_id: remote.radiateur_sdb_rm4_mini
         data:
           command: swing
           device: radiateur_sdb
-          num_repeats: 1
   mode: single
 - id: '1766776340583'
-  alias: C - Arrêt Radiateur Salle de Bain
-  description: Extinction du radiateur, mise à jour du climate et coupure prise après
-    1 min
+  alias: C - ARRÊT SÉCURISÉ RADIATEUR SDB
+  description: 'Procédure d''extinction : IR d''abord, refroidissement, puis coupure
+    prise.'
   triggers:
-  - trigger: state
+  - alias: 'DÉCLENCHEMENT : PASSAGE À OFF DU BOOLEAN'
+    trigger: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'off'
   conditions:
-  - condition: state
+  - alias: 'SÉCURITÉ : VÉRIFIER SI LA PRISE EST ENCORE ALIMENTÉE'
+    condition: state
     entity_id: switch.prise_radiateur_salle_de_bain_nous
     state: 'on'
   actions:
-  - alias: Mise à jour du thermostat virtuel
+  - alias: 'ETAT : THERMOSTAT VIRTUEL SUR OFF'
     action: climate.set_hvac_mode
     target:
       entity_id: climate.soufflant_salle_de_bain
     data:
       hvac_mode: 'off'
-  - alias: 'Commande IR : Power OFF'
+  - alias: 'IR : ENVOI COMMANDE POWER OFF'
     action: remote.send_command
     target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: on_off
       device: radiateur_sdb
-      num_repeats: 1
-  - alias: Délai de sécurité pour le refroidissement
+  - alias: 'SÉCURITÉ : DÉLAI DE REFROIDISSEMENT RÉSISTANCE'
     delay: 00:01:00
-  - alias: Coupure physique de la prise
+  - alias: 'MATÉRIEL : COUPURE PHYSIQUE DE LA PRISE'
     action: switch.turn_off
     target:
       entity_id: switch.prise_radiateur_salle_de_bain_nous
   mode: single
 - id: '1766776405670'
-  alias: D - Watchdog Sécurité Radiateur SDB
-  description: Reset physique si T > 24°C, uniquement si la prise est alimentée
+  alias: D - WATCHDOG SÉCURITÉ RADIATEUR SDB
+  description: Coupe automatiquement le chauffage si la température dépasse 24°C pour
+    éviter la surchauffe.
   triggers:
-  - trigger: state
-    entity_id: sensor.th_salle_de_bain_temperature
-  conditions:
-  - condition: state
-    entity_id: switch.prise_radiateur_salle_de_bain_nous
-    state: 'on'
-  - condition: state
-    entity_id: input_boolean.inter_radiateur_salle_de_bain
-    state: 'on'
-  - condition: numeric_state
+  - alias: 'SURVEILLANCE : TEMPÉRATURE > 24°C'
+    trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     above: 24
-  - condition: template
-    value_template: "{{ (states('sensor.th_salle_de_bain_temperature') | float) >=
-      \n   (trigger.from_state.state | float + 0.5) }}\n"
   actions:
-  - action: notify.mobile_app_poco_x7_pro_eric
+  - alias: 'VÉRIFICATION : LE RADIATEUR EST-IL ACTIF ?'
+    condition: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    state: 'on'
+  - alias: 'ACTION : PASSAGE DU BOOLEAN SUR OFF'
+    action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.inter_radiateur_salle_de_bain
+  - alias: 'NOTIF : ALERTE SÉCURITÉ POCO'
+    action: notify.mobile_app_poco_x7_pro_eric
     data:
-      title: ⚠️ Watchdog SDB
-      message: 'Dérive thermique détectée à {{ states(''sensor.th_salle_de_bain_temperature'')
-        }}°C.  Reset IR lancé.
-
-        '
-  - repeat:
-      count: 2
-      sequence:
-      - action: remote.send_command
-        target:
-          entity_id: remote.radiateur_sdb_rm4_mini
-        data:
-          command: on_off
-          device: radiateur_sdb
-          num_repeats: 1
-      - delay: 00:00:01
+      title: ⚠️ SÉCURITÉ RADIATEUR SDB
+      message: Température de 24°C atteinte. Extinction automatique de sécurité lancée.
 - id: '1766776477442'
   alias: '[Backup] Git au démarrage HA'
   description: Push Git immédiatement au boot de Home Assistant
