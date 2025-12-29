@@ -11,18 +11,18 @@
 #========================================================================
 
 - sensor:
-  - name: "Clim. Rad. Total mean 24h kWh"
-    unique_id: clim_rad_total_mean_24h_kwh
+  - name: "Clim. Rad. Total Avg Watts Daily"
+    unique_id: clim_rad_total_avg_watts_daily
     device_class: energy
     unit_of_measurement: "kWh"
     icon: mdi:flash-outline
     state: >
-      {{ (states('sensor.clim_salon_mean_24h_kwh') | float(0) +
-        states('sensor.radiateur_cuisine_mean_24h_kwh') | float(0) +
-        states('sensor.clim_bureau_mean_24h_kwh') | float(0) +
-        states('sensor.soufflant_sdb_mean_24h_kwh') | float(0) +
-        states('sensor.seche_serv_mean_24h_kwh') | float(0) +
-        states('sensor.clim_chambre_mean_24h_kwh') | float(0)) | round(3) }}
+      {{ (states('sensor.clim_salon_avg_watts_daily') | float(0) +
+        states('sensor.radiateur_cuisine_avg_watts_daily') | float(0) +
+        states('sensor.clim_bureau_avg_watts_daily') | float(0) +
+        states('sensor.soufflant_sdb_avg_watts_daily') | float(0) +
+        states('sensor.seche_serv_avg_watts_daily') | float(0) +
+        states('sensor.clim_chambre_avg_watts_daily') | float(0)) | round(3) }}
 
 #========================================================================
 # TOTAUX MENSUEL (mean 730h)
