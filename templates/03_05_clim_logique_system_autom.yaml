@@ -81,7 +81,7 @@
       {% if states('sensor.mode_ete_hiver') == 'cool' %}
         {{ temp_conf_m }}
       {% else %}
-        {{ temp_conf_m + 1 }}
+        {{ temp_conf_m + 0 }}
       {% endif %}
 
   # --- CALCUL : Correction Eric Hivers ---
