@@ -110,12 +110,24 @@
           - climate.clim_chambre_rm4_mini
         data:
           hvac_mode: 'off'
-      - alias: 'NOTIF : ALERTE POCO - FENÊTRE OUVERTE'
+      - alias: 'NOTIF : ALERTE FENÊTRE'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: CLIM COUPÉE ⚠️
-          message: Une ou plusieurs fenêtres sont ouvertes. Les climatisations ont
-            été coupées.
+          title: CLIM COUPÉE
+          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
+            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set
+            ouverts = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}
+            {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
+            \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
+            | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
+            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
+            replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
+            | lower %}\n    {% set article = 'du' if piece_lower == 'bureau' or piece_lower
+            == 'salon' else 'de la' %}\n    {% set messages.list = messages.list +
+            [\"La fenêtre \" ~ article ~ \" \" ~ piece_lower | upper ~ \" a été ouverte\"]
+            %}\n  {% endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n
+            \ Aucune fenêtre n'est actuellement ouverte.\n{% endif %}\n"
     default:
     - alias: 'ACTION : ENVOI DES COMMANDES AUX PIÈCES EN PARALLÈLE'
       parallel:
@@ -135,8 +147,11 @@
             target:
               entity_id: climate.clim_salon_rm4_mini
             data:
-              hvac_mode: '{{ ''off'' if (trigger.id == ''sensor_update'' and is_state(''climate.clim_salon_rm4_mini'',
-                ''off'')) else mode_saison }}'
+              vac_mode: '{% if trigger is defined and trigger.id == ''sensor_update''
+                and is_state(''climate.clim_salon_rm4_mini'', ''off'') %} off {%else
+                %} {{ mode_saison }} {% endif %}
+
+                '
               temperature: '{{ t_salon_target }}'
           - alias: 'COMMANDE : VENTILATION SALON'
             action: climate.set_fan_mode
@@ -160,8 +175,9 @@
             target:
               entity_id: climate.clim_bureau_rm4_mini
             data:
-              hvac_mode: '{{ ''off'' if (trigger.id == ''sensor_update'' and is_state(''climate.clim_bureau_rm4_mini'',
-                ''off'')) else mode_saison }}'
+              hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                and is_state('climate.clim_bureau_rm4_mini', 'off') %}\n  off\n{%
+                else %}\n  {{ mode_saison }}\n{% endif %}"
               temperature: '{{ t_bureau_target }}'
           - alias: 'COMMANDE : VENTILATION BUREAU'
             action: climate.set_fan_mode
@@ -185,19 +201,26 @@
             target:
               entity_id: climate.clim_chambre_rm4_mini
             data:
-              hvac_mode: '{{ ''off'' if (trigger.id == ''sensor_update'' and is_state(''climate.clim_chambre_rm4_mini'',
-                ''off'')) else mode_saison }}'
+              hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
+                and is_state('climate.clim_chambre_rm4_mini', 'off') %}\n  off\n{%
+                else %}\n  {{ mode_saison }}\n{% endif %}"
               temperature: '{{ t_chambre_target }}'
+          - alias: 'COMMANDE : VENTILATION CHAMBRE'
+            action: climate.set_fan_mode
+            target:
+              entity_id: climate.clim_chambre_rm4_mini
+            data:
+              fan_mode: auto
     - alias: 'PAUSE : SÉCURITÉ RÉCEPTION'
       delay: 00:00:02
-    - alias: 'NOTIF : RÉSUMÉ DE L''ÉTAT ACTUEL'
+    - alias: 'NOTIF : RÉSUMÉ DE L''ÉTAT DES CLIMATISATIONS'
       action: notify.mobile_app_poco_x7_pro_eric
       data:
         title: '[AJ] {{ states(''sensor.presence_clim'') }}'
-        message: 'Mode : {{ mode_saison | upper }} | S: {{ t_salon_target }}° | B:
-          {{ t_bureau_target }}° | C: {{ t_chambre_target }}°
-
-          '
+        message: "{%- if 'groupe_1' in groupe_presence and mode_saison == 'heat' %}\n
+          \ [éCO HEAT]\n  Les 3 Clims : {{ temp_eco_c }}° (Absent)\n{% else %}\n  Mode
+          : {{ mode_saison | upper }}\n  Salon: {{ t_salon_target }}°\n  Bureau: {{
+          t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{% endif %}\n"
   mode: queued
 - id: '1766771294543'
   alias: (B - 0) (TEST 2025-12-19) Autmatisation CLIM (21h00 <-> 07h30)
