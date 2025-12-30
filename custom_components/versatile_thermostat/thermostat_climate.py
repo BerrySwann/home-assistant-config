@@ -62,6 +62,8 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
         self._auto_deactivated_fan_mode: str | None = None
         self._follow_underlying_temp_change: bool = False
         self._last_regulation_change = None  # NowClass.get_now(hass)
+        self._sync_entity_list: list[str] = []
+        self._sync_with_calibration: bool = False
 
         # super.__init__ calls post_init at the end. So it must be called after regulation initialization
         super().__init__(hass, unique_id, name, entry_infos)
@@ -88,6 +90,9 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
                 climate_entity_id=climate,
             )
             self._underlyings.append(under)
+
+        self._sync_entity_list = config_entry.get(CONF_SYNC_ENTITY_LIST, [])
+        self._sync_with_calibration = config_entry.get(CONF_SYNC_WITH_CALIBRATION, False)
 
         self.choose_auto_regulation_mode(
             config_entry.get(CONF_AUTO_REGULATION_MODE)
@@ -420,6 +425,13 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
             except ValueError:
                 return None
 
+        def determine_fan_mode_contains_speed(fan_modes: list[str]) -> bool:
+            """Determine if the fan_modes contains speed modes by searching for the keywords "low"/"1"."""
+            for val in ["low", "1"]:
+                if find_fan_mode(fan_modes, val):
+                    return True
+            return False
+
         def fix_order_speed_modes(speed_modes: list) -> list:
             """Determine if speed_modes list is ordered from high to low speed and reverse it"""
             index = -1
@@ -465,6 +477,17 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
         #    |CONF_AUTO_FAN_HIGH    |medium_high |
         #    |CONF_AUTO_FAN_TURBO   |high        |
         target_index = -1
+
+        if determine_fan_mode_contains_speed(fan_modes) is False:
+            self._auto_activated_fan_mode = None
+            _LOGGER.warning(
+                "%s - #1419 - choose_auto_fan_mode cannot define value because fan_modes=%s doesn't contains speed values",
+                self,
+                self.fan_modes,
+            )
+
+            return
+
         if auto_fan_mode == CONF_AUTO_FAN_LOW:
             if num_speeds >= 4:
                 target_index = num_speeds - 4
@@ -565,6 +588,10 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
                 "auto_regulation_mode": self._auto_regulation_mode,
                 "regulation_accumulated_error": self._regulation_algo.accumulated_error,
             }
+
+        if self.has_sync_entities:
+            vtherm_over_climate_data["sync_entity_ids"] = self._sync_entity_list
+            vtherm_over_climate_data["sync_with_calibration"] = self._sync_with_calibration
 
         self._attr_extra_state_attributes.update({"vtherm_over_climate": vtherm_over_climate_data})
 
@@ -900,6 +927,95 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
         self._follow_underlying_temp_change = follow
         self.update_custom_attributes()
         self.async_write_ha_state()
+
+    @overrides
+    async def _async_temperature_changed(self, event: Event) -> callable:
+        """Handle temperature of the temperature sensor changes.
+        Return the function to dearm (clear) the window auto check"""
+        ret = await super()._async_temperature_changed(event)
+
+        # Synchronize the device temperature if needed
+        if self.has_sync_entities:
+            await self.synchronize_device_temperature()
+
+        return ret
+
+    async def synchronize_device_temperature(self):
+        """Synchronize the device temperature by sending the offset calibration"""
+
+        if not self.has_sync_entities:
+            return
+
+        for idx, sync_entity_id in enumerate(self._sync_entity_list):
+            sync_entity_state = self._hass.states.get(sync_entity_id)
+            if not sync_entity_state:
+                _LOGGER.warning(
+                    "%s - Cannot synchronize device temperature because sync entity %s not found",
+                    self,
+                    sync_entity_id,
+                )
+                continue
+
+            min_sync_entity = sync_entity_state.attributes.get("min")
+            max_sync_entity = sync_entity_state.attributes.get("max")
+            step_sync_entity = sync_entity_state.attributes.get("step") or 0.1  # default step is 0.1
+
+            under = self.underlying_entity(idx)
+            if not under:
+                _LOGGER.warning(
+                    "%s - Cannot synchronize device temperature because underlying index %d not found",
+                    self,
+                    idx,
+                )
+                continue
+
+            room_temp = self.current_temperature
+            if self._sync_with_calibration:
+                # send offset_calibration to the difference between target temp and local temp
+                offset = None
+                local_temp = under.underlying_current_temperature
+                current_offset = get_safe_float(self._hass, sync_entity_id)
+                if local_temp is not None and room_temp is not None and current_offset is not None:
+                    val = round_to_nearest(room_temp - (local_temp - current_offset), step_sync_entity)
+                    offset = min(max_sync_entity, max(min_sync_entity, val))
+
+                    _LOGGER.debug(
+                        "%s - Synchronize device temperature for entity %s: local_temp=%.2f, room_temp=%.2f, current_offset=%.2f -> new offset=%.2f",
+                        self,
+                        sync_entity_id,
+                        local_temp,
+                        room_temp,
+                        current_offset,
+                        offset,
+                    )
+                    await under.send_value_to_number(sync_entity_id, offset)
+            else:
+                # Send the new temperature directly
+                val = round_to_nearest(room_temp, step_sync_entity)
+                val = min(max_sync_entity, max(min_sync_entity, val))
+                _LOGGER.debug(
+                    "%s - Synchronize device temperature for entity %s: room_temp=%.2f -> new temp=%.2f",
+                    self,
+                    sync_entity_id,
+                    room_temp,
+                    val,
+                )
+                await under.send_value_to_number(sync_entity_id, val)
+
+    @property
+    def has_sync_entities(self) -> bool:
+        """Return True if the underlying have a sync entity"""
+        return self._sync_entity_list is not None and len(self._sync_entity_list) > 0
+
+    @property
+    def is_sync_with_calibration(self) -> bool:
+        """Return True if the underlying is synchronized with calibration (or with temperature copying)"""
+        return self._sync_with_calibration
+
+    @property
+    def sync_entity_ids(self) -> list[str] | None:
+        """Get the sync entity ids"""
+        return self._sync_entity_list
 
     @property
     def auto_regulation_mode(self) -> str | None:

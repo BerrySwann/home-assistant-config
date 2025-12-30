@@ -38,7 +38,7 @@ from .vtherm_state import VThermState  # pylint: disable=unused-import
 _LOGGER = logging.getLogger(__name__)
 
 CONFIG_VERSION = 2
-CONFIG_MINOR_VERSION = 1
+CONFIG_MINOR_VERSION = 2
 
 DEVICE_MANUFACTURER = "JMCOLLIN"
 DEVICE_MODEL = "Versatile Thermostat"
@@ -127,6 +127,9 @@ CONF_CLOSING_DEGREE_LIST = "closing_degree_entity_ids"
 CONF_MIN_OPENING_DEGREES = "min_opening_degrees"
 CONF_MAX_CLOSING_DEGREE = "max_closing_degree"
 CONF_OPENING_THRESHOLD_DEGREE = "opening_threshold_degree"
+CONF_SYNC_DEVICE_INTERNAL_TEMP = "sync_device_internal_temp"
+CONF_SYNC_WITH_CALIBRATION = "sync_with_calibration"
+CONF_SYNC_ENTITY_LIST = "sync_entity_ids"
 
 CONF_LOCK_CODE = "lock_code"
 CONF_LOCK_USERS = "lock_users"
@@ -148,6 +151,25 @@ CONF_VALVE = "valve_entity_id"
 CONF_VALVE_2 = "valve_entity2_id"
 CONF_VALVE_3 = "valve_entity3_id"
 CONF_VALVE_4 = "valve_entity4_id"
+
+CONF_AUTO_TPI_MODE = "auto_tpi_mode"
+CONF_AUTO_TPI_ENABLE_UPDATE_CONFIG = "auto_tpi_enable_update_config"
+CONF_AUTO_TPI_ENABLE_NOTIFICATION = "auto_tpi_enable_notification"
+CONF_AUTO_TPI_KEEP_EXT_LEARNING = "auto_tpi_keep_ext_learning"
+CONF_AUTO_TPI_CONTINUOUS_LEARNING = "auto_tpi_continuous_learning"
+CONF_AUTO_TPI_HEATER_HEATING_TIME = "heater_heating_time"
+CONF_AUTO_TPI_HEATER_COOLING_TIME = "heater_cooling_time"
+CONF_AUTO_TPI_CALCULATION_METHOD = "auto_tpi_calculation_method"
+AUTO_TPI_METHOD_AVG = "average"
+AUTO_TPI_METHOD_EMA = "ema"
+CONF_AUTO_TPI_CALCULATION_METHODS = [AUTO_TPI_METHOD_AVG, AUTO_TPI_METHOD_EMA]
+CONF_AUTO_TPI_EMA_ALPHA = "auto_tpi_ema_alpha"
+CONF_AUTO_TPI_AVG_INITIAL_WEIGHT = "auto_tpi_avg_initial_weight"
+CONF_AUTO_TPI_MAX_COEF_INT = "auto_tpi_max_coef_int"
+CONF_AUTO_TPI_HEATING_POWER = "auto_tpi_heating_rate"
+CONF_AUTO_TPI_COOLING_POWER = "auto_tpi_cooling_rate"
+CONF_AUTO_TPI_EMA_DECAY_RATE = "auto_tpi_ema_decay_rate"
+
 
 # Global params into configuration.yaml
 CONF_SHORT_EMA_PARAMS = "short_ema_params"
@@ -295,6 +317,10 @@ ALL_CONF = (
         CONF_PROP_FUNCTION,
         CONF_TPI_COEF_INT,
         CONF_TPI_COEF_EXT,
+        CONF_TPI_THRESHOLD_LOW,
+        CONF_TPI_THRESHOLD_HIGH,
+        CONF_AUTO_TPI_HEATER_HEATING_TIME,
+        CONF_AUTO_TPI_HEATER_COOLING_TIME,
         CONF_PRESENCE_SENSOR,
         CONF_MINIMAL_ACTIVATION_DELAY,
         CONF_MINIMAL_DEACTIVATION_DELAY,
@@ -336,6 +362,17 @@ ALL_CONF = (
         CONF_MIN_OPENING_DEGREES,
         CONF_MAX_CLOSING_DEGREE,
         CONF_OPENING_THRESHOLD_DEGREE,
+        CONF_AUTO_TPI_CALCULATION_METHOD,
+        CONF_AUTO_TPI_EMA_ALPHA,
+        CONF_AUTO_TPI_AVG_INITIAL_WEIGHT,
+        CONF_AUTO_TPI_MAX_COEF_INT,
+        CONF_AUTO_TPI_HEATING_POWER,
+        CONF_AUTO_TPI_COOLING_POWER,
+        CONF_AUTO_TPI_EMA_DECAY_RATE,
+        CONF_AUTO_TPI_KEEP_EXT_LEARNING,
+        CONF_AUTO_TPI_CONTINUOUS_LEARNING,
+        CONF_SYNC_DEVICE_INTERNAL_TEMP,
+        CONF_SYNC_WITH_CALIBRATION,
     ]
     + CONF_PRESETS_VALUES
     + CONF_PRESETS_AWAY_VALUES
@@ -399,6 +436,8 @@ SERVICE_SET_HVAC_MODE_SLEEP = "set_hvac_mode_sleep"
 SERVICE_LOCK = "lock"
 SERVICE_UNLOCK = "unlock"
 SERVICE_SET_TPI_PARAMETERS = "set_tpi_parameters"
+SERVICE_SET_AUTO_TPI_MODE = "set_auto_tpi_mode"
+SERVICE_AUTO_TPI_CALIBRATE_CAPACITY = "auto_tpi_calibrate_capacity"
 
 DEFAULT_SAFETY_MIN_ON_PERCENT = 0.5
 DEFAULT_SAFETY_DEFAULT_ON_PERCENT = 0.1
@@ -519,6 +558,7 @@ class EventType(Enum):
     PRESET_EVENT = "versatile_thermostat_preset_event"
     WINDOW_AUTO_EVENT = "versatile_thermostat_window_auto_event"
     AUTO_START_STOP_EVENT = "versatile_thermostat_auto_start_stop_event"
+    AUTO_TPI_EVENT = "versatile_thermostat_auto_tpi_event"
 
 
 def send_vtherm_event(hass, event_type: EventType, entity, data: dict):
@@ -586,6 +626,11 @@ class ConfigurationNotCompleteError(HomeAssistantError):
 
 class ValveRegulationNbEntitiesIncorrect(HomeAssistantError):
     """Error to indicate there is an error in the configuration of the TRV with valve regulation.
+    The number of specific entities is incorrect."""
+
+
+class SyncDeviceInternalTempNbEntitiesIncorrect(HomeAssistantError):
+    """Error to indicate there is an error in the configuration of the TRV with synchronize device internal temperature.
     The number of specific entities is incorrect."""
 
 

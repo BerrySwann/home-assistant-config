@@ -50,6 +50,8 @@ from .const import (
     CONF_USE_CENTRAL_BOILER_FEATURE,
     CONF_AUTO_REGULATION_VALVE,
     CONF_AUTO_REGULATION_MODE,
+    CONF_TPI_COEF_INT,
+    CONF_TPI_COEF_EXT,
     overrides,
 )
 
@@ -116,6 +118,13 @@ async def async_setup_entry(
             entities.append(
                 RegulatedTemperatureSensor(hass, unique_id, name, entry.data)
             )
+
+        # Add Auto TPI Sensor for TPI-based thermostats
+        if entry.data.get(CONF_THERMOSTAT_TYPE) in [
+            CONF_THERMOSTAT_SWITCH,
+            CONF_THERMOSTAT_VALVE,
+        ] or (entry.data.get(CONF_THERMOSTAT_TYPE) == CONF_THERMOSTAT_CLIMATE and have_valve_regulation):
+            entities.append(AutoTpiSensor(hass, unique_id, name, entry.data))
 
     if entities:
         async_add_entities(entities, True)
@@ -252,7 +261,7 @@ class OnPercentSensor(VersatileThermostatBaseEntity, SensorEntity):
 
         on_percent = (
             float(self.my_climate.proportional_algorithm.on_percent)
-            if self.my_climate and self.my_climate.proportional_algorithm
+            if self.my_climate and self.my_climate.has_tpi and self.my_climate.proportional_algorithm
             else None
         )
         if on_percent is None:
@@ -289,6 +298,63 @@ class OnPercentSensor(VersatileThermostatBaseEntity, SensorEntity):
     def suggested_display_precision(self) -> int | None:
         """Return the suggested number of decimal digits for display."""
         return 1
+
+
+class AutoTpiSensor(VersatileThermostatBaseEntity, SensorEntity):
+    """Representation of the Auto TPI Learning state"""
+
+    def __init__(self, hass: HomeAssistant, unique_id, name, entry_infos) -> None:
+        """Initialize the Auto TPI sensor"""
+        super().__init__(hass, unique_id, entry_infos.get(CONF_NAME))
+        self._attr_name = "Auto TPI Learning State"
+        self._attr_unique_id = f"{self._device_name}_auto_tpi_learning"
+        self._attr_icon = "mdi:brain"
+
+    @callback
+    async def async_my_climate_changed(self, event: Event = None):
+        """Called when my climate have change"""
+
+        # Verify has_tpi and proportional_algorithm
+        # proportional_algorithm can be None during initialization even if has_tpi is True
+        if not self.my_climate or not self.my_climate.has_tpi or not self.my_climate.proportional_algorithm:
+            self._attr_native_value = "disabled"
+            self.async_write_ha_state()
+            return
+
+        if not hasattr(self.my_climate, "_auto_tpi_manager") or not self.my_climate._auto_tpi_manager:
+             self._attr_native_value = "disabled"
+             self.async_write_ha_state()
+             return
+
+        manager = self.my_climate._auto_tpi_manager
+
+        # Determine state
+        if manager.learning_active:
+            self._attr_native_value = "Active"
+        else:
+            self._attr_native_value = "Off" # Or "Completed" / "Idle" depending on context, but "Off" implies not learning.
+
+        # Update attributes
+        self._attr_extra_state_attributes = {
+            "coeff_int_cycles": manager.int_cycles,
+            "coeff_ext_cycles": manager.ext_cycles,
+            "heating_cycles_count": manager.heating_cycles_count,  # Total heating cycles
+            "thermal_time_constant_hours": manager.time_constant,  # Building's thermal time constant τ
+            "model_confidence": manager.confidence,  # Model confidence (R² or percentage)
+            "last_learning_status": manager.state.last_learning_status,  # Reason for last learning outcome
+            "max_capacity_heat": manager.state.max_capacity_heat,
+            "max_capacity_cool": manager.state.max_capacity_cool,
+            "learning_start_dt": manager.state.learning_start_date,
+        }
+
+        # Add calculated TPI coefficients
+        calculated = manager.get_calculated_params()
+        self._attr_extra_state_attributes.update({
+            "calculated_coef_int": calculated.get(CONF_TPI_COEF_INT),
+            "calculated_coef_ext": calculated.get(CONF_TPI_COEF_EXT),
+        })
+
+        self.async_write_ha_state()
 
 
 class ValveOpenPercentSensor(VersatileThermostatBaseEntity, SensorEntity):
@@ -353,7 +419,7 @@ class OnTimeSensor(VersatileThermostatBaseEntity, SensorEntity):
 
         on_time = (
             float(self.my_climate.proportional_algorithm.on_time_sec)
-            if self.my_climate and self.my_climate.proportional_algorithm
+            if self.my_climate and self.my_climate.has_tpi and self.my_climate.proportional_algorithm
             else None
         )
 
@@ -402,7 +468,7 @@ class OffTimeSensor(VersatileThermostatBaseEntity, SensorEntity):
 
         off_time = (
             float(self.my_climate.proportional_algorithm.off_time_sec)
-            if self.my_climate and self.my_climate.proportional_algorithm
+            if self.my_climate and self.my_climate.has_tpi and self.my_climate.proportional_algorithm
             else None
         )
         if off_time is None:
@@ -523,7 +589,11 @@ class TemperatureSlopeSensor(VersatileThermostatBaseEntity, SensorEntity):
 
     @property
     def icon(self) -> str | None:
-        if self._attr_native_value is None or self._attr_native_value == 0:
+        if (
+            self._attr_native_value is None
+            or not isinstance(self._attr_native_value, (int, float))
+            or self._attr_native_value == 0
+        ):
             return "mdi:thermometer"
         elif self._attr_native_value > 0:
             return "mdi:thermometer-chevron-up"
