@@ -121,16 +121,16 @@
     command: >-
       bash -c 'LOG=/config/.logs/ha_git_backup.log;
       if [ -s "$LOG" ]; then
-        # On capture les lignes avec les emojis de statut ou les mots clés d erreur
-        OUT=$(grep -aE "✅|❌|🏷️|ABANDON|error:|declined|denied|failed|Git pull" "$LOG" | tail -n 10);
+        # Inclusion de ✅ (succès), ❌ (erreur), 📝 (commit) et 🏷️ (tag)
+        OUT=$(grep -aE "✅|❌|📝|🏷️|ABANDON|error:|declined|failed|Git pull" "$LOG" | tail -n 10);
         if [ -z "$OUT" ]; then
-          echo "{\"text\":\"Aucune entrée pertinente trouvée\"}";
+          echo "{\"text\":\"Aucune activité pertinente trouvée\"}";
         else
-          # Utilisation de jq pour transformer le texte brut en JSON valide
+          # Utilisation de jq pour transformer le texte en JSON valide
           echo "{\"text\": $(echo "$OUT" | jq -Rs .)}";
         fi
       else
-        echo "{\"text\":\"Fichier de log introuvable ou vide\"}";
+        echo "{\"text\":\"Fichier de log introuvable\"}";
       fi'
     value_template: "ready"
     json_attributes:
