@@ -13,7 +13,7 @@
         {% set p4 = states('sensor.diag_poste_4_chauffage_mensuel') | float(0) %}
         {% set p5 = states('sensor.diag_poste_5_multimedia_mensuel') | float(0) %}
         {% set p6 = states('sensor.diag_poste_6_lumiere_mensuel') | float(0) %}
-        {{ ([p1, p2, p3, p4, p5, p6] | max + 10) | round(0) }}
+        {{ ([p1, p2, p3, p4, p5, p6] | max + 10) | round(3) }}
 
     #--- POSTE 1 : HYGIÈNE (Linge, Vaisselle, Repassage) ---
     - name: "Diag Poste 1 Hygiene mensuel"
@@ -71,6 +71,7 @@
         {{ (states('sensor.prise_box_internet_ikea_monthly') | float(0) + 
             states('sensor.prise_pc_s_gege_ikea_monthly') | float(0) + 
             states('sensor.prise_bureau_pc_ikea_monthly') | float(0) +
+            states('sensor.prise_tv_salon_nous_monthly') | float(0) +
             states('sensor.prise_tv_chambre_nous_monthly') | float(0)) | round(3) }}
 
     #--- POSTE 6 : LUMIÈRE (Total Éclairage) ---
