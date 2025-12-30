@@ -114,23 +114,28 @@
       bash -lc 'cd /config && git tag --list "weekly-*" | sort | tail -n1 || true'
     scan_interval: 1800
 
-# SENSORS COMMAND_LINE
+# --- Journal (10 dernières lignes pertinentes) ---
 - sensor:
-      name: "backup_github_journal"
-      unique_id: backup_github_journal
-      command: >-
-        bash -lc 'LOG=/config/.logs/ha_git_backup.log;
-        if [ -s "$LOG" ]; then
-          OUT=$(grep -aE "Backup GitHub OK:|❌|ABANDON|error:|push declined|Permission denied|Host key verification failed|Tag créé|Git pull" "$LOG" | tail -n 10);
-          OUT_ESCAPED=$(printf "%s" "$OUT" | sed -e "s/\\\\/\\\\\\\\/g" -e "s/\"/\\\\\"/g" -e ":a;N;\$!ba;s/\n/\\\\n/g");
-          printf "{\"text\":\"%s\"}\n" "$OUT_ESCAPED";
+    name: "backup_github_journal"
+    unique_id: backup_github_journal
+    command: >-
+      bash -c 'LOG=/config/.logs/ha_git_backup.log;
+      if [ -s "$LOG" ]; then
+        # On capture les lignes avec les emojis de statut ou les mots clés d erreur
+        OUT=$(grep -aE "✅|❌|🏷️|ABANDON|error:|declined|denied|failed|Git pull" "$LOG" | tail -n 10);
+        if [ -z "$OUT" ]; then
+          echo "{\"text\":\"Aucune entrée pertinente trouvée\"}";
         else
-          echo "{\"text\":\"—\"}";
-        fi'
-      value_template: "ready"
-      json_attributes:
-        - text
-      scan_interval: 60
+          # Utilisation de jq pour transformer le texte brut en JSON valide
+          echo "{\"text\": $(echo "$OUT" | jq -Rs .)}";
+        fi
+      else
+        echo "{\"text\":\"Fichier de log introuvable ou vide\"}";
+      fi'
+    value_template: "ready"
+    json_attributes:
+      - text
+    scan_interval: 60
 
 - sensor:
     name: "GitHub Default Branch"
