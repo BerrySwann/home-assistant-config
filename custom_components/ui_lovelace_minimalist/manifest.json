@@ -18,5 +18,5 @@
         "aiofiles>=0.8.0",
         "aiogithubapi>=22.2.4"
     ],
-    "version": "v1.3.19"
+    "version": "V1.4.0"
 }
