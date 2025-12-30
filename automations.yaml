@@ -2044,8 +2044,8 @@
   mode: single
 - id: '1766779612030'
   alias: Système - Économie Énergie VS Code
-  description: Coupe VS Code après 20h si le CPU dépasse 10% ou s'il est inactif,
-    avec confirmation.
+  description: Coupe VS Code si le CPU dépasse 10% ou s'il est inactif, avec confirmation
+    (H24).
   triggers:
   - trigger: numeric_state
     entity_id: sensor.system_monitor_utilisation_du_processeur
@@ -2058,9 +2058,6 @@
     for:
       minutes: 15
   conditions:
-  - condition: time
-    after: '20:00:00'
-    before: 07:00:00
   - condition: state
     entity_id: binary_sensor.studio_code_server_running
     state: 'on'
