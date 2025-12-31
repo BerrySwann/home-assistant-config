@@ -2249,13 +2249,13 @@
   triggers:
   - alias: 'DÉCLENCHEUR : LAVE-LINGE DÉMARRE'
     trigger: numeric_state
-    entity_id: sensor.prise_lave_linge_power
+    entity_id: sensor.prise_lave_linge_nous_power
     above: 100
     for:
       minutes: 2
   - alias: 'DÉCLENCHEUR : LAVE-VAISSELLE DÉMARRE'
     trigger: numeric_state
-    entity_id: sensor.prise_lave_vaisselle_power
+    entity_id: sensor.prise_lave_linge_nous_power
     above: 100
     for:
       minutes: 2
@@ -2268,7 +2268,7 @@
   - alias: 'ACTION : NOTIFICATION SUR LE POCO'
     action: notify.mobile_app_poco_x7_pro_eric
     data:
-      title: ⚡ Alerte Consommation HP
+      title: ⚡ Alerte Conso. HP
       message: 'Un appareil de gros électroménager vient de démarrer en Heures Pleines
         ! Il est {{ now().strftime(''%H:%M'') }}.  Vérifiez si le départ différé a
         bien été activé.

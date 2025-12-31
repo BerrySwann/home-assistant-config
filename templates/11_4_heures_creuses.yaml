@@ -1,3 +1,7 @@
+# =======================================================================
+# Linky total (HP + HC) -> cumul kWh
+# =======================================================================
+- sensor:
   - name: "heures_creuses_electriques"
     unique_id: heures_creuses_electriques
     state: >
