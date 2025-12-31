@@ -621,7 +621,7 @@ eclairage_hue_white_lamp_chambre_2_quotidien:
   name: eclairage_hue_white_lamp_chambre_2_quotidien
   cycle: daily
 
-# BOUGEE ERIC
+# BOUGIE ERIC
 eclairage_hue_color_candle_chambre_eric_annuel:
   source: sensor.hue_color_candle_chambre_eric_energy
   name: eclairage_hue_color_candle_chambre_eric_annuel
@@ -658,8 +658,9 @@ eclairage_hue_color_candle_chambre_gege_quotidien:
   cycle: daily
 
 #============================================================================
-# TOTO ECOJOKO -> Jour / Mois (compteur ELEC)
+# TOTO ECOJOKO -> (Daily + Monthly) (compteur ELEC)
 #============================================================================
+# --- ecojoko ---
 ecojoko_energy_daily:
   source: sensor.ecojoko_consommation_reseau
   cycle: daily
@@ -669,19 +670,23 @@ ecojoko_energy_monthly:
   cycle: monthly
 
 #============================================================================
-# MINI-PC 
+# MINI-PC -> (Daily + Monthly)
 #============================================================================
+# --- mini_pc ---
 mini_pc_daily:
-  source: sensor.prise_mini_pc_ikea_kwh  # Corrigé : pointe vers l'entité de sensors.yaml
+  source: sensor.prise_mini_pc_ikea_kwh  
   cycle: daily
-
 mini_pc_monthly:
-  source: sensor.prise_mini_pc_ikea_kwh  # Corrigé : pointe vers l'entité de sensors.yaml
+  source: sensor.prise_mini_pc_ikea_kwh  
   cycle: monthly
 
 #============================================================================
-# PRISES CONNECTÉES (Daily + Monthly)
+# PRISES CONNECTÉES -> (Daily + Monthly)
 #============================================================================
+# ==========================================
+# 1. ENTRÉE
+# ==========================================
+# --- box_internet ---
 prise_box_internet_ikea_daily:
   source: sensor.prise_box_internet_ikea_kwh
   cycle: daily
@@ -689,6 +694,7 @@ prise_box_internet_ikea_monthly:
   source: sensor.prise_box_internet_ikea_kwh
   cycle: monthly
 
+# --- horloge ---
 prise_horloge_ikea_daily:
   source: sensor.prise_horloge_ikea_kwh
   cycle: daily
@@ -696,6 +702,10 @@ prise_horloge_ikea_monthly:
   source: sensor.prise_horloge_ikea_kwh
   cycle: monthly
 
+# ==========================================
+# 2. SALON
+# ==========================================
+# --- pc_s_gege ---
 prise_pc_s_gege_ikea_daily:
   source: sensor.prise_pc_s_gege_ikea_kwh
   cycle: daily
@@ -703,6 +713,7 @@ prise_pc_s_gege_ikea_monthly:
   source: sensor.prise_pc_s_gege_ikea_kwh
   cycle: monthly
 
+# --- salon_chargeur ---
 prise_salon_chargeur_nous_daily:
   source: sensor.prise_salon_chargeur_nous_kwh
   cycle: daily
@@ -710,6 +721,10 @@ prise_salon_chargeur_nous_monthly:
   source: sensor.prise_salon_chargeur_nous_kwh
   cycle: monthly
 
+# ==========================================
+# 3. CUISINE
+# ==========================================
+# --- four_micro_ondes ---
 prise_four_micro_ondes_nous_daily:
   source: sensor.prise_four_micro_ondes_nous_kwh
   cycle: daily
@@ -717,6 +732,7 @@ prise_four_micro_ondes_nous_monthly:
   source: sensor.prise_four_micro_ondes_nous_kwh
   cycle: monthly
 
+# --- lave_linge ---
 prise_lave_linge_nous_daily:
   source: sensor.prise_lave_linge_nous_kwh
   cycle: daily
@@ -724,6 +740,7 @@ prise_lave_linge_nous_monthly:
   source: sensor.prise_lave_linge_nous_kwh
   cycle: monthly
 
+# --- lave_vaisselle ---
 prise_lave_vaisselle_nous_daily:
   source: sensor.prise_lave_vaisselle_nous_kwh
   cycle: daily
@@ -731,6 +748,7 @@ prise_lave_vaisselle_nous_monthly:
   source: sensor.prise_lave_vaisselle_nous_kwh
   cycle: monthly
 
+# --- airfryer ---
 prise_airfryer_ninja_nous_daily:
   source: sensor.prise_airfryer_ninja_nous_kwh
   cycle: daily
@@ -738,6 +756,7 @@ prise_airfryer_ninja_nous_monthly:
   source: sensor.prise_airfryer_ninja_nous_kwh
   cycle: monthly
 
+# --- four_et_plaque_de_cuisson ---
 four_et_plaque_de_cuisson_daily:
   source: sensor.four_et_plaque_de_cuisson_kwh
   cycle: daily
@@ -745,6 +764,7 @@ four_et_plaque_de_cuisson_monthly:
   source: sensor.four_et_plaque_de_cuisson_kwh
   cycle: monthly
 
+# --- frigo_cuisine ---
 prise_frigo_cuisine_nous_daily:
   source: sensor.prise_frigo_cuisine_nous_kwh
   cycle: daily
@@ -752,6 +772,7 @@ prise_frigo_cuisine_nous_monthly:
   source: sensor.prise_frigo_cuisine_nous_kwh
   cycle: monthly
 
+# --- congelateur_cuisine ---
 prise_congelateur_cuisine_nous_daily:
   source: sensor.prise_congelateur_cuisine_nous_kwh
   cycle: daily
@@ -759,6 +780,10 @@ prise_congelateur_cuisine_nous_monthly:
   source: sensor.prise_congelateur_cuisine_nous_kwh
   cycle: monthly
 
+# ==========================================
+# 5. BUREAU
+# ==========================================
+# --- bureau_pc ---
 prise_bureau_pc_ikea_daily:
   source: sensor.prise_bureau_pc_ikea_kwh
   cycle: daily
@@ -766,6 +791,7 @@ prise_bureau_pc_ikea_monthly:
   source: sensor.prise_bureau_pc_ikea_kwh
   cycle: monthly
 
+# --- fer_a_repasser ---
 prise_bureau_fer_a_repasser_nous_daily:
   source: sensor.prise_bureau_fer_a_repasser_nous_kwh
   cycle: daily
@@ -773,6 +799,10 @@ prise_bureau_fer_a_repasser_nous_monthly:
   source: sensor.prise_bureau_fer_a_repasser_nous_kwh
   cycle: monthly
 
+# ==========================================
+# 6. SALLE DE BAIN
+# ==========================================
+# --- tete_de_lit ---
 prise_tete_de_lit_chambre_daily:
   source: sensor.prise_tete_de_lit_chambre_kwh
   cycle: daily
@@ -780,6 +810,7 @@ prise_tete_de_lit_chambre_monthly:
   source: sensor.prise_tete_de_lit_chambre_kwh
   cycle: monthly
 
+# --- tv_chambre ---
 prise_tv_chambre_nous_daily:
   source: sensor.prise_tv_chambre_nous_kwh
   cycle: daily
@@ -787,6 +818,10 @@ prise_tv_chambre_nous_monthly:
   source: sensor.prise_tv_chambre_nous_kwh
   cycle: monthly
 
+# ==========================================
+# 7. ALL STANDBY
+# ==========================================
+# --- all_standby ---
 all_standby_daily:
   source: sensor.all_standby_kwh
   cycle: daily
@@ -797,6 +832,7 @@ all_standby_monthly:
 #============================================================================
 # CHAUFFAGE & CLIM (Daily + Monthly)
 #============================================================================
+# --- clim_salon ---
 clim_salon_daily:
   source: sensor.clim_salon_kwh
   cycle: daily
@@ -804,6 +840,7 @@ clim_salon_monthly:
   source: sensor.clim_salon_kwh
   cycle: monthly
 
+# --- radiateur_cuisine ---
 radiateur_cuisine_daily:
   source: sensor.radiateur_cuisine_kwh
   cycle: daily
@@ -811,6 +848,7 @@ radiateur_cuisine_monthly:
   source: sensor.radiateur_cuisine_kwh
   cycle: monthly
 
+# --- clim_bureau ---
 clim_bureau_daily:
   source: sensor.clim_bureau_kwh
   cycle: daily
@@ -818,6 +856,7 @@ clim_bureau_monthly:
   source: sensor.clim_bureau_kwh
   cycle: monthly
 
+# --- soufflant_sdb ---
 soufflant_sdb_daily:
   source: sensor.soufflant_sdb_kwh
   cycle: daily
@@ -825,6 +864,7 @@ soufflant_sdb_monthly:
   source: sensor.soufflant_sdb_kwh
   cycle: monthly
 
+# --- Seche_serv ---
 seche_serv_daily:
   source: sensor.seche_serv_sdb_kwh
   cycle: daily
@@ -832,6 +872,7 @@ seche_serv_monthly:
   source: sensor.seche_serv_sdb_kwh
   cycle: monthly
 
+# --- clim_chambre ---
 clim_chambre_daily:
   source: sensor.clim_chambre_kwh
   cycle: daily
