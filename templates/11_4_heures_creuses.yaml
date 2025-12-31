@@ -1,0 +1,11 @@
+  - name: "heures_creuses_electriques"
+    unique_id: heures_creuses_electriques
+    state: >
+      {% set current_time = now().strftime('%H:%M') %}
+      {{ ('01:00' <= current_time < '07:30') or ('13:00' <= current_time < '14:30') }}
+    icon: >
+      {% if is_state('binary_sensor.heures_creuses_electriques', 'on') %}
+        mdi:flash
+      {% else %}
+        mdi:flash-outline
+      {% endif %}

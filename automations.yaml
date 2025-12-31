@@ -2125,11 +2125,13 @@
   description: Log toutes les 15 min la consommation des 6 postes et la température
     extérieure dans un fichier.
   triggers:
-  - trigger: time_pattern
+  - alias: 'DÉCLENCHEUR : TOUTES LES 15 MINUTES'
+    trigger: time_pattern
     minutes: /15
   conditions: []
   actions:
-  - action: notify.send_message
+  - alias: 'ACTION : ENREGISTREMENT DANS LE FICHIER'
+    action: notify.send_message
     target:
       entity_id: notify.file
     data:
@@ -2137,12 +2139,14 @@
         | round(2) %} {% set p2 = states(''sensor.diag_poste_2_cuisson_quotidien'')
         | float(0) | round(2) %} {% set p3 = states(''sensor.diag_poste_3_froid_quotidien'')
         | float(0) | round(2) %} {% set p4 = states(''sensor.diag_poste_4_chauffage_quotidien'')
+        | float(0) | round(2) %} {% set agv_clim = states(''sensor.clim_rad_total_avg_watts_daily'')
         | float(0) | round(2) %} {% set p5 = states(''sensor.diag_poste_5_multimedia_quotidien'')
         | float(0) | round(2) %} {% set p6 = states(''sensor.diag_poste_6_lumiere_quotidien'')
         | float(0) | round(2) %} {% set ext = states(''sensor.th_balcon_nord_temperature'')
+        | float(0) %} {% set int = states(''sensor.temperature_moyenne_interieure'')
         | float(0) %} {% set t = now().strftime(''%d/%m %H:%M'') %} {{t}} | Hyg:{{p1}}
-        | Cuis:{{p2}} | Froid:{{p3}} | Chauff:{{p4}} | Multi:{{p5}} | Lum:{{p6}} |
-        Ext:{{ext}}°C
+        | Cuis:{{p2}} | Froid:{{p3}} | Chauff:{{p4}} | Avg P4:{{agv_clim}} | Multi:{{p5}}
+        | Lum:{{p6}} | T̄i:{{int}}°C | Ext:{{ext}}°C
 
         '
   mode: single
@@ -2239,3 +2243,35 @@
         target:
           entity_id: light.entree
   mode: queued
+- id: '1767179354047'
+  alias: ÉNERGIE - SURVEILLANCE GROS ÉLECTRO EN HP
+  description: Alerte si le lave-linge ou le lave-vaisselle tourne en Heures Pleines.
+  triggers:
+  - alias: 'DÉCLENCHEUR : LAVE-LINGE DÉMARRE'
+    trigger: numeric_state
+    entity_id: sensor.prise_lave_linge_power
+    above: 100
+    for:
+      minutes: 2
+  - alias: 'DÉCLENCHEUR : LAVE-VAISSELLE DÉMARRE'
+    trigger: numeric_state
+    entity_id: sensor.prise_lave_vaisselle_power
+    above: 100
+    for:
+      minutes: 2
+  conditions:
+  - alias: 'CONDITION : NOUS SOMMES EN HEURES PLEINES'
+    condition: state
+    entity_id: binary_sensor.heures_creuses_electriques
+    state: 'off'
+  actions:
+  - alias: 'ACTION : NOTIFICATION SUR LE POCO'
+    action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: ⚡ Alerte Consommation HP
+      message: 'Un appareil de gros électroménager vient de démarrer en Heures Pleines
+        ! Il est {{ now().strftime(''%H:%M'') }}.  Vérifiez si le départ différé a
+        bien été activé.
+
+        '
+  mode: single
