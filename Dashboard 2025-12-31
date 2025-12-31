@@ -888,7 +888,7 @@ streamline_templates:
             func: last
             duration: 1m
         - entity: '[[avg_daily_entity]]'
-          name: Moy. /H.
+          name: Moy. depuis minuit
           yaxis_id: Watts
           type: line
           color: '#F44336'
@@ -896,8 +896,10 @@ streamline_templates:
           stroke_width: 2.5
           stroke_dash: 8
         - entity: '[[conso_daily_kwh_entity]]'
-          name: Conso. /Jrs
+          transform: return x * 1000;
+          name: Jour en cours
           color: '#F44336'
+          unit: Wh
           show:
             in_header: true
             in_brush: false
@@ -970,7 +972,7 @@ streamline_templates:
             duration: 24h
             start_with_last: true
         - entity: '[[avg_monthly_entity]]'
-          name: Moy. (Mois)
+          name: Moy. 1er du mois
           yaxis_id: Avg
           type: line
           color: red
@@ -981,7 +983,7 @@ streamline_templates:
             func: last
             duration: 1d
         - entity: '[[conso_monthly_kwh_entity]]'
-          name: Conso.(Mois)
+          name: Mois en ccours
           color: '#F44336'
           unit: kWh
           show:
@@ -1058,7 +1060,7 @@ streamline_templates:
             func: last
             duration: 1m
         - entity: '[[avg_daily_entity]]'
-          name: Moy. /H.
+          name: Moy. depuis minuit
           yaxis_id: Watts
           type: line
           color: '#F44336'
@@ -1066,7 +1068,7 @@ streamline_templates:
           stroke_width: 2.5
           stroke_dash: 8
         - entity: '[[conso_daily_kwh_entity]]'
-          name: Conso. /Jrs
+          name: Jour en cours
           color: '#F44336'
           show:
             in_header: true
@@ -1139,14 +1141,13 @@ streamline_templates:
           yaxis_id: W_day
           type: column
           color: '[[energy_color]]'
-          unit: Wh
-          transform: return x * 1000;
+          unit: kWh
           group_by:
             func: diff
             duration: 24h
             start_with_last: true
         - entity: '[[temp_entity]]'
-          name: T.Mini. /24h
+          name: T.Mini.
           yaxis_id: TH
           type: line
           curve: stepline
@@ -1159,7 +1160,7 @@ streamline_templates:
             duration: 24h
             start_with_last: true
         - entity: '[[avg_monthly_entity]]'
-          name: Moy. (Mois)
+          name: Moy. 1er du mois
           yaxis_id: Avg
           type: line
           color: red
@@ -1170,7 +1171,7 @@ streamline_templates:
             func: last
             duration: 1d
         - entity: '[[conso_monthly_kwh_entity]]'
-          name: Conso.(Mois)
+          name: Mois en ccours
           color: '#F44336'
           unit: kWh
           show:
@@ -1473,6 +1474,8 @@ views:
                     ? 'green'
                     : state === 'not_home'
                       ? 'rgb(255, 103, 0)'
+                      : state === 'Boulot'
+                      ? 'rgb(0,87,81)'
                       : 'grey'
                   } !important;
               }
@@ -1483,7 +1486,9 @@ views:
                     ? 'darkgreen'
                     : state === 'not_home'
                       ? 'rgb(255, 103, 0)'
-                      : 'grey'
+                      : state === 'Boulot'
+                        ? 'rgb(0,87,81)'
+                        : 'grey'
                   } !important;
               }
 
@@ -1492,7 +1497,9 @@ views:
                   ? 'mdi:home'
                   : state === 'not_home'
                     ? 'mdi:home-off'
-                    : 'mdi:crosshairs-question'
+                    : state === 'Boulot'
+                      ? 'mdi:hammer-screwdriver'
+                      : 'mdi:crosshairs-question'
               )}
           - type: custom:bubble-card
             card_type: button
@@ -1529,6 +1536,8 @@ views:
                       ? 'rgb(255, 103, 0)'
                       : state === 'LECLERC VENCE'
                         ? 'rgb(0, 102, 204)'
+                        : state === 'Primark'
+                        ? 'rgb(4,155,216)'
                         : 'grey'
                   } !important;
               }
@@ -1541,6 +1550,8 @@ views:
                       ? 'rgb(255, 103, 0)'
                       : state === 'LECLERC VENCE'
                         ? 'rgb(0, 102, 204)'
+                        : state === 'Primark'
+                        ? 'rgb(4,155,216)'
                         : 'grey'
                   } !important;
               }
@@ -1552,7 +1563,9 @@ views:
                     ? 'mdi:home-off'
                     : state === 'LECLERC VENCE'
                       ? 'mdi:basket-check'
-                      : 'mdi:crosshairs-question'
+                      : state === 'Primark'
+                        ? 'mdi:hanger'
+                        : 'mdi:crosshairs-question'
               )}
             name: Mamour
           - type: custom:mushroom-entity-card
@@ -1662,7 +1675,7 @@ views:
                       - text-align: center
                     humidite:
                       - justify-self: end
-                      - margin-right: 8px
+                      - margin-right: 6px
                       - text-align: right
                 custom_fields:
                   titre: |
@@ -1828,7 +1841,7 @@ views:
                       - text-align: left
                     consigne:
                       - justify-self: end
-                      - margin-right: 8px
+                      - margin-right: 6px
                       - text-align: right
                 custom_fields:
                   titre: Commande Clim.
@@ -1853,8 +1866,8 @@ views:
                       }
 
                       const pieces = [
-                        { name: 'T̄ Appart. ----------', color: 'white' },
-                        { name: 'Δ Ademe ------------', color: 'white' },
+                        { name: 'T̄ Appart. --------------', color: 'white' },
+                        { name: 'Δ Ademe --------------', color: 'white' },
                         { name: 'Mode ->', color: 'white' },
                         { name: 'Salon', power: safeState('sensor.salon_power_status'), mode: safeState('sensor.clim_salon_etat') },
                         { name: 'Cuisine', power: safeState('sensor.cuisine_power_status'), mode: safeState('sensor.radiateur_cuisine_etat') },
@@ -2161,7 +2174,7 @@ views:
                       - font-weight: bold
                     piece:
                       - justify-self: start
-                      - margin-left: 3px
+                      - margin-left: 7px
                       - text-align: left
                     quotidien:
                       - justify-self: start
@@ -2169,7 +2182,7 @@ views:
                       - text-align: left
                     mensuel:
                       - justify-self: end
-                      - margin-right: 2px
+                      - margin-right: 6px
                       - text-align: right
                 custom_fields:
                   titre: Consommation CLIM
@@ -2318,7 +2331,7 @@ views:
                       - text-align: left
                     mensuel:
                       - justify-self: end
-                      - margin-right: 10px
+                      - margin-right: 6px
                       - text-align: right
                 custom_fields:
                   titre: |
@@ -3495,15 +3508,15 @@ views:
                               - opacity: 1;
                       horseshoe_scale:
                         min: 0
-                        max: 6100
+                        max: 4000
                         width: 3
                       color_stops:
                         '0': green
-                        '2000': gold
-                        '3000': rgb(231,180,57)
-                        '4000': rgb(225,156,24)
-                        '5000': darkorange
-                        '6000': red
+                        '1800': gold
+                        '2500': rgb(231,180,57)
+                        '3000': rgb(225,156,24)
+                        '3500': darkorange
+                        '4000': red
                       card_mod:
                         style: |
                           ha-card {
@@ -4310,8 +4323,6 @@ views:
                       border: none !important;
                       box-shadow: none !important;
                       background: none !important;
-                      margin: 0;
-                      padding: 0;
                     }
               - type: custom:bubble-card
                 card_type: separator
@@ -4330,13 +4341,17 @@ views:
                     cards:
                       - type: custom:ha-tbaro-card
                         entity: sensor.vence_pressure
-                        angle: 270
-                        unit: hpa
-                        show_border: true
+                        show_weather_icon: true
+                        show_weather_text: true
+                        show_pressure: true
                         stroke_width: 10
-                        size: 300
+                        show_icon: true
                         needle_color: gainsboro
-                        tick_color: lightgrey
+                        tick_color: gainsboro
+                        show_border: false
+                        unit: hpa
+                        angle: 270
+                        size: 400
                         segments:
                           - from: 950
                             to: 980
@@ -4350,20 +4365,14 @@ views:
                           - from: 1020
                             to: 1050
                             color: '#4CAF50'
-                      - type: markdown
-                        content: |
-                          <div style="text-align: center;">
-                            <strong>Mini :</strong> {{ states('sensor.vence_pressure_mini') }} hPa –
-                            <strong>Maxi :</strong> {{ states('sensor.vence_pressure_maxi') }} hPa /24h
-                          </div>
+                        border: none
+                        language: fr
                         card_mod:
                           style: |
                             ha-card {
-                              margin-top: -75px;
-                              font-size: 10px;
-                              background: none !important;
                               border: none !important;
-                              text-align: center; 
+                              box-shadow: none !important;
+                              background: none !important;
                             }
               - type: vertical-stack
                 cards:
@@ -4534,6 +4543,9 @@ views:
                                   background: none !important;
                                   border: none !important;
                                 }
+            grid_options:
+              columns: full
+              rows: 8
           - type: heading
             heading_style: title
           - type: vertical-stack
@@ -8616,6 +8628,7 @@ views:
             cache: true
             span:
               start: day
+              offset: '-0h'
             apex_config:
               chart:
                 height: 400px
@@ -8645,7 +8658,7 @@ views:
             all_series_config:
               group_by:
                 func: last
-                duration: 60m
+                duration: 30m
               show:
                 legend_value: false
             series:
@@ -8684,21 +8697,18 @@ views:
                 show:
                   in_brush: false
                   in_chart: false
-              - entity: sensor.conso_clim_rad_total
-                name: Avg (24h)
+              - entity: sensor.clim_rad_total_avg_watts_daily
+                name: Moy.depuis Minuit
                 yaxis_id: conso_clim
                 type: line
                 stroke_width: 2
                 color: red
                 unit: W
-                group_by:
-                  func: avg
-                  duration: 24h
                 show:
                   in_brush: false
                   in_chart: true
-              - entity: sensor.clim_rad_total_mean_24h_kwh
-                name: Mean (24h)
+              - entity: sensor.conso_clim_rad_total_mensuel
+                name: Mois en cours
                 color: '#F44336'
                 show:
                   in_brush: false
@@ -10477,7 +10487,7 @@ views:
                   - level4
                   - level5
                   - powerful
-            name: Clim du BUREAU
+            name: Clim du BUREAU (-1°)
             card_mod:
               style: |
                 ha-card {
@@ -13520,17 +13530,30 @@ views:
               chart:
                 height: 400px
               legend:
-                show: false
+                show: true
+            span:
+              start: day
+            now:
+              show: true
+              color: darkred
+              label: Now
             header:
               show: true
               title: ' '
               show_states: true
               colorize_states: true
             yaxis:
-              - id: first
+              - id: TempsReel
                 min: 0
                 max: auto
                 opposite: false
+                decimals: 0
+                apex_config:
+                  tickAmount: 20
+              - id: Minuit
+                min: 0
+                max: '|+30|'
+                opposite: true
                 decimals: 0
                 apex_config:
                   tickAmount: 20
@@ -13539,24 +13562,39 @@ views:
                 func: last
                 duration: 10m
               show:
-                legend_value: true
+                legend_value: false
                 extremas: true
             series:
               - entity: sensor.ecojoko_consommation_temps_reel
+                yaxis_id: TempsReel
                 name: conso. en temps réel
                 color: green
                 type: area
                 stroke_width: 1
               - entity: sensor.ecojoko_consommation_temps_reel
+                name: Moy. glissante (24h)
+                yaxis_id: TempsReel
                 unit: W
-                type: line
-                stroke_dash: 4
                 color: red
+                type: line
                 stroke_width: 1
-                name: Moy.(en cours)
                 group_by:
                   func: avg
                   duration: 24h
+              - entity: sensor.ecojoko_avg_watts_daily
+                yaxis_id: Minuit
+                name: Moy. depuis minuit
+                unit: Wh
+                color: '#FF5252'
+                type: line
+                stroke_width: 1.5
+              - entity: sensor.ecojoko_avg_watts_monthly
+                name: Moy. 1er du mois
+                unit: Wh
+                show:
+                  in_chart: false
+                  in_header: true
+                opacity: 0
             card_mod:
               style: |
                 ha-card {
@@ -13788,10 +13826,10 @@ views:
               }
             card_layout: normal
           - type: custom:apexcharts-card
-            graph_span: 730h
+            graph_span: 31d
             cache: true
             span:
-              end: day
+              start: month
             apex_config:
               chart:
                 height: 400px
@@ -13804,8 +13842,16 @@ views:
               colorize_states: true
             yaxis:
               - id: daily
-                min: 0
+                min: ~0
                 max: auto
+                apex_config:
+                  tickAmount: 10
+              - id: moyenne
+                min: ~0
+                max: ~500
+                decimals: 0
+                show: false
+                opposite: true
             all_series_config:
               group_by:
                 func: last
@@ -13816,33 +13862,32 @@ views:
             series:
               - entity: sensor.ecojoko_energy_daily
                 yaxis_id: daily
-                name: Conso./jour
+                name: Conso. ce jour
                 color: rgb(68,115,158)
                 type: column
-                unit: kWh/j
-                show:
-                  in_chart: true
+                unit: kWh
+                group_by:
+                  func: max
+                  duration: 24h
               - entity: sensor.ecojoko_consommation_reseau
                 yaxis_id: daily
                 type: line
                 color: red
-                stroke_width: 0.5
-                name: Avg(730h)
+                stroke_width: 3
+                name: Moy. glissante (Mois)
                 group_by:
                   func: avg
                   duration: 730h
-              - entity: sensor.ecojoko_mean_730h_kwh
-                yaxis_id: daily
+              - entity: sensor.ecojoko_avg_watts_daily
+                yaxis_id: moyenne
                 type: line
                 color: '#FF5252'
-                stroke_width: 1
-                name: Mean(730h)
-                unit: kWh
-                show:
-                  in_chart: true
-              - entity: sensor.ecojoko_energy_monthly
-                name: Mois en cours
-                unit: kWh
+                stroke_width: 1.5
+                name: Moy. depuis minuit
+                unit: Wh
+              - entity: sensor.ecojoko_avg_watts_monthly
+                name: Moy. 1er du Mois
+                unit: Wh
                 show:
                   in_chart: false
                   in_header: true
@@ -13858,12 +13903,12 @@ views:
           - type: custom:auto-entities
             card:
               type: custom:bar-card
-              title: SYNTHÈSE USAGES (6 POSTES)
+              title: SYNTHÈSE USAGES ( Jour en cours )
               height: 35px
               decimal: 2
               unit_of_measurement: kWh
               min: 0
-              max: 15
+              max: sensor.max_conso_quotidien_dynamique
               positions:
                 icon: inside
                 indicator: inside
@@ -13884,14 +13929,14 @@ views:
                     padding-left: 10px;
                   }
                   bar-card-currentbar, bar-card-backgroundbar {
-                      height: 8px !important;
+                      height: 4px !important;
                       border-radius: 4px;
                       margin-top: 24px;
                   }
                   ha-card {
                       background: none !important;
                       box-shadow: none !important;
-                      border: 2px solid white !important;
+                      border: none !important;
                       border-radius: 10px !important;
                       padding: 10px !important;
                   }
@@ -13931,6 +13976,92 @@ views:
                     icon: mdi:desktop-tower-monitor
                     color: '#9370DB'
                 - entity_id: sensor.diag_poste_6_lumiere_quotidien
+                  options:
+                    name: Lumière
+                    icon: mdi:lightbulb
+                    color: '#ADFF2F'
+            sort:
+              method: state
+              numeric: true
+              reverse: true
+          - type: custom:auto-entities
+            card:
+              type: custom:bar-card
+              title: SYNTHÈSE USAGES ( Mois en cours )
+              height: 35px
+              decimal: 2
+              unit_of_measurement: kWh
+              min: 0
+              max: sensor.max_conso_mensuelle_dynamique
+              positions:
+                icon: inside
+                indicator: inside
+                name: inside
+                value: inside
+              card_mod:
+                style: |
+                  bar-card-value {
+                    font-size: 14px;
+                    font-weight: bold;
+                    margin-right: 10px;
+                  }
+                  bar-card-title {
+                    font-size: 15px;
+                    font-weight: bold;
+                    padding-bottom: 10px;
+                    text-align: left;
+                    padding-left: 10px;
+                    color: white;
+                  }
+                  bar-card-currentbar, bar-card-backgroundbar {
+                      height: 4px !important;
+                      border-radius: 4px;
+                      margin-top: 24px;
+                  }
+                  ha-card {
+                      background: none !important;
+                      box-shadow: none !important;
+                      border: none !important;
+                      border-radius: 10px !important;
+                      padding: 10px !important;
+                  }
+                  ha-icon {
+                    color: white !important;
+                    padding-bottom: 15px;
+                  }
+                  bar-card-name {
+                    padding-bottom: 15px;
+                    font-weight: bold;
+                    color: white;
+                  }
+            filter:
+              include:
+                - entity_id: sensor.diag_poste_1_hygiene_mensuel
+                  options:
+                    name: Hygiène
+                    icon: mdi:water
+                    color: '#00BFFF'
+                - entity_id: sensor.diag_poste_2_cuisson_mensuel
+                  options:
+                    name: Cuisson
+                    icon: mdi:stove
+                    color: '#FF4500'
+                - entity_id: sensor.diag_poste_3_froid_mensuel
+                  options:
+                    name: Froid
+                    icon: mdi:snowflake
+                    color: '#87CEEB'
+                - entity_id: sensor.diag_poste_4_chauffage_mensuel
+                  options:
+                    name: Chauffage
+                    icon: mdi:fire
+                    color: '#FFA500'
+                - entity_id: sensor.diag_poste_5_multimedia_mensuel
+                  options:
+                    name: Multimedia
+                    icon: mdi:desktop-tower-monitor
+                    color: '#9370DB'
+                - entity_id: sensor.diag_poste_6_lumiere_mensuel
                   options:
                     name: Lumière
                     icon: mdi:lightbulb
@@ -14167,7 +14298,7 @@ views:
                     height: 580px
                 header:
                   show: true
-                  title: Conso. journalière (Cumul sur 24h)
+                  title: Conso. journalière (Cumul depuis Minuit )
                   show_states: true
                   colorize_states: true
                 all_series_config:
@@ -14444,7 +14575,7 @@ views:
                                 - energy_entity: sensor.prise_box_internet_ikea_power
                                 - energy_color: gainsboro
                                 - current_entity: sensor.prise_box_internet_ikea_current
-                                - avg_daily_entity: sensor.box_internet_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.box_internet_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_box_internet_ikea_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14453,7 +14584,7 @@ views:
                                 - energy_entity: sensor.prise_horloge_ikea_power
                                 - energy_color: rgb(183, 183, 183)
                                 - current_entity: sensor.prise_horloge_ikea_current
-                                - avg_daily_entity: sensor.horloge_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.horloge_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_horloge_ikea_daily
                         attributes:
                           label: Entrée
@@ -14468,7 +14599,7 @@ views:
                                 - energy_entity: sensor.prise_pc_s_gege_ikea_power
                                 - energy_color: rgb(202, 135, 135)
                                 - current_entity: sensor.prise_pc_s_gege_ikea_current
-                                - avg_daily_entity: sensor.pc_geraldine_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.pc_gege_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_pc_s_gege_ikea_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14479,8 +14610,7 @@ views:
                                 - energy_entity: sensor.prise_salon_chargeur_nous_power
                                 - energy_color: rgb(174, 68, 90)
                                 - current_entity: sensor.prise_salon_chargeur_nous_current
-                                - avg_daily_entity: >-
-                                    sensor.chargeurs_salon_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.chargeurs_salon_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_salon_chargeur_nous_daily
                         attributes:
                           label: Salon
@@ -14495,7 +14625,7 @@ views:
                                 - energy_entity: sensor.prise_four_micro_ondes_nous_power
                                 - energy_color: rgb(98, 78, 136)
                                 - current_entity: sensor.prise_four_micro_ondes_nous_current
-                                - avg_daily_entity: sensor.four_mo_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.four_mo_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_four_micro_ondes_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14506,7 +14636,7 @@ views:
                                 - energy_entity: sensor.prise_lave_linge_nous_power
                                 - energy_color: rgb(137, 103, 179)
                                 - current_entity: sensor.prise_lave_linge_nous_current
-                                - avg_daily_entity: sensor.lave_linge_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.lave_linge_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_lave_linge_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14515,7 +14645,7 @@ views:
                                 - energy_entity: sensor.prise_lave_vaisselle_nous_power
                                 - energy_color: rgb(129, 116, 180)
                                 - current_entity: sensor.prise_lave_vaisselle_nous_current
-                                - avg_daily_entity: sensor.lave_vaisselle_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.lave_vaisselle_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_lave_vaisselle_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14524,7 +14654,7 @@ views:
                                 - energy_entity: sensor.prise_airfryer_ninja_nous_power
                                 - energy_color: rgb(142, 122, 181)
                                 - current_entity: sensor.prise_airfryer_ninja_nous_current
-                                - avg_daily_entity: sensor.airfryer_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.airfryer_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_airfryer_ninja_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14533,7 +14663,7 @@ views:
                                 - energy_entity: sensor.four_et_plaque_de_cuisson_power
                                 - energy_color: rgb(162, 148, 249)
                                 - current_entity: sensor.four_et_plaque_de_cuisson_current
-                                - avg_daily_entity: sensor.plaques_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.plaques_cuisson_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.four_et_plaque_de_cuisson_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14542,7 +14672,7 @@ views:
                                 - energy_entity: sensor.prise_frigo_cuisine_nous_power
                                 - energy_color: cyan
                                 - current_entity: sensor.prise_frigo_cuisine_nous_current
-                                - avg_daily_entity: sensor.frigo_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.frigo_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_frigo_cuisine_nous_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14552,7 +14682,7 @@ views:
                                 - energy_color: rgb(19, 160, 255)
                                 - current_entity: >-
                                     sensor.prise_congelateur_cuisine_nous_current
-                                - avg_daily_entity: sensor.congelateur_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.congelateur_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_congelateur_cuisine_nous_daily
                         attributes:
                           label: Cuisine
@@ -14567,7 +14697,7 @@ views:
                                 - energy_entity: sensor.prise_bureau_pc_ikea_power
                                 - energy_color: orange
                                 - current_entity: sensor.prise_bureau_pc_ikea_current
-                                - avg_daily_entity: sensor.pc_bureau_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.pc_bureau_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_bureau_pc_ikea_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14578,7 +14708,7 @@ views:
                                 - energy_color: gold
                                 - current_entity: >-
                                     sensor.prise_bureau_fer_a_repasser_nous_current
-                                - avg_daily_entity: sensor.fer_repasser_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.fer_repasser_avg_watts_daily
                                 - conso_daily_kwh_entity: >-
                                     sensor.prise_bureau_fer_a_repasser_nous_daily
                         attributes:
@@ -14596,7 +14726,7 @@ views:
                                 - energy_entity: sensor.prise_tete_de_lit_chambre_power
                                 - energy_color: rgb(177, 194, 158)
                                 - current_entity: sensor.prise_tete_de_lit_chambre_current
-                                - avg_daily_entity: sensor.tetes_lit_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.tetes_lit_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_tete_de_lit_chambre_daily
                             - type: custom:streamline-card
                               template: conso_temps_reel_appareil
@@ -14605,7 +14735,7 @@ views:
                                 - energy_entity: sensor.prise_tv_chambre_nous_power
                                 - energy_color: rgb(30, 81, 40)
                                 - current_entity: sensor.prise_tv_chambre_nous_current
-                                - avg_daily_entity: sensor.tv_chambre_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.tv_chambre_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.prise_tv_chambre_nous_daily
                         attributes:
                           label: Chambre
@@ -14620,7 +14750,7 @@ views:
                                 - energy_entity: sensor.all_standby_power
                                 - energy_color: grey
                                 - current_entity: sensor.all_standby_current
-                                - avg_daily_entity: sensor.veilles_puissance_moyenne_jour
+                                - avg_daily_entity: sensor.veilles_avg_watts_daily
                                 - conso_daily_kwh_entity: sensor.all_standby_daily
                         attributes:
                           label: Vieilles
@@ -14728,7 +14858,7 @@ views:
               title: Box Internet (Hue)
               energy_entity: sensor.prise_box_internet_ikea_energy
               color: gainsboro
-              avg_monthly_entity: sensor.box_internet_puissance_moyenne_mois
+              avg_monthly_entity: sensor.box_internet_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_box_internet_ikea_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14736,7 +14866,7 @@ views:
               title: Horloge Entrée (Chargeur)
               energy_entity: sensor.prise_horloge_ikea_energy
               color: rgb(183, 183, 183)
-              avg_monthly_entity: sensor.horloge_puissance_moyenne_mois
+              avg_monthly_entity: sensor.horloge_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_horloge_ikea_monthly
           - type: heading
             icon: mdi:sofa
@@ -14748,7 +14878,7 @@ views:
               title: PC's Géraldine
               energy_entity: sensor.prise_pc_s_gege_ikea_energy
               color: rgb(202, 135, 135)
-              avg_monthly_entity: sensor.pc_geraldine_puissance_moyenne_mois
+              avg_monthly_entity: sensor.pc_gege_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_pc_s_gege_ikea_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14756,7 +14886,7 @@ views:
               title: Prise Salon (Chargeurs, Vapote, Aspi. & iRobot)
               energy_entity: sensor.prise_salon_chargeur_nous_energy
               color: rgb(174, 68, 90)
-              avg_monthly_entity: sensor.chargeurs_salon_puissance_moyenne_mois
+              avg_monthly_entity: sensor.chargeurs_salon_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_salon_chargeur_nous_monthly
           - type: heading
             icon: mdi:fridge
@@ -14768,7 +14898,7 @@ views:
               title: Four Micro-Ondes (Alexa)
               energy_entity: sensor.prise_four_micro_ondes_nous_energy
               color: rgb(98, 78, 136)
-              avg_monthly_entity: sensor.four_mo_puissance_moyenne_mois
+              avg_monthly_entity: sensor.four_mo_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_four_micro_ondes_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14776,7 +14906,7 @@ views:
               title: Lave-Linge (grille pain, Théière, machine à café)
               energy_entity: sensor.prise_lave_linge_nous_energy
               color: rgb(137, 103, 179)
-              avg_monthly_entity: sensor.lave_linge_puissance_moyenne_mois
+              avg_monthly_entity: sensor.lave_linge_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_lave_linge_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14784,7 +14914,7 @@ views:
               title: Lave-Vaisselle
               energy_entity: sensor.prise_lave_vaisselle_nous_energy
               color: rgb(129, 116, 180)
-              avg_monthly_entity: sensor.lave_vaisselle_puissance_moyenne_mois
+              avg_monthly_entity: sensor.lave_vaisselle_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_lave_vaisselle_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14792,7 +14922,7 @@ views:
               title: Airfryer (Cookéo, mixer, ect...)
               energy_entity: sensor.prise_airfryer_ninja_nous_energy
               color: rgb(142, 122, 181)
-              avg_monthly_entity: sensor.airfryer_puissance_moyenne_mois
+              avg_monthly_entity: sensor.airfryer_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_airfryer_ninja_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14800,7 +14930,7 @@ views:
               title: Four et plaque de Cuisson
               energy_entity: sensor.four_et_plaque_de_cuisson_energy
               color: rgb(162, 148, 249)
-              avg_monthly_entity: sensor.plaques_puissance_moyenne_mois
+              avg_monthly_entity: sensor.plaques_cuisson_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.four_et_plaque_de_cuisson_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14808,7 +14938,7 @@ views:
               title: Frigo
               energy_entity: sensor.prise_frigo_cuisine_nous_energy
               color: cyan
-              avg_monthly_entity: sensor.frigo_puissance_moyenne_mois
+              avg_monthly_entity: sensor.frigo_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_frigo_cuisine_nous_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14816,7 +14946,7 @@ views:
               title: Congélateur
               energy_entity: sensor.prise_congelateur_cuisine_nous_energy
               color: rgb(19, 160, 255)
-              avg_monthly_entity: sensor.congelateur_puissance_moyenne_mois
+              avg_monthly_entity: sensor.congelateur_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_congelateur_cuisine_nous_monthly
           - type: heading
             icon: mdi:desktop-tower-monitor
@@ -14828,7 +14958,7 @@ views:
               title: PCe Bureau
               energy_entity: sensor.prise_bureau_pc_ikea_energy
               color: orange
-              avg_monthly_entity: sensor.pc_bureau_puissance_moyenne_mois
+              avg_monthly_entity: sensor.pc_bureau_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_bureau_pc_ikea_monthly
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
@@ -14836,8 +14966,16 @@ views:
               title: Fer à Repasser Bureau (Store)
               energy_entity: sensor.prise_bureau_fer_a_repasser_nous_energy
               color: gold
-              avg_monthly_entity: sensor.fer_repasser_puissance_moyenne_mois
+              avg_monthly_entity: sensor.fer_repasser_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_bureau_fer_a_repasser_nous_monthly
+          - type: custom:streamline-card
+            template: conso_mensuelle_appareil
+            variables:
+              title: Têtes de Lit chambre (Chargeurs, Alexa, etc...)
+              energy_entity: sensor.prise_tete_de_lit_chambre_energy
+              color: rgb(177, 194, 158)
+              avg_monthly_entity: sensor.tetes_lit_avg_watts_monthly
+              conso_monthly_kwh_entity: sensor.prise_tete_de_lit_chambre_monthly
           - type: heading
             icon: mdi:bed
             heading: Chambre
@@ -14845,18 +14983,10 @@ views:
           - type: custom:streamline-card
             template: conso_mensuelle_appareil
             variables:
-              title: Têtes de Lit chambre (Chargeurs, Alexa, etc...)
-              energy_entity: sensor.prise_tete_de_lit_chambre_energy
-              color: rgb(177, 194, 158)
-              avg_monthly_entity: sensor.tetes_lit_puissance_moyenne_mois
-              conso_monthly_kwh_entity: sensor.prise_tete_de_lit_chambre_monthly
-          - type: custom:streamline-card
-            template: conso_mensuelle_appareil
-            variables:
-              title: TV Chambre (Casques, TireTV, ect...)
+              title: TV Chambre (Casques, FireTV, ect...)
               energy_entity: sensor.prise_tv_chambre_nous_energy
               color: rgb(30, 81, 40)
-              avg_monthly_entity: sensor.tv_chambre_puissance_moyenne_mois
+              avg_monthly_entity: sensor.tv_chambre_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.prise_tv_chambre_nous_monthly
           - type: heading
             icon: mdi:sleep
@@ -14868,7 +14998,7 @@ views:
               title: Vieilles
               energy_entity: sensor.all_standby_energy
               color: grey
-              avg_monthly_entity: sensor.veilles_puissance_moyenne_mois
+              avg_monthly_entity: sensor.veilles_avg_watts_monthly
               conso_monthly_kwh_entity: sensor.all_standby_monthly
     title: Energie HOME Mensuel
     cards: []
@@ -15488,6 +15618,7 @@ views:
             cache: true
             span:
               start: day
+              offset: '-0h'
             apex_config:
               chart:
                 height: 400px
@@ -15502,7 +15633,7 @@ views:
               colorize_states: true
             yaxis:
               - id: temperature
-                min: ~10
+                min: ~5
                 max: ~32
                 decimals: 2
                 apex_config:
@@ -15517,7 +15648,7 @@ views:
             all_series_config:
               group_by:
                 func: last
-                duration: 60m
+                duration: 30m
               show:
                 legend_value: false
             series:
@@ -15556,22 +15687,19 @@ views:
                 show:
                   in_brush: false
                   in_chart: false
-              - entity: sensor.conso_clim_rad_total
-                name: Avg (24h)
+              - entity: sensor.clim_rad_total_avg_watts_daily
+                name: Moy.depuis Minuit
                 yaxis_id: conso_clim
                 type: line
                 stroke_width: 2
-                color: red
+                color: '#F44336'
                 unit: W
-                group_by:
-                  func: avg
-                  duration: 24h
                 show:
                   in_brush: false
                   in_chart: true
-              - entity: sensor.clim_rad_total_mean_24h_kwh
-                name: Mean (24h)
-                color: '#F44336'
+              - entity: sensor.conso_clim_rad_total_mensuel
+                name: Mois en cours
+                color: red
                 show:
                   in_brush: false
                   in_chart: false
@@ -16201,7 +16329,7 @@ views:
                           }
                     card:
                       type: custom:text-divider-row
-                      text: sèche-serviettes de la Salle de Bain
+                      text: Sèche-Serviettes Salle de Bain
           - type: custom:streamline-card
             template: clim_voltage_ring-tile
             variables:
@@ -16221,7 +16349,7 @@ views:
           - type: custom:streamline-card
             template: conso_temps_reel_clim_rad
             variables:
-              card_title: Conso. Temps Réel Sèche-serv. Salle de Bain
+              card_title: Conso. Temps Réel Sèche-Serv. Salle de Bain
               energy_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
               energy_color: rgb(218, 112, 214)
               current_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_current
@@ -16628,14 +16756,14 @@ views:
               }
             card_layout: normal
           - type: custom:button-card
-            entity: automation.redemarrage_quotidien_studio_code_server
+            entity: automation.systeme_economie_energie_vs_code
             name: Redémarrer Studio Code Server
             icon: mdi:restart
             tap_action:
               action: call-service
               service: automation.trigger
               service_data:
-                entity_id: automation.redemarrage_quotidien_studio_code_server
+                entity_id: automation.systeme_economie_energie_vs_code
             styles:
               card:
                 - background: transparent
@@ -16663,9 +16791,9 @@ views:
               }
             card_layout: normal
           - type: custom:button-card
-            entity: automation.redemarrage_quotidien_studio_code_server
-            name: '[DB] Purge MariaDB + Repack'
-            icon: mdi:database-check-outline
+            entity: automation.db_purge_mariadb_repack
+            name: Nettoyer MariaDB
+            icon: mdi:database-sync
             tap_action:
               action: call-service
               service: automation.trigger
@@ -16674,18 +16802,15 @@ views:
             styles:
               card:
                 - background: transparent
-                - border: 0.1px solid white
+                - border: 1px solid white
                 - border-radius: 12px
                 - color: white
-                - font-size: 14px
                 - padding: 4px
               icon:
                 - width: 40px
-                - height: 40px
-                - color: white
-              name:
-                - font-size: 16px
-                - margin-top: 12px
+                - color: >
+                    [[[ if (states['automation.db_purge_mariadb_repack'].state
+                    == 'on') return 'gold'; return 'white'; ]]]
     title: reserve
     cards: []
   - type: sections
@@ -18812,6 +18937,63 @@ views:
             layout_options:
               grid_columns: full
               grid_rows: 1
+            heading: Batteries — contacts de fenêtres SONOFF
+          - type: custom:battery-state-card
+            secondary_info: '{last_changed}'
+            colors:
+              steps:
+                - '#ff0000'
+                - '#ffff00'
+                - '#00ff00'
+              gradient: true
+            filter:
+              exclude:
+                - name: entity_id
+                  value: sensor.ne2213_*
+                - name: entity_id
+                  value: sensor.gm1901_battery_level
+                - name: entity_id
+                  value: sensor.sm_a530f_battery_level
+                - name: entity_id
+                  value: sensor.tablette_battery_level
+            collapse:
+              - name: >-
+                  Contacts de fenêtres SONOFF (Total : {count} / Mini. : {min}
+                  %)
+                secondary_info: 'Niveaux de batterie : {range} %'
+                icon: mdi:window-closed-variant
+                icon_color: first
+                entities:
+                  - sensor.contact_fenetre_salon_sonoff_battery
+                  - sensor.contact_fenetre_cuisine_sonoff_battery
+                  - sensor.contact_fenetre_bureau_sonoff_battery
+                  - sensor.contact_fenetre_chambre_sonoff_battery
+            sort:
+              by: state
+            bulk_rename:
+              - from: ' Batterie'
+              - from: ' Battery'
+              - from: ' level'
+              - from: ' (HUE)'
+              - from: Hue Smart
+              - from: button
+                to: Bouton
+              - from: Th
+                to: Thermostat
+            card_mod:
+              style: |
+                ha-card {
+                  background: none !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
+          - type: heading
+            icon: mdi:battery-high
+            heading_style: title
+            badges: []
+            layout_options:
+              grid_columns: full
+              grid_rows: 1
             heading: Batteries — thermostats SONOFF
           - type: custom:battery-state-card
             secondary_info: '{last_changed}'
@@ -19147,150 +19329,6 @@ views:
                   style: >
                     ha-card { background: none !important; box-shadow: none
                     !important; border: none !important; }
-              - type: custom:stack-in-card
-                mode: vertical
-                cards:
-                  - type: horizontal-stack
-                    cards:
-                      - type: custom:bar-card
-                        entities:
-                          - entity: sensor.system_monitor_charge_1m
-                            name: Charge 1m
-                            color: rgb(81,140,67)
-                            height: 25px
-                            min: 0
-                            max: 100
-                            target: 75
-                        animation:
-                          state: 'on'
-                        positions:
-                          icon: 'off'
-                          indicator: inside
-                        entity_row: true
-                        severity:
-                          - color: rgb(81,140,67)
-                            from: 0
-                            to: 2
-                          - color: rgb(255,152,1)
-                            from: 2
-                            to: 3
-                          - color: rgb(244,67,54)
-                            from: 3
-                            to: 6
-                        card_mod:
-                          style: |
-                            ha-card {
-                              font-size: 12px;
-                              font-weight: bold;
-                              --mdc-icon-size: 30px;
-                              --paper-item-icon-color: white;
-                              border: none !important;
-                              box-shadow: none !important;
-                              background: none !important;
-                            }
-                            bar-card-currentbar {
-                              border: none !important;
-                              box-shadow: none !important;
-                            }
-                            bar-card-backgroundbar {
-                              border: none !important;
-                              box-shadow: none !important;
-                            }
-                      - type: custom:bar-card
-                        entities:
-                          - entity: sensor.system_monitor_charge_5m
-                            name: Charge 5m
-                            color: rgb(81,140,67)
-                            height: 25px
-                            min: 0
-                            max: 100
-                            target: 75
-                        animation:
-                          state: 'on'
-                        positions:
-                          icon: 'off'
-                          indicator: inside
-                        entity_row: true
-                        severity:
-                          - color: rgb(81,140,67)
-                            from: 0
-                            to: 2
-                          - color: rgb(255,152,1)
-                            from: 2
-                            to: 3
-                          - color: rgb(244,67,54)
-                            from: 3
-                            to: 6
-                        card_mod:
-                          style: |
-                            ha-card {
-                              font-size: 12px;
-                              font-weight: bold;
-                              --mdc-icon-size: 30px;
-                              --paper-item-icon-color: white;
-                              border: none !important;
-                              box-shadow: none !important;
-                              background: none !important;
-                            }
-                            bar-card-currentbar {
-                              border: none !important;
-                              box-shadow: none !important;
-                            }
-                            bar-card-backgroundbar {
-                              border: none !important;
-                              box-shadow: none !important;
-                            }
-                      - type: custom:bar-card
-                        entities:
-                          - entity: sensor.system_monitor_charge_15m
-                            name: Charge 15m
-                            color: darkgreen
-                            height: 25px
-                            min: 0
-                            max: 100
-                            target: 75
-                        animation:
-                          state: 'on'
-                        positions:
-                          icon: 'off'
-                          indicator: inside
-                        entity_row: true
-                        severity:
-                          - color: rgb(81,140,67)
-                            from: 0
-                            to: 2
-                          - color: rgb(255,152,1)
-                            from: 2
-                            to: 3
-                          - color: rgb(244,67,54)
-                            from: 3
-                            to: 6
-                        card_mod:
-                          style: |
-                            ha-card {
-                              font-size: 12px;
-                              font-weight: bold;
-                              --mdc-icon-size: 30px;
-                              --paper-item-icon-color: white;
-                              border: none !important;
-                              box-shadow: none !important;
-                              background: none !important;
-                            }
-                            bar-card-currentbar {
-                              border: none !important;
-                              box-shadow: none !important;
-                            }
-                            bar-card-backgroundbar {
-                              border: none !important;
-                              box-shadow: none !important;
-                            }
-                card_mod:
-                  style: |
-                    ha-card {
-                      border: none !important;
-                      box-shadow: none !important;
-                      background: none !important;
-                    }
               - type: custom:stack-in-card
                 mode: vertical
                 cards:
@@ -19695,6 +19733,150 @@ views:
                       background: none !important;
                       box-shadow: none !important;
                       border: none !important;
+                    }
+              - type: custom:stack-in-card
+                mode: vertical
+                cards:
+                  - type: horizontal-stack
+                    cards:
+                      - type: custom:bar-card
+                        entities:
+                          - entity: sensor.system_monitor_charge_1m
+                            name: Charge 1m
+                            color: rgb(81,140,67)
+                            height: 25px
+                            min: 0
+                            max: 100
+                            target: 75
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: 'off'
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 2
+                          - color: rgb(255,152,1)
+                            from: 2
+                            to: 3
+                          - color: rgb(244,67,54)
+                            from: 3
+                            to: 6
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 12px;
+                              font-weight: bold;
+                              --mdc-icon-size: 30px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                      - type: custom:bar-card
+                        entities:
+                          - entity: sensor.system_monitor_charge_5m
+                            name: Charge 5m
+                            color: rgb(81,140,67)
+                            height: 25px
+                            min: 0
+                            max: 100
+                            target: 75
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: 'off'
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 2
+                          - color: rgb(255,152,1)
+                            from: 2
+                            to: 3
+                          - color: rgb(244,67,54)
+                            from: 3
+                            to: 6
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 12px;
+                              font-weight: bold;
+                              --mdc-icon-size: 30px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                      - type: custom:bar-card
+                        entities:
+                          - entity: sensor.system_monitor_charge_15m
+                            name: Charge 15m
+                            color: darkgreen
+                            height: 25px
+                            min: 0
+                            max: 100
+                            target: 75
+                        animation:
+                          state: 'on'
+                        positions:
+                          icon: 'off'
+                          indicator: inside
+                        entity_row: true
+                        severity:
+                          - color: rgb(81,140,67)
+                            from: 0
+                            to: 2
+                          - color: rgb(255,152,1)
+                            from: 2
+                            to: 3
+                          - color: rgb(244,67,54)
+                            from: 3
+                            to: 6
+                        card_mod:
+                          style: |
+                            ha-card {
+                              font-size: 12px;
+                              font-weight: bold;
+                              --mdc-icon-size: 30px;
+                              --paper-item-icon-color: white;
+                              border: none !important;
+                              box-shadow: none !important;
+                              background: none !important;
+                            }
+                            bar-card-currentbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                            bar-card-backgroundbar {
+                              border: none !important;
+                              box-shadow: none !important;
+                            }
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: none !important;
                     }
               - type: horizontal-stack
                 cards:
@@ -20223,76 +20405,71 @@ views:
                 bg_opacity: '0'
               - type: custom:apexcharts-card
                 experimental:
+                  color_threshold: true
                   brush: true
                 graph_span: 24h
                 cache: true
                 span:
-                  offset: +2m
+                  offset: +1m
                 now:
                   show: true
-                  color: darkred
+                  color: '#F44336'
                   label: Now
                 header:
                   show: true
-                  title: ''
+                  title: ' '
                   show_states: true
                   colorize_states: true
-                  standard_format: true
                 apex_config:
                   chart:
-                    height: 340px
+                    height: 320px
                     toolbar:
-                      show: false
+                      show: true
                   legend:
                     show: false
                   tooltip:
                     shared: true
                     intersect: false
-                  stroke:
-                    width: 2
-                yaxis:
-                  - id: Use
-                    min: 0
-                    max: ~10
-                    decimals: 0
-                    opposite: true
-                    apex_config:
-                      tickAmount: 10
                 all_series_config:
                   show:
                     legend_value: false
                     extremas: true
+                yaxis:
+                  - id: Use
+                    min: 0
+                    max: ~30
+                    decimals: 0
+                    opposite: true
+                    apex_config:
+                      tickAmount: 5
                 series:
                   - entity: sensor.system_monitor_utilisation_du_processeur
                     name: Instantané
                     yaxis_id: Use
                     type: area
                     curve: stepline
-                    stroke_width: 1.5
-                    opacity: 0.4
-                    color: rgb(68,115,158)
+                    stroke_width: 1
+                    opacity: 0.3
                     fill_raw: last
-                    group_by:
-                      func: last
-                      duration: 1m
+                    color: rgb(68,115,158)
                     color_threshold:
                       - value: 0
                         color: rgb(68,115,158)
                       - value: 65
                         color: '#FFC107'
-                      - value: 75
+                      - value: 85
                         color: '#F44336'
                   - entity: sensor.system_monitor_utilisation_du_processeur
-                    name: Moy.(24hrs)
+                    name: Moy.(24h)
+                    yaxis_id: Use
                     type: line
                     curve: smooth
                     stroke_dash: 5
-                    color: red
                     stroke_width: 2.5
-                    fill_raw: last
+                    color: red
                     group_by:
                       func: avg
-                      duration: 2h
+                      duration: 1h
                   - entity: sensor.system_monitor_utilisation_du_processeur
                     name: Moy.(730hrs)
                     color: '#FF5252'
@@ -20343,12 +20520,16 @@ views:
                   chart:
                     height: 320px
                     toolbar:
-                      show: false
+                      show: true
                   legend:
                     show: false
                   tooltip:
                     shared: true
                     intersect: false
+                all_series_config:
+                  show:
+                    legend_value: false
+                    extremas: true
                 yaxis:
                   - id: Temp
                     min: auto
@@ -20362,7 +20543,7 @@ views:
                     name: Instantané
                     yaxis_id: Temp
                     type: area
-                    stroke_width: 1.5
+                    stroke_width: 1
                     opacity: 0.3
                     fill_raw: last
                     color_threshold:
@@ -20397,19 +20578,12 @@ views:
               - type: custom:bubble-card
                 card_type: pop-up
                 hash: '#conso'
-                show_header: true
-                force_icon: false
-                show_state: false
-                show_last_changed: false
-                show_attribute: false
-                button_type: name
                 name: Consommation Mini-PC
                 icon: mdi:lightning-bolt-circle
+                button_type: name
+                show_header: true
                 show_icon: true
                 show_name: true
-                card_layout: normal
-                hide_backdrop: false
-                close_on_click: false
                 bg_opacity: '0'
               - type: custom:streamline-card
                 template: conso_temps_reel_appareil
@@ -20420,12 +20594,6 @@ views:
                   current_entity: sensor.prise_mini_pc_ikea_current
                   avg_daily_entity: sensor.mini_pc_avg_watts_daily
                   conso_daily_kwh_entity: sensor.mini_pc_daily
-                card_mod:
-                  style: >
-                    ha-card { background: none !important; border: none
-                    !important;
-
-                    box-shadow: none !important; }
               - type: custom:streamline-card
                 template: conso_mensuelle_appareil
                 variables:
@@ -20434,12 +20602,6 @@ views:
                   color: gainsboro
                   avg_monthly_entity: sensor.mini_pc_avg_watts_monthly
                   conso_monthly_kwh_entity: sensor.mini_pc_monthly
-                card_mod:
-                  style: >
-                    ha-card { background: none !important; border: none
-                    !important;
-
-                    box-shadow: none !important; }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
