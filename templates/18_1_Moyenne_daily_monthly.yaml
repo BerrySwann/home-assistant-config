@@ -1,9 +1,9 @@
 #============================================================================
-# PUISSANCE DE CROISIÈRE (Watts) - MOYENNE RÉELLE JOUR & MOIS
+# ALIAS : PUISSANCE DE CROISIÈRE (W) - MOYENNES RÉELLES JOUR & MOIS
 #============================================================================
 
 - sensor:
-    # --- ECOJOKO ---
+    # --- SECTION : ECOJOKO ---
     - name: "Ecojoko Avg Watts Daily"
       unique_id: ecojoko_avg_watts_daily
       unit_of_measurement: "W"
@@ -22,7 +22,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- MINI PC ---
+    # --- SECTION : MINI PC ---
     - name: "Mini Pc Avg Watts Daily"
       unique_id: mini_pc_avg_watts_daily
       unit_of_measurement: "W"
@@ -41,7 +41,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- BOX INTERNET ---
+    # --- SECTION : BOX INTERNET ---
     - name: "Box Internet Avg Watts Daily"
       unique_id: box_internet_avg_watts_daily
       unit_of_measurement: "W"
@@ -60,7 +60,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- HORLOGE ---
+    # --- SECTION : HORLOGE ---
     - name: "Horloge Avg Watts Daily"
       unique_id: horloge_avg_watts_daily
       unit_of_measurement: "W"
@@ -79,7 +79,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- PC GÉRALDINE ---
+    # --- SECTION : PC GEGE ---
     - name: "Pc Gege Avg Watts Daily"
       unique_id: pc_gege_avg_watts_daily
       unit_of_measurement: "W"
@@ -98,7 +98,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- CHARGEURS SALON ---
+    # --- SECTION : CHARGEURS SALON ---
     - name: "Chargeurs Salon Avg Watts Daily"
       unique_id: chargeurs_salon_avg_watts_daily
       unit_of_measurement: "W"
@@ -117,7 +117,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- FOUR MICRO-ONDES ---
+    # --- SECTION : FOUR MICRO-ONDES ---
     - name: "Four Mo Avg Watts Daily"
       unique_id: four_mo_avg_watts_daily
       unit_of_measurement: "W"
@@ -136,7 +136,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- LAVE-LINGE ---
+    # --- SECTION : LAVE-LINGE ---
     - name: "Lave Linge Avg Watts Daily"
       unique_id: lave_linge_avg_watts_daily
       unit_of_measurement: "W"
@@ -155,7 +155,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- LAVE-VAISSELLE ---
+    # --- SECTION : LAVE-VAISSELLE ---
     - name: "Lave Vaisselle Avg Watts Daily"
       unique_id: lave_vaisselle_avg_watts_daily
       unit_of_measurement: "W"
@@ -174,7 +174,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- AIRFRYER ---
+    # --- SECTION : AIRFRYER ---
     - name: "Airfryer Avg Watts Daily"
       unique_id: airfryer_avg_watts_daily
       unit_of_measurement: "W"
@@ -193,7 +193,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- PLAQUES & FOUR ---
+    # --- SECTION : PLAQUES & FOUR ---
     - name: "Plaques Cuisson Avg Watts Daily"
       unique_id: plaques_cuisson_avg_watts_daily
       unit_of_measurement: "W"
@@ -212,7 +212,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- FRIGO ---
+    # --- SECTION : FRIGO ---
     - name: "Frigo Avg Watts Daily"
       unique_id: frigo_avg_watts_daily
       unit_of_measurement: "W"
@@ -231,7 +231,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- CONGÉLATEUR ---
+    # --- SECTION : CONGÉLATEUR ---
     - name: "Congelateur Avg Watts Daily"
       unique_id: congelateur_avg_watts_daily
       unit_of_measurement: "W"
@@ -250,7 +250,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- PC BUREAU ---
+    # --- SECTION : PC BUREAU ---
     - name: "Pc Bureau Avg Watts Daily"
       unique_id: pc_bureau_avg_watts_daily
       unit_of_measurement: "W"
@@ -269,7 +269,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- FER À REPASSER ---
+    # --- SECTION : FER À REPASSER ---
     - name: "Fer Repasser Avg Watts Daily"
       unique_id: fer_repasser_avg_watts_daily
       unit_of_measurement: "W"
@@ -288,7 +288,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- TÊTES DE LIT ---
+    # --- SECTION : TÊTES DE LIT ---
     - name: "Tetes Lit Avg Watts Daily"
       unique_id: tetes_lit_avg_watts_daily
       unit_of_measurement: "W"
@@ -307,7 +307,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- TV CHAMBRE ---
+    # --- SECTION : TV CHAMBRE ---
     - name: "Tv Chambre Avg Watts Daily"
       unique_id: tv_chambre_avg_watts_daily
       unit_of_measurement: "W"
@@ -326,7 +326,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- ALL STANDBY ---
+    # --- SECTION : VEILLES ---
     - name: "Veilles Avg Watts Daily"
       unique_id: veilles_avg_watts_daily
       unit_of_measurement: "W"
@@ -345,7 +345,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- CLIM SALON ---
+    # --- SECTION : CLIMATISATION SALON ---
     - name: "Clim Salon Avg Watts Daily"
       unique_id: clim_salon_avg_watts_daily
       unit_of_measurement: "W"
@@ -364,7 +364,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- RADIATEUR CUISINE ---
+    # --- SECTION : RADIATEUR CUISINE ---
     - name: "Radiateur Cuisine Avg Watts Daily"
       unique_id: radiateur_cuisine_avg_watts_daily
       unit_of_measurement: "W"
@@ -383,7 +383,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- CLIM BUREAU ---
+    # --- SECTION : CLIMATISATION BUREAU ---
     - name: "Clim Bureau Avg Watts Daily"
       unique_id: clim_bureau_avg_watts_daily
       unit_of_measurement: "W"
@@ -402,7 +402,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- SOUFFLANT SDB ---
+    # --- SECTION : SOUFFLANT SDB ---
     - name: "Soufflant Sdb Avg Watts Daily"
       unique_id: soufflant_sdb_avg_watts_daily
       unit_of_measurement: "W"
@@ -421,7 +421,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- SECHE-SERVIETTE ---
+    # --- SECTION : SECHE-SERVIETTE ---
     - name: "Seche Serv Avg Watts Daily"
       unique_id: seche_serv_avg_watts_daily
       unit_of_measurement: "W"
@@ -440,7 +440,7 @@
         {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
         {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
-    # --- CLIM CHAMBRE ---
+    # --- SECTION : CLIMATISATION CHAMBRE ---
     - name: "Clim Chambre Avg Watts Daily"
       unique_id: clim_chambre_avg_watts_daily
       unit_of_measurement: "W"
