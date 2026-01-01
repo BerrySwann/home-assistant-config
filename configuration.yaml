@@ -132,24 +132,24 @@ recorder:
     entity_globs:
       # --- PRÉSENCE & RÉSEAU (LE BRUIT GPS / SIGNAL) ---
       - sensor.*_estimated_distance  # Distance estimée (App Mobile)
-      - sensor.*_force_du_signal     # Signal WiFi/Zigbee (Français)
-      - sensor.*_lqi                 # Qualité lien Zigbee
-      - sensor.*_rssi                # Signal Wi-Fi (Anglais)
-      - sensor.*_linkquality         # Qualité de lien
-      - sensor.*_last_seen           # Horodatage de dernière vue
-      - sensor.*_device_tracker      # Capteurs de suivi dérivés
-      - binary_sensor.*_connectivity # Tests de connexion
+      - sensor.*force_du_signal     # Signal WiFi/Zigbee (Français)
+      - sensor.*lqi                 # Qualité lien Zigbee
+      - sensor.*rssi                # Signal Wi-Fi (Anglais)
+      - sensor.*linkquality         # Qualité de lien
+      - sensor.*last_seen           # Horodatage de dernière vue
+      - sensor.*device_tracker      # Capteurs de suivi dérivés
+      - binary_sensor.*connectivity # Tests de connexion
 
       # --- ÉLECTRICITÉ & BATTERIES ---
-      - sensor.*_battery             # Niveaux de piles (Sonoff, IKEA, etc.)
-      - sensor.*_power               # Puissance Watts (très bruyant/instable)
-      - sensor.*_voltage             # Tension (V)
-      - sensor.*_current             # Intensité (A)
+      - sensor.*battery             # Niveaux de piles (Sonoff, IKEA, etc.)
+      - sensor.*power               # Puissance Watts (très bruyant/instable)
+      - sensor.*voltage             # Tension (V)
+      - sensor.*current             # Intensité (A)
       
       # --- CALCULS & STATS (VOS 8 SECTIONS) ---
-      - sensor.*_avg_watts_daily     # Vos moyennes journalières
-      - sensor.eclairage_*_um        # Vos Utility Meters sources (Calculs internes)
-      - binary_sensor.contact_fenetre_* # État des ouvertures Sonoff
+      - sensor.*avg_watts_daily     # Vos moyennes journalières
+      - sensor.eclairage*um         # Vos Utility Meters sources (Calculs internes)
+      - binary_sensor.contact_fenetre* # État des ouvertures Sonoff
 
       # --- HARDWARE & SYSTÈME (VOTRE PC) ---
       - sensor.127_0_0_1* # Monitoring Localhost
@@ -164,7 +164,7 @@ recorder:
       - sensor.generic_memory*
       - sensor.ethernet*
       - sensor.amd_ryzen_9_5900x*
-      - sensor.*_uptime              # Temps de fonctionnement (change sans cesse)
+      - sensor.*uptime              # Temps de fonctionnement (change sans cesse)
 
     entities:
       - sensor.lights                         # Compteur global
