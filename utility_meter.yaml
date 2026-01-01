@@ -781,7 +781,7 @@ prise_congelateur_cuisine_nous_monthly:
   cycle: monthly
 
 # ==========================================
-# 5. BUREAU
+# 4. BUREAU
 # ==========================================
 # --- bureau_pc ---
 prise_bureau_pc_ikea_daily:
@@ -800,7 +800,11 @@ prise_bureau_fer_a_repasser_nous_monthly:
   cycle: monthly
 
 # ==========================================
-# 6. SALLE DE BAIN
+# 5. SALLE DE BAIN
+# ==========================================
+
+# ==========================================
+# 6. CHAMBRE
 # ==========================================
 # --- tete_de_lit ---
 prise_tete_de_lit_chambre_daily:
