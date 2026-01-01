@@ -2117,7 +2117,7 @@
   actions:
   - action: recorder.purge
     data:
-      keep_days: 15
+      keep_days: 7
       repack: true
   mode: single
 - id: '1766779772267'
