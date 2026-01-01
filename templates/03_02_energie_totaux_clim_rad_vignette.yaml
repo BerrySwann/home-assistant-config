@@ -13,8 +13,8 @@
 - sensor:
   - name: "Clim. Rad. Total Avg Watts Daily"
     unique_id: clim_rad_total_avg_watts_daily
-    device_class: energy
-    unit_of_measurement: "kWh"
+    device_class: power
+    unit_of_measurement: "W"
     icon: mdi:flash-outline
     state: >
       {{ (states('sensor.clim_salon_avg_watts_daily') | float(0) +
