@@ -103,14 +103,20 @@ notify:
     name: Telegram
     chat_id: !secret id_telegram_HA-Bot
 
+# ==========================================================================
 # BASE DE DONNEE MariaDB
+# ==========================================================================
 recorder:
   db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
-  purge_keep_days: 32
+  purge_keep_days: 15
   auto_purge: true
   auto_repack: true
   exclude:
     domains:
+      - remote
+      - update
+      - weather
+      - scene
       - update
       - persistent_notification
       - sun
@@ -120,6 +126,10 @@ recorder:
       - call_service
 
     entity_globs:
+      - binary_sensor.contact_fenetre_*
+      - sensor.*_avg_watts_daily
+      - sensor.eclairage_*_um
+      - sensor.sun*
       - sensor.127_0_0_1*
       - sensor.*linkquality
       - sensor.*last_seen
@@ -133,6 +143,11 @@ recorder:
       - sensor.generic_memory*
       - sensor.ethernet*
       - sensor.amd_ryzen_9_5900x*
+
+    entities:
+      - sensor.lights                       
+      - sensor.direction_de_l_eclair_label  
+      - sensor.blitzortung_lightning_azimuth
 
 sql:
   - name: Taille DB Home Assistant
