@@ -108,46 +108,69 @@ notify:
 # ==========================================================================
 recorder:
   db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
-  purge_keep_days: 15
+  purge_keep_days: 7
   auto_purge: true
   auto_repack: true
   exclude:
     domains:
-      - remote
-      - update
-      - weather
-      - scene
-      - update
-      - persistent_notification
-      - sun
-      - input_text
+      - remote                  # Vos 3 Broadlink RM4 Mini
+      - update                  # Mises à jour (Spook, etc.)
+      - weather                 # Météo (très lourd en attributs)
+      - scene                   # Scènes Hue
+      - persistent_notification # Notifications système
+      - sun                     # Domaine soleil
+      - input_text              # Zones de texte
+      - device_tracker          # Suivi GPS/Réseau (le plus gros pollueur)
+      - automation              # Historique des déclenchements (on garde le Logbook)
+      - button                  # Appuis sur boutons virtuels
+      - group                   # États des groupes
+      - zone                    # Définition des zones
 
     event_types:
-      - call_service
+      - call_service            # Évite de noter chaque appel de service
 
     entity_globs:
-      - binary_sensor.contact_fenetre_*
-      - sensor.*_avg_watts_daily
-      - sensor.eclairage_*_um
-      - sensor.sun*
-      - sensor.127_0_0_1*
-      - sensor.*linkquality
-      - sensor.*last_seen
-      - sensor.date*
-      - sensor.time*
-      - sensor.toshiba*
-      - sensor.sandisk*
+      # --- PRÉSENCE & RÉSEAU (LE BRUIT GPS / SIGNAL) ---
+      - sensor.*_estimated_distance  # Distance estimée (App Mobile)
+      - sensor.*_force_du_signal     # Signal WiFi/Zigbee (Français)
+      - sensor.*_lqi                 # Qualité lien Zigbee
+      - sensor.*_rssi                # Signal Wi-Fi (Anglais)
+      - sensor.*_linkquality         # Qualité de lien
+      - sensor.*_last_seen           # Horodatage de dernière vue
+      - sensor.*_device_tracker      # Capteurs de suivi dérivés
+      - binary_sensor.*_connectivity # Tests de connexion
+
+      # --- ÉLECTRICITÉ & BATTERIES ---
+      - sensor.*_battery             # Niveaux de piles (Sonoff, IKEA, etc.)
+      - sensor.*_power               # Puissance Watts (très bruyant/instable)
+      - sensor.*_voltage             # Tension (V)
+      - sensor.*_current             # Intensité (A)
+      
+      # --- CALCULS & STATS (VOS 8 SECTIONS) ---
+      - sensor.*_avg_watts_daily     # Vos moyennes journalières
+      - sensor.eclairage_*_um        # Vos Utility Meters sources (Calculs internes)
+      - binary_sensor.contact_fenetre_* # État des ouvertures Sonoff
+
+      # --- HARDWARE & SYSTÈME (VOTRE PC) ---
+      - sensor.127_0_0_1* # Monitoring Localhost
+      - sensor.sun* # Position soleil
+      - sensor.date* # Date (change inutilement en base)
+      - sensor.time* # Heure (écrit toutes les minutes !)
+      - sensor.toshiba* # Disque Dur
+      - sensor.sandisk* # SSD
       - sensor.samsung_ssd_970_evo_plus*
       - sensor.nvidia_nvidia_geforce_rtx_3060*
       - sensor.gigabyte_b450_aorus_elite*
       - sensor.generic_memory*
       - sensor.ethernet*
       - sensor.amd_ryzen_9_5900x*
+      - sensor.*_uptime              # Temps de fonctionnement (change sans cesse)
 
     entities:
-      - sensor.lights                       
-      - sensor.direction_de_l_eclair_label  
-      - sensor.blitzortung_lightning_azimuth
+      - sensor.lights                         # Compteur global
+      - sensor.direction_de_l_eclair_label    # Blitzortung
+      - sensor.blitzortung_lightning_azimuth  # Blitzortung
+      - sun.sun                               # Entité racine soleil
 
 sql:
   - name: Taille DB Home Assistant
