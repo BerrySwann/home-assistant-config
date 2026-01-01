@@ -1,5 +1,5 @@
 - id: '1766771160614'
-  alias: (A - 0) Automatisation CLIM (07h30 <-> 21h00)
+  alias: (A - 0) 2026-01-01 Automatisation CLIM (07h30 <-> 21h00)
   description: '[VERSION FINALE] Pilotage des clims basé sur la présence et la saison.  Indentation
     corrigée et alias harmonisés.'
   triggers:
@@ -58,10 +58,38 @@
     after: 07:30:00
     before: '21:00:00'
   actions:
+  - alias: 'SÉCURITÉ : ATTENTE INITIALISATION DE TOUS LES CAPTEURS'
+    wait_template: "{{ \n  states('sensor.mode_ete_hiver') not in ['unknown', 'unavailable']
+      and\n  states('sensor.groupe_clim') not in ['unknown', 'unavailable'] and\n
+      \ states('sensor.temperature_cible') not in ['unknown', 'unavailable'] and\n
+      \ states('sensor.temperature_eco_hiver_corrige') not in ['unknown', 'unavailable']
+      and\n  states('sensor.temperature_corrige_mamour_hivers') not in ['unknown',
+      'unavailable'] and\n  states('sensor.temperature_corrige_eric_hivers') not in
+      ['unknown', 'unavailable']\n}}\n"
+    timeout: 00:00:30
+    continue_on_timeout: true
+  - alias: 'LOGIQUE : VÉRIFICATION DU TIMEOUT'
+    choose:
+    - alias: 'CAS : ÉCHEC DE L''ATTENTE (TIMEOUT)'
+      conditions:
+      - alias: 'VÉRIFICATION : LE DÉLAI EST DÉPASSÉ'
+        condition: template
+        value_template: '{{ not wait.completed }}'
+      sequence:
+      - alias: 'NOTIF : ALERTE CAPTEURS INDISPONIBLES'
+        action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: 'SYSTÈME CLIM : ERREUR ⚠️'
+          message: 'L''automatisation a été stoppée.  Capteurs indisponibles après
+            30s de démarrage. Mode: {{ states(''sensor.mode_ete_hiver'') }} Groupe:
+            {{ states(''sensor.groupe_clim'') }}
+
+            '
+      - stop: 'Fin de l''exécution : Capteurs non prêts.'
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
-      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
-        ''cool'', ''fan_only''] %} {{ m }} {% else %} off {% endif %}
+      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %} {% if m in [''heat'',
+        ''cool'', ''fan_only''] %} {{ m | trim }} {% else %} off {% endif %}
 
         '
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
@@ -280,10 +308,38 @@
     after: '21:00:00'
     before: 07:30:00
   actions:
+  - alias: 'SÉCURITÉ : ATTENTE INITIALISATION DE TOUS LES CAPTEURS'
+    wait_template: "{{ \n  states('sensor.mode_ete_hiver') not in ['unknown', 'unavailable']
+      and\n  states('sensor.groupe_clim') not in ['unknown', 'unavailable'] and\n
+      \ states('sensor.temperature_cible') not in ['unknown', 'unavailable'] and\n
+      \ states('sensor.temperature_eco_hiver_corrige') not in ['unknown', 'unavailable']
+      and\n  states('sensor.temperature_corrige_mamour_hivers') not in ['unknown',
+      'unavailable'] and\n  states('sensor.temperature_corrige_eric_hivers') not in
+      ['unknown', 'unavailable']\n}}\n"
+    timeout: 00:00:30
+    continue_on_timeout: true
+  - alias: 'LOGIQUE : VÉRIFICATION DU TIMEOUT'
+    choose:
+    - alias: 'CAS : ÉCHEC DE L''ATTENTE (TIMEOUT)'
+      conditions:
+      - alias: 'VÉRIFICATION : LE DÉLAI EST DÉPASSÉ'
+        condition: template
+        value_template: '{{ not wait.completed }}'
+      sequence:
+      - alias: 'NOTIF : ALERTE CAPTEURS INDISPONIBLES'
+        action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: 'SYSTÈME CLIM : ERREUR ⚠️'
+          message: 'L''automatisation a été stoppée.  Capteurs indisponibles après
+            30s de démarrage. Mode: {{ states(''sensor.mode_ete_hiver'') }} Groupe:
+            {{ states(''sensor.groupe_clim'') }}
+
+            '
+      - stop: 'Fin de l''exécution : Capteurs non prêts.'
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
-      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
-        ''cool'', ''fan_only''] %} {{ m }} {% else %} off {% endif %}
+      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %} {% if m in [''heat'',
+        ''cool'', ''fan_only''] %} {{ m | trim }} {% else %} off {% endif %}
 
         '
       groupe_presence: '{{ states(''sensor.groupe_clim'') }}'
