@@ -111,62 +111,30 @@ recorder:
   purge_keep_days: 7
   auto_purge: true
   auto_repack: true
-  include:
-    # --- ON AUTORISE L'HISTORIQUE POUR LES GRAPHIQUES DU DASHBOARD ---
-    entity_globs:
-      # PÔLE 1 : PRISES (Consommations majeures)
-      - sensor.entree_box_internet_power # [L8] modif
-      - sensor.salon_pc_s_gege_power     # [L9] modif
-      - sensor.cuisine_*_power           # [L10] modif : (Lave-linge, Vaisselle, Four, etc.)
-      - sensor.bureau_bureau_pc_power    # [L11] modif
-      - sensor.chambre_tv_power          # [L12] modif
-      - sensor.standby_*_power           # [L13] modif : Pour puissance de croisière
-      
-      # PÔLE 2 : CHAUFFAGE / CLIM
-      - sensor.clim_*_power              # [L16] modif : Salon, Bureau, Chambre
-      - sensor.radiateur_cuisine_power   # [L17] modif
-      - sensor.sdb_soufflant_power       # [L18] modif
-      - sensor.sdb_seche_serv_power      # [L19] modif
-      
-      # STATISTIQUES ÉNERGIE (Séries 11, 17, 18)
-      - sensor.*_daily                   # [L22] modif : Consos journalières
-      - sensor.*_avg_watts_daily         # [L23] modif : Moyennes de croisière
-      - sensor.linky_* # [L24] modif : Données Ecojoko/Linky
-
   exclude:
-    # --- ON BLOQUE LE RESTE POUR PROTÉGER LE SSD ---
     domains:
-      - remote                  # Broadlink
-      - update                  # Updates système
-      - weather                 # Météo (trop d'attributs)
-      - scene                   # Scènes Hue
-      - persistent_notification # Notifications
-      - sun                     # Soleil
-      - device_tracker          # GPS (Gros pollueur)
-      - automation              # On garde uniquement le Logbook
-      - button                  # Appuis boutons
-      - group                   # États de groupes
+      - update
+      - persistent_notification
+      - sun
+      - input_text
+
+    event_types:
+      - call_service
 
     entity_globs:
-      # SIGNAL & RÉSEAU (Très bruyant)
-      - sensor.*_lqi
-      - sensor.*_rssi
+      - sensor.127_0_0_1*
       - sensor.*linkquality
       - sensor.*last_seen
-      
-      # BATTERIES & ÉLECTRIQUE SECONDAIRE
-      - sensor.*_battery        # Pas besoin de courbe pour les piles
-      - sensor.*_voltage        # Tension 230V inutile en graphique
-      
-      # ON EXCLUT LE RESTE DU POWER/CURRENT NON LISTÉ DANS LE INCLUDE
-      - sensor.*_power          # [L51] modif : Bloque les petites prises non critiques
-      - sensor.*_current        # [L52] modif : Bloque l'intensité (sauf si besoin spécifique)
-
-    entities:
-      - sun.sun
-      - sensor.date
-      - sensor.time
-      - sensor.uptime
+      - sensor.date*
+      - sensor.time*
+      - sensor.toshiba*
+      - sensor.sandisk*
+      - sensor.samsung_ssd_970_evo_plus*
+      - sensor.nvidia_nvidia_geforce_rtx_3060*
+      - sensor.gigabyte_b450_aorus_elite*
+      - sensor.generic_memory*
+      - sensor.ethernet*
+      - sensor.amd_ryzen_9_5900x*
 
 #openai_conversation:
 #  api_key: !secret chat_gpt_api_key
