@@ -111,70 +111,62 @@ recorder:
   purge_keep_days: 7
   auto_purge: true
   auto_repack: true
-  exclude:
-    domains:
-      - remote                  # Vos 3 Broadlink RM4 Mini
-      - update                  # Mises à jour (Spook, etc.)
-      - weather                 # Météo (très lourd en attributs)
-      - scene                   # Scènes Hue
-      - persistent_notification # Notifications système
-      - sun                     # Domaine soleil
-      - input_text              # Zones de texte
-      - device_tracker          # Suivi GPS/Réseau (le plus gros pollueur)
-      - automation              # Historique des déclenchements (on garde le Logbook)
-      - button                  # Appuis sur boutons virtuels
-      - group                   # États des groupes
-      - zone                    # Définition des zones
+  include:
+    # --- ON AUTORISE L'HISTORIQUE POUR LES GRAPHIQUES DU DASHBOARD ---
+    entity_globs:
+      # PÔLE 1 : PRISES (Consommations majeures)
+      - sensor.entree_box_internet_power # [L8] modif
+      - sensor.salon_pc_s_gege_power     # [L9] modif
+      - sensor.cuisine_*_power           # [L10] modif : (Lave-linge, Vaisselle, Four, etc.)
+      - sensor.bureau_bureau_pc_power    # [L11] modif
+      - sensor.chambre_tv_power          # [L12] modif
+      - sensor.standby_*_power           # [L13] modif : Pour puissance de croisière
+      
+      # PÔLE 2 : CHAUFFAGE / CLIM
+      - sensor.clim_*_power              # [L16] modif : Salon, Bureau, Chambre
+      - sensor.radiateur_cuisine_power   # [L17] modif
+      - sensor.sdb_soufflant_power       # [L18] modif
+      - sensor.sdb_seche_serv_power      # [L19] modif
+      
+      # STATISTIQUES ÉNERGIE (Séries 11, 17, 18)
+      - sensor.*_daily                   # [L22] modif : Consos journalières
+      - sensor.*_avg_watts_daily         # [L23] modif : Moyennes de croisière
+      - sensor.linky_* # [L24] modif : Données Ecojoko/Linky
 
-    event_types:
-      - call_service            # Évite de noter chaque appel de service
+  exclude:
+    # --- ON BLOQUE LE RESTE POUR PROTÉGER LE SSD ---
+    domains:
+      - remote                  # Broadlink
+      - update                  # Updates système
+      - weather                 # Météo (trop d'attributs)
+      - scene                   # Scènes Hue
+      - persistent_notification # Notifications
+      - sun                     # Soleil
+      - device_tracker          # GPS (Gros pollueur)
+      - automation              # On garde uniquement le Logbook
+      - button                  # Appuis boutons
+      - group                   # États de groupes
 
     entity_globs:
-      # --- PRÉSENCE & RÉSEAU (LE BRUIT GPS / SIGNAL) ---
-      - sensor.*_estimated_distance  # Distance estimée (App Mobile)
-      - sensor.*force_du_signal     # Signal WiFi/Zigbee (Français)
-      - sensor.*lqi                 # Qualité lien Zigbee
-      - sensor.*rssi                # Signal Wi-Fi (Anglais)
-      - sensor.*linkquality         # Qualité de lien
-      - sensor.*last_seen           # Horodatage de dernière vue
-      - sensor.*device_tracker      # Capteurs de suivi dérivés
-      - binary_sensor.*connectivity # Tests de connexion
-
-      # --- HARDWARE & SYSTÈME (VOTRE PC) ---
-      - sensor.127_0_0_1* # Monitoring Localhost
-      - sensor.sun* # Position soleil
-      - sensor.date* # Date (change inutilement en base)
-      - sensor.time* # Heure (écrit toutes les minutes !)
-      - sensor.toshiba* # Disque Dur
-      - sensor.sandisk* # SSD
-      - sensor.samsung_ssd_970_evo_plus*
-      - sensor.nvidia_nvidia_geforce_rtx_3060*
-      - sensor.gigabyte_b450_aorus_elite*
-      - sensor.generic_memory*
-      - sensor.ethernet*
-      - sensor.amd_ryzen_9_5900x*
-      - sensor.*uptime              # Temps de fonctionnement (change sans cesse)
+      # SIGNAL & RÉSEAU (Très bruyant)
+      - sensor.*_lqi
+      - sensor.*_rssi
+      - sensor.*linkquality
+      - sensor.*last_seen
+      
+      # BATTERIES & ÉLECTRIQUE SECONDAIRE
+      - sensor.*_battery        # Pas besoin de courbe pour les piles
+      - sensor.*_voltage        # Tension 230V inutile en graphique
+      
+      # ON EXCLUT LE RESTE DU POWER/CURRENT NON LISTÉ DANS LE INCLUDE
+      - sensor.*_power          # [L51] modif : Bloque les petites prises non critiques
+      - sensor.*_current        # [L52] modif : Bloque l'intensité (sauf si besoin spécifique)
 
     entities:
-      - sensor.lights                         # Compteur global
-      - sensor.direction_de_l_eclair_label    # Blitzortung
-      - sensor.blitzortung_lightning_azimuth  # Blitzortung
-      - sun.sun                               # Entité racine soleil
-
-sql:
-  - name: Taille DB Home Assistant
-    # Crée sensor.taille_db_home_assistant"
-    db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
-    # core-mariadb : URL de la DB de l’add-on MariaDB"
-    query: >
-      SELECT Round(Sum(data_length + index_length) / POWER(1024,2), 1) AS value
-      FROM information_schema.tables
-      WHERE table_schema = "homeassistant";
-    # Requête 'Database size' (doc officielle MariaDB/MySQL)"
-    column: value
-    unit_of_measurement: MiB
-    device_class: data_size
-    unique_id: taille_db_home_assistant
+      - sun.sun
+      - sensor.date
+      - sensor.time
+      - sensor.uptime
 
 #openai_conversation:
 #  api_key: !secret chat_gpt_api_key
