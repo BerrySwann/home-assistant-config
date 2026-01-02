@@ -2333,13 +2333,13 @@
   mode: single
 - id: '1767373340706'
   alias: (A - 0) 2026-01-02 AUTOMATISATION CLIM JOUR (07H30 <-> 21H00)
-  description: Pilotage clims jour avec boucle de relance automatique des capteurs
+  description: Pilotage clims jour avec boucle de relance et notification ciblée fenêtres
   triggers:
   - alias: 'SYSTEM : REDÉMARRAGE HOME ASSISTANT'
     trigger: homeassistant
     event: start
     id: ha_restart
-  - alias: 'HORAIRE : DÉMARRAGE 7H30'
+  - alias: 'HORAIRE : DÉMARRAGE 07H30'
     trigger: time
     at: 07:30:00
     id: force_run
@@ -2425,9 +2425,9 @@
       - alias: 'NOTIF : ALERTE ATTENTE CAPTEURS'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: 'CLIM : ATTENTE CAPTEURS ⏳'
-          message: Essai n°{{ repeat.index }}... Certains capteurs sont indisponibles.
-            Pause 30s.
+          title: '[AJ] ATTENTE CAPTEURS'
+          message: Essai n°{{ repeat.index }}... Les capteurs de jour ne sont pas
+            prêts. Pause 30s.
       - alias: 'PAUSE : AVANT NOUVEL ESSAI'
         delay: 00:00:30
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
@@ -2483,24 +2483,23 @@
           - climate.clim_chambre_rm4_mini
         data:
           hvac_mode: 'off'
-      - alias: 'NOTIF : ALERTE DÉTAILLÉE FENÊTRES OUVERTES'
+      - alias: 'NOTIF : ALERTE CIBLÉE SUR DÉCLENCHEUR'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: CLIM COUPÉE ⚠️
-          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set
-            ouverts = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}
-            {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
-            \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
-            | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
-            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(SONOFF\\).*',
-            replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
-            | lower %}\n    {% set article = 'du' if piece_lower in ['bureau', 'salon']
-            else 'de la' %}\n    {% set messages.list = messages.list + [\"La fenêtre
-            \" ~ article ~ \" \" ~ piece_lower | upper ~ \" est ouverte\"] %}\n  {%
-            endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n  Aucune fenêtre
-            n'est actuellement ouverte.\n{% endif %}\n"
+          title: '[AJ] CLIM JOUR COUPÉE'
+          message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_sonoff_contact'
+            and is_state('binary_sensor.contact_fenetre_salon_sonoff_contact', 'on')
+            %}\n  La fenêtre du Salon a été ouverte.\n{% elif trigger.entity_id ==
+            'binary_sensor.contact_fenetre_cuisine_sonoff_contact' and is_state('binary_sensor.contact_fenetre_cuisine_sonoff_contact',
+            'on') %}\n  La fenêtre de la Cuisine a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_bureau_sonoff_contact' and is_state('binary_sensor.contact_fenetre_bureau_sonoff_contact',
+            'on') %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_chambre_sonoff_contact' and is_state('binary_sensor.contact_fenetre_chambre_sonoff_contact',
+            'on') %}\n  La fenêtre de la Chambre a été ouverte.\n{% else %}\n  Une
+            fenêtre est ouverte (Mise à jour globale).\n{% endif %}\n{% if states('sensor.nbre_de_fenetres_ouvertes')
+            | int == 4 %}\n  Toutes les fenêtres sont ouvertes.\n{% endif %}\n"
+      - alias: 'SÉCURITÉ : ARRÊT IMMÉDIAT POUR ÉVITER DOUBLON'
+        stop: Coupure fenêtre effectuée
     default:
     - alias: 'ACTION : ENVOI DES COMMANDES AUX PIÈCES EN PARALLÈLE'
       parallel:
@@ -2577,7 +2576,7 @@
   mode: queued
 - id: '1767373801871'
   alias: (B - 0) 2026-01-02 AUTOMATISATION CLIM NUIT (21H00 <-> 07H30)
-  description: Pilotage clims nuit avec boucle de relance automatique des capteurs
+  description: Pilotage clims nuit avec boucle de relance et notification ciblée fenêtres
   triggers:
   - alias: 'SYSTEM : REDÉMARRAGE HOME ASSISTANT'
     trigger: homeassistant
@@ -2646,9 +2645,11 @@
   - alias: 'SÉCURITÉ : BOUCLE D''ATTENTE DES CAPTEURS'
     repeat:
       until:
-      - condition: or
+      - alias: 'VÉRIFICATION : TOUS LES CAPTEURS SONT PRÊTS OU LIMITE ATTEINTE'
+        condition: or
         conditions:
-        - condition: template
+        - alias: 'ÉTAT : TOUS OK'
+          condition: template
           value_template: "{{ \n  states('sensor.mode_ete_hiver') not in ['unknown',
             'unavailable'] and\n  states('sensor.groupe_clim') not in ['unknown',
             'unavailable'] and\n  states('sensor.temperature_cible') not in ['unknown',
@@ -2656,18 +2657,22 @@
             in ['unknown', 'unavailable'] and\n  states('sensor.temperature_corrige_mamour_hivers')
             not in ['unknown', 'unavailable'] and\n  states('sensor.temperature_corrige_eric_hivers')
             not in ['unknown', 'unavailable']\n}}\n"
-        - condition: template
+        - alias: 'LIMITE : 10 TENTATIVES (5 MIN)'
+          condition: template
           value_template: '{{ repeat.index >= 10 }}'
       sequence:
-      - condition: template
+      - alias: 'CONDITION : NOTIF UNIQUEMENT SI ÉCHEC'
+        condition: template
         value_template: "{{ \n  states('sensor.mode_ete_hiver') in ['unknown', 'unavailable']
           or\n  states('sensor.groupe_clim') in ['unknown', 'unavailable']\n}}\n"
-      - action: notify.mobile_app_poco_x7_pro_eric
+      - alias: 'NOTIF : ALERTE ATTENTE CAPTEURS'
+        action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: 'CLIM NUIT : ATTENTE ⏳'
+          title: '[AJ] ATTENTE CAPTEURS'
           message: Essai n°{{ repeat.index }}... Les capteurs de nuit ne sont pas
-            prêts.
-      - delay: 00:00:30
+            prêts. Pause 30s.
+      - alias: 'PAUSE : AVANT NOUVEL ESSAI'
+        delay: 00:00:30
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
       mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
@@ -2702,10 +2707,12 @@
     choose:
     - alias: 'CAS URGENCE : FENÊTRE OUVERTE DÉTECTÉE'
       conditions:
-      - condition: template
+      - alias: 'VÉRIFICATION : ÉTAT DES CAPTEURS FENÊTRES'
+        condition: template
         value_template: '{{ fenetres_ouvertes }}'
       sequence:
-      - action: climate.set_hvac_mode
+      - alias: 'ACTION : ARRÊT FORCÉ DES UNITÉS CLIM'
+        action: climate.set_hvac_mode
         target:
           entity_id:
           - climate.clim_salon_rm4_mini
@@ -2713,24 +2720,23 @@
           - climate.clim_chambre_rm4_mini
         data:
           hvac_mode: 'off'
-      - alias: 'NOTIF : ALERTE DÉTAILLÉE FENÊTRES OUVERTES'
+      - alias: 'NOTIF : ALERTE CIBLÉE SUR DÉCLENCHEUR'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
           title: '[AN] CLIM NUIT COUPÉE'
-          message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-            \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set
-            ouverts = expand(*fenetres) | selectattr('state', 'eq', 'on') | list %}
-            {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
-            \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
-            | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
-            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(SONOFF\\).*',
-            replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
-            | lower %}\n    {% set article = 'du' if piece_lower in ['bureau', 'salon']
-            else 'de la' %}\n    {% set messages.list = messages.list + [\"La fenêtre
-            \" ~ article ~ \" \" ~ piece_lower | upper ~ \" est ouverte\"] %}\n  {%
-            endfor %}\n  {{ messages.list | join('\\n') }}\n{% else %}\n  Une fenêtre
-            est ouverte.\n{% endif %}\n"
+          message: "{% if trigger.entity_id == 'binary_sensor.contact_fenetre_salon_sonoff_contact'
+            and is_state('binary_sensor.contact_fenetre_salon_sonoff_contact', 'on')
+            %}\n  La fenêtre du Salon a été ouverte.\n{% elif trigger.entity_id ==
+            'binary_sensor.contact_fenetre_cuisine_sonoff_contact' and is_state('binary_sensor.contact_fenetre_cuisine_sonoff_contact',
+            'on') %}\n  La fenêtre de la Cuisine a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_bureau_sonoff_contact' and is_state('binary_sensor.contact_fenetre_bureau_sonoff_contact',
+            'on') %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
+            == 'binary_sensor.contact_fenetre_chambre_sonoff_contact' and is_state('binary_sensor.contact_fenetre_chambre_sonoff_contact',
+            'on') %}\n  La fenêtre de la Chambre a été ouverte.\n{% else %}\n  Une
+            fenêtre est ouverte (Mise à jour globale).\n{% endif %}\n{% if states('sensor.nbre_de_fenetres_ouvertes')
+            | int == 4 %}\n  Toutes les fenêtres sont ouvertes.\n{% endif %}\n"
+      - alias: 'SÉCURITÉ : ARRÊT IMMÉDIAT POUR ÉVITER DOUBLON'
+        stop: Coupure fenêtre effectuée
     default:
     - alias: 'ACTION : ENVOI PARALLÈLE DES COMMANDES NUIT'
       parallel:
@@ -2745,7 +2751,8 @@
             entity_id: input_boolean.clim_salon_arret_securise_en_cours
             state: 'off'
           sequence:
-          - action: climate.set_temperature
+          - alias: 'COMMANDE : RÉGLAGE SALON'
+            action: climate.set_temperature
             target:
               entity_id: climate.clim_salon_rm4_mini
             data:
@@ -2764,7 +2771,8 @@
             entity_id: input_boolean.clim_bureau_arret_securise_en_cours
             state: 'off'
           sequence:
-          - action: climate.set_temperature
+          - alias: 'COMMANDE : RÉGLAGE BUREAU'
+            action: climate.set_temperature
             target:
               entity_id: climate.clim_bureau_rm4_mini
             data:
@@ -2783,7 +2791,8 @@
             entity_id: input_boolean.clim_chambre_arret_securise_en_cours
             state: 'off'
           sequence:
-          - action: climate.set_temperature
+          - alias: 'COMMANDE : RÉGLAGE CHAMBRE'
+            action: climate.set_temperature
             target:
               entity_id: climate.clim_chambre_rm4_mini
             data:
