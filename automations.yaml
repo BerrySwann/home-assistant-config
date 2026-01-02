@@ -2332,7 +2332,7 @@
         '
   mode: single
 - id: '1767373340706'
-  alias: (A - 0) 2026-01-01 AUTOMATISATION CLIM JOUR (07H30 <-> 21H00)
+  alias: (A - 0) 2026-01-02 AUTOMATISATION CLIM JOUR (07H30 <-> 21H00)
   description: Pilotage clims jour avec boucle de relance automatique des capteurs
   triggers:
   - alias: 'SYSTEM : REDÉMARRAGE HOME ASSISTANT'
@@ -2494,7 +2494,7 @@
             {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
             \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
             | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
-            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
+            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(SONOFF\\).*',
             replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
             | lower %}\n    {% set article = 'du' if piece_lower in ['bureau', 'salon']
             else 'de la' %}\n    {% set messages.list = messages.list + [\"La fenêtre
@@ -2716,7 +2716,7 @@
       - alias: 'NOTIF : ALERTE DÉTAILLÉE FENÊTRES OUVERTES'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: CLIM NUIT COUPÉE ⚠️
+          title: '[AN] CLIM NUIT COUPÉE'
           message: "{% set fenetres = [\n  'binary_sensor.contact_fenetre_salon_sonoff_contact',\n
             \ 'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n  'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
             \ 'binary_sensor.contact_fenetre_chambre_sonoff_contact'\n] %} {% set
@@ -2724,7 +2724,7 @@
             {% set messages = namespace(list=[]) %} {% if ouverts | length > 0 %}\n
             \ {% for fenetre in ouverts %}\n    {% set nom_complet = fenetre.name
             | string %}\n    {% set piece_nettoye = nom_complet | regex_findall_index(find='fenetre
-            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(IKEA\\).*',
+            (.+)', index=0, ignorecase=True) | regex_replace(find=' \\(SONOFF\\).*',
             replace='', ignorecase=True) | trim %}\n    {% set piece_lower = piece_nettoye
             | lower %}\n    {% set article = 'du' if piece_lower in ['bureau', 'salon']
             else 'de la' %}\n    {% set messages.list = messages.list + [\"La fenêtre
