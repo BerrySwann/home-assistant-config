@@ -140,17 +140,6 @@ recorder:
       - sensor.*device_tracker      # Capteurs de suivi dérivés
       - binary_sensor.*connectivity # Tests de connexion
 
-      # --- ÉLECTRICITÉ & BATTERIES ---
-      - sensor.*battery             # Niveaux de piles (Sonoff, IKEA, etc.)
-      - sensor.*power               # Puissance Watts (très bruyant/instable)
-      - sensor.*voltage             # Tension (V)
-      - sensor.*current             # Intensité (A)
-      
-      # --- CALCULS & STATS (VOS 8 SECTIONS) ---
-      - sensor.*avg_watts_daily     # Vos moyennes journalières
-      - sensor.eclairage*um         # Vos Utility Meters sources (Calculs internes)
-      - binary_sensor.contact_fenetre* # État des ouvertures Sonoff
-
       # --- HARDWARE & SYSTÈME (VOTRE PC) ---
       - sensor.127_0_0_1* # Monitoring Localhost
       - sensor.sun* # Position soleil
