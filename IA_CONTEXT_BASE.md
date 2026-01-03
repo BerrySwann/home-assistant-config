@@ -1,51 +1,76 @@
-# 🏠 Home Assistant – Configuration de Berry Swann
+🧠 BASE DE CONTEXTE EXPERT HOME ASSISTANT (BerrySwann)
+Dernière mise à jour : 2026-01-03
 
-[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.x-blue?logo=home-assistant&logoColor=white)](https://www.home-assistant.io/)
-[![GitHub last commit](https://img.shields.io/github/last-commit/BerrySwann/home-assistant-config)](https://github.com/BerrySwann/home-assistant-config)
-[![Expert HA](https://img.shields.io/badge/Expert-HAOS_x86--64-success)](#)
-[![Powered by Gemini IA](https://img.shields.io/badge/AI_Partner-Gemini_Flash-blueviolet)](#)
+📏 RÈGLES DE TITRAGE YAML (HIÉRARCHIE VISUELLE)
+Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml).
 
-Ce dépôt contient ma configuration **Home Assistant OS (HAOS)** sur **Mini-PC x86-64**. L'installation est maintenue avec une rigueur industrielle, assistée par une **IA (Gemini)** pour garantir l'optimisation des performances et la propreté du code.
+1. Titre Principal (Section / Série / Plateforme)
+Format : Boîte ASCII avec coins arrondis (╭, ─, ╮, │, ╰, ╯).
+Largeur : 74 caractères (pleine largeur).
+Style : Texte en MAJUSCULES, préfixé par le type de composant.
 
----
+2. Titre Secondaire (Pièce / Pôle / Sous-groupe)
+Format : Boîte ASCII avec coins carrés (┌, ─, ┐, │, └, ┘).
+Largeur : 37 caractères (moitié du titre principal).
+Style : Texte en MAJUSCULES, respectant la numérotation des pièces (1 à 10).
 
-## 🧠 Méthodologie et Contexte IA
-Le cœur de la maintenance repose sur un fichier maître de directives :  
-👉 **[`IA_CONTEXT_BASE.md`](./IA_CONTEXT_BASE.md)**
+🛠️ RÈGLES DE CODAGE STRICTES
+AUTOMATIONS :
+⛔ INTERDIT : Jamais d' id: au niveau global (en haut de l'automatisation).
+✅ OBLIGATOIRE : alias en MAJUSCULES pour chaque bloc (trigger, condition, action, choose).
+🆗 AUTORISÉ : id: permis UNIQUEMENT à l'intérieur des triggers ou actions.
 
-Ce document définit les règles immuables appliquées à chaque modification :
-* **Hiérarchie visuelle** : Titres en boîtes ASCII (74 car. arrondis / 37 car. carrés).
-* **Zéro Erreur** : Diagnostic systématique des logs pour éliminer les latences.
-* **Ordre Strict** : Organisation par pôles et numérotation des pièces (1 à 10).
+ENTITÉS :
+name: "Nom Lisible" (Majuscules/Espaces).
+unique_id: nom_lisible (Minuscules/Underscores).
 
----
+MODIFICATIONS :
+Annoter chaque ligne modifiée : # "[L...] modif".
+Bloc final obligatoire : # annotations_log:.
 
-## ⚙️ Système & Infrastructure
-* **Machine** : Mini-PC Intel/AMD (Architecture x86-64).
-* **Stockage** : SSD M.2 SATA haute performance.
-* **Réseau Zigbee** : Dongle Sonoff EFR32MG21 sur rallonge USB (Z2M).
-* **Sauvegardes** : Automatisation de commits GitHub via script Shell dédié.
+🏠 ORGANISATION DES PIÈCES ET PÔLES
+ORDRE DES PIÈCES (1 À 10) :
+ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. STANDBY.
+ORDRE DES PÔLES (1 À 3) :
+PRISES | 2. CHAUFFAGE/CLIM | 3. ÉCLAIRAGE.
 
----
+🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
+1. Pôle Prises
+1. ENTRÉE : box_internet, horloge.
+4. SALON : pc_s_gege, salon_chargeur.
+5. CUISINE : micro_ondes, lave_linge, lave_vaisselle, airfryer, four_plaque, frigo, congel.
+7. BUREAU : bureau_pc, fer.
+9. CHAMBRE : tete_de_lit, tv.
+10. STANDBY : all_standby.
 
-## 🧩 Écosystème & Dashboards
-* **Énergie** : Suivi Linky, Ecojoko et calculs de consommation par poste.
-* **Confort** : Monitoring **DUT** (Durée d'Utilisation Totale) pour clim/chauffage.
-* **Interface** : Dashboards YAML personnalisés (`ApexCharts`, `Bubble-Card`, `Mushroom`).
-* **Météo** : Alertes Météo France et localisation d'impacts de foudre (**Blitzortung**).
+2. Pôle Chauffage / Clim
+4. SALON : clim_salon.
+5. CUISINE : radiateur_cuisine.
+7. BUREAU : clim_bureau.
+8. SDB : soufflant, seche_serv.
+9. CHAMBRE : clim_chambre.
 
----
+3. Pôle Éclairage
+1. ENTRÉE : Hue White.
+4. SALON : Table, Ambiance 1, 2, 3, Color 1.
+5. CUISINE : Hue White.
+6. COULOIR : Hue White.
+7. BUREAU : Play 1, 2, 3, White 1, 2.
+8. SDB : Miroir Sonoff, Hue White.
+9. CHAMBRE : White 1, 2, Color Eric, Color Gege.
 
-## 📸 Aperçu du Système
+🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
+📂 Configuration & Scripts
+configuration.yaml
+automations.yaml
+scripts.yaml
+sensors.yaml
+utility_meter.yaml
+ha_git_backup.sh
 
-<p align="center">
-  <img width="800" src="https://github.com/user-attachments/assets/7c3a7943-d287-4c01-b860-80ea76232a2f" alt="Dashboard Preview">
-</p>
+📂 Séries Templates (01 à 18)
+Série 01 (Météo/Foudre) : 01_2_meteo_foudre_card.yaml
 
----
+Série 03 (Climat/DUT) : 03_01_energie_clim_radiateur_card.yaml
 
-## 📖 Liens & Communauté
-* [Forum HACF](https://forum.hacf.fr) | [Howmation](https://howmation.com/fr_FR/)
-* [Documentation Officielle HA](https://www.home-assistant.io/docs/)
-
-✨ **Projet vivant, optimisé par IA et en évolution constante !**
+Série 17 (Diagnostic) : 17_1_diag_conso_jour_en_cours.yaml
