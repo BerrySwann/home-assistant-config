@@ -29,38 +29,38 @@ Ce fichier définit les règles immuables appliquées par l'IA lors de la géné
 
 ---
 
-# ╭─────────────────────────────────────────────────────────────────────╮
-# │ ⚙️ SYSTÈME & INFRASTRUCTURE                                        │
-# ╰─────────────────────────────────────────────────────────────────────╯
+# ╭────────────────────────────╮
+# │ ⚙️ SYSTÈME & INFRASTRUCTURE│
+# ╰────────────────────────────╯
 
-# ┌─────────────────────────────┐
-# │ MATÉRIEL & OS               │
-# └─────────────────────────────┘
+# ┌──────────────┐
+# │ MATÉRIEL & OS│
+# └──────────────┘
 - **Machine** : Mini-PC Intel/AMD (Architecture x86-64).
 - **Stockage** : SSD M.2 SATA haute performance.
 - **Réseau Zigbee** : Dongle Sonoff EFR32MG21 sur rallonge USB (Z2M).
 
-# ┌─────────────────────────────┐
-# │ ADD-ONS ET SERVICES         │
-# └─────────────────────────────┘
+# ┌────────────────────┐
+# │ ADD-ONS ET SERVICES│
+# └────────────────────┘
 - **Sécurité** : Cloudflared, AdGuard Home.
 - **Gestion** : Studio Code Server, MariaDB, phpMyAdmin.
 - **Backup** : Script de synchronisation GitHub automatique.
 
 ---
 
-# ╭─────────────────────────────────────────────────────────────────────╮
-# │ 🎨 DASHBOARDS & UI (HACS)                                           │
-# ╰─────────────────────────────────────────────────────────────────────╯
+# ╭──────────────────────────╮
+# │ 🎨 DASHBOARDS & UI (HACS)│
+# ╰──────────────────────────╯
 
 - **Cartes Clés** : `apexcharts-card`, `bubble-card`, `mushroom`, `bar-card`.
 - **Logique** : Suivi énergétique détaillé, calculs de **DUT** (Durée d'Utilisation Totale) et monitoring de la qualité d'air.
 
 ---
 
-# ╭─────────────────────────────────────────────────────────────────────╮
-# │ 📸 APERÇU DU SYSTÈME                                               │
-# ╰─────────────────────────────────────_───────────────────────────────╯
+# ╭──────────────────────╮
+# │ 📸 APERÇU DU SYSTÈME│
+# ╰──────────────────────╯
 
 <p align="center">
   <img width="800" src="https://github.com/user-attachments/assets/7c3a7943-d287-4c01-b860-80ea76232a2f" alt="Dashboard Preview">
@@ -68,9 +68,9 @@ Ce fichier définit les règles immuables appliquées par l'IA lors de la géné
 
 ---
 
-# ╭─────────────────────────────────────────────────────────────────────╮
-# │ 📖 COMMUNAUTÉ & LIENS                                               │
-# ╰─────────────────────────────────────────────────────────────────────╯
+# ╭──────────────────────╮
+# │ 📖 COMMUNAUTÉ & LIENS│
+# ╰──────────────────────╯
 
 - [Forum HACF](https://forum.hacf.fr) | [Howmation](https://howmation.com/fr_FR/)
 - [Documentation Officielle HA](https://www.home-assistant.io/docs/)
