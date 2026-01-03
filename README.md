@@ -11,7 +11,8 @@ Ce dépôt contient ma configuration **Home Assistant OS (HAOS)** sur **Mini-PC 
 
 ## 🧠 Méthodologie et Contexte IA
 Le cœur de la maintenance repose sur un fichier maître de directives :  
-👉 **[`IA_CONTEXT_BASE.md`](./IA_CONTEXT_BASE.md)**
+👉 **[`IA_CONTEXT_BASE.md`](./IA_CONTEXT_BASE.md)**<img width="1220" height="3520" alt="HA" src="https://github.com/user-attachments/assets/8c7e2db0-194c-4c13-8dcc-6ad13ef7f24f" />
+
 
 Ce document définit les règles immuables appliquées à chaque modification :
 * **Hiérarchie visuelle** : Titres en boîtes ASCII (74 car. arrondis / 37 car. carrés).
@@ -38,6 +39,7 @@ Ce document définit les règles immuables appliquées à chaque modification :
 
 ## 📸 Aperçu du Système
 
+<img width="1220" height="3520" alt="HA" src="https://github.com/user-attachments/assets/fc33371e-3d93-4102-a357-14aa3a4a8863" />
 
 ---
 
