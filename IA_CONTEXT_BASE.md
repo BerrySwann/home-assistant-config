@@ -15,24 +15,26 @@ Largeur : 37 caractères (moitié du titre principal).
 Style : Texte en MAJUSCULES, respectant la numérotation des pièces (1 à 10).
 
 🛠️ RÈGLES DE CODAGE STRICTES
-AUTOMATIONS :
+
+**AUTOMATIONS :**
 
 ⛔ INTERDIT : Jamais d' id: au niveau global (en haut de l'automatisation).
 ✅ OBLIGATOIRE : alias en MAJUSCULES pour chaque bloc (trigger, condition, action, choose).
 🆗 AUTORISÉ : id: permis UNIQUEMENT à l'intérieur des triggers ou actions.
 
-ENTITÉS :
+**ENTITÉS :**
 name: "Nom Lisible" (Majuscules/Espaces).
 unique_id: nom_lisible (Minuscules/Underscores).
 
-MODIFICATIONS :
+**MODIFICATIONS :**
 Annoter chaque ligne modifiée : # "[L...] modif".
 Bloc final obligatoire : # annotations_log:.
 
 🏠 ORGANISATION DES PIÈCES ET PÔLES
-ORDRE DES PIÈCES (1 À 10) :
+**ORDRE DES PIÈCES (1 À 10) :**
  - ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. STANDBY.
-ORDRE DES PÔLES (1 À 3) :
+
+**ORDRE DES PÔLES (1 À 3) :**
  - PRISES | 2. CHAUFFAGE/CLIM | 3. ÉCLAIRAGE.
 
 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
