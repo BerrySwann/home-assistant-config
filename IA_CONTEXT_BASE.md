@@ -43,8 +43,8 @@ Cette liste sert de référence pour la création de nouveaux Dashboards afin de
 |                  | `plotly-graph`            | Analyse de données complexe                             |
 |                  | `bar-card`                | Jauges de consommation et niveaux de batteries          |
 |                  | `history-explorer-card`   | Exploration interactive de l'historique                 |
-| **UI/Design**    |                           |                                                         |
-|                  | `bubble-card`             | Navigation, Pop-ups par pièce, boutons tactiles         |
+|                  |                           |                                                         |
+|  **UI/Design**   | `bubble-card`             | Navigation, Pop-ups par pièce, boutons tactiles         |
 |                  | `mushroom-card`           | Éclairage (Mushroom Light), Titres, Chips d'état        |
 |                  | `mod-card` (card-mod)     | Personnalisation CSS avancée des cartes                 |
 |                  | `layout-card`             | Structure des vues (Grid, Masonry)                      |
@@ -52,8 +52,8 @@ Cette liste sert de référence pour la création de nouveaux Dashboards afin de
 |                  | `vertical-stack-in-card`  |                                                         |
 |                  | `swipe-card`              | Carrousels (Météo, Caméras)                             |
 |                  | `auto-entities`           | Listes dynamiques (Fenêtres ouvertes, Piles faibles)    |
-| **Spécialisées** |                           |                                                         |
-|                  | `enhanced-shutter-card`   | Gestion visuelle des stores (Série 08)                  |
+|                  |                           |                                                         |
+| **Spécialisées** | `enhanced-shutter-card`   | Gestion visuelle des stores (Série 08)                  |
 |                  | `tempometer-gauge-card`   | Jauges de température et humidité pro                   |
 |                  | `ring-tile-card`          | Indicateurs circulaires (Statut MariaDB, CPU)           |
 |                  | `multiple-entity-row`     | Multi-affichage sur une seule ligne d'entité            |
