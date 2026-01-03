@@ -12,6 +12,7 @@ secrets.yaml
 .git-credentials
 .ssh/
 myelectricaldata/
+zigbee2mqtt/configuration.yaml
 
 # --- HA runtime ---
 .storage/
