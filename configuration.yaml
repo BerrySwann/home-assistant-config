@@ -75,6 +75,9 @@ input_text: !include input_text.yaml
 #renvoi au fichier input_select.yaml
 input_select: !include input_select.yaml
 
+#renvoi au fichier sql.yaml
+sql: !include sql.yaml
+
 # Amazon
 alexa_media:
   accounts:
