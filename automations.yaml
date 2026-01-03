@@ -2423,28 +2423,24 @@
         'eq', 'on') | list | count > 0 }}\n"
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
-      temp_cible: '{{ states(''sensor.temperature_cible'') | float(19) }}'
-      temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(21)
+      temp_cible: '{{ states(''sensor.temperature_cible'') | float(18) }}'
+      temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(19)
         }}'
-      temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(21)
+      temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(19)
         }}'
-      t_salon_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if mode_saison
-        == ''heat'' else temp_cible }} {% elif ''groupe_2'' in groupe_presence or
-        ''groupe_4'' in groupe_presence %} {{ temp_conf_m }} {% else %} {{ temp_cible
-        }} {% endif %}
-
-        '
-      t_bureau_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
-        mode_saison == ''heat'' else temp_cible }} {% elif ''groupe_3'' in groupe_presence
-        or ''groupe_4'' in groupe_presence %} {{ temp_conf_e }} {% else %} {{ temp_cible
-        }} {% endif %}
-
-        '
-      t_chambre_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
-        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_cible }} {%
-        endif %}
-
-        '
+      temp_conf_c: '{{ states(''sensor.temperature_corrige_chambre_hivers'') | float(18)
+        }}'
+      t_salon_target: "{% if 'groupe_1' in groupe_presence %} \n  {{ temp_eco_c if
+        mode_saison == 'heat' else temp_cible }}\n{% elif 'groupe_2' in groupe_presence
+        or 'groupe_4' in groupe_presence %}\n  {{ temp_conf_m }}\n{% else %}\n  {{
+        temp_cible }}\n{% endif %}\n"
+      t_bureau_target: "{% if 'groupe_1' in groupe_presence %} \n  {{ temp_eco_c if
+        mode_saison =='heat' else temp_cible }} \n{% elif 'groupe_3' in groupe_presence
+        or 'groupe_4' in groupe_presence %} \n  {{ temp_conf_e }}\n{% else %}\n  {{
+        temp_cible }}\n{% endif %}\n"
+      t_chambre_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
+        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_conf_c }}\n{%
+        endif %}\n"
   - alias: 'LOGIQUE : SÉCURITÉ FENÊTRES VS GESTION STANDARD'
     choose:
     - alias: 'CAS URGENCE : FENÊTRE OUVERTE DÉTECTÉE'

@@ -6,11 +6,36 @@
 # Foudre (direction / distance / azimut / timer)
 #
 #========================================================================
+- sensor:
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : TEMPS ÉCOULÉ FOUDRE (SÉRIE 01)                                  │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+  - name: "Dernier Impact de Foudre Temps Ecoule" # [L17] modif
+    unique_id: dernier_impact_de_foudre_temps_ecoule # [L18] modif
+    icon: mdi:lightning-bolt
+    state: >
+      {% set last_lightning = states('input_datetime.dernier_eclair') %}
+      {% if last_lightning | has_value %}
+        {% set last_lightning_ts = as_timestamp(last_lightning) %}
+        {% set time_since_last = as_timestamp(now()) - last_lightning_ts %}
+        {% set minutes = ((time_since_last % 3600) // 60) | int %}
+        {% set hours = ((time_since_last // 3600) % 24) | int %}
+        {% set days = (time_since_last // 86400) | int %}
+        {% if days > 0 %}
+          Dernier impact il y a {{ days }} jours, {{ hours }} h et {{ minutes }} min
+        {% elif hours > 0 %}
+          Dernier impact il y a {{ hours }} h et {{ minutes }} min
+        {% else %}
+            Dernier impact il y a {{ minutes }} min
+        {% endif %}
+        {% else %}
+          Dernier impact de foudre : Inconnu
+        {% endif %}
 
 #========================================================================
 # windrose-card - LABEL Lightning direction label
 #========================================================================
-- sensor:
+
   - name: "Lightning direction label"
     unique_id: lightning_direction_label
     state: >

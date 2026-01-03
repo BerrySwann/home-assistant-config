@@ -97,6 +97,18 @@
         {{ temp_conf_e - 1 }}
       {% endif %}
 
+# --- CALCUL : Correction Chambre Hivers ---
+  - name: "Temperature Corrigé Chambre Hivers" # [L2] modif
+    unique_id: temperature_corrige_chambre_hivers # [L3] modif
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state: >
+      {% set temp_conf_c = states('sensor.consigne_de_base') | float(0) %}
+      {% if is_state('sensor.mode_ete_hiver', 'cool') %}
+        {% set temp_conf_c = states('sensor.temperature_confort_jour') | float(0) %}
+      {% endif %}
+      {{ temp_conf_c }}
+
   # --- MOTEUR DE CALCUL : CIBLE ---
   - name: "Temperature Cible"
     unique_id: temperature_cible
@@ -142,6 +154,7 @@
       {% set temp_cible = states('sensor.temperature_cible') | int (0) %}
       {% set delta_1 = states('sensor.delta_1') | int (0) %}
       {% set delta_2 = states('sensor.delta_2') | int (0) %}
+      {% set delta_3 = states('sensor.delta_3') | int (0) %}
       {% set delta_5 = states('sensor.delta_5') | int (0) %}
       {% set delta_7 = states('sensor.delta_7') | int (0) %}
       {% if temp_ext < 10 %}
