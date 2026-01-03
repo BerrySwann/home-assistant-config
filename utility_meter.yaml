@@ -26,6 +26,35 @@ eclair_hourly:
   source: sensor.blitzortung_lightning_counter
   cycle: hourly
 
+# ==========================================================
+# SUIVI MENSUEL DU DUT (DURÉE D'UTILISATION TOTALE)
+# [2026-01-03] modif : Ajout des compteurs mensuels S/R/B/C
+# ==========================================================
+
+dut_clim_salon_mensuel:
+  source: sensor.dut_clim_salon
+  name: "DUT Mensuel Clim Salon"
+  unique_id: dut_clim_salon_mensuel
+  cycle: monthly
+
+dut_radiateur_cuisine_mensuel:
+  source: sensor.dut_radiateur_cuisine
+  name: "DUT Mensuel Radiateur Cuisine"
+  unique_id: dut_radiateur_cuisine_mensuel
+  cycle: monthly
+
+dut_clim_bureau_mensuel:
+  source: sensor.dut_clim_bureau
+  name: "DUT Mensuel Clim Bureau"
+  unique_id: dut_clim_bureau_mensuel
+  cycle: monthly
+
+dut_clim_chambre_mensuel:
+  source: sensor.dut_clim_chambre
+  name: "DUT Mensuel Clim Chambre"
+  unique_id: dut_clim_chambre_mensuel
+  cycle: monthly
+
 #==================================================================
 #
 # TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre
