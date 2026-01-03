@@ -75,7 +75,7 @@ Utilisation du mode **YAML + Storage** avec une optimisation pour tablette et mo
 
 ## 📸 Aperçu
 <p align="center">
-  <img width="1100" height="3520" alt="HA" src="https://github.com/user-attachments/assets/fc33371e-3d93-4102-a357-14aa3a4a8863" />
+  <img width="1000" height="3520" alt="HA" src="https://github.com/user-attachments/assets/fc33371e-3d93-4102-a357-14aa3a4a8863" />
 </p>
 
 ---
