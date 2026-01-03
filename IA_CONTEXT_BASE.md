@@ -36,7 +36,7 @@ ORDRE DES PÔLES (1 À 3) :
  - PRISES | 2. CHAUFFAGE/CLIM | 3. ÉCLAIRAGE.
 
 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
-1. Pôle Prises
+**1. Pôle Prises**
   - ENTRÉE (1): box_internet, horloge.
   - SALON (4): pc_s_gege, salon_chargeur.
   - CUISINE (5): micro_ondes, lave_linge, lave_vaisselle, airfryer, four_plaque, frigo, congel.
