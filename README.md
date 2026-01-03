@@ -29,14 +29,14 @@ Cette configuration est maintenue en collaboration avec une **IA (Gemini)** pour
 * **Zigbee2MQTT** (Sonoff EFR32MG21 + Rallonge USB pour éviter les interférences)
 * **MariaDB** (Base de données optimisée pour le recorder)
 * **Cloudflared** (Accès distant sécurisé) & **AdGuard Home** (DNS/Ads)
-* **Studio Code Server**, **Samba Share**, **Uptime Kuma**, **phpMyAdmin**, **Glances**
+* **Studio Code Server**, **Samba Share**, **phpMyAdmin**, **Glances**
 
 ---
 
 ## 🧩 Intégrations & Énergie
 * **Énergie** : `MyElectricalData` (Linky HP/HC), `Ecojoko` (Conso réseau temps réel)
 * **Météo & Environnement** : `Mété France`, `Blitzortung` (Foudre), `Pollens`, `UV`
-* **Hardware** : `Meross LAN`, `Philips HUE`, `IKEA Tradfri`, `NOUS`, `Sonoff`
+* **Hardware** : `Meross LAN`, `Philips HUE`, `IKEA`, `NOUS`, `Sonoff`
 * **Logique** : `Node-RED Companion`, `Browser Mod` (Pop-ups dynamiques)
 
 ---
