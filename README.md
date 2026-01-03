@@ -38,9 +38,6 @@ Ce document définit les règles immuables appliquées à chaque modification :
 
 ## 📸 Aperçu du Système
 
-<p align="center">
-  <img width="800" src="https://github.com/user-attachments/assets/7c3a7943-d287-4c01-b860-80ea76232a2f" alt="Dashboard Preview">
-</p>
 
 ---
 
