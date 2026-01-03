@@ -127,7 +127,7 @@
   name: "DUT Clim Salon Jour"
   unique_id: dut_clim_salon_jour
   entity_id: sensor.salon_power_status
-  state: "Actif"
+  state: "on"
   type: time
   start: "{{ now().replace(hour=0, minute=0, second=0) }}"
   end: "{{ now() }}"
@@ -136,7 +136,7 @@
   name: "DUT Radiateur Cuisine"
   unique_id: dut_radiateur_cuisine
   entity_id: sensor.cuisine_power_status
-  state: "Actif"
+  state: "on"
   type: time
   start: "{{ now().replace(hour=0, minute=0, second=0) }}"
   end: "{{ now() }}"
@@ -145,7 +145,7 @@
   name: "DUT Clim Bureau Jour"
   unique_id: dut_clim_bureau_jour
   entity_id: sensor.bureau_power_status
-  state: "Actif"
+  state: "on"
   type: time
   start: "{{ now().replace(hour=0, minute=0, second=0) }}"
   end: "{{ now() }}"
@@ -154,7 +154,7 @@
   name: "DUT Clim Chambre Jour"
   unique_id: dut_clim_chambre_jour
   entity_id: sensor.chambre_power_status
-  state: "Actif"
+  state: "on"
   type: time
   start: "{{ now().replace(hour=0, minute=0, second=0) }}"
   end: "{{ now() }}"

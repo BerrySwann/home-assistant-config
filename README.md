@@ -1,116 +1,78 @@
 # 🏠 Home Assistant – Configuration de Berry Swann
 
-[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2025.9.x-blue?logo=home-assistant&logoColor=white)](https://www.home-assistant.io/)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.x-blue?logo=home-assistant&logoColor=white)](https://www.home-assistant.io/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/BerrySwann/home-assistant-config)](https://github.com/BerrySwann/home-assistant-config)
+[![Expert HA](https://img.shields.io/badge/Expert-HAOS_x86--64-success)](#)
+[![Powered by Gemini IA](https://img.shields.io/badge/AI_Partner-Gemini_Flash-blueviolet)](#)
 
-Ce dépôt contient ma configuration **Home Assistant OS** (HAOS) qui tourne sur un mini-PC **x86-64 (Generic image)**.  
-Il reflète mon installation domotique complète : énergie, climatisation, suivi de confort, automations intelligentes, sauvegardes Git, et dashboards Lovelace très personnalisés.
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ PRÉSENTATION GÉNÉRALE                                                    │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 
----
-
-## ⚙️ Système & Matériel
-- **OS** : Home Assistant OS (HAOS) – image `Generic x86-64`
-- **Matériel** : mini-PC Intel/AMD (x86-64)
-- **Stockage** : SSD M.2 SATA
-- **Accès fichiers** : `/config` via Samba, Studio Code Server, SSH
+Ce dépôt contient ma configuration **Home Assistant OS (HAOS)** sur **Mini-PC x86-64**. 
+L'installation est maintenue en collaboration avec une **IA (Gemini)** agissant comme un "Thought Partner" Expert pour garantir la propreté du code et l'optimisation des performances.
 
 ---
 
-## 📦 Add-ons utilisés
-- **Zigbee2MQTT** (dongle Sonoff EFR32MG21, firmware EmberZNet)
-- **MariaDB** (base optimisée pour recorder)
-- **Studio Code Server** (édition des configs dans HAOS)
-- **Samba Share** (partage réseau)
-- **Cloudflared** (remote access sécurisé)
-- **Uptime Kuma** (monitoring services)
-- **phpMyAdmin** (gestion DB)
-- **AdGuard Home** (DNS / blocage pubs) <- en pause
-- **Glances** (stats système)
-- **Silicon Labs Flasher** (flash firmware dongle)
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ 🧠 MÉTHODOLOGIE ET CONTEXTE IA                                           │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+Pour assurer une cohérence parfaite, ce projet utilise un fichier maître de directives : 
+👉 **[`IA_CONTEXT_BASE.md`](./IA_CONTEXT_BASE.md)**
+
+Ce fichier définit les règles immuables appliquées par l'IA lors de la génération de code :
+- **Standardisation visuelle** : Hiérarchie des titres en boîtes ASCII (74/37 car.).
+- **Normes de nommage** : `unique_id` vs `name` et alias d'automatisations.
+- **Ordre logique** : Respect strict de l'ordre des pièces (1 à 10) et des pôles.
+- **Audit de logs** : Diagnostic systématique pour une instance "Zéro Erreur".
 
 ---
 
-## 🧩 Intégrations principales
-- **MyElectricalData** → suivi conso Linky (HP/HC, historique, coûts)
-- **Ecojoko** → consommation électrique réseau
-- **Node-RED Companion** → automatisations avancées
-- **Browser Mod** → pop-ups et navigation dynamique
-- **Météo France + Blitzortung** (alertes météo & orages)
-- **Meross LAN(WIFI)** / **HUE** / **IKEA** / **NOUS** (prises, inter., B.P., lampes et capteurs Zigbee)
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ ⚙️ SYSTÈME & INFRASTRUCTURE                                              │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ MATÉRIEL & OS                     │
+# └───────────────────────────────────┘
+- **Machine** : Mini-PC Intel/AMD (Architecture x86-64).
+- **Stockage** : SSD M.2 SATA haute performance.
+- **Réseau Zigbee** : Dongle Sonoff EFR32MG21 sur rallonge USB (Z2M).
+
+# ┌───────────────────────────────────┐
+# │ ADD-ONS ET SERVICES               │
+# └───────────────────────────────────┘
+- **Sécurité** : Cloudflared, AdGuard Home.
+- **Gestion** : Studio Code Server, MariaDB, phpMyAdmin.
+- **Backup** : Script de synchronisation GitHub automatique.
 
 ---
 
-## 🎨 Dashboards Lovelace
-- Mode **YAML + Storage** (mix, maintenance via `/config/dashboard*.yaml`)
-- Vues optimisées pour tablette & téléphone
-- **Custom cards via HACS** :
-  - `apexcharts-card`, `auto-entities`, `bar-card`, `bubble-card`, `ring-tile-card`, `streamline-card`, `mushroom-*`, `vertical-stack-in-card`, etc.
-- **Exemples** : (730h = ~1 mois)
-  - Suivi énergie : conso journalière & mensuelle (diff/730h), moyennes glissantes (mean 24h / 730h)
-  - Suivi clim/radiateurs avec cibles calculées (été/hiver)
-  - Pop-ups Bubble par pièce (températures, qualité d’air, état appareils)
-  - Cartes météo (Météo France, Blitzortung, pollens, UV, etc.)
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ 🎨 DASHBOARDS & UI (HACS)                                                │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+- **Cartes Clés** : `apexcharts-card`, `bubble-card`, `mushroom`, `bar-card`.
+- **Logique** : Suivi énergétique détaillé, calculs de **DUT** (Durée d'Utilisation Totale) et monitoring de la qualité d'air.
 
 ---
 
-## ⚡ Énergie & Confort
-- **Utility meters** (journaliers / 730h) pour chaque appareil
-- **Sensors statistiques** (moyennes 24h, 730h, etc.)
-- **Delta intérieur/extérieur** et calcul automatique de la **température cible climatisation**
-- Graphiques ApexCharts avec **color thresholds** & brush
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ 📸 APERÇU DU SYSTÈME                                                     │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+<p align="center">
+  <img width="800" src="https://github.com/user-attachments/assets/7c3a7943-d287-4c01-b860-80ea76232a2f" alt="Dashboard Preview">
+</p>
 
 ---
 
-## 🔒 Sauvegardes & Git
-- **Sauvegardes HA (snapshots)** via Supervisor
-- **Backup GitHub automatique** (scripts + automations YAML) :
-  - Commit toutes les heures (H+10)
-  - Commit complet chaque dimanche à 03h40
-- `.gitignore` adapté : exclusion `.db`, `.storage`, médias, backups, secrets
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ 📖 COMMUNAUTÉ & LIENS                                                    │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 
----
+- [Forum HACF](https://forum.hacf.fr) | [Howmation](https://howmation.com/fr_FR/)
+- [Documentation Officielle HA](https://www.home-assistant.io/docs/)
 
-## 📂 Structure de fichiers
-- `configuration.yaml` → inclut les sous-fichiers → (À revoir)
-- `automations.yaml` → règles YAML
-- `templates/` → templates Jinja2 (capteurs, helpers)
-- `dashboard*.yaml` → dashboards Lovelace versionnés
-- `utility_meter.yaml`, `input_number.yaml`, `group.yaml`, `command_line.yaml`, etc.
-
----
-
-## 🛠️ Particularités
-- **Optimisation MariaDB** : purge automatique, `recorder` limité
-- **Zigbee2MQTT** : suivi complet réseau (network table, routers/endpoints)
-
----
-
-## 🚀 Prochains objectifs
-- Migration complète des dashboards vers `streamline_templates`
-- Automatisation intelligente climatisation (locale + météo)
-- Intégration plus poussée des capteurs air qualité (PM2.5, COV)
-- Ajout d’un monitoring détaillé pour Studio Code Server (RAM/CPU)
-
----
-
-## 📸 Aperçu
-<img width="1218" height="3510" alt="image" src="https://github.com/user-attachments/assets/7c3a7943-d287-4c01-b860-80ea76232a2f" />
-
-
-
-
----
-
-## 📖 Liens utiles
-- [Home Assistant Docs](https://www.home-assistant.io/docs/)
-- [Community Add-ons (Hass.io)](https://github.com/hassio-addons/repository)
-- [Forum Home Assistant](https://community.home-assistant.io/)
-- [Frorum Howmation](https://howmation.com/fr_FR/)
-- [forum domotique](https://forumdomotique.com/)
-- [Forum HACF (communauté francophone)](https://forum.hacf.fr)
-
-- [Mon dépôt GitHub](https://github.com/BerrySwann/home-assistant-config)
-
----
-
-✨ Projet vivant et en évolution constante !
+✨ **Projet vivant, optimisé par IA et en évolution constante !**
