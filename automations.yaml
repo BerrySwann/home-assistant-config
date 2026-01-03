@@ -1992,31 +1992,6 @@
         }} impact(s) détecté(s).\n{% endif %}\n"
   - delay: 00:01:00
   mode: single
-- id: '1766779275821'
-  alias: Mettre à jour le texte du temps écoulé
-  description: Met à jour le texte du temps écoulé depuis le dernier impact de foudre
-    toutes les 30 secondes.
-  triggers:
-  - trigger: time_pattern
-    seconds: /30
-  conditions: []
-  actions:
-  - action: input_text.set_value
-    target:
-      entity_id: input_text.dernier_impact_de_foudre_temps_ecoule
-    data:
-      value: "{% set last_lightning = states('input_datetime.dernier_eclair') %} {%
-        if last_lightning not in ['unknown', 'unavailable', 'none', ''] %}\n  {% set
-        last_lightning_ts = as_timestamp(last_lightning) %}\n  {% set time_since_last
-        = as_timestamp(now()) - last_lightning_ts %}\n  {% set minutes = ((time_since_last
-        % 3600) // 60) | int %}\n  {% set hours = ((time_since_last // 3600) % 24)
-        | int %}\n  {% set days = (time_since_last // 86400) | int %}\n  {% if days
-        > 0 %}\n    Dernier impact il y a {{ days }} jours, {{ hours }} h et {{ minutes
-        }} min\n  {% elif hours > 0 %}\n    Dernier impact il y a {{ hours }} h et
-        {{ minutes }} min\n  {% else %}\n    Dernier impact il y a {{ minutes }} min\n
-        \ {% endif %}\n{% else %}\n  Dernier impact de foudre : Inconnu\n{% endif
-        %}\n"
-  mode: single
 - id: '1766779355162'
   alias: Mettre à jour le temps du dernier impact de foudre
   description: Met à jour l'input_datetime au moment précis où un éclair est détecté.

@@ -1,10 +1,10 @@
-#==========================================================================
-# Notification FOUDRES Blitzortung
-#==========================================================================
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : NOTIFICATION FOUDRES BLITZORTUNG (SÉRIE 01)                     │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 - platform: rest
   name: Blitzortung Lightning Localisation
   unique_id: blitzortung_lightning_localisation
-  scan_interval: 3600  # Mise à jour toutes les heures au lieu de 24h
+  scan_interval: 3600
   resource_template: >-
     {%- set lat = state_attr('sensor.blitzortung_lightning_distance', 'lat') -%}
     {%- set lon = state_attr('sensor.blitzortung_lightning_distance', 'lon') -%}
@@ -13,10 +13,34 @@
   json_attributes:
     - features
 
-#==========================================================================
-# STATISTIQUES MINI-PC (Santé du système)
-#==========================================================================
-# On garde uniquement la moyenne de PUISSANCE (W)
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : TEMPS ÉCOULÉ FOUDRE (SÉRIE 01)                                  │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Dernier Impact de Foudre Temps Ecoule" # [L17] modif
+      unique_id: dernier_impact_de_foudre_temps_ecoule # [L18] modif
+      icon: mdi:lightning-bolt
+      state: >
+        {% set last_lightning = states('input_datetime.dernier_eclair') %}
+        {% if last_lightning | has_value %}
+          {% set last_lightning_ts = as_timestamp(last_lightning) %}
+          {% set time_since_last = as_timestamp(now()) - last_lightning_ts %}
+          {% set minutes = ((time_since_last % 3600) // 60) | int %}
+          {% set hours = ((time_since_last // 3600) % 24) | int %}
+          {% set days = (time_since_last // 86400) | int %}
+          {% if days > 0 %}
+            Dernier impact il y a {{ days }} jours, {{ hours }} h et {{ minutes }} min
+          {% elif hours > 0 %}
+            Dernier impact il y a {{ hours }} h et {{ minutes }} min
+          {% else %}
+            Dernier impact il y a {{ minutes }} min
+          {% endif %}
+        {% else %}
+          Dernier impact de foudre : Inconnu
+        {% endif %}
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME)                            │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 - platform: statistics
   name: "Mini PC Charge moyenne 24h (W)"
   unique_id: mini_pc_charge_moyenne_24h_w
@@ -25,7 +49,6 @@
   max_age: { hours: 24 }
   precision: 1
 
-# INTEGRATION (énergie_kWh à partir de la puissance W)
 - platform: integration
   source: sensor.prise_mini_pc_ikea_power
   name: prise_mini_pc_ikea_kwh
@@ -34,28 +57,27 @@
   unit_time: h
   round: 3
 
-#==========================================================================
-# Ping VSCode sur erodi-ha.com Mini-PC
-#==========================================================================
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PING HTTPS VSCODE (ERODI-HA.COM)                                │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 - platform: rest
   name: "Ping HTTPS VSCode"
+  unique_id: ping_https_vscode # [L65] modif
   resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
   method: GET
   timeout: 15
   value_template: "{{ value_json is defined or value is defined }}"
   scan_interval: 60
 
-#==========================================================================
-# CALCUL MOYENS SUR 24h POUR PM2.5 & tCOV
-#==========================================================================
-# -------- PM2.5 --------
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)                         │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 - platform: statistics
   name: PM2.5 Salon (moy 24h)
   unique_id: pm25_salon_mean_24h
   entity_id: sensor.qualite_air_salon_ikea_pm25
   state_characteristic: mean
-  max_age:
-    hours: 24
+  max_age: { hours: 24 }
   precision: 1
 
 - platform: statistics
@@ -63,8 +85,7 @@
   unique_id: pm25_bureau_mean_24h
   entity_id: sensor.qualite_air_bureau_ikea_pm25
   state_characteristic: mean
-  max_age:
-    hours: 24
+  max_age: { hours: 24 }
   precision: 1
 
 - platform: statistics
@@ -72,18 +93,15 @@
   unique_id: pm25_chambre_mean_24h
   entity_id: sensor.qualite_air_chambre_ikea_pm25
   state_characteristic: mean
-  max_age:
-    hours: 24
+  max_age: { hours: 24 }
   precision: 1
 
-# -------- tCOV (ppb) --------
 - platform: statistics
   name: tCOV Salon (moy 24h)
   unique_id: tcov_salon_mean_24h
   entity_id: sensor.qualite_air_salon_ikea_voc_index
   state_characteristic: mean
-  max_age:
-    hours: 24
+  max_age: { hours: 24 }
   precision: 1
 
 - platform: statistics
@@ -91,8 +109,7 @@
   unique_id: tcov_bureau_mean_24h
   entity_id: sensor.qualite_air_bureau_ikea_voc_index
   state_characteristic: mean
-  max_age:
-    hours: 24
+  max_age: { hours: 24 }
   precision: 1
 
 - platform: statistics
@@ -100,25 +117,24 @@
   unique_id: tcov_chambre_mean_24h
   entity_id: sensor.qualite_air_chambre_ikea_voc_index
   state_characteristic: mean
-  max_age:
-    hours: 24
+  max_age: { hours: 24 }
   precision: 1
 
-  # 🌡️ CALCUL DU DUT (DURÉE D'UTILISATION TOTALE)
-# [2026-01-03] Création des capteurs de statistiques de chauffe
-
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : DUT - DURÉE D'UTILISATION TOTALE (S/R/B/C)                      │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 - platform: history_stats
   name: "DUT Clim Salon Jour"
   unique_id: dut_clim_salon_jour
-  entity_id: sensor.salon_power_status # Sensor qui passe à 'Actif' > 50W
+  entity_id: sensor.salon_power_status
   state: "Actif"
   type: time
   start: "{{ now().replace(hour=0, minute=0, second=0) }}"
   end: "{{ now() }}"
 
 - platform: history_stats
-  name: "DUT Radiateur Cuisine" # [L31] modif
-  unique_id: dut_radiateur_cuisine # [L32] modif
+  name: "DUT Radiateur Cuisine"
+  unique_id: dut_radiateur_cuisine
   entity_id: sensor.cuisine_power_status
   state: "Actif"
   type: time
@@ -142,11 +158,11 @@
   type: time
   start: "{{ now().replace(hour=0, minute=0, second=0) }}"
   end: "{{ now() }}"
-  
-#==========================================================================
-# INTEGRATION (énergie_kWh à partir de la puissance W)
-#==========================================================================
-# Entrée
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : INTÉGRATION KWH (PÔLES PRISES & CHAUFFAGE)                      │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# --- 1. ENTRÉE ---
 - platform: integration
   source: sensor.prise_box_internet_ikea_power
   name: prise_box_internet_ikea_kwh
@@ -163,7 +179,7 @@
   unit_time: h
   round: 3
 
-# Salon
+# --- 4. SALON ---
 - platform: integration
   source: sensor.prise_pc_s_gege_ikea_power
   name: prise_pc_s_gege_ikea_kwh
@@ -180,7 +196,15 @@
   unit_time: h
   round: 3
 
-# Cuisine
+- platform: integration
+  source: sensor.clim_salon_nous_power
+  name: clim_salon_kwh
+  method: left
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- 5. CUISINE ---
 - platform: integration
   source: sensor.prise_four_micro_ondes_nous_power
   name: prise_four_micro_ondes_nous_kwh
@@ -237,7 +261,15 @@
   unit_time: h
   round: 3
 
-# Bureau
+- platform: integration
+  source: sensor.radiateur_elec_cuisine_power
+  name: radiateur_cuisine_kwh
+  method: left
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- 7. BUREAU ---
 - platform: integration
   source: sensor.prise_bureau_pc_ikea_power
   name: prise_bureau_pc_ikea_kwh
@@ -254,7 +286,32 @@
   unit_time: h
   round: 3
 
-# Chambre
+- platform: integration
+  source: sensor.clim_du_bureau_nous_power
+  name: clim_bureau_kwh
+  method: left
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- 8. SDB ---
+- platform: integration
+  source: sensor.prise_radiateur_salle_de_bain_nous_power
+  name: soufflant_sdb_kwh
+  method: left
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+- platform: integration
+  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+  name: seche_serv_sdb_kwh
+  method: left
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- 9. CHAMBRE ---
 - platform: integration
   source: sensor.prise_tete_de_lit_chambre_power
   name: prise_tete_de_lit_chambre_kwh
@@ -271,66 +328,18 @@
   unit_time: h
   round: 3
 
-# All Standby
-- platform: integration
-  source: sensor.all_standby_power
-  name: all_standby_kwh
-  method: left
-  unit_prefix: k
-  unit_time: h
-  round: 3
-
-# Clim / Radiateur / Soufflant / Sèche serviette
-
-# Salon
-- platform: integration
-  source: sensor.clim_salon_nous_power
-  name: clim_salon_kwh
-  method: left
-  unit_prefix: k
-  unit_time: h
-  round: 3
-
-# Cusine
-- platform: integration
-  source: sensor.radiateur_elec_cuisine_power
-  name: radiateur_cuisine_kwh
-  method: left
-  unit_prefix: k
-  unit_time: h
-  round: 3
-
-# Bureau
-- platform: integration
-  source: sensor.clim_du_bureau_nous_power
-  name: clim_bureau_kwh
-  method: left
-  unit_prefix: k
-  unit_time: h
-  round: 3
-
-# Soufflant
-- platform: integration
-  source: sensor.prise_radiateur_salle_de_bain_nous_power
-  name: soufflant_sdb_kwh
-  method: left
-  unit_prefix: k
-  unit_time: h
-  round: 3
-
-# Sèche-Serviette
-- platform: integration
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
-  name: seche_serv_sdb_kwh
-  method: left
-  unit_prefix: k
-  unit_time: h
-  round: 3
-
-# Chambre
 - platform: integration
   source: sensor.clim_chambre_nous_power
   name: clim_chambre_kwh
+  method: left
+  unit_prefix: k
+  unit_time: h
+  round: 3
+
+# --- 10. STANDBY ---
+- platform: integration
+  source: sensor.all_standby_power
+  name: all_standby_kwh
   method: left
   unit_prefix: k
   unit_time: h
