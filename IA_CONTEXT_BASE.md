@@ -36,30 +36,32 @@
 
 Cette liste sert de référence pour la création de nouveaux Dashboards afin de garantir la compatibilité système.
 
-| Type            | Nom de la Carte         | Utilisation Principale                                  |
-| :-------------- | :---------------------- | :------------------------------------------------------ |
-| **Graph/Data**  | `apexcharts-card`       | Graphiques énergie, moyennes glissantes, seuils couleur |
-|                 | `mini-graph-card`       | Tendances rapides (températures, humidité)              |
-|                 | `plotly-graph`          | Analyse de données complexe                             |
-|                 | `bar-card`              | Jauges de consommation et niveaux de batteries          |
-|                 | `history-explorer-card` | Exploration interactive de l'historique                 |
-| **UI/Design**   |                         |                                                         |
-|                 | `bubble-card`           | Navigation, Pop-ups par pièce, boutons tactiles         |
-|                 | `mushroom-card`         | Éclairage (Mushroom Light), Titres, Chips d'état        |
-|                 | `mod-card` (card-mod)   | Personnalisation CSS avancée des cartes                 |
-|                 | `layout-card`           | Structure des vues (Grid, Masonry)                      |
-|                 | `stack-in-card` / `vertical-stack-in-card` | Groupement de cartes sans bordures   |
-|                 | `swipe-card`            | Carrousels (Météo, Caméras)                             |
-|                 | `auto-entities`         | Listes dynamiques (Fenêtres ouvertes, Piles faibles)    |
-| **Spécialisées**| `enhanced-shutter-card` | Gestion visuelle des stores (Série 08)                  |
-|                 | `tempometer-gauge-card` | Jauges de température et humidité pro                   |
-|                 | `ring-tile-card`        | Indicateurs circulaires (Statut MariaDB, CPU)           |
-|                 | `multiple-entity-row`   | Multi-affichage sur une seule ligne d'entité            |
-|                 | `text-divider-row`      | Séparateurs de sections textuels                        |
-|                 | `navbar-card`           | Barre de navigation personnalisée                       |
-|                 | `linky-card`            | Suivi MyElectricalData (Compteur Linky)                 |
-|                 | `rain-gauge-card`       | Visualisation de la pluviométrie                        |
-|                 | `uv-index-card`         | Affichage de l'indice UV (Série 01)                     |
+| Type             | Nom de la Carte           | Utilisation Principale                                  |
+| :----------------| :-------------------------| :------------------------------------------------------ |
+| **Graph/Data**   | `apexcharts-card`         | Graphiques énergie, moyennes glissantes, seuils couleur |
+|                  | `mini-graph-card`         | Tendances rapides (températures, humidité)              |
+|                  | `plotly-graph`            | Analyse de données complexe                             |
+|                  | `bar-card`                | Jauges de consommation et niveaux de batteries          |
+|                  | `history-explorer-card`   | Exploration interactive de l'historique                 |
+| **UI/Design**    |                           |                                                         |
+|                  | `bubble-card`             | Navigation, Pop-ups par pièce, boutons tactiles         |
+|                  | `mushroom-card`           | Éclairage (Mushroom Light), Titres, Chips d'état        |
+|                  | `mod-card` (card-mod)     | Personnalisation CSS avancée des cartes                 |
+|                  | `layout-card`             | Structure des vues (Grid, Masonry)                      |
+|                  | `stack-in-card`/          | Groupement de cartes sans bordures                      |
+|                  | `vertical-stack-in-card`  |                                                         |
+|                  | `swipe-card`              | Carrousels (Météo, Caméras)                             |
+|                  | `auto-entities`           | Listes dynamiques (Fenêtres ouvertes, Piles faibles)    |
+| **Spécialisées** |                           |                                                         |
+|                  | `enhanced-shutter-card`   | Gestion visuelle des stores (Série 08)                  |
+|                  | `tempometer-gauge-card`   | Jauges de température et humidité pro                   |
+|                  | `ring-tile-card`          | Indicateurs circulaires (Statut MariaDB, CPU)           |
+|                  | `multiple-entity-row`     | Multi-affichage sur une seule ligne d'entité            |
+|                  | `text-divider-row`        | Séparateurs de sections textuels                        |
+|                  | `navbar-card`             | Barre de navigation personnalisée                       |
+|                  | `linky-card`              | Suivi MyElectricalData (Compteur Linky)                 |
+|                  | `rain-gauge-card`         | Visualisation de la pluviométrie                        |
+|                  | `uv-index-card`           | Affichage de l'indice UV (Série 01)                     |
 
 ---
 
