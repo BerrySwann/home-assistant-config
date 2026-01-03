@@ -77,13 +77,13 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **9. CHAMBRE** : clim_chambre.
 
 ### 3. Pôle Éclairage
-- **1. ENTRÉE** : Hue White.
-- **4. SALON** : Table, Ambiance 1, 2, 3, Color 1.
+- **1. ENTRÉE**  : Hue White.
+- **4. SALON**   : Table, Ambiance 1, 2, 3, Color 1.
 - **5. CUISINE** : Hue White.
 - **6. COULOIR** : Hue White.
-- **7. BUREAU** : Play 1, 2, 3, White 1, 2.
-- **8. SDB** : Miroir Sonoff, Hue White.
-- **9. CHAMBRE** : White 1, 2, Color Eric, Color Gege.
+- **7. BUREAU**  : Play 1, 2, 3, White 1, 2.
+- **8. SDB**     : Miroir Sonoff, Hue White.
+- **9. CHAMBRE** : Hue White 1, 2, Color Zone-1, Color Zone-2.
 
 ---
 
