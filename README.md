@@ -22,7 +22,7 @@ Ce document définit les règles immuables appliquées à chaque modification :
 
 ## ⚙️ Système & Infrastructure
 * **Machine** : Mini-PC Intel/AMD (Architecture x86-64).
-* **Stockage** : SSD M.2 SATA haute performance.
+* **Stockage** : SSD M.2 SATA.
 * **Réseau Zigbee** : Dongle Sonoff EFR32MG21 sur rallonge USB (Z2M).
 * **Sauvegardes** : Automatisation de commits GitHub via script Shell dédié.
 
@@ -45,7 +45,7 @@ Ce document définit les règles immuables appliquées à chaque modification :
 ---
 
 ## 📖 Liens & Communauté
-* [Forum HACF](https://forum.hacf.fr) | [Howmation](https://howmation.com/fr_FR/)
+* [Forum HACF](https://forum.hacf.fr) 
 * [Documentation Officielle HA](https://www.home-assistant.io/docs/)
 
 ✨ **Projet vivant, optimisé par IA et en évolution constante !**
