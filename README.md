@@ -5,62 +5,38 @@
 [![Expert HA](https://img.shields.io/badge/Expert-HAOS_x86--64-success)](#)
 [![Powered by Gemini IA](https://img.shields.io/badge/AI_Partner-Gemini_Flash-blueviolet)](#)
 
-# ╭─────────────────────────────────────────────────────────────────────╮
-# │ PRÉSENTATION GÉNÉRALE                                               │
-# ╰─────────────────────────────────────────────────────────────────────╯
-
-Ce dépôt contient ma configuration **Home Assistant OS (HAOS)** sur **Mini-PC x86-64**. 
-L'installation est maintenue en collaboration avec une **IA (Gemini)** agissant comme un "Thought Partner" Expert pour garantir la propreté du code et l'optimisation des performances.
+Ce dépôt contient ma configuration **Home Assistant OS (HAOS)** sur **Mini-PC x86-64**. L'installation est maintenue avec une rigueur industrielle, assistée par une **IA (Gemini)** pour garantir l'optimisation des performances et la propreté du code.
 
 ---
 
-# ╭─────────────────────────────────────────────────────────────────────╮
-# │ 🧠 MÉTHODOLOGIE ET CONTEXTE IA                                      │
-# ╰─────────────────────────────────────────────────────────────────────╯
-
-Pour assurer une cohérence parfaite, ce projet utilise un fichier maître de directives : 
+## 🧠 Méthodologie et Contexte IA
+Le cœur de la maintenance repose sur un fichier maître de directives :  
 👉 **[`IA_CONTEXT_BASE.md`](./IA_CONTEXT_BASE.md)**
 
-Ce fichier définit les règles immuables appliquées par l'IA lors de la génération de code :
-- **Standardisation visuelle** : Hiérarchie des titres en boîtes ASCII (74/37 car.).
-- **Normes de nommage** : `unique_id` vs `name` et alias d'automatisations.
-- **Ordre logique** : Respect strict de l'ordre des pièces (1 à 10) et des pôles.
-- **Audit de logs** : Diagnostic systématique pour une instance "Zéro Erreur".
+Ce document définit les règles immuables appliquées à chaque modification :
+* **Hiérarchie visuelle** : Titres en boîtes ASCII (74 car. arrondis / 37 car. carrés).
+* **Zéro Erreur** : Diagnostic systématique des logs pour éliminer les latences.
+* **Ordre Strict** : Organisation par pôles et numérotation des pièces (1 à 10).
 
 ---
 
-# ╭────────────────────────────╮
-# │ ⚙️ SYSTÈME & INFRASTRUCTURE│
-# ╰────────────────────────────╯
-
-# ┌──────────────┐
-# │ MATÉRIEL & OS│
-# └──────────────┘
-- **Machine** : Mini-PC Intel/AMD (Architecture x86-64).
-- **Stockage** : SSD M.2 SATA haute performance.
-- **Réseau Zigbee** : Dongle Sonoff EFR32MG21 sur rallonge USB (Z2M).
-
-# ┌────────────────────┐
-# │ ADD-ONS ET SERVICES│
-# └────────────────────┘
-- **Sécurité** : Cloudflared, AdGuard Home.
-- **Gestion** : Studio Code Server, MariaDB, phpMyAdmin.
-- **Backup** : Script de synchronisation GitHub automatique.
+## ⚙️ Système & Infrastructure
+* **Machine** : Mini-PC Intel/AMD (Architecture x86-64).
+* **Stockage** : SSD M.2 SATA haute performance.
+* **Réseau Zigbee** : Dongle Sonoff EFR32MG21 sur rallonge USB (Z2M).
+* **Sauvegardes** : Automatisation de commits GitHub via script Shell dédié.
 
 ---
 
-# ╭──────────────────────────╮
-# │ 🎨 DASHBOARDS & UI (HACS)│
-# ╰──────────────────────────╯
-
-- **Cartes Clés** : `apexcharts-card`, `bubble-card`, `mushroom`, `bar-card`.
-- **Logique** : Suivi énergétique détaillé, calculs de **DUT** (Durée d'Utilisation Totale) et monitoring de la qualité d'air.
+## 🧩 Écosystème & Dashboards
+* **Énergie** : Suivi Linky, Ecojoko et calculs de consommation par poste.
+* **Confort** : Monitoring **DUT** (Durée d'Utilisation Totale) pour clim/chauffage.
+* **Interface** : Dashboards YAML personnalisés (`ApexCharts`, `Bubble-Card`, `Mushroom`).
+* **Météo** : Alertes Météo France et localisation d'impacts de foudre (**Blitzortung**).
 
 ---
 
-# ╭──────────────────────╮
-# │ 📸 APERÇU DU SYSTÈME│
-# ╰──────────────────────╯
+## 📸 Aperçu du Système
 
 <p align="center">
   <img width="800" src="https://github.com/user-attachments/assets/7c3a7943-d287-4c01-b860-80ea76232a2f" alt="Dashboard Preview">
@@ -68,11 +44,8 @@ Ce fichier définit les règles immuables appliquées par l'IA lors de la géné
 
 ---
 
-# ╭──────────────────────╮
-# │ 📖 COMMUNAUTÉ & LIENS│
-# ╰──────────────────────╯
-
-- [Forum HACF](https://forum.hacf.fr) | [Howmation](https://howmation.com/fr_FR/)
-- [Documentation Officielle HA](https://www.home-assistant.io/docs/)
+## 📖 Liens & Communauté
+* [Forum HACF](https://forum.hacf.fr) | [Howmation](https://howmation.com/fr_FR/)
+* [Documentation Officielle HA](https://www.home-assistant.io/docs/)
 
 ✨ **Projet vivant, optimisé par IA et en évolution constante !**
