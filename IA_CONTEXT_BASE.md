@@ -64,17 +64,20 @@ Bloc final obligatoire : # annotations_log:.
   - CHAMBRE (9):Hue White 1, 2, Color Eric, Color Gege.
 
 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
+
 📂 Configuration & Scripts
-configuration.yaml
-automations.yaml
-scripts.yaml
-sensors.yaml
-utility_meter.yaml
-ha_git_backup.sh
+
+  - configuration.yaml
+  - automations.yaml
+  - scripts.yaml
+  - sensors.yaml
+  - utility_meter.yaml
+  - ha_git_backup.sh
 
 📂 Séries Templates (01 à 18)
-Série 01 (Météo/Foudre) : 01_2_meteo_foudre_card.yaml
 
-Série 03 (Climat/DUT) : 03_01_energie_clim_radiateur_card.yaml
+  - Série 01 (Météo/Foudre) : 01_2_meteo_foudre_card.yaml
 
-Série 17 (Diagnostic) : 17_1_diag_conso_jour_en_cours.yaml
+  - Série 03 (Climat/DUT) : 03_01_energie_clim_radiateur_card.yaml
+
+  - Série 17 (Diagnostic) : 17_1_diag_conso_jour_en_cours.yaml
