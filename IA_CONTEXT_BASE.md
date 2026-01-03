@@ -16,6 +16,7 @@ Style : Texte en MAJUSCULES, respectant la numérotation des pièces (1 à 10).
 
 🛠️ RÈGLES DE CODAGE STRICTES
 AUTOMATIONS :
+
 ⛔ INTERDIT : Jamais d' id: au niveau global (en haut de l'automatisation).
 ✅ OBLIGATOIRE : alias en MAJUSCULES pour chaque bloc (trigger, condition, action, choose).
 🆗 AUTORISÉ : id: permis UNIQUEMENT à l'intérieur des triggers ou actions.
@@ -30,34 +31,34 @@ Bloc final obligatoire : # annotations_log:.
 
 🏠 ORGANISATION DES PIÈCES ET PÔLES
 ORDRE DES PIÈCES (1 À 10) :
-ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. STANDBY.
+ - ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. STANDBY.
 ORDRE DES PÔLES (1 À 3) :
-PRISES | 2. CHAUFFAGE/CLIM | 3. ÉCLAIRAGE.
+ - PRISES | 2. CHAUFFAGE/CLIM | 3. ÉCLAIRAGE.
 
 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
 1. Pôle Prises
-1. ENTRÉE : box_internet, horloge.
-4. SALON : pc_s_gege, salon_chargeur.
-5. CUISINE : micro_ondes, lave_linge, lave_vaisselle, airfryer, four_plaque, frigo, congel.
-7. BUREAU : bureau_pc, fer.
-9. CHAMBRE : tete_de_lit, tv.
-10. STANDBY : all_standby.
+  - ENTRÉE (1): box_internet, horloge.
+  - SALON (4): pc_s_gege, salon_chargeur.
+  - CUISINE (5): micro_ondes, lave_linge, lave_vaisselle, airfryer, four_plaque, frigo, congel.
+  - BUREAU (7): bureau_pc, fer.
+  - CHAMBRE (9): tete_de_lit, tv.
+  - STANDBY (10): all_standby.
 
 2. Pôle Chauffage / Clim
-4. SALON : clim_salon.
-5. CUISINE : radiateur_cuisine.
-7. BUREAU : clim_bureau.
-8. SDB : soufflant, seche_serv.
-9. CHAMBRE : clim_chambre.
+  - SALON (4): clim_salon.
+  - CUISINE (5): radiateur_cuisine.
+  - BUREAU (7): clim_bureau.
+  - SDB (8): soufflant, seche_serv.
+  - CHAMBRE (9): clim_chambre.
 
 3. Pôle Éclairage
-1. ENTRÉE : Hue White.
-4. SALON : Table, Ambiance 1, 2, 3, Color 1.
-5. CUISINE : Hue White.
-6. COULOIR : Hue White.
-7. BUREAU : Play 1, 2, 3, White 1, 2.
-8. SDB : Miroir Sonoff, Hue White.
-9. CHAMBRE : White 1, 2, Color Eric, Color Gege.
+  - ENTRÉE (1): Hue White.
+  - SALON (4): Table, Ambiance 1, 2, 3, Color 1.
+  - CUISINE (5): Hue White.
+  - COULOIR (6): Hue White.
+  - BUREAU (7): Play 1, 2, 3, White 1, 2.
+  - SDB (8): Miroir Sonoff, Hue White.
+  - CHAMBRE (9):Hue White 1, 2, Color Eric, Color Gege.
 
 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
 📂 Configuration & Scripts
