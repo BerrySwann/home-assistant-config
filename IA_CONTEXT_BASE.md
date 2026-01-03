@@ -45,6 +45,10 @@ Dernière mise à jour : 2026-01-01
 ## 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW)
 
 [INDEX GITHUB RAW] :
+### 📂 Consommation électrique
+- https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/notifs/diag_conso_elec.txt
+### 📂 Script Github
+- https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/.scripts/ha_git_backup.sh
 ### 📂 Cœur du Système
 - Automations : https://raw.githubusercontent.com/BerrySwann/home-assistant-config/main/automations.yaml
 - camera: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/camera.yaml
@@ -119,7 +123,7 @@ Dernière mise à jour : 2026-01-01
 - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/15_2_nuit_on_21h_7h30.yaml
 
 ### 📂 Icône été/Hivers (Série 16)
-- https://rahttps://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/16_1_icon%20ete_hivers.yaml
+- https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/16_1_icon%20ete_hivers.yaml
 
 ### 📂 Diag Conso par Poste (Série 17) 
 - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/17_1_diag_conso_jour_en_cours.yaml

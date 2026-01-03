@@ -2177,9 +2177,9 @@
       repack: true
   mode: single
 - id: '1766779772267'
-  alias: DIAG - Enregistrement Journalier (6 Postes)
-  description: Log toutes les 15 min la consommation des 6 postes et la température
-    extérieure dans un fichier.
+  alias: DIAG - ENREGISTREMENT JOURNALIER (6 POSTES + DUT)
+  description: Log toutes les 15 min la consommation des 6 postes, la température
+    extérieure et le DUT chauffage (Ordre S/R/B/C) dans un fichier.
   triggers:
   - alias: 'DÉCLENCHEUR : TOUTES LES 15 MINUTES'
     trigger: time_pattern
@@ -2200,9 +2200,13 @@
         | float(0) | round(2) %} {% set p6 = states(''sensor.diag_poste_6_lumiere_quotidien'')
         | float(0) | round(2) %} {% set ext = states(''sensor.th_balcon_nord_temperature'')
         | float(0) %} {% set int = states(''sensor.temperature_moyenne_interieure'')
-        | float(0) %} {% set t = now().strftime(''%d/%m %H:%M'') %} {{t}} | Hyg:{{p1}}
+        | float(0) %} {% set dut_s = states(''sensor.dut_clim_salon'') | float(0)
+        | round(1) %} {% set dut_r = states(''sensor.dut_radiateur_cuisine'') | float(0)
+        | round(1) %} {% set dut_b = states(''sensor.dut_clim_bureau'') | float(0)
+        | round(1) %} {% set dut_c = states(''sensor.dut_clim_chambre'') | float(0)
+        | round(1) %} {% set t = now().strftime(''%d/%m %H:%M'') %} {{t}} | Hyg:{{p1}}
         | Cuis:{{p2}} | Froid:{{p3}} | Chauff:{{p4}} | Avg P4:{{agv_clim}} | Multi:{{p5}}
-        | Lum:{{p6}} | T̄i:{{int}}°C | Ext:{{ext}}°C
+        | Lum:{{p6}} | T̄i:{{int}}°C | Ext:{{ext}}°C | DUT S/R/B/C:{{dut_s}}/{{dut_r}}/{{dut_b}}/{{dut_c}}h
 
         '
   mode: single

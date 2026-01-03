@@ -104,6 +104,45 @@
     hours: 24
   precision: 1
 
+  # 🌡️ CALCUL DU DUT (DURÉE D'UTILISATION TOTALE)
+# [2026-01-03] Création des capteurs de statistiques de chauffe
+
+- platform: history_stats
+  name: "DUT Clim Salon Jour"
+  unique_id: dut_clim_salon_jour
+  entity_id: sensor.salon_power_status # Sensor qui passe à 'Actif' > 50W
+  state: "Actif"
+  type: time
+  start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+  end: "{{ now() }}"
+
+- platform: history_stats
+  name: "DUT Radiateur Cuisine" # [L31] modif
+  unique_id: dut_radiateur_cuisine # [L32] modif
+  entity_id: sensor.cuisine_power_status
+  state: "Actif"
+  type: time
+  start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+  end: "{{ now() }}"
+
+- platform: history_stats
+  name: "DUT Clim Bureau Jour"
+  unique_id: dut_clim_bureau_jour
+  entity_id: sensor.bureau_power_status
+  state: "Actif"
+  type: time
+  start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+  end: "{{ now() }}"
+
+- platform: history_stats
+  name: "DUT Clim Chambre Jour"
+  unique_id: dut_clim_chambre_jour
+  entity_id: sensor.chambre_power_status
+  state: "Actif"
+  type: time
+  start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+  end: "{{ now() }}"
+  
 #==========================================================================
 # INTEGRATION (énergie_kWh à partir de la puissance W)
 #==========================================================================
