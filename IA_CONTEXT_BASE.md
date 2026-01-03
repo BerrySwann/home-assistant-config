@@ -2,6 +2,7 @@
 Dernière mise à jour : 2026-01-03
 
 📏 RÈGLES DE TITRAGE YAML (HIÉRARCHIE VISUELLE)
+
 Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml).
 
 1. Titre Principal (Section / Série / Plateforme)
@@ -19,7 +20,9 @@ Style : Texte en MAJUSCULES, respectant la numérotation des pièces (1 à 10).
 **AUTOMATIONS :**
 
 ⛔ INTERDIT : Jamais d' id: au niveau global (en haut de l'automatisation).
+
 ✅ OBLIGATOIRE : alias en MAJUSCULES pour chaque bloc (trigger, condition, action, choose).
+
 🆗 AUTORISÉ : id: permis UNIQUEMENT à l'intérieur des triggers ou actions.
 
 **ENTITÉS :**
@@ -77,7 +80,5 @@ Bloc final obligatoire : # annotations_log:.
 📂 Séries Templates (01 à 18)
 
   - Série 01 (Météo/Foudre) : 01_2_meteo_foudre_card.yaml
-
   - Série 03 (Climat/DUT) : 03_01_energie_clim_radiateur_card.yaml
-
   - Série 17 (Diagnostic) : 17_1_diag_conso_jour_en_cours.yaml
