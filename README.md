@@ -5,43 +5,82 @@
 [![Expert HA](https://img.shields.io/badge/Expert-HAOS_x86--64-success)](#)
 [![Powered by Gemini IA](https://img.shields.io/badge/AI_Partner-Gemini_Flash-blueviolet)](#)
 
-Ce dépôt contient ma configuration **Home Assistant OS (HAOS)** sur **Mini-PC x86-64**. L'installation est maintenue avec une rigueur industrielle, assistée par une **IA (Gemini)** pour garantir l'optimisation des performances et la propreté du code.
+Ce dépôt contient ma configuration **Home Assistant OS (HAOS)** tournant sur un **mini-PC x86-64 (Generic image)**. Il reflète une installation domotique complète et optimisée : énergie, climatisation, suivi de confort et dashboards avancés.
 
 ---
 
-## 🧠 Méthodologie et Contexte IA
-Le cœur de la maintenance repose sur un fichier maître de directives :  
+## 🧠 Méthodologie & IA Thought Partner
+L'intégralité du code et de la structure est régie par le fichier maître de directives :
 👉 **[`IA_CONTEXT_BASE.md`](./IA_CONTEXT_BASE.md)**
 
-
-Ce document définit les règles immuables appliquées à chaque modification :
-* **Hiérarchie visuelle** : Titres en boîtes ASCII (74 car. arrondis / 37 car. carrés).
-* **Zéro Erreur** : Diagnostic systématique des logs pour éliminer les latences.
-* **Ordre Strict** : Organisation par pôles et numérotation des pièces (1 à 10).
-
----
-
-## ⚙️ Système & Infrastructure
-* **Machine** : Mini-PC Intel/AMD (Architecture x86-64).
-* **Stockage** : SSD M.2 SATA.
-* **Réseau Zigbee** : Dongle Sonoff EFR32MG21 sur rallonge USB (Z2M).
-* **Sauvegardes** : Automatisation de commits GitHub via script Shell dédié.
+Cette configuration est maintenue en collaboration avec une **IA (Gemini)** pour garantir :
+* **Standardisation visuelle** : Hiérarchie stricte en boîtes ASCII (74/37 car.).
+* **Qualité du code** : Zéro ID global dans les automatisations, nomenclature unique_id rigoureuse.
+* **Santé Système** : Audit permanent des logs pour éliminer les latences et erreurs de format.
 
 ---
 
-## 🧩 Écosystème & Dashboards
-* **Énergie** : Suivi Linky, Ecojoko et calculs de consommation par poste.
-* **Confort** : Monitoring **DUT** (Durée d'Utilisation Totale) pour clim/chauffage.
-* **Interface** : Dashboards YAML personnalisés (`ApexCharts`, `Bubble-Card`, `Mushroom`).
-* **Météo** : Alertes Météo France et localisation d'impacts de foudre (**Blitzortung**).
+## ⚙️ Système & Matériel
+* **OS** : Home Assistant OS (HAOS) – image `Generic x86-64`
+* **Matériel** : mini-PC Intel/AMD (x86-64) avec SSD M.2 SATA
+* **Accès** : `/config` via Samba, Studio Code Server, SSH
+
+### 📦 Add-ons utilisés
+* **Zigbee2MQTT** (Sonoff EFR32MG21 + Rallonge USB pour éviter les interférences)
+* **MariaDB** (Base de données optimisée pour le recorder)
+* **Cloudflared** (Accès distant sécurisé) & **AdGuard Home** (DNS/Ads)
+* **Studio Code Server**, **Samba Share**, **Uptime Kuma**, **phpMyAdmin**, **Glances**
 
 ---
 
-## 📸 Aperçu du Système
-
-<img width="1220" height="3520" alt="HA" src="https://github.com/user-attachments/assets/fc33371e-3d93-4102-a357-14aa3a4a8863" />
+## 🧩 Intégrations & Énergie
+* **Énergie** : `MyElectricalData` (Linky HP/HC), `Ecojoko` (Conso réseau temps réel)
+* **Météo & Environnement** : `Mété France`, `Blitzortung` (Foudre), `Pollens`, `UV`
+* **Hardware** : `Meross LAN`, `Philips HUE`, `IKEA Tradfri`, `NOUS`, `Sonoff`
+* **Logique** : `Node-RED Companion`, `Browser Mod` (Pop-ups dynamiques)
 
 ---
+
+## 🎨 Dashboards Lovelace (HACS)
+Utilisation du mode **YAML + Storage** avec une optimisation pour tablette et mobile.
+* **Custom Cards** : `apexcharts-card`, `bubble-card`, `mushroom`, `bar-card`, `ring-tile-card`, `streamline-card`, `layout-card`.
+* **Fonctionnalités** :
+    * Suivi énergie : Journalier & Mensuel (730h), moyennes glissantes (24h/730h).
+    * Suivi Clim/Radiateurs : Calcul automatique des cibles (Été/Hiver) et **DUT** (Durée d'Utilisation Totale).
+    * Qualité d'air : Monitoring détaillé PM2.5 et tCOV par pièce.
+
+---
+
+## 🔒 Sauvegardes & Git
+* **Automatique** : Backup GitHub via scripts (`.scripts/ha_git_backup.sh`) et automatisations.
+* **Fréquence** : Commit horaire (H+10) et commit complet hebdomadaire (Dimanche 03h40).
+* **Hygiène** : `.gitignore` strict (exclusion des bases `.db`, `.storage`, secrets).
+
+---
+
+## 📂 Structure du projet
+* `configuration.yaml` : Cœur du système avec inclusions modulaires.
+* `templates/` : Capteurs virtuels Jinja2 (Séries 01 à 18).
+* `automations.yaml` : Règles métier sans ID globaux pour la stabilité.
+* `dashboard*.yaml` : Dashboards Lovelace versionnés.
+
+---
+
+## 🚀 Prochains objectifs
+* Migration vers `streamline_templates`.
+* Automatisation prédictive de la climatisation (Locale + Météo).
+* Monitoring avancé des ressources add-ons (RAM/CPU Studio Code Server).
+
+---
+
+## 📸 Aperçu
+<p align="center">
+  <img width="1220" height="3520" alt="HA" src="https://github.com/user-attachments/assets/fc33371e-3d93-4102-a357-14aa3a4a8863" />
+</p>
+
+---
+
+✨ **Projet vivant, optimisé par IA et en évolution constante !**
 
 ## 📖 Liens & Communauté
 * [Forum HACF](https://forum.hacf.fr) 
