@@ -3,6 +3,7 @@
 !*.yml
 !*.md
 !.gitignore
+! notifs/diag_conso_elec.txt
 
 # --- Secrets & jetons (NE PAS PUBLISH) ---
 secrets.yaml

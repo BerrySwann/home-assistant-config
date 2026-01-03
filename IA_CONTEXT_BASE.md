@@ -56,6 +56,7 @@ Dernière mise à jour : 2026-01-01
 - Scripts : https://raw.githubusercontent.com/BerrySwann/home-assistant-config/main/scripts.yaml
 - sensors: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors.yaml
 - shell_command: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/shell_command.yaml
+- sql: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sql.yaml
 - utility_meter: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/utility_meter.yaml  
 
 ### 📂 Météo (Série 01)
