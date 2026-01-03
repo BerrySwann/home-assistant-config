@@ -82,6 +82,20 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ---
 
+## 📏 RÈGLE CARD_MOD : Obligation d'ajouter systématiquement le bloc suivant à la fin de chaque carte :
+
+YAML
+
+card_mod:
+  style: |
+    ha-card {
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent;
+    }
+
+---
+
 ## 🏠 ORGANISATION DES PIÈCES ET PÔLES
 
 **ORDRE DES PIÈCES (1 À 10)** :  
