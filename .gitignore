@@ -3,7 +3,6 @@
 !*.yml
 !*.md
 !.gitignore
-!notifs/diag_conso_elec.txt
 
 # --- Secrets & jetons (NE PAS PUBLISH) ---
 secrets.yaml
@@ -62,3 +61,7 @@ migration-*-to-*.log
 *.webp
 *.ico
 # "[L60] Ignorer .txt & images (bruit)"
+
+# --- EXCEPTIONS FINALES (LES PLUS FORTES) ---
+!notifs/diag_conso_elec.txt
+# "[L65] Force l inclusion du diagnostic conso malgré l interdiction .txt"
