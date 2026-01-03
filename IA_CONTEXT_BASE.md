@@ -36,6 +36,7 @@ ORDRE DES PÔLES (1 À 3) :
  - PRISES | 2. CHAUFFAGE/CLIM | 3. ÉCLAIRAGE.
 
 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
+
 **1. Pôle Prises**
   - ENTRÉE (1): box_internet, horloge.
   - SALON (4): pc_s_gege, salon_chargeur.
@@ -44,14 +45,14 @@ ORDRE DES PÔLES (1 À 3) :
   - CHAMBRE (9): tete_de_lit, tv.
   - STANDBY (10): all_standby.
 
-2. Pôle Chauffage / Clim
+**2. Pôle Chauffage / Clim**
   - SALON (4): clim_salon.
   - CUISINE (5): radiateur_cuisine.
   - BUREAU (7): clim_bureau.
   - SDB (8): soufflant, seche_serv.
   - CHAMBRE (9): clim_chambre.
 
-3. Pôle Éclairage
+**3. Pôle Éclairage**
   - ENTRÉE (1): Hue White.
   - SALON (4): Table, Ambiance 1, 2, 3, Color 1.
   - CUISINE (5): Hue White.
