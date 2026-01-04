@@ -186,16 +186,6 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ---
 
-### 5. RÈGLE D'ORDRE INTERNE (PIÈCES & PÔLES)
-Pour chaque section de capteurs, l'ordre de rédaction doit être :
-1. **HIÉRARCHIE DES PIÈCES** : Respecter l'ordre numérique de 1 à 10.
-2. **HIÉRARCHIE DES PÔLES** : 
-   - 1. CHAUFFAGE/CLIM
-   - 2. PRISES
-   - 3. ÉCLAIRAGE
-
----
-
 ## 📊 LOGIQUE DE TRI PAR UNITÉ (SENSORS)
 **Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
 
