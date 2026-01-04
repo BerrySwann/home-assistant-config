@@ -198,11 +198,12 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 ### SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV) (- platform: statistics)
   * *Titre* : SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)
 
-### 1. PÔLE 1 : CHAUFFAGE & CLIM 
+### 1. PÔLE 1 : CHAUFFAGE & CLIM
+  * *Titre* : SENSOR : `PÔLE 1. CHAUFFAGE & CLIMATISATION`
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
-  * *Titre* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
+  * *Titre Secondaire* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
 - **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement)
-  * *Titre* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION` (- platform: history_stats)
+  * *Titre Secondaire* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION` (- platform: history_stats)
 
 ### 2. PÔLE 2 : PRISES
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
