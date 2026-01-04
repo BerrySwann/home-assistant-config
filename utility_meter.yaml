@@ -1,10 +1,10 @@
-#==================================================================
-# Utility_merter.yaml
-#==================================================================
-#
-# toto éclaire (foudres - Point d'impact)
-#
-#==================================================================
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ UTILITY METER : COMPTEURS DE SUIVI INTÉGRAL (VERSION EXHAUSTIVE)         │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ BLITZORTUNG : SUIVI DES IMPACTS DE FOUDRE                                │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 
 eclair_yearly:
   source: sensor.blitzortung_lightning_counter
@@ -26,45 +26,53 @@ eclair_hourly:
   source: sensor.blitzortung_lightning_counter
   cycle: hourly
 
-# ==========================================================
-# SUIVI MENSUEL DU DUT (DURÉE D'UTILISATION TOTALE)
-# [2026-01-03] modif : Ajout des compteurs mensuels S/R/B/C
-# ==========================================================
-
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ DUT : DURÉE D'UTILISATION TOTALE (CLIM & RADIATEURS)                     │
+# │ [2026-01-03] modif : Ajout des compteurs mensuels S/R/B/C                |
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# ┌────────────────────────────────────┐
+# │ PIÈCE 4. SALON                     │
+# └────────────────────────────────────┘
 dut_clim_salon_mensuel:
   source: sensor.dut_clim_salon
   name: "DUT Mensuel Clim Salon"
   unique_id: dut_clim_salon_mensuel
   cycle: monthly
 
+# ┌────────────────────────────────────┐
+# │ PIÈCE 5. CUISINE                   │
+# └────────────────────────────────────┘
 dut_radiateur_cuisine_mensuel:
   source: sensor.dut_radiateur_cuisine
   name: "DUT Mensuel Radiateur Cuisine"
   unique_id: dut_radiateur_cuisine_mensuel
   cycle: monthly
 
+# ┌────────────────────────────────────┐
+# │ PIÈCE 7. BUREAU                    │
+# └────────────────────────────────────┘
 dut_clim_bureau_mensuel:
   source: sensor.dut_clim_bureau
   name: "DUT Mensuel Clim Bureau"
   unique_id: dut_clim_bureau_mensuel
   cycle: monthly
 
+# ┌────────────────────────────────────┐
+# │ PIÈCE 9. CHAMBRE                   │
+# └────────────────────────────────────┘
 dut_clim_chambre_mensuel:
   source: sensor.dut_clim_chambre
   name: "DUT Mensuel Clim Chambre"
   unique_id: dut_clim_chambre_mensuel
   cycle: monthly
 
-#==================================================================
-#
-# TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre
-#
-#==================================================================
-
-#------------------------------------------------------------
-# CLIM SALON
-#------------------------------------------------------------
-
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ ÉNERGIE : PÔLE 2. CHAUFFAGE & CLIMATISATION                              |
+# │ TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre       │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# ┌────────────────────────────────────┐
+# │ PIÈCE 4. SALON                     │
+# └────────────────────────────────────┘
 clim_salon_annuel_um:
   source: sensor.clim_salon_nous_energy
   cycle: yearly
@@ -81,10 +89,9 @@ clim_salon_quotidien_um:
   source: sensor.clim_salon_nous_energy
   cycle: daily
 
-#------------------------------------------------------------
-# RADIATEUR CUISINE
-#------------------------------------------------------------
-
+# ┌────────────────────────────────────┐
+# │ PIÈCE 5. CUISINE                   │
+# └────────────────────────────────────┘
 radiateur_elec_cuisine_annuel_um:
   source: sensor.radiateur_elec_cuisine_energy
   cycle: yearly
@@ -101,10 +108,9 @@ radiateur_elec_cuisine_quotidien_um:
   source: sensor.radiateur_elec_cuisine_energy
   cycle: daily
 
-#------------------------------------------------------------
-# CLIM BUREAU
-#------------------------------------------------------------
-
+# ┌────────────────────────────────────┐
+# │ PIÈCE 7. BUREAU                    │
+# └────────────────────────────────────┘
 clim_du_bureau_annuel_um:
   source: sensor.clim_du_bureau_nous_energy
   cycle: yearly
@@ -121,10 +127,9 @@ clim_du_bureau_quotidien_um:
   source: sensor.clim_du_bureau_nous_energy
   cycle: daily
 
-#------------------------------------------------------------
-# SOUFLANT SALLE DE BAIN
-#------------------------------------------------------------
-
+# ┌────────────────────────────────────┐
+# │ PIÈCE 8. SDB                       │
+# └────────────────────────────────────┘
 radiateur_sdb_annuel_um:
   source: sensor.prise_radiateur_salle_de_bain_nous_energy
   cycle: yearly
@@ -141,10 +146,7 @@ radiateur_sdb_quotidien_um:
   source: sensor.prise_radiateur_salle_de_bain_nous_energy
   cycle: daily
 
-#------------------------------------------------------------
-# SECHE-SERVIETTES SALLE DE BAIN
-#------------------------------------------------------------
-
+# --- SECHE-SERVIETTES SALLE DE BAIN ---
 seche_serviettes_sdb_annuel_um:
   source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
   cycle: yearly
@@ -161,10 +163,9 @@ seche_serviettes_sdb_quotidien_um:
   source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
   cycle: daily
 
-#------------------------------------------------------------
-# CLIM CHAMBRE
-#------------------------------------------------------------
-
+# ┌────────────────────────────────────┐
+# │ PIÈCE 9. CHAMBRE                   │
+# └────────────────────────────────────┘
 clim_chambre_annuel_um:
   source: sensor.clim_chambre_nous_energy
   cycle: yearly
@@ -181,14 +182,14 @@ clim_chambre_quotidien_um:
   source: sensor.clim_chambre_nous_energy
   cycle: daily
 
-#============================================================================
-# TOTO Eclairage salon / entree-cuisine-couloir / bureau / Chambre
-#============================================================================
-
-#------------------------------------------------------------
-# Eclairage SALON
-#------------------------------------------------------------
-
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │ ÉCLAIRAGE : PÔLE 3. PAR ZONES                                                │
+# │ TOTO Eclairage [salon] / [entree-cuisine-couloir] / [bureau] / [Chambre]     |
+# │ TOTO Eclairage [salon] / [cuisine] / [entree-couloir] / [bureau] / [Chambre] |
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+# ┌────────────────────────────────────┐
+# │ PIÈCE 4. SALON                     │
+# └────────────────────────────────────┘
 eclairage_salon_5_annuel_um:
   source: sensor.eclairage_salon_5_energie
   cycle: yearly
@@ -205,9 +206,9 @@ eclairage_salon_5_quotidien_um:
   source: sensor.eclairage_salon_5_energie
   cycle: daily
 
-#------------------------------------------------------------
-# Eclairage APPARTEMENT (3 Entrée, cuisine & couloir) (HOME)
-#------------------------------------------------------------
+# ╭────────────────────────────────────────────────────────────╮
+# │ Eclairage APPARTEMENT (3 Entrée, cuisine & couloir) (HOME) |
+# ╰────────────────────────────────────────────────────────────╯
 eclairage_appart_3_annuel_um:
   source: sensor.eclairage_appart_3_energie
   cycle: yearly
@@ -224,10 +225,9 @@ eclairage_appart_3_quotidien_um:
   source: sensor.eclairage_appart_3_energie
   cycle: daily
 
-#------------------------------------------------------------
-# Eclairage CUISINE (1)
-#------------------------------------------------------------
-
+# ┌────────────────────────────────────┐
+# │ PIÈCE 5. CUISINE                   │
+# └────────────────────────────────────┘
 eclairage_cuisine_1_annuel_um:
   source: sensor.eclairage_cuisine_1_energie
   cycle: yearly

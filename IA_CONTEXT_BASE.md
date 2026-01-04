@@ -160,6 +160,9 @@ card_mod:
 - **7. BUREAU**  : Play 1, 2, 3, Hue White 1, 2.
 - **8. SDB**     : Miroir Sonoff, Hue White.
 - **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
+### 3. Pôle Éclairage subtilité 
+- **1, 5 & 6 Eclairage APPARTEMENT** (3 Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
+- **1 & 6 Eclairage APPARTEMENT** (2 Éclairages - 1. ENTRÉE & 6. COULOIR) 
 
 ---
 
