@@ -32,7 +32,7 @@
 
 ---
 
-## 📏 RÈGLES DE TITRAGE YAML (HIÉRARCHIE VISUELLE)
+## 📏 RÈGLES DE STRUCTURATION ET DE TITRAGEDES FICHIERS (YAML) (HIÉRARCHIE VISUELLE)
 **Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml).**
 
 ### 1. Titre Principal (Section / Série / Plateforme)
@@ -49,6 +49,25 @@
 - **Format** : Commentaire simple avec tirets (`# --- nom_equipement ---`).
 - **Style** : Texte en minuscules (doit correspondre au slug de l'entité).
 - **Usage** : Obligatoire juste au-dessus du bloc de configuration d'un appareil spécifique.
+
+### 4. HIÉRARCHIE DE TRI (SÉPARATION STRICTE)
+- **RÈGLE D'OR :** On ne mélange JAMAIS les types d'équipements au sein d'une même pièce.
+- **STRUCTURE :** Le tri se fait d'abord par **PÔLE** (Type), puis par **PIÈCE** (Numérotation).
+- **ORDRE DES BLOCS :**
+    1. **BLOC PÔLE 1 (CHAUFFAGE/CLIM) :** Regroupe toutes les pièces de 1 à 10.
+    2. **BLOC PÔLE 2 (PRISES) :** Regroupe toutes les pièces de 1 à 10.
+    3. **BLOC PÔLE 3 (ÉCLAIRAGE) :** Regroupe toutes les pièces de 1 à 10.
+
+Chaque Pôle doit obligatoirement commencer par un **Titre Principal (ASCII 74 car.)**.
+
+### 5. ORDRE OFFICIEL DES PIÈCES (INDEX 1 À 10)
+Respecter scrupuleusement cette numérotation dans chaque bloc de pôle :
+1. ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. AUTRE.
+
+### 6. CONVENTION DE NOMMAGE (ENTITÉS)
+- `name:` : Doit être en "Nom Lisible" (Majuscules, Espaces, ex: "Clim Salon kWh").
+- `unique_id:` : Doit être identique au name mais en "slug" (Minuscules, Underscores, ex: "clim_salon_kwh").
+- **Note :** L' `unique_id` est OBLIGATOIRE pour permettre la gestion via l'interface UI de HA.
 
 ---
 
@@ -226,9 +245,9 @@ Pour chaque section de capteurs, l'ordre de rédaction doit être :
 
 ### 2. PÔLE 3 : ÉCLAIRAGE (LOGIQUE DE REGROUPEMENT)
 - **SOUS-SECTION ZONES** : Compteurs calculant la somme d'une pièce ou d'un groupe (ex: Salon_5x).
-  * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITEE`
+  * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITÉ`
 - **SOUS-SECTION UNITAIRE** : Compteurs individuels pour chaque ampoule Hue/Sonoff.
-  * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITEE`
+  * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITÉ`
 
 ## 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
   ### 📂 Configuration & Scripts
