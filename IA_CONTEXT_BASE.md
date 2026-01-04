@@ -131,26 +131,26 @@ card_mod:
 1. ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. STANDBY.
 
 **ORDRE DES PÔLES (1 À 3)** :  
-1. PRISES | 2. CHAUFFAGE/CLIM | 3. ÉCLAIRAGE.
+2. CHAUFFAGE/CLIM | 2. PRISES | 3. ÉCLAIRAGE.
 
 ---
 
 ## 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
 
-### 1. Pôle Prises
+### 1. Pôle Chauffage / Clim
+- **4. SALON** : clim_salon.
+- **5. CUISINE** : radiateur_cuisine.
+- **7. BUREAU** : clim_bureau.
+- **8. SDB** : soufflant, seche_serv.
+- **9. CHAMBRE** : clim_chambre.
+
+### 2. Pôle Prises
 - **1. ENTRÉE** : box_internet, horloge.
 - **4. SALON** : pc_s_gege, salon_chargeur.
 - **5. CUISINE** : micro_ondes, lave_linge, lave_vaisselle, airfryer, four_plaque, frigo, congel.
 - **7. BUREAU** : bureau_pc, fer.
 - **9. CHAMBRE** : tete_de_lit, tv.
 - **10. STANDBY** : all_standby.
-
-### 2. Pôle Chauffage / Clim
-- **4. SALON** : clim_salon.
-- **5. CUISINE** : radiateur_cuisine.
-- **7. BUREAU** : clim_bureau.
-- **8. SDB** : soufflant, seche_serv.
-- **9. CHAMBRE** : clim_chambre.
 
 ### 3. Pôle Éclairage
 - **1. ENTRÉE**  : Hue White.
@@ -160,11 +160,44 @@ card_mod:
 - **7. BUREAU**  : Play 1, 2, 3, Hue White 1, 2.
 - **8. SDB**     : Miroir Sonoff, Hue White.
 - **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
-### 3. Pôle Éclairage subtilité 
+
+### 3. Pôle Éclairage spécifique (utility_meter)
 - **1, 5 & 6 Eclairage APPARTEMENT** (3 Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
 - **1 & 6 Eclairage APPARTEMENT** (2 Éclairages - 1. ENTRÉE & 6. COULOIR) 
 
+- **ZONE 4. (5x) SALON** : [somme de] Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
+- **ZONE. ((3x) Entrée, cuisine & couloir) (HOME)** : [somme de] Hue White, Hue White, Hue White.
+- **ZONE 5. (1x) CUISINE** : [somme de] Hue White.
+- **ZONE. ((2x) Entrée & couloir) (HOME)** : [somme de] Hue White, Hue White.
+- **ZONE 7. (5x) BUREAU** : [somme de] Play 1, 2, 3, Hue White, Hue White.
+- **ZONE 8. (2x) SDB** : [somme de] Miroir Sonoff, Hue White.
+- **ZONE 9. (4x) CHAMBRE** : [somme de] Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
+
 ---
+
+### 3. Titre Tertiaire (Équipement individuel)
+- **Format** : Commentaire simple avec tirets (`# --- nom_equipement ---`).
+- **Style** : Texte en minuscules (doit correspondre au slug de l'entité).
+- **Usage** : Obligatoire juste au-dessus du bloc de configuration d'un appareil spécifique.
+
+---
+
+## 📊 LOGIQUE DE TRI PAR UNITÉ (UTILITY_METER)
+**Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
+
+### 1. PÔLE 1 : CHAUFFAGE & CLIM (LOGIQUE THERMIQUE)
+- **SOUS-SECTION [_um]** : Uniquement les sources `_energy` brutes (Calculs internes).
+  * *Titre* : `PÔLE 1. ÉNERGIE: [_um] CHAUFFAGE / CLIM`
+- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
+  * *Titre* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
+- **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement).
+  * *Titre* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION`
+
+### 2. PÔLE 3 : ÉCLAIRAGE (LOGIQUE DE REGROUPEMENT)
+- **SOUS-SECTION ZONES** : Compteurs calculant la somme d'une pièce ou d'un groupe (ex: Salon_5x).
+  * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITEE`
+- **SOUS-SECTION UNITAIRE** : Compteurs individuels pour chaque ampoule Hue/Sonoff.
+  * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITEE`
 
 ## 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
 

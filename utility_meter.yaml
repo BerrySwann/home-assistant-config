@@ -26,9 +26,9 @@ eclair_hourly:
   cycle: hourly
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ PÔLE 1. [_um] CHAUFFAGE / CLIM :                          │
+# │ PÔLE 1. ÉNERGIE: [_um] CHAUFFAGE / CLIM                                  │
 # ╰──────────────────────────────────────────────────────────────────────────╯
-# ╭──────────────────────────────────────────────────────────────────────────╮                          |
+# ╭──────────────────────────────────────────────────────────────────────────╮
 # │ TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre       │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 # ┌────────────────────────────────────┐
@@ -214,13 +214,13 @@ clim_chambre_monthly:
   cycle: monthly
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ PÔLE 1. du: [kWh] CHAUFFAGE & CLIMATISATION                         │
-# │ DUT : DURÉE D'UTILISATION TOTALE (CLIM & RADIATEURS)                     │
+# │ PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION      │
 # │ [2026-01-03] modif : Ajout des compteurs mensuels S/R/B/C                |
 # ╰──────────────────────────────────────────────────────────────────────────╯
 # ┌────────────────────────────────────┐
 # │ PIÈCE 4. SALON                     │
 # └────────────────────────────────────┘
+# --- clim_salon ---
 dut_clim_salon_mensuel:
   source: sensor.dut_clim_salon
   name: "DUT Mensuel Clim Salon"
@@ -230,6 +230,7 @@ dut_clim_salon_mensuel:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 5. CUISINE                   │
 # └────────────────────────────────────┘
+# --- radiateur_cuisine ---
 dut_radiateur_cuisine_mensuel:
   source: sensor.dut_radiateur_cuisine
   name: "DUT Mensuel Radiateur Cuisine"
@@ -239,6 +240,7 @@ dut_radiateur_cuisine_mensuel:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 7. BUREAU                    │
 # └────────────────────────────────────┘
+# --- clim_bureau ---
 dut_clim_bureau_mensuel:
   source: sensor.dut_clim_bureau
   name: "DUT Mensuel Clim Bureau"
@@ -248,6 +250,7 @@ dut_clim_bureau_mensuel:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 9. CHAMBRE                   │
 # └────────────────────────────────────┘
+# --- clim_chambre ---
 dut_clim_chambre_mensuel:
   source: sensor.dut_clim_chambre
   name: "DUT Mensuel Clim Chambre"
@@ -448,7 +451,7 @@ eclairage_appart_3_quotidien_um:
   cycle: daily
 
 # ┌────────────────────────────────────┐
-# │ PIÈCE 5. (1x) CUISINE              │
+# │ ZONE 5. (1x) CUISINE               │
 # └────────────────────────────────────┘
 eclairage_cuisine_1_annuel_um:
   source: sensor.eclairage_cuisine_1_energie
@@ -548,6 +551,7 @@ eclairage_chambre_4_quotidien_um:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 1. ENTRÉE                    │
 # └────────────────────────────────────┘
+# --- HUE WHITE LAMP ---
 eclairage_hue_white_lamp_entree_annuel:
   source: sensor.hue_white_lamp_entree_energy
   name: eclairage_hue_white_lamp_entree_annuel
@@ -568,7 +572,7 @@ eclairage_hue_white_lamp_entree_quotidien:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 4. SALON                     │
 # └────────────────────────────────────┘
-# --- TABLE SALON ---
+# --- HUE WHITE LAMP TABLE SALON ---
 eclairage_hue_white_lamp_table_salon_annuel:
   source: sensor.hue_white_lamp_table_salon_energy
   name: eclairage_hue_white_lamp_table_salon_annuel
@@ -661,6 +665,7 @@ eclairage_hue_color_candle_salon_1_quotidien:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 5. CUISINE                   │
 # └────────────────────────────────────┘
+# --- HUE WHITE LAMP ---
 eclairage_hue_white_lamp_cuisine_annuel:
   source: sensor.hue_white_lamp_cuisine_energy
   name: eclairage_hue_white_lamp_cuisine_annuel
@@ -681,6 +686,7 @@ eclairage_hue_white_lamp_cuisine_quotidien:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 6. COULOIR                   │
 # └────────────────────────────────────┘
+# --- HUE WHITE LAMP ---
 eclairage_hue_white_lamp_couloir_annuel:
   source: sensor.hue_white_lamp_couloir_energy
   name: eclairage_hue_white_lamp_couloir_annuel
@@ -755,7 +761,7 @@ eclairage_hue_play_3_pc_bureau_quotidien:
   name: eclairage_hue_play_3_pc_bureau_quotidien
   cycle: daily
 
-# --- LAMPE BUREAU 1 ---
+# --- HUE WHITE LAMP 1 ---
 eclairage_lampe_bureau_1_hue_annuel:
   source: sensor.lampe_bureau_1_hue_energy
   name: eclairage_lampe_bureau_1_hue_annuel
@@ -773,7 +779,7 @@ eclairage_lampe_bureau_1_hue_quotidien:
   name: eclairage_lampe_bureau_1_hue_quotidien
   cycle: daily
 
-# --- LAMPE BUREAU 2 ---
+# --- HUE WHITE LAMP 2 ---
 eclairage_lampe_bureau_2_hue_annuel:
   source: sensor.lampe_bureau_2_hue_energy
   name: eclairage_lampe_bureau_2_hue_annuel
@@ -812,7 +818,7 @@ eclairage_relais_lumiere_sdb_sonoff_quotidien:
   name: eclairage_relais_lumiere_sdb_sonoff_quotidien
   cycle: daily
 
-# --- LAMPE HUE ---
+# --- HUE WHITE LAMP ---
 eclairage_lampe_salle_de_bain_hue_annuel:
   source: sensor.lampe_salle_de_bain_hue_energy
   name: eclairage_lampe_salle_de_bain_hue_annuel
