@@ -99,17 +99,26 @@
 # │ SENSOR : DUT - DURÉE D'UTILISATION TOTALE (CORRIGÉ)                      │
 # ╰──────────────────────────────────────────────────────────────────────────╯
   - platform: history_stats
-    name: "DUT Clim Salon" # [L4] modif (Retrait de "Jour" pour matcher votre carte)
-    unique_id: dut_clim_salon # [L5] modif
-    entity_id: sensor.salon_power_status # [L6] modif (Entité rétablie)
+    name: "DUT Clim Salon" 
+    unique_id: dut_clim_salon 
+    entity_id: sensor.salon_power_status 
     state: "on"
     type: time
     start: "{{ now().replace(hour=0, minute=0, second=0) }}"
     end: "{{ now() }}"
 
   - platform: history_stats
-    name: "DUT Clim Bureau" # [L14] modif
-    unique_id: dut_clim_bureau # [L15] modif
+    name: "DUT Radiateur Cuisine" 
+    unique_id: dut_radiateur_cuisine 
+    entity_id: sensor.cuisine_power_status 
+    state: "on"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+  - platform: history_stats
+    name: "DUT Clim Bureau" 
+    unique_id: dut_clim_bureau 
     entity_id: sensor.bureau_power_status
     state: "on"
     type: time
@@ -117,8 +126,8 @@
     end: "{{ now() }}"
 
   - platform: history_stats
-    name: "DUT Clim Chambre" # [L23] modif
-    unique_id: dut_clim_chambre # [L24] modif
+    name: "DUT Clim Chambre" 
+    unique_id: dut_clim_chambre 
     entity_id: sensor.chambre_power_status
     state: "on"
     type: time
