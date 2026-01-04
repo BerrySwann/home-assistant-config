@@ -195,10 +195,10 @@ soufflant_sdb_monthly:
   cycle: monthly
 
 # --- Seche_serv ---
-seche_serv_daily:
+seche_serv_sdb_daily:
   source: sensor.seche_serv_sdb_kwh
   cycle: daily
-seche_serv_monthly:
+seche_serv_sdb_monthly:
   source: sensor.seche_serv_sdb_kwh
   cycle: monthly
 
