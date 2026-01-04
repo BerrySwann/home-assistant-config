@@ -176,6 +176,16 @@ card_mod:
 
 ---
 
+### 3. RÈGLE D'ORDRE INTERNE (PIÈCES & PÔLES)
+Pour chaque section de capteurs, l'ordre de rédaction doit être :
+1. **HIÉRARCHIE DES PIÈCES** : Respecter l'ordre numérique de 1 à 10.
+2. **HIÉRARCHIE DES PÔLES** : 
+   - 1. CHAUFFAGE/CLIM
+   - 2. PRISES
+   - 3. ÉCLAIRAGE
+
+---
+
 ### 3. Titre Tertiaire (Équipement individuel)
 - **Format** : Commentaire simple avec tirets (`# --- nom_equipement ---`).
 - **Style** : Texte en minuscules (doit correspondre au slug de l'entité).
@@ -190,26 +200,20 @@ card_mod:
 ### SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME) (- platform: statistics & - platform: integration)
 ### SENSOR : PING HTTPS VSCODE (ERODI-HA.COM) (- platform: rest)
 ### SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV) (- platform: statistics)
-### SENSOR : DUT - DURÉE D'UTILISATION TOTALE (CORRIGÉ)
 
-### 1. PÔLE 1 : CHAUFFAGE & CLIM (LOGIQUE THERMIQUE)
-- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh` (issus de la plateforme `integration`).
-  * *Titre Principal* : `SENSOR : INTÉGRATION KWH ( PÔLES 1. CHAUFFAGE & CLIMATISATION PRISES)`
-  * *Contenu* : `│ SENSOR : INTÉGRATION KWH (PÔLES PRISES & CHAUFFAGE)                      │`
-  * *Titre Secondaire* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
+### 1. PÔLE 1 : CHAUFFAGE & CLIM 
+- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
+  * *Titre* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
+- **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement) (- platform: integration)
+  * *Titre* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION` (- platform: history_stats)
+
 
 ### 2. PÔLE 2 : PRISES
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
   * *Titre Secondaire* : `PÔLE 2. ÉNERGIE: [kWh] PRISES`
-  * *Règle de priorité* : Au sein d'une même pièce, le Pôle 1 (CHAUFFAGE/CLIM) doit impérativement être listé **AVANT** le Pôle 2 (PRISES).
+  
 
-### 3. RÈGLE D'ORDRE INTERNE (PIÈCES & PÔLES)
-Pour chaque section de capteurs, l'ordre de rédaction doit être :
-1. **HIÉRARCHIE DES PIÈCES** : Respecter l'ordre numérique de 1 à 10.
-2. **HIÉRARCHIE DES PÔLES** : 
-   - 1. CHAUFFAGE/CLIM
-   - 2. PRISES
-   - 3. ÉCLAIRAGE
+
 
 ---
 
