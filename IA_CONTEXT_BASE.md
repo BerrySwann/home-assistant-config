@@ -160,7 +160,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **9. CHAMBRE** : tete_de_lit, tv.
 - **10. 10. AUTRE** : all_standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov.
 
-### 3. Pôle Éclairage
+### 3. Pôle Éclairage (le Pôle 3 est la vue physique (matériel).)
 - **1. ENTRÉE**  : Hue White.
 - **4. SALON**   : Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
 - **5. CUISINE** : Hue White.
@@ -169,7 +169,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **8. SDB**     : Miroir Sonoff, Hue White.
 - **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
 
-### 4. Pôle Éclairage spécifique (utility_meter)
+### 4. Pôle Éclairage spécifique (utility_meter) (le Pôle 4 est une vue logique (somme))
 - **1, 5 & 6 Eclairage APPARTEMENT** (3x Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
 - **1 & 6 Eclairage APPARTEMENT** (2x Éclairages - 1. ENTRÉE & 6. COULOIR) 
 
