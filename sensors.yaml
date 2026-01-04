@@ -181,6 +181,62 @@
     round: 3
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PÔLE 1. DURÉE D'UTILISATION [DUT] (CHAUFFAGE & CLIM)            │ # [L1] modif : Section isolée
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- dut_clim_salon ---
+  - platform: history_stats
+    name: "DUT Clim Salon" 
+    unique_id: dut_clim_salon 
+    entity_id: sensor.salon_power_status 
+    state: "on"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+# ┌───────────────────────────────────┐
+# │ 5. CUISINE                        │
+# └───────────────────────────────────┘
+# --- dut_radiateur_cuisine ---
+  - platform: history_stats
+    name: "DUT Radiateur Cuisine" 
+    unique_id: dut_radiateur_cuisine 
+    entity_id: sensor.cuisine_power_status 
+    state: "on"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- dut_clim_bureau ---
+  - platform: history_stats
+    name: "DUT Clim Bureau" 
+    unique_id: dut_clim_bureau 
+    entity_id: sensor.bureau_power_status
+    state: "on"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- dut_clim_chambre ---
+  - platform: history_stats
+    name: "DUT Clim Chambre" 
+    unique_id: dut_clim_chambre 
+    entity_id: sensor.chambre_power_status
+    state: "on"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
 # │ SENSOR : INTÉGRATION KWH (PÔLE 2. PRISES)                                │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

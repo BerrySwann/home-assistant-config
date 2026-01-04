@@ -190,19 +190,23 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 **Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
 
 ### SENSOR : NOTIFICATION FOUDRES BLITZORTUNG (- platform: rest)
+  * *Titre* : SENSOR : NOTIFICATION FOUDRES BLITZORTUNG
 ### SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME) (- platform: statistics & - platform: integration)
+  * *Titre* : SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME)
 ### SENSOR : PING HTTPS VSCODE (ERODI-HA.COM) (- platform: rest)
+  * *Titre* : SENSOR : PING HTTPS VSCODE (ERODI-HA.COM)
 ### SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV) (- platform: statistics)
+  * *Titre* : SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)
 
 ### 1. PÔLE 1 : CHAUFFAGE & CLIM 
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
   * *Titre* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
-- **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement) (- platform: integration)
+- **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement)
   * *Titre* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION` (- platform: history_stats)
 
 ### 2. PÔLE 2 : PRISES
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
-  * *Titre Secondaire* : `PÔLE 2. ÉNERGIE: [kWh] PRISES`
+  * *Titre Secondaire* : `PÔLE 2. ÉNERGIE: [kWh] PRISES` (- platform: integration)
 
 ---
 
