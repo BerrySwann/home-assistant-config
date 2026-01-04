@@ -3,13 +3,15 @@
 
 ---
 
-# 🏠 STRUCTURE DU LOGEMENT (uniquement pour l'analyse des consommations électrique)
+# 🏠 STRUCTURE DU LOGEMENT 
+(uniquement pour l'analyse des consommations électrique)
 - **Localisation :** 06140 Vence (Altitude ~360m).
 - **Type :** Immeuble début 1980, 4ème et dernier étage (Sous toiture).
 - **Caractéristiques :** Traversant SUD/NORD, Simple vitrage partout.
 - **VMC :** Présente en SDB (Crée une dépression thermique).
 
-# 📏 DIMENSIONS & PÔLES (uniquement pour l'analyse des consommations électrique)
+# 📏 DIMENSIONS & PÔLES 
+(uniquement pour l'analyse des consommations électrique)
 1. **SALON (Sud) :** 6.52m x 3.97m (25.88 m²). 
    - *Équipement :* Split mural, Volet motorisé (Auto: 7h30 -> Coucher soleil / Fermé si Absence / Fermé si >34°C).
    - *Note :* Apport solaire crucial dès 15h.
@@ -26,7 +28,8 @@
    - *Équipement :* Split mural. Pas de volet motorisé.
    - *Note :* Forte dissipation thermique (DUT élevé).
 
-# 🌡️ STRATÉGIE THERMIQUE & MONITORING (uniquement pour l'analyse des consommations électrique)
+# 🌡️ STRATÉGIE THERMIQUE & MONITORING 
+(uniquement pour l'analyse des consommations électrique)
 - **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure.
 - **Mode Absence :** Si T° Ext < 10°C, tous les climats passent à 17°C ou 18°C.
 
