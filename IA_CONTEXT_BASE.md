@@ -206,7 +206,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ### 2. PÔLE 2 : PRISES
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
-  * *Titre Secondaire* : `PÔLE 2. ÉNERGIE: [kWh] PRISES` (- platform: integration)
+  * *Titre* : `PÔLE 2. ÉNERGIE: [kWh] PRISES` (- platform: integration)
 
 ---
 
