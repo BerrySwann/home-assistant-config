@@ -187,27 +187,25 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 ---
 
 ## 📊 LOGIQUE DE TRI PAR UNITÉ (SENSORS)
-**Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
+Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.
 
-### SENSOR : NOTIFICATION FOUDRES BLITZORTUNG (- platform: rest)
-  * *Titre* : SENSOR : NOTIFICATION FOUDRES BLITZORTUNG
-### SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME) (- platform: statistics & - platform: integration)
-  * *Titre* : SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME)
-### SENSOR : PING HTTPS VSCODE (ERODI-HA.COM) (- platform: rest)
-  * *Titre* : SENSOR : PING HTTPS VSCODE (ERODI-HA.COM)
-### SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV) (- platform: statistics)
-  * *Titre* : SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)
+### CAPTEURS SYSTÈMES & SERVICES
+*(Titre Principal 74 car. pour chaque section)*
+- **SENSOR : NOTIFICATION FOUDRES BLITZORTUNG** (`platform: rest`)
+- **SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME)** (`platform: statistics` & `integration`)
+- **SENSOR : PING HTTPS VSCODE (ERODI-HA.COM)** (`platform: rest`)
+- **SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)** (`platform: statistics`)
 
 ### 1. PÔLE 1 : CHAUFFAGE & CLIM
-  * *Titre* : SENSOR : `PÔLE 1. CHAUFFAGE & CLIMATISATION`
-- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
-  * *Titre Secondaire* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
-- **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement)
-  * *Titre Secondaire* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION` (- platform: history_stats)
+- **Titre Principal (74 car.)** : `SENSOR : PÔLE 1. CHAUFFAGE & CLIMATISATION`
+- **SOUS-SECTION [kWh]** : Consommation réelle (`platform: integration`).
+    - *Titre Secondaire (37 car.)* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIM`
+- **SOUS-SECTION [DUT]** : Durée de fonctionnement (`platform: history_stats`).
+    - *Titre Secondaire (37 car.)* : `PÔLE 1. DURÉE D'UTILISATION [DUT]`
 
 ### 2. PÔLE 2 : PRISES
-- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
-  * *Titre* : `PÔLE 2. ÉNERGIE: [kWh] PRISES` (- platform: integration)
+- **SOUS-SECTION [kWh]** : Consommation réelle (`platform: integration`).
+    - **Titre Principal (74 car.)** : `SENSOR : PÔLE 2. ÉNERGIE: [kWh] PRISES`
 
 ---
 
