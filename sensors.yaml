@@ -1,8 +1,10 @@
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : NOTIFICATION FOUDRES BLITZORTUNG                                │
+# │ SENSOR : NOTIFICATIONS ET SYSTÈME                                        │
 # ╰──────────────────────────────────────────────────────────────────────────╯
+
+# --- blitzortung_lightning_localisation ---
   - platform: rest
-    name: Blitzortung Lightning Localisation
+    name: "Blitzortung Lightning Localisation"
     unique_id: blitzortung_lightning_localisation
     scan_interval: 3600
     resource_template: >-
@@ -13,31 +15,19 @@
     json_attributes:
       - features
 
-# ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME)                            │
-# ╰──────────────────────────────────────────────────────────────────────────╯
+# --- mini_pc_charge_moyenne_24h_w ---
   - platform: statistics
-    name: "Mini PC Charge moyenne 24h (W)"
+    name: "Mini PC Charge Moyenne 24h (W)"
     unique_id: mini_pc_charge_moyenne_24h_w
     entity_id: sensor.prise_mini_pc_ikea_power
     state_characteristic: mean
     max_age: { hours: 24 }
     precision: 1
 
-  - platform: integration
-    source: sensor.prise_mini_pc_ikea_power
-    name: prise_mini_pc_ikea_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-# ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : PING HTTPS VSCODE (ERODI-HA.COM)                                │
-# ╰──────────────────────────────────────────────────────────────────────────╯
+# --- ping_https_vscode ---
   - platform: rest
     name: "Ping HTTPS VSCode"
-    unique_id: ping_https_vscode # [L65] modif
+    unique_id: ping_https_vscode
     resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
     method: GET
     timeout: 15
@@ -47,48 +37,64 @@
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)                         │
 # ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- pm25_salon_mean_24h ---
   - platform: statistics
-    name: PM2.5 Salon (moy 24h)
+    name: "PM2.5 Salon (moy 24h)"
     unique_id: pm25_salon_mean_24h
     entity_id: sensor.qualite_air_salon_ikea_pm25
     state_characteristic: mean
     max_age: { hours: 24 }
     precision: 1
 
+# --- tcov_salon_mean_24h ---
   - platform: statistics
-    name: PM2.5 Bureau (moy 24h)
-    unique_id: pm25_bureau_mean_24h
-    entity_id: sensor.qualite_air_bureau_ikea_pm25
-    state_characteristic: mean
-    max_age: { hours: 24 }
-    precision: 1
-
-  - platform: statistics
-    name: PM2.5 Chambre (moy 24h)
-    unique_id: pm25_chambre_mean_24h
-    entity_id: sensor.qualite_air_chambre_ikea_pm25
-    state_characteristic: mean
-    max_age: { hours: 24 }
-    precision: 1
-
-  - platform: statistics
-    name: tCOV Salon (moy 24h)
+    name: "tCOV Salon (moy 24h)"
     unique_id: tcov_salon_mean_24h
     entity_id: sensor.qualite_air_salon_ikea_voc_index
     state_characteristic: mean
     max_age: { hours: 24 }
     precision: 1
 
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- pm25_bureau_mean_24h ---
   - platform: statistics
-    name: tCOV Bureau (moy 24h)
+    name: "PM2.5 Bureau (moy 24h)"
+    unique_id: pm25_bureau_mean_24h
+    entity_id: sensor.qualite_air_bureau_ikea_pm25
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# --- tcov_bureau_mean_24h ---
+  - platform: statistics
+    name: "tCOV Bureau (moy 24h)"
     unique_id: tcov_bureau_mean_24h
     entity_id: sensor.qualite_air_bureau_ikea_voc_index
     state_characteristic: mean
     max_age: { hours: 24 }
     precision: 1
 
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- pm25_chambre_mean_24h ---
   - platform: statistics
-    name: tCOV Chambre (moy 24h)
+    name: "PM2.5 Chambre (moy 24h)"
+    unique_id: pm25_chambre_mean_24h
+    entity_id: sensor.qualite_air_chambre_ikea_pm25
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# --- tcov_chambre_mean_24h ---
+  - platform: statistics
+    name: "tCOV Chambre (moy 24h)"
     unique_id: tcov_chambre_mean_24h
     entity_id: sensor.qualite_air_chambre_ikea_voc_index
     state_characteristic: mean
@@ -96,226 +102,270 @@
     precision: 1
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : DUT - DURÉE D'UTILISATION TOTALE (CORRIGÉ)                      │
+# │ SENSOR : INTÉGRATION KWH (PÔLE 1. CHAUFFAGE & CLIMATISATION)             │
 # ╰──────────────────────────────────────────────────────────────────────────╯
-  - platform: history_stats
-    name: "DUT Clim Salon" 
-    unique_id: dut_clim_salon 
-    entity_id: sensor.salon_power_status 
-    state: "on"
-    type: time
-    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
-    end: "{{ now() }}"
 
-  - platform: history_stats
-    name: "DUT Radiateur Cuisine" 
-    unique_id: dut_radiateur_cuisine 
-    entity_id: sensor.cuisine_power_status 
-    state: "on"
-    type: time
-    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
-    end: "{{ now() }}"
-
-  - platform: history_stats
-    name: "DUT Clim Bureau" 
-    unique_id: dut_clim_bureau 
-    entity_id: sensor.bureau_power_status
-    state: "on"
-    type: time
-    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
-    end: "{{ now() }}"
-
-  - platform: history_stats
-    name: "DUT Clim Chambre" 
-    unique_id: dut_clim_chambre 
-    entity_id: sensor.chambre_power_status
-    state: "on"
-    type: time
-    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
-    end: "{{ now() }}"
-
-# ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : INTÉGRATION KWH (PÔLES PRISES & CHAUFFAGE)                      │
-# ╰──────────────────────────────────────────────────────────────────────────╯
-# --- 1. ENTRÉE ---
-  - platform: integration
-    source: sensor.prise_box_internet_ikea_power
-    name: prise_box_internet_ikea_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_horloge_ikea_power
-    name: prise_horloge_ikea_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-# --- 4. SALON ---
-  - platform: integration
-    source: sensor.prise_pc_s_gege_ikea_power
-    name: prise_pc_s_gege_ikea_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_salon_chargeur_nous_power
-    name: prise_salon_chargeur_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- clim_salon_kwh ---
   - platform: integration
     source: sensor.clim_salon_nous_power
-    name: clim_salon_kwh
+    name: "Clim Salon kWh"
+    unique_id: clim_salon_kwh
     method: left
     unit_prefix: k
     unit_time: h
     round: 3
 
-# --- 5. CUISINE ---
-  - platform: integration
-    source: sensor.prise_four_micro_ondes_nous_power
-    name: prise_four_micro_ondes_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_lave_linge_nous_power
-    name: prise_lave_linge_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_lave_vaisselle_nous_power
-    name: prise_lave_vaisselle_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_airfryer_ninja_nous_power
-    name: prise_airfryer_ninja_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.four_et_plaque_de_cuisson_power
-    name: four_et_plaque_de_cuisson_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_frigo_cuisine_nous_power
-    name: prise_frigo_cuisine_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_congelateur_cuisine_nous_power
-    name: prise_congelateur_cuisine_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
+# ┌───────────────────────────────────┐
+# │ 5. CUISINE                        │
+# └───────────────────────────────────┘
+# --- radiateur_cuisine_kwh ---
   - platform: integration
     source: sensor.radiateur_elec_cuisine_power
-    name: radiateur_cuisine_kwh
+    name: "Radiateur Cuisine kWh"
+    unique_id: radiateur_cuisine_kwh
     method: left
     unit_prefix: k
     unit_time: h
     round: 3
 
-# --- 7. BUREAU ---
-  - platform: integration
-    source: sensor.prise_bureau_pc_ikea_power
-    name: prise_bureau_pc_ikea_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_bureau_fer_a_repasser_nous_power
-    name: prise_bureau_fer_a_repasser_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- clim_bureau_kwh ---
   - platform: integration
     source: sensor.clim_du_bureau_nous_power
-    name: clim_bureau_kwh
+    name: "Clim Bureau kWh"
+    unique_id: clim_bureau_kwh
     method: left
     unit_prefix: k
     unit_time: h
     round: 3
 
-# --- 8. SDB ---
+# ┌───────────────────────────────────┐
+# │ 8. SDB                            │
+# └───────────────────────────────────┘
+# --- soufflant_sdb_kwh ---
   - platform: integration
     source: sensor.prise_radiateur_salle_de_bain_nous_power
-    name: soufflant_sdb_kwh
+    name: "Soufflant SDB kWh"
+    unique_id: soufflant_sdb_kwh
     method: left
     unit_prefix: k
     unit_time: h
     round: 3
 
+# --- seche_serv_sdb_kwh ---
   - platform: integration
     source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
-    name: seche_serv_sdb_kwh
+    name: "Seche Serv SDB kWh"
+    unique_id: seche_serv_sdb_kwh
     method: left
     unit_prefix: k
     unit_time: h
     round: 3
 
-# --- 9. CHAMBRE ---
-  - platform: integration
-    source: sensor.prise_tete_de_lit_chambre_power
-    name: prise_tete_de_lit_chambre_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
-  - platform: integration
-    source: sensor.prise_tv_chambre_nous_power
-    name: prise_tv_chambre_nous_kwh
-    method: left
-    unit_prefix: k
-    unit_time: h
-    round: 3
-
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- clim_chambre_kwh ---
   - platform: integration
     source: sensor.clim_chambre_nous_power
-    name: clim_chambre_kwh
+    name: "Clim Chambre kWh"
+    unique_id: clim_chambre_kwh
     method: left
     unit_prefix: k
     unit_time: h
     round: 3
 
-# --- 10. STANDBY ---
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : INTÉGRATION KWH (PÔLE 2. PRISES)                                │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ 1. ENTRÉE                         │
+# └───────────────────────────────────┘
+# --- prise_box_internet_ikea_kwh ---
   - platform: integration
-    source: sensor.all_standby_power
-    name: all_standby_kwh
+    source: sensor.prise_box_internet_ikea_power
+    name: "Prise Box Internet IKEA kWh"
+    unique_id: prise_box_internet_ikea_kwh
     method: left
     unit_prefix: k
     unit_time: h
     round: 3
+
+# --- prise_horloge_ikea_kwh ---
+  - platform: integration
+    source: sensor.prise_horloge_ikea_power
+    name: "Prise Horloge IKEA kWh"
+    unique_id: prise_horloge_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- prise_pc_s_gege_ikea_kwh ---
+  - platform: integration
+    source: sensor.prise_pc_s_gege_ikea_power
+    name: "Prise PC S Gege IKEA kWh"
+    unique_id: prise_pc_s_gege_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_salon_chargeur_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_salon_chargeur_nous_power
+    name: "Prise Salon Chargeur Nous kWh"
+    unique_id: prise_salon_chargeur_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 5. CUISINE                        │
+# └───────────────────────────────────┘
+# --- prise_four_micro_ondes_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_four_micro_ondes_nous_power
+    name: "Prise Four Micro Ondes Nous kWh"
+    unique_id: prise_four_micro_ondes_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_lave_linge_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_lave_linge_nous_power
+    name: "Prise Lave Linge Nous kWh"
+    unique_id: prise_lave_linge_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_lave_vaisselle_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_lave_vaisselle_nous_power
+    name: "Prise Lave Vaisselle Nous kWh"
+    unique_id: prise_lave_vaisselle_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_airfryer_ninja_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_airfryer_ninja_nous_power
+    name: "Prise Airfryer Ninja Nous kWh"
+    unique_id: prise_airfryer_ninja_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- four_et_plaque_de_cuisson_kwh ---
+  - platform: integration
+    source: sensor.four_et_plaque_de_cuisson_power
+    name: "Four et Plaque de Cuisson kWh"
+    unique_id: four_et_plaque_de_cuisson_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_frigo_cuisine_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_frigo_cuisine_nous_power
+    name: "Prise Frigo Cuisine Nous kWh"
+    unique_id: prise_frigo_cuisine_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_congelateur_cuisine_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_congelateur_cuisine_nous_power
+    name: "Prise Congelateur Cuisine Nous kWh"
+    unique_id: prise_congelateur_cuisine_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- prise_bureau_pc_ikea_kwh ---
+  - platform: integration
+    source: sensor.prise_bureau_pc_ikea_power
+    name: "Prise Bureau PC IKEA kWh"
+    unique_id: prise_bureau_pc_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_bureau_fer_a_repasser_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_bureau_fer_a_repasser_nous_power
+    name: "Prise Bureau Fer a Repasser Nous kWh"
+    unique_id: prise_bureau_fer_a_repasser_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- prise_tete_de_lit_chambre_kwh ---
+  - platform: integration
+    source: sensor.prise_tete_de_lit_chambre_power
+    name: "Prise Tete de Lit Chambre kWh"
+    unique_id: prise_tete_de_lit_chambre_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_tv_chambre_nous_kwh ---
+  - platform: integration
+    source: sensor.prise_tv_chambre_nous_power
+    name: "Prise TV Chambre Nous kWh"
+    unique_id: prise_tv_chambre_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 10. AUTRE                         │
+# └───────────────────────────────────┘
+# --- all_standby_kwh ---
+  - platform: integration
+    source: sensor.all_standby_power
+    name: "All Standby kWh"
+    unique_id: all_standby_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# annotations_log:
+# - '[Pôles] Séparation stricte des capteurs Integration par type (Chauffage vs Prises).'
+# - '[Titrage] Application des boîtes ASCII 74 car. (arrondies) et 37 car. (carrées).'
+# - '[Naming] Conversion de tous les "name" en Nom Lisible (Majuscules/Espaces).'
+# - '[Unique_ID] Création systématique de unique_id en format slug (Minuscules/Underscores).'
+# - '[Qualité Air] Tri des statistiques par pièce selon l'ordre officiel (4, 7, 9).'
+# - '[Section 10] Harmonisation du nom vers "AUTRE".'

@@ -32,42 +32,35 @@
 
 ---
 
-## 📏 RÈGLES DE STRUCTURATION ET DE TITRAGEDES FICHIERS (YAML) (HIÉRARCHIE VISUELLE)
+## 📏 RÈGLES DE STRUCTURATION ET DE TITRAGE (YAML)
 **Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml).**
 
-### 1. Titre Principal (Section / Série / Plateforme)
-- **Format** : Boîte ASCII avec coins arrondis (`╭`, `─`, `╮`, `│`, `╰`, `╯`).
-- **Largeur** : 74 caractères (pleine largeur).
-- **Style** : Texte en MAJUSCULES, préfixé par le type de composant.
+### 1. HIÉRARCHIE VISUELLE (LES TITRES)
+- **TITRE PRINCIPAL (Section / Pôle)**
+    - **Format** : Boîte ASCII coins arrondis (`╭`, `─`, `╮`, `│`, `╰`, `╯`).
+    - **Largeur** : 74 caractères (pleine largeur).
+    - **Style** : Texte en MAJUSCULES (Ex: `SENSOR : INTÉGRATION KWH (PÔLE 1. CHAUFFAGE)`).
+- **TITRE SECONDAIRE (Pièce)**
+    - **Format** : Boîte ASCII coins carrés (`┌`, `─`, `┐`, `│`, `└`, `┘`).
+    - **Largeur** : 37 caractères.
+    - **Style** : MAJUSCULES, respectant la numérotation officielle (1 à 10).
+- **TITRE TERTIAIRE (Équipement)**
+    - **Format** : `# --- slug_de_l_entite ---`
+    - **Usage** : Obligatoire juste au-dessus du bloc de configuration de chaque appareil.
 
-### 2. Titre Secondaire (Pièce / Pôle / Sous-groupe)
-- **Format** : Boîte ASCII avec coins carrés (`┌`, `─`, `┐`, `│`, `└`, `┘`).
-- **Largeur** : 37 caractères (moitié du titre principal).
-- **Style** : Texte en MAJUSCULES, respectant la numérotation des pièces (1 à 10).
+### 2. LOGIQUE DE TRI (SÉPARATION STRICTE)
+- **RÈGLE D'OR :** On ne mélange **JAMAIS** les types d'équipements (Pôles) au sein d'une même pièce.
+- **MÉTHODE :** La structure suit d'abord le **PÔLE**, puis la **PIÈCE**.
+- **ORDRE DES PÔLES (1 à 3) :**
+    1. **CHAUFFAGE/CLIM**
+    2. **PRISES**
+    3. **ÉCLAIRAGE**
 
-### 3. Titre Tertiaire (Équipement individuel)
-- **Format** : Commentaire simple avec tirets (`# --- nom_equipement ---`).
-- **Style** : Texte en minuscules (doit correspondre au slug de l'entité).
-- **Usage** : Obligatoire juste au-dessus du bloc de configuration d'un appareil spécifique.
+### 3. ORDRE OFFICIEL DES PIÈCES (INDEX 1 À 10)
+Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de Pôle :
+1. **ENTRÉE** | 2. **CELLIER** | 3. **TOILETTE** | 4. **SALON** | 5. **CUISINE** | 6. **COULOIR** | 7. **BUREAU** | 8. **SDB** | 9. **CHAMBRE** | 10. **AUTRE**.
 
-### 4. HIÉRARCHIE DE TRI (SÉPARATION STRICTE)
-- **RÈGLE D'OR :** On ne mélange JAMAIS les types d'équipements au sein d'une même pièce.
-- **STRUCTURE :** Le tri se fait d'abord par **PÔLE** (Type), puis par **PIÈCE** (Numérotation).
-- **ORDRE DES BLOCS :**
-    1. **BLOC PÔLE 1 (CHAUFFAGE/CLIM) :** Regroupe toutes les pièces de 1 à 10.
-    2. **BLOC PÔLE 2 (PRISES) :** Regroupe toutes les pièces de 1 à 10.
-    3. **BLOC PÔLE 3 (ÉCLAIRAGE) :** Regroupe toutes les pièces de 1 à 10.
-
-Chaque Pôle doit obligatoirement commencer par un **Titre Principal (ASCII 74 car.)**.
-
-### 5. ORDRE OFFICIEL DES PIÈCES (INDEX 1 À 10)
-Respecter scrupuleusement cette numérotation dans chaque bloc de pôle :
-1. ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. AUTRE.
-
-### 6. CONVENTION DE NOMMAGE (ENTITÉS)
-- `name:` : Doit être en "Nom Lisible" (Majuscules, Espaces, ex: "Clim Salon kWh").
-- `unique_id:` : Doit être identique au name mais en "slug" (Minuscules, Underscores, ex: "clim_salon_kwh").
-- **Note :** L' `unique_id` est OBLIGATOIRE pour permettre la gestion via l'interface UI de HA.
+*Note : **10. AUTRE** regroupe (Standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov).*
 
 ---
 
@@ -147,11 +140,6 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 | **Inactive**  | `#44739e` | `68, 115, 158`  | Éteint, Absent        |
 | **Active**    | `#fdd835` | `253, 216, 53`  | Éclairage, Chauffage  |
 | **Text**      | `#212121` | `33, 33, 33`    | Polices, Bordures     |
-
----
-
-
-
 
 ---
 
