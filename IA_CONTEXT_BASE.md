@@ -151,14 +151,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 ---
 
 
-## 🏠 ORGANISATION DES PIÈCES ET PÔLES (ORDRE OFFICIEL)
 
-**ORDRE DES PIÈCES (1 À 10)** :  
-1. ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. AUTRE.
-(10. AUTRE = Standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov)
-
-**ORDRE DES PÔLES (1 À 3)** : (ORDRE OFFICIEL)
-1. CHAUFFAGE/CLIM | 2. PRISES | 3. ÉCLAIRAGE.
 
 ---
 
