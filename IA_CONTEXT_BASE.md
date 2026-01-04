@@ -1,15 +1,15 @@
 # 🧠 BASE DE CONTEXTE EXPERT HOME ASSISTANT (BerrySwann)
-*Dernière mise à jour : 2026-01-03*
+*Dernière mise à jour : 2026-01-04*
 
 ---
 
-# 🏠 STRUCTURE DU LOGEMENT
+# 🏠 STRUCTURE DU LOGEMENT (uniquement pour l'analyse des consommations électrique)
 - **Localisation :** 06140 Vence (Altitude ~360m).
 - **Type :** Immeuble début 1980, 4ème et dernier étage (Sous toiture).
 - **Caractéristiques :** Traversant SUD/NORD, Simple vitrage partout.
 - **VMC :** Présente en SDB (Crée une dépression thermique).
 
-# 📏 DIMENSIONS & PÔLES (ORDRE OFFICIEL)
+# 📏 DIMENSIONS & PÔLES (uniquement pour l'analyse des consommations électrique)
 1. **SALON (Sud) :** 6.52m x 3.97m (25.88 m²). 
    - *Équipement :* Split mural, Volet motorisé (Auto: 7h30 -> Coucher soleil / Fermé si Absence / Fermé si >34°C).
    - *Note :* Apport solaire crucial dès 15h.
@@ -26,7 +26,7 @@
    - *Équipement :* Split mural. Pas de volet motorisé.
    - *Note :* Forte dissipation thermique (DUT élevé).
 
-# 🌡️ STRATÉGIE THERMIQUE & MONITORING
+# 🌡️ STRATÉGIE THERMIQUE & MONITORING (uniquement pour l'analyse des consommations électrique)
 - **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure.
 - **Mode Absence :** Si T° Ext < 10°C, tous les climats passent à 17°C ou 18°C.
 
@@ -45,6 +45,11 @@
 - **Largeur** : 37 caractères (moitié du titre principal).
 - **Style** : Texte en MAJUSCULES, respectant la numérotation des pièces (1 à 10).
 
+### 3. Titre Tertiaire (Équipement individuel)
+- **Format** : Commentaire simple avec tirets (`# --- nom_equipement ---`).
+- **Style** : Texte en minuscules (doit correspondre au slug de l'entité).
+- **Usage** : Obligatoire juste au-dessus du bloc de configuration d'un appareil spécifique.
+
 ---
 
 ## 🛠️ RÈGLES DE CODAGE STRICTES
@@ -58,6 +63,21 @@
 - **MODIFICATIONS** : 
   - Annoter chaque ligne modifiée : `# "[L...] modif"`.
   - Bloc final obligatoire : `# annotations_log:`.
+
+---
+
+## 📏 RÈGLE CARD_MOD : Obligation d'ajouter systématiquement le bloc suivant à la fin de chaque carte :
+
+YAML "sauf exception de lisibilité ou d'incompatibilité"
+
+card_mod:
+  style: |
+    ha-card {
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent;
+    }
+
 
 ---
 
@@ -94,7 +114,7 @@ Cette liste sert de référence pour la création de nouveaux Dashboards afin de
 
 ---
 
-# 🎨 PALETTE DE COULEURS OFFICIELLES (HEX & RGB)
+# 🎨 PALETTE DE COULEURS OFFICIELLES HA (HEX & RGB)
 
 Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
@@ -111,27 +131,14 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ---
 
-## 📏 RÈGLE CARD_MOD : Obligation d'ajouter systématiquement le bloc suivant à la fin de chaque carte :
 
-YAML
-
-card_mod:
-  style: |
-    ha-card {
-      border: none !important;
-      box-shadow: none !important;
-      background: transparent;
-    }
-
----
-
-## 🏠 ORGANISATION DES PIÈCES ET PÔLES
+## 🏠 ORGANISATION DES PIÈCES ET PÔLES (ORDRE OFFICIEL)
 
 **ORDRE DES PIÈCES (1 À 10)** :  
 1. ENTRÉE | 2. CELLIER | 3. TOILETTE | 4. SALON | 5. CUISINE | 6. COULOIR | 7. BUREAU | 8. SDB | 9. CHAMBRE | 10. AUTRE.
-(10. AUTRE = Standby, Ecojoko, Mini-PC & Linky)
+(10. AUTRE = Standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov)
 
-**ORDRE DES PÔLES (1 À 3)** :  
+**ORDRE DES PÔLES (1 À 3)** : (ORDRE OFFICIEL)
 1. CHAUFFAGE/CLIM | 2. PRISES | 3. ÉCLAIRAGE.
 
 ---
@@ -151,7 +158,7 @@ card_mod:
 - **5. CUISINE** : micro_ondes, lave_linge, lave_vaisselle, airfryer, four_plaque, frigo, congel.
 - **7. BUREAU** : bureau_pc, fer.
 - **9. CHAMBRE** : tete_de_lit, tv.
-- **10. STANDBY** : all_standby.
+- **10. 10. AUTRE** : all_standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov.
 
 ### 3. Pôle Éclairage
 - **1. ENTRÉE**  : Hue White.
@@ -162,9 +169,9 @@ card_mod:
 - **8. SDB**     : Miroir Sonoff, Hue White.
 - **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
 
-### 3. Pôle Éclairage spécifique (utility_meter)
-- **1, 5 & 6 Eclairage APPARTEMENT** (3 Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
-- **1 & 6 Eclairage APPARTEMENT** (2 Éclairages - 1. ENTRÉE & 6. COULOIR) 
+### 4. Pôle Éclairage spécifique (utility_meter)
+- **1, 5 & 6 Eclairage APPARTEMENT** (3x Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
+- **1 & 6 Eclairage APPARTEMENT** (2x Éclairages - 1. ENTRÉE & 6. COULOIR) 
 
 - **ZONE 4. (5x) SALON** : [somme de] Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
 - **ZONE. ((3x) Entrée, cuisine & couloir) (HOME)** : [somme de] Hue White, Hue White, Hue White.
@@ -176,20 +183,13 @@ card_mod:
 
 ---
 
-### 3. RÈGLE D'ORDRE INTERNE (PIÈCES & PÔLES)
+### 5. RÈGLE D'ORDRE INTERNE (PIÈCES & PÔLES)
 Pour chaque section de capteurs, l'ordre de rédaction doit être :
 1. **HIÉRARCHIE DES PIÈCES** : Respecter l'ordre numérique de 1 à 10.
 2. **HIÉRARCHIE DES PÔLES** : 
    - 1. CHAUFFAGE/CLIM
    - 2. PRISES
    - 3. ÉCLAIRAGE
-
----
-
-### 3. Titre Tertiaire (Équipement individuel)
-- **Format** : Commentaire simple avec tirets (`# --- nom_equipement ---`).
-- **Style** : Texte en minuscules (doit correspondre au slug de l'entité).
-- **Usage** : Obligatoire juste au-dessus du bloc de configuration d'un appareil spécifique.
 
 ---
 
@@ -207,13 +207,9 @@ Pour chaque section de capteurs, l'ordre de rédaction doit être :
 - **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement) (- platform: integration)
   * *Titre* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION` (- platform: history_stats)
 
-
 ### 2. PÔLE 2 : PRISES
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
   * *Titre Secondaire* : `PÔLE 2. ÉNERGIE: [kWh] PRISES`
-  
-
-
 
 ---
 
@@ -297,9 +293,9 @@ Pour chaque section de capteurs, l'ordre de rédaction doit être :
     - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/15_1_jour_on_7h30_21h.yaml
     - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/15_2_nuit_on_21h_7h30.yaml
     ### 📂 Icône été/Hivers (Série 16)
-    - https://rahttps://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/16_1_icon%20ete_hivers.yaml
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/16_1_icon%20ete_hivers.yaml
     ### 📂 Diag Conso (Série 17) 
     - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/17_1_diag_conso_jour_en_cours.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/17_1_diag_conso_mois_en_cours.yaml
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/17_2_diag_conso_mois_en_cours.yaml
     ### 📂 Puissance de Croisière en Watts (Série 18) 
     - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/18_1_Moyenne_daily_monthly.yaml
