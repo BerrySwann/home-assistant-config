@@ -3,6 +3,35 @@
 
 ---
 
+# 🏠 STRUCTURE DU LOGEMENT
+- **Localisation :** 06140 Vence (Altitude ~360m).
+- **Type :** Immeuble début 1980, 4ème et dernier étage (Sous toiture).
+- **Caractéristiques :** Traversant SUD/NORD, Simple vitrage partout.
+- **VMC :** Présente en SDB (Crée une dépression thermique).
+
+# 📏 DIMENSIONS & PÔLES (ORDRE OFFICIEL)
+1. **SALON (Sud) :** 6.52m x 3.97m (25.88 m²). 
+   - *Équipement :* Split mural, Volet motorisé (Auto: 7h30 -> Coucher soleil / Fermé si Absence / Fermé si >34°C).
+   - *Note :* Apport solaire crucial dès 15h.
+2. **CUISINE (Nord) :** Surface non définie (~10m²).
+   - *Équipement :* Bain d'huile (Prise connectée). 
+   - *Auto :* L-Ma-Me-Je (4h45-7h), Ve-Sa-Di (5h45-8h).
+3. **BUREAU (Nord) :** 3.95m x 2.67m (10.55 m²).
+   - *Équipement :* Split mural, Volet motorisé. 
+   - *Auto :* Ouvert uniquement si T° Ext [18°C - 25°C].
+4. **SDB (Interne) :** Pas de fenêtre.
+   - *Équipement :* Soufflant (2x1000W), Sèche-serviette (150W).
+   - *Auto :* Soufflant OFF si >23°C. Sèche-serviette 1h après douche.
+5. **CHAMBRE (Nord) :** 3.95m x 2.85m (11.26 m²).
+   - *Équipement :* Split mural. Pas de volet motorisé.
+   - *Note :* Forte dissipation thermique (DUT élevé).
+
+# 🌡️ STRATÉGIE THERMIQUE & MONITORING
+- **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure.
+- **Mode Absence :** Si T° Ext < 10°C, tous les climats passent à 17°C ou 18°C.
+
+---
+
 ## 📏 RÈGLES DE TITRAGE YAML (HIÉRARCHIE VISUELLE)
 **Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml).**
 
