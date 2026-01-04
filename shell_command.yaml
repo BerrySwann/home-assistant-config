@@ -1,14 +1,26 @@
-# Commande pour le PUSH MANUEL (permet de passer le message via 'data')
+# ╭──────────────────────────────────────────────────────────────────────────╮# [L1] modif
+# │ SHELL COMMAND : BACKUP GIT & LOGS SYSTÈME                                │# [L2] modif
+# ╰──────────────────────────────────────────────────────────────────────────╯# [L3] modif
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 10. AUTRE                    │
+# └────────────────────────────────────┘
+
+# --- git_backup_push_manual ---
+# [L10] Permet de passer un message de commit personnalisé via 'data'
 git_backup_push_manual: >-
   bash -lc '/config/.scripts/ha_git_backup.sh "{{ custom_message }}" >> /config/.logs/ha_git_backup.log 2>&1'
 
-# Commande pour le PUSH AUTOMATIQUE (générique, sans argument)
+# --- git_backup_push ---
+# [L14] Push générique automatique
 git_backup_push: "bash -lc '/config/.scripts/ha_git_backup.sh >> /config/.logs/ha_git_backup.log 2>&1'"
 
-# Commande pour le PUSH WEEKLY (utilise l'argument "weekly")
+# --- git_backup_push_weekly ---
+# [L18] Push avec argument "weekly" pour les archives hebdomadaires
 git_backup_push_weekly: "bash -lc '/config/.scripts/ha_git_backup.sh weekly >> /config/.logs/ha_git_backup.log 2>&1'"
 
-# Commande pour le PULL (pour mettre à jour la configuration locale)
+# --- git_pull_ff ---
+# [L22] Mise à jour de la config locale avec journalisation des erreurs
 git_pull_ff: >-
   bash -lc 'cd /config &&
   git fetch origin --prune &&
@@ -18,5 +30,6 @@ git_pull_ff: >-
     echo "❌ Git pull KO: $(date "+%F %T %Z")" >> /config/.logs/ha_git_backup.log;
   fi'
 
-# Ecrire dans le fichier diag_conso_elec.txt (Méthode native Linux)
+# --- write_diag_log ---
+# [L33] Écriture native dans le fichier de diagnostic électrique
 write_diag_log: "echo '{{ message }}' >> /config/diag_conso_elec.txt"

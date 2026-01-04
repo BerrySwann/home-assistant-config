@@ -183,6 +183,36 @@ card_mod:
 
 ---
 
+## 📊 LOGIQUE DE TRI PAR UNITÉ (SENSORS)
+**Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
+
+### SENSOR : NOTIFICATION FOUDRES BLITZORTUNG (- platform: rest)
+### SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME) (- platform: statistics & - platform: integration)
+### SENSOR : PING HTTPS VSCODE (ERODI-HA.COM) (- platform: rest)
+### SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV) (- platform: statistics)
+### SENSOR : DUT - DURÉE D'UTILISATION TOTALE (CORRIGÉ)
+
+### 1. PÔLE 1 : CHAUFFAGE & CLIM (LOGIQUE THERMIQUE)
+- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh` (issus de la plateforme `integration`).
+  * *Titre Principal* : `SENSOR : INTÉGRATION KWH ( PÔLES 1. CHAUFFAGE & CLIMATISATION PRISES)`
+  * *Contenu* : `│ SENSOR : INTÉGRATION KWH (PÔLES PRISES & CHAUFFAGE)                      │`
+  * *Titre Secondaire* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
+
+### 2. PÔLE 2 : PRISES
+- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
+  * *Titre Secondaire* : `PÔLE 2. ÉNERGIE: [kWh] PRISES`
+  * *Règle de priorité* : Au sein d'une même pièce, le Pôle 1 (CHAUFFAGE/CLIM) doit impérativement être listé **AVANT** le Pôle 2 (PRISES).
+
+### 3. RÈGLE D'ORDRE INTERNE (PIÈCES & PÔLES)
+Pour chaque section de capteurs, l'ordre de rédaction doit être :
+1. **HIÉRARCHIE DES PIÈCES** : Respecter l'ordre numérique de 1 à 10.
+2. **HIÉRARCHIE DES PÔLES** : 
+   - 1. CHAUFFAGE/CLIM
+   - 2. PRISES
+   - 3. ÉCLAIRAGE
+
+---
+
 ## 📊 LOGIQUE DE TRI PAR UNITÉ (UTILITY_METER)
 **Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
 

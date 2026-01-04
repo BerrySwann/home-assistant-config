@@ -1,5 +1,5 @@
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : NOTIFICATION FOUDRES BLITZORTUNG (SÉRIE 01)                     │
+# │ SENSOR : NOTIFICATION FOUDRES BLITZORTUNG                                │
 # ╰──────────────────────────────────────────────────────────────────────────╯
   - platform: rest
     name: Blitzortung Lightning Localisation

@@ -548,367 +548,368 @@ eclairage_chambre_4_quotidien_um:
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITEE                                 │
 # ╰──────────────────────────────────────────────────────────────────────────╯
+
 # ┌────────────────────────────────────┐
 # │ PIÈCE 1. ENTRÉE                    │
 # └────────────────────────────────────┘
-# --- HUE WHITE LAMP ---
+# --- hue_white_lamp_entree ---
 eclairage_hue_white_lamp_entree_annuel:
   source: sensor.hue_white_lamp_entree_energy
-  name: eclairage_hue_white_lamp_entree_annuel
+  name: "Eclairage Hue White Lamp Entree Annuel" # [L1] modif
   cycle: yearly
 eclairage_hue_white_lamp_entree_mensuel:
   source: sensor.hue_white_lamp_entree_energy
-  name: eclairage_hue_white_lamp_entree_mensuel
+  name: "Eclairage Hue White Lamp Entree Mensuel" # [L2] modif
   cycle: monthly
 eclairage_hue_white_lamp_entree_hebdomadaire:
   source: sensor.hue_white_lamp_entree_energy
-  name: eclairage_hue_white_lamp_entree_hebdomadaire
+  name: "Eclairage Hue White Lamp Entree Hebdomadaire" # [L3] modif
   cycle: weekly
 eclairage_hue_white_lamp_entree_quotidien:
   source: sensor.hue_white_lamp_entree_energy
-  name: eclairage_hue_white_lamp_entree_quotidien
+  name: "Eclairage Hue White Lamp Entree Quotidien" # [L4] modif
   cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 4. SALON                     │
 # └────────────────────────────────────┘
-# --- HUE WHITE LAMP TABLE SALON ---
+# --- hue_white_lamp_table_salon ---
 eclairage_hue_white_lamp_table_salon_annuel:
   source: sensor.hue_white_lamp_table_salon_energy
-  name: eclairage_hue_white_lamp_table_salon_annuel
+  name: "Eclairage Hue White Lamp Table Salon Annuel" # [L5] modif
   cycle: yearly
 eclairage_hue_white_lamp_table_salon_mensuel:
   source: sensor.hue_white_lamp_table_salon_energy
-  name: eclairage_hue_white_lamp_table_salon_mensuel
+  name: "Eclairage Hue White Lamp Table Salon Mensuel" # [L6] modif
   cycle: monthly
 eclairage_hue_white_lamp_table_salon_hebdomadaire:
   source: sensor.hue_white_lamp_table_salon_energy
-  name: eclairage_hue_white_lamp_table_salon_hebdomadaire
+  name: "Eclairage Hue White Lamp Table Salon Hebdomadaire" # [L7] modif
   cycle: weekly
 eclairage_hue_white_lamp_table_salon_quotidien:
   source: sensor.hue_white_lamp_table_salon_energy
-  name: eclairage_hue_white_lamp_table_salon_quotidien
+  name: "Eclairage Hue White Lamp Table Salon Quotidien" # [L8] modif
   cycle: daily
 
-# --- AMBIANCE LAMP SALON 1 ---
+# --- hue_ambiance_lamp_salon_1 ---
 eclairage_hue_ambiance_lamp_salon_1_annuel:
   source: sensor.hue_ambiance_lamp_salon_1_energy
-  name: eclairage_hue_ambiance_lamp_salon_1_annuel
+  name: "Eclairage Hue Ambiance Lamp Salon 1 Annuel" # [L9] modif
   cycle: yearly
 eclairage_hue_ambiance_lamp_salon_1_mensuel:
   source: sensor.hue_ambiance_lamp_salon_1_energy
-  name: eclairage_hue_ambiance_lamp_salon_1_mensuel
+  name: "Eclairage Hue Ambiance Lamp Salon 1 Mensuel" # [L10] modif
   cycle: monthly
 eclairage_hue_ambiance_lamp_salon_1_hebdomadaire:
   source: sensor.hue_ambiance_lamp_salon_1_energy
-  name: eclairage_hue_ambiance_lamp_salon_1_hebdomadaire
+  name: "Eclairage Hue Ambiance Lamp Salon 1 Hebdomadaire" # [L11] modif
   cycle: weekly
 eclairage_hue_ambiance_lamp_salon_1_quotidien:
   source: sensor.hue_ambiance_lamp_salon_1_energy
-  name: eclairage_hue_ambiance_lamp_salon_1_quotidien
+  name: "Eclairage Hue Ambiance Lamp Salon 1 Quotidien" # [L12] modif
   cycle: daily
 
-# --- AMBIANCE LAMP SALON 2 ---
+# --- hue_ambiance_lamp_salon_2 ---
 eclairage_hue_ambiance_lamp_salon_2_annuel:
   source: sensor.hue_ambiance_lamp_salon_2_energy
-  name: eclairage_hue_ambiance_lamp_salon_2_annuel
+  name: "Eclairage Hue Ambiance Lamp Salon 2 Annuel" # [L13] modif
   cycle: yearly
 eclairage_hue_ambiance_lamp_salon_2_mensuel:
   source: sensor.hue_ambiance_lamp_salon_2_energy
-  name: eclairage_hue_ambiance_lamp_salon_2_mensuel
+  name: "Eclairage Hue Ambiance Lamp Salon 2 Mensuel" # [L14] modif
   cycle: monthly
 eclairage_hue_ambiance_lamp_salon_2_hebdomadaire:
   source: sensor.hue_ambiance_lamp_salon_2_energy
-  name: eclairage_hue_ambiance_lamp_salon_2_hebdomadaire
+  name: "Eclairage Hue Ambiance Lamp Salon 2 Hebdomadaire" # [L15] modif
   cycle: weekly
 eclairage_hue_ambiance_lamp_salon_2_quotidien:
   source: sensor.hue_ambiance_lamp_salon_2_energy
-  name: eclairage_hue_ambiance_lamp_salon_2_quotidien
+  name: "Eclairage Hue Ambiance Lamp Salon 2 Quotidien" # [L16] modif
   cycle: daily
 
-# --- AMBIANCE LAMP SALON 3 ---
+# --- hue_ambiance_lamp_salon_3 ---
 eclairage_hue_ambiance_lamp_salon_3_annuel:
   source: sensor.hue_ambiance_lamp_salon_3_energy
-  name: eclairage_hue_ambiance_lamp_salon_3_annuel
+  name: "Eclairage Hue Ambiance Lamp Salon 3 Annuel" # [L17] modif
   cycle: yearly
 eclairage_hue_ambiance_lamp_salon_3_mensuel:
   source: sensor.hue_ambiance_lamp_salon_3_energy
-  name: eclairage_hue_ambiance_lamp_salon_3_mensuel
+  name: "Eclairage Hue Ambiance Lamp Salon 3 Mensuel" # [L18] modif
   cycle: monthly
 eclairage_hue_ambiance_lamp_salon_3_hebdomadaire:
   source: sensor.hue_ambiance_lamp_salon_3_energy
-  name: eclairage_hue_ambiance_lamp_salon_3_hebdomadaire
+  name: "Eclairage Hue Ambiance Lamp Salon 3 Hebdomadaire" # [L19] modif
   cycle: weekly
 eclairage_hue_ambiance_lamp_salon_3_quotidien:
   source: sensor.hue_ambiance_lamp_salon_3_energy
-  name: eclairage_hue_ambiance_lamp_salon_3_quotidien
+  name: "Eclairage Hue Ambiance Lamp Salon 3 Quotidien" # [L20] modif
   cycle: daily
 
-# --- COLOR CANDLE SALON 1 ---
+# --- hue_color_candle_salon_1 ---
 eclairage_hue_color_candle_salon_1_annuel:
   source: sensor.hue_color_candle_salon_1_energy
-  name: eclairage_hue_color_candle_salon_1_annuel
+  name: "Eclairage Hue Color Candle Salon 1 Annuel" # [L21] modif
   cycle: yearly
 eclairage_hue_color_candle_salon_1_mensuel:
   source: sensor.hue_color_candle_salon_1_energy
-  name: eclairage_hue_color_candle_salon_1_mensuel
+  name: "Eclairage Hue Color Candle Salon 1 Mensuel" # [L22] modif
   cycle: monthly
 eclairage_hue_color_candle_salon_1_hebdomadaire:
   source: sensor.hue_color_candle_salon_1_energy
-  name: eclairage_hue_color_candle_salon_1_hebdomadaire
+  name: "Eclairage Hue Color Candle Salon 1 Hebdomadaire" # [L23] modif
   cycle: weekly
 eclairage_hue_color_candle_salon_1_quotidien:
   source: sensor.hue_color_candle_salon_1_energy
-  name: eclairage_hue_color_candle_salon_1_quotidien
+  name: "Eclairage Hue Color Candle Salon 1 Quotidien" # [L24] modif
   cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 5. CUISINE                   │
 # └────────────────────────────────────┘
-# --- HUE WHITE LAMP ---
+# --- hue_white_lamp_cuisine ---
 eclairage_hue_white_lamp_cuisine_annuel:
   source: sensor.hue_white_lamp_cuisine_energy
-  name: eclairage_hue_white_lamp_cuisine_annuel
+  name: "Eclairage Hue White Lamp Cuisine Annuel" # [L25] modif
   cycle: yearly
 eclairage_hue_white_lamp_cuisine_mensuel:
   source: sensor.hue_white_lamp_cuisine_energy
-  name: eclairage_hue_white_lamp_cuisine_mensuel
+  name: "Eclairage Hue White Lamp Cuisine Mensuel" # [L26] modif
   cycle: monthly
 eclairage_hue_white_lamp_cuisine_hebdomadaire:
   source: sensor.hue_white_lamp_cuisine_energy
-  name: eclairage_hue_white_lamp_cuisine_hebdomadaire
+  name: "Eclairage Hue White Lamp Cuisine Hebdomadaire" # [L27] modif
   cycle: weekly
 eclairage_hue_white_lamp_cuisine_quotidien:
   source: sensor.hue_white_lamp_cuisine_energy
-  name: eclairage_hue_white_lamp_cuisine_quotidien
+  name: "Eclairage Hue White Lamp Cuisine Quotidien" # [L28] modif
   cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 6. COULOIR                   │
 # └────────────────────────────────────┘
-# --- HUE WHITE LAMP ---
+# --- hue_white_lamp_couloir ---
 eclairage_hue_white_lamp_couloir_annuel:
   source: sensor.hue_white_lamp_couloir_energy
-  name: eclairage_hue_white_lamp_couloir_annuel
+  name: "Eclairage Hue White Lamp Couloir Annuel" # [L29] modif
   cycle: yearly
 eclairage_hue_white_lamp_couloir_mensuel:
   source: sensor.hue_white_lamp_couloir_energy
-  name: eclairage_hue_white_lamp_couloir_mensuel
+  name: "Eclairage Hue White Lamp Couloir Mensuel" # [L30] modif
   cycle: monthly
 eclairage_hue_white_lamp_couloir_hebdomadaire:
   source: sensor.hue_white_lamp_couloir_energy
-  name: eclairage_hue_white_lamp_couloir_hebdomadaire
+  name: "Eclairage Hue White Lamp Couloir Hebdomadaire" # [L31] modif
   cycle: weekly
 eclairage_hue_white_lamp_couloir_quotidien:
   source: sensor.hue_white_lamp_couloir_energy
-  name: eclairage_hue_white_lamp_couloir_quotidien
+  name: "Eclairage Hue White Lamp Couloir Quotidien" # [L32] modif
   cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 7. BUREAU                    │
 # └────────────────────────────────────┘
-# --- HUE PLAY 1 ---
+# --- hue_play_1_pc_bureau ---
 eclairage_hue_play_1_pc_bureau_annuel:
   source: sensor.hue_play_1_pc_bureau_energy
-  name: eclairage_hue_play_1_pc_bureau_annuel
+  name: "Eclairage Hue Play 1 Pc Bureau Annuel" # [L33] modif
   cycle: yearly
 eclairage_hue_play_1_pc_bureau_mensuel:
   source: sensor.hue_play_1_pc_bureau_energy
-  name: eclairage_hue_play_1_pc_bureau_mensuel
+  name: "Eclairage Hue Play 1 Pc Bureau Mensuel" # [L34] modif
   cycle: monthly
 eclairage_hue_play_1_pc_bureau_hebdomadaire:
   source: sensor.hue_play_1_pc_bureau_energy
-  name: eclairage_hue_play_1_pc_bureau_hebdomadaire
+  name: "Eclairage Hue Play 1 Pc Bureau Hebdomadaire" # [L35] modif
   cycle: weekly
 eclairage_hue_play_1_pc_bureau_quotidien:
   source: sensor.hue_play_1_pc_bureau_energy
-  name: eclairage_hue_play_1_pc_bureau_quotidien
+  name: "Eclairage Hue Play 1 Pc Bureau Quotidien" # [L36] modif
   cycle: daily
 
-# --- HUE PLAY 2 ---
+# --- hue_play_2_pc_bureau ---
 eclairage_hue_play_2_pc_bureau_annuel:
   source: sensor.hue_play_2_pc_bureau_energy
-  name: eclairage_hue_play_2_pc_bureau_annuel
+  name: "Eclairage Hue Play 2 Pc Bureau Annuel" # [L37] modif
   cycle: yearly
 eclairage_hue_play_2_pc_bureau_mensuel:
   source: sensor.hue_play_2_pc_bureau_energy
-  name: eclairage_hue_play_2_pc_bureau_mensuel
+  name: "Eclairage Hue Play 2 Pc Bureau Mensuel" # [L38] modif
   cycle: monthly
 eclairage_hue_play_2_pc_bureau_hebdomadaire:
   source: sensor.hue_play_2_pc_bureau_energy
-  name: eclairage_hue_play_2_pc_bureau_hebdomadaire
+  name: "Eclairage Hue Play 2 Pc Bureau Hebdomadaire" # [L39] modif
   cycle: weekly
 eclairage_hue_play_2_pc_bureau_quotidien:
   source: sensor.hue_play_2_pc_bureau_energy
-  name: eclairage_hue_play_2_pc_bureau_quotidien
+  name: "Eclairage Hue Play 2 Pc Bureau Quotidien" # [L40] modif
   cycle: daily
 
-# --- HUE PLAY 3 ---
+# --- hue_play_3_pc_bureau ---
 eclairage_hue_play_3_pc_bureau_annuel:
   source: sensor.hue_play_3_pc_bureau_energy
-  name: eclairage_hue_play_3_pc_bureau_annuel
+  name: "Eclairage Hue Play 3 Pc Bureau Annuel" # [L41] modif
   cycle: yearly
 eclairage_hue_play_3_pc_bureau_mensuel:
   source: sensor.hue_play_3_pc_bureau_energy
-  name: eclairage_hue_play_3_pc_bureau_mensuel
+  name: "Eclairage Hue Play 3 Pc Bureau Mensuel" # [L42] modif
   cycle: monthly
 eclairage_hue_play_3_pc_bureau_hebdomadaire:
   source: sensor.hue_play_3_pc_bureau_energy
-  name: eclairage_hue_play_3_pc_bureau_hebdomadaire
+  name: "Eclairage Hue Play 3 Pc Bureau Hebdomadaire" # [L43] modif
   cycle: weekly
 eclairage_hue_play_3_pc_bureau_quotidien:
   source: sensor.hue_play_3_pc_bureau_energy
-  name: eclairage_hue_play_3_pc_bureau_quotidien
+  name: "Eclairage Hue Play 3 Pc Bureau Quotidien" # [L44] modif
   cycle: daily
 
-# --- HUE WHITE LAMP 1 ---
+# --- lampe_bureau_1_hue ---
 eclairage_lampe_bureau_1_hue_annuel:
   source: sensor.lampe_bureau_1_hue_energy
-  name: eclairage_lampe_bureau_1_hue_annuel
+  name: "Eclairage Lampe Bureau 1 Hue Annuel" # [L45] modif
   cycle: yearly
 eclairage_lampe_bureau_1_hue_mensuel:
   source: sensor.lampe_bureau_1_hue_energy
-  name: eclairage_lampe_bureau_1_hue_mensuel
+  name: "Eclairage Lampe Bureau 1 Hue Mensuel" # [L46] modif
   cycle: monthly
 eclairage_lampe_bureau_1_hue_hebdomadaire:
   source: sensor.lampe_bureau_1_hue_energy
-  name: eclairage_lampe_bureau_1_hue_hebdomadaire
+  name: "Eclairage Lampe Bureau 1 Hue Hebdomadaire" # [L47] modif
   cycle: weekly
 eclairage_lampe_bureau_1_hue_quotidien:
   source: sensor.lampe_bureau_1_hue_energy
-  name: eclairage_lampe_bureau_1_hue_quotidien
+  name: "Eclairage Lampe Bureau 1 Hue Quotidien" # [L48] modif
   cycle: daily
 
-# --- HUE WHITE LAMP 2 ---
+# --- lampe_bureau_2_hue ---
 eclairage_lampe_bureau_2_hue_annuel:
   source: sensor.lampe_bureau_2_hue_energy
-  name: eclairage_lampe_bureau_2_hue_annuel
+  name: "Eclairage Lampe Bureau 2 Hue Annuel" # [L49] modif
   cycle: yearly
 eclairage_lampe_bureau_2_hue_mensuel:
   source: sensor.lampe_bureau_2_hue_energy
-  name: eclairage_lampe_bureau_2_hue_mensuel
+  name: "Eclairage Lampe Bureau 2 Hue Mensuel" # [L50] modif
   cycle: monthly
 eclairage_lampe_bureau_2_hue_hebdomadaire:
   source: sensor.lampe_bureau_2_hue_energy
-  name: eclairage_lampe_bureau_2_hue_hebdomadaire
+  name: "Eclairage Lampe Bureau 2 Hue Hebdomadaire" # [L51] modif
   cycle: weekly
 eclairage_lampe_bureau_2_hue_quotidien:
   source: sensor.lampe_bureau_2_hue_energy
-  name: eclairage_lampe_bureau_2_hue_quotidien
+  name: "Eclairage Lampe Bureau 2 Hue Quotidien" # [L52] modif
   cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 8. SDB                       │
 # └────────────────────────────────────┘
-# --- MIROIR (RELAIS SONOFF) ---
+# --- relais_lumiere_sdb_sonoff ---
 eclairage_relais_lumiere_sdb_sonoff_annuel:
   source: sensor.relais_lumiere_sdb_sonoff_energy
-  name: eclairage_relais_lumiere_sdb_sonoff_annuel
+  name: "Eclairage Relais Lumiere Sdb Sonoff Annuel" # [L53] modif
   cycle: yearly
 eclairage_relais_lumiere_sdb_sonoff_mensuel:
   source: sensor.relais_lumiere_sdb_sonoff_energy
-  name: eclairage_relais_lumiere_sdb_sonoff_mensuel
+  name: "Eclairage Relais Lumiere Sdb Sonoff Mensuel" # [L54] modif
   cycle: monthly
 eclairage_relais_lumiere_sdb_sonoff_hebdomadaire:
   source: sensor.relais_lumiere_sdb_sonoff_energy
-  name: eclairage_relais_lumiere_sdb_sonoff_hebdomadaire
+  name: "Eclairage Relais Lumiere Sdb Sonoff Hebdomadaire" # [L55] modif
   cycle: weekly
 eclairage_relais_lumiere_sdb_sonoff_quotidien:
   source: sensor.relais_lumiere_sdb_sonoff_energy
-  name: eclairage_relais_lumiere_sdb_sonoff_quotidien
+  name: "Eclairage Relais Lumiere Sdb Sonoff Quotidien" # [L56] modif
   cycle: daily
 
-# --- HUE WHITE LAMP ---
+# --- lampe_salle_de_bain_hue ---
 eclairage_lampe_salle_de_bain_hue_annuel:
   source: sensor.lampe_salle_de_bain_hue_energy
-  name: eclairage_lampe_salle_de_bain_hue_annuel
+  name: "Eclairage Lampe Salle De Bain Hue Annuel" # [L57] modif
   cycle: yearly
 eclairage_lampe_salle_de_bain_hue_mensuel:
   source: sensor.lampe_salle_de_bain_hue_energy
-  name: eclairage_lampe_salle_de_bain_hue_mensuel
+  name: "Eclairage Lampe Salle De Bain Hue Mensuel" # [L58] modif
   cycle: monthly
 eclairage_lampe_salle_de_bain_hue_hebdomadaire:
   source: sensor.lampe_salle_de_bain_hue_energy
-  name: eclairage_lampe_salle_de_bain_hue_hebdomadaire
+  name: "Eclairage Lampe Salle De Bain Hue Hebdomadaire" # [L59] modif
   cycle: weekly
 eclairage_lampe_salle_de_bain_hue_quotidien:
   source: sensor.lampe_salle_de_bain_hue_energy
-  name: eclairage_lampe_salle_de_bain_hue_quotidien
+  name: "Eclairage Lampe Salle De Bain Hue Quotidien" # [L60] modif
   cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 9. CHAMBRE                   │
 # └────────────────────────────────────┘
-# --- HUE WHITE LAMP 1 ---
+# --- hue_white_lamp_chambre_1 ---
 eclairage_hue_white_lamp_chambre_1_annuel:
   source: sensor.hue_white_lamp_chambre_1_energy
-  name: eclairage_hue_white_lamp_chambre_1_annuel
+  name: "Eclairage Hue White Lamp Chambre 1 Annuel" # [L61] modif
   cycle: yearly
 eclairage_hue_white_lamp_chambre_1_mensuel:
   source: sensor.hue_white_lamp_chambre_1_energy
-  name: eclairage_hue_white_lamp_chambre_1_mensuel
+  name: "Eclairage Hue White Lamp Chambre 1 Mensuel" # [L62] modif
   cycle: monthly
 eclairage_hue_white_lamp_chambre_1_hebdomadaire:
   source: sensor.hue_white_lamp_chambre_1_energy
-  name: eclairage_hue_white_lamp_chambre_1_hebdomadaire
+  name: "Eclairage Hue White Lamp Chambre 1 Hebdomadaire" # [L63] modif
   cycle: weekly
 eclairage_hue_white_lamp_chambre_1_quotidien:
   source: sensor.hue_white_lamp_chambre_1_energy
-  name: eclairage_hue_white_lamp_chambre_1_quotidien
+  name: "Eclairage Hue White Lamp Chambre 1 Quotidien" # [L64] modif
   cycle: daily
 
-# --- HUE WHITE LAMP 2 ---
+# --- hue_white_lamp_chambre_2 ---
 eclairage_hue_white_lamp_chambre_2_annuel:
   source: sensor.hue_white_lamp_chambre_2_energy
-  name: eclairage_hue_white_lamp_chambre_2_annuel
+  name: "Eclairage Hue White Lamp Chambre 2 Annuel" # [L65] modif
   cycle: yearly
 eclairage_hue_white_lamp_chambre_2_mensuel:
   source: sensor.hue_white_lamp_chambre_2_energy
-  name: eclairage_hue_white_lamp_chambre_2_mensuel
+  name: "Eclairage Hue White Lamp Chambre 2 Mensuel" # [L66] modif
   cycle: monthly
 eclairage_hue_white_lamp_chambre_2_hebdomadaire:
   source: sensor.hue_white_lamp_chambre_2_energy
-  name: eclairage_hue_white_lamp_chambre_2_hebdomadaire
+  name: "Eclairage Hue White Lamp Chambre 2 Hebdomadaire" # [L67] modif
   cycle: weekly
 eclairage_hue_white_lamp_chambre_2_quotidien:
   source: sensor.hue_white_lamp_chambre_2_energy
-  name: eclairage_hue_white_lamp_chambre_2_quotidien
+  name: "Eclairage Hue White Lamp Chambre 2 Quotidien" # [L68] modif
   cycle: daily
 
-# --- HUE CANDLE ZONE GEGE --- 
+# --- hue_color_candle_chambre_gege ---
 eclairage_hue_color_candle_chambre_gege_annuel:
   source: sensor.hue_color_candle_chambre_gege_energy
-  name: eclairage_hue_color_candle_chambre_gege_annuel
+  name: "Eclairage Hue Color Candle Chambre Gege Annuel" # [L69] modif
   cycle: yearly
 eclairage_hue_color_candle_chambre_gege_mensuel:
   source: sensor.hue_color_candle_chambre_gege_energy
-  name: eclairage_hue_color_candle_chambre_gege_mensuel
+  name: "Eclairage Hue Color Candle Chambre Gege Mensuel" # [L70] modif
   cycle: monthly
 eclairage_hue_color_candle_chambre_gege_hebdomadaire:
   source: sensor.hue_color_candle_chambre_gege_energy
-  name: eclairage_hue_color_candle_chambre_gege_hebdomadaire
+  name: "Eclairage Hue Color Candle Chambre Gege Hebdomadaire" # [L71] modif
   cycle: weekly
 eclairage_hue_color_candle_chambre_gege_quotidien:
   source: sensor.hue_color_candle_chambre_gege_energy
-  name: eclairage_hue_color_candle_chambre_gege_quotidien
+  name: "Eclairage Hue Color Candle Chambre Gege Quotidien" # [L72] modif
   cycle: daily
 
-  # --- HUE CANDLE ZONE ERIC ---
+# --- hue_color_candle_chambre_eric ---
 eclairage_hue_color_candle_chambre_eric_annuel:
   source: sensor.hue_color_candle_chambre_eric_energy
-  name: eclairage_hue_color_candle_chambre_eric_annuel
+  name: "Eclairage Hue Color Candle Chambre Eric Annuel" # [L73] modif
   cycle: yearly
 eclairage_hue_color_candle_chambre_eric_mensuel:
   source: sensor.hue_color_candle_chambre_eric_energy
-  name: eclairage_hue_color_candle_chambre_eric_mensuel
+  name: "Eclairage Hue Color Candle Chambre Eric Mensuel" # [L74] modif
   cycle: monthly
 eclairage_hue_color_candle_chambre_eric_hebdomadaire:
   source: sensor.hue_color_candle_chambre_eric_energy
-  name: eclairage_hue_color_candle_chambre_eric_hebdomadaire
+  name: "Eclairage Hue Color Candle Chambre Eric Hebdomadaire" # [L75] modif
   cycle: weekly
 eclairage_hue_color_candle_chambre_eric_quotidien:
   source: sensor.hue_color_candle_chambre_eric_energy
-  name: eclairage_hue_color_candle_chambre_eric_quotidien
+  name: "Eclairage Hue Color Candle Chambre Eric Quotidien" # [L76] modif
   cycle: daily
 
 # ╭──────────────────────────────────────────────────────────────────────────╮

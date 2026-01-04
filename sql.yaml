@@ -1,7 +1,13 @@
-- name: "Taille DB Home Assistant" # [L1] modif : Name selon règle 2026
-  # "[L2] Crée sensor.taille_db_home_assistant"
-  db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4
-  # "[L5] core-mariadb : URL de la DB de l’add-on MariaDB"
+# ╭──────────────────────────────────────────────────────────────────────────╮# [L1] modif
+# │ SENSOR : MONITORING SYSTÈME (MARIADB)                                    │# [L2] modif
+# ╰──────────────────────────────────────────────────────────────────────────╯# [L3] modif
+# ┌────────────────────────────────────┐
+# │ PIÈCE 10. AUTRE                    │
+# └────────────────────────────────────┘
+# --- taille_db_home_assistant ---
+- name: "Taille Db Home Assistant"             # [L10] modif
+  unique_id: taille_db_home_assistant          # [L11] modif
+  db_url: mysql://homeassistant:MariaDB@core-mariadb/homeassistant?charset=utf8mb4 # [L12] modif
   query: >
     SELECT Round(Sum(data_length + index_length) / POWER(1024,2), 1) AS value
     FROM information_schema.tables
@@ -9,4 +15,3 @@
   column: "value"
   unit_of_measurement: "MiB"
   device_class: data_size
-  unique_id: taille_db_home_assistant # [L10] unique_id en minuscules/underscores
