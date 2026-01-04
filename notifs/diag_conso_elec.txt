@@ -993,3 +993,5 @@ Home Assistant notifications (Log started: 2025-12-20T19:43:03.751958+00:00)
 04/01 00:30 | Hyg:0.0 | Cuis:0.0 | Froid:0.02 | Chauff:0.08 | Avg P4:156.3 | Multi:0.19 | Lum:0.0 | T̄i:20.2°C | Ext:7.4°C | DUT S/R/B/C:0.0/0.0/0.2/0.2h
 04/01 00:45 | Hyg:0.0 | Cuis:0.0 | Froid:0.03 | Chauff:0.14 | Avg P4:179.4 | Multi:0.2 | Lum:0.0 | T̄i:20.1°C | Ext:7.4°C | DUT S/R/B/C:0.0/0.0/0.3/0.3h
 04/01 01:00 | Hyg:0.0 | Cuis:0.0 | Froid:0.05 | Chauff:0.17 | Avg P4:156.4 | Multi:0.21 | Lum:0.01 | T̄i:20.1°C | Ext:7.4°C | DUT S/R/B/C:0.0/0.0/0.3/0.4h
+04/01 01:15 | Hyg:0.0 | Cuis:0.0 | Froid:0.05 | Chauff:0.21 | Avg P4:157.9 | Multi:0.4 | Lum:0.01 | T̄i:20.1°C | Ext:7.6°C | DUT S/R/B/C:0.0/0.0/0.4/0.5h
+04/01 01:30 | Hyg:0.0 | Cuis:0.0 | Froid:0.06 | Chauff:0.25 | Avg P4:157.6 | Multi:0.47 | Lum:0.01 | T̄i:20.0°C | Ext:7.6°C | DUT S/R/B/C:0.0/0.0/0.5/0.6h
