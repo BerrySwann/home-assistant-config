@@ -1,300 +1,235 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : ÉNERGIE & UTILITY METERS (CLIM & RADIATEURS)                    │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 
-#========================================================================
-#
-# ÉNERGIE 
-#
-# Utility meter 
-# Clim & Radiateurs (Salon / cusine / Bureau / Sdb / Chambre)
-#
-#========================================================================
-
-#========================================================================
-# CLIM SALON ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
-#========================================================================
 - sensor:
-  - name: "Clim Salon ANNUEL"
-    unique_id: clim_salon_annuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_salon_annuel_um')) %} 
-        {{ states('sensor.clim_salon_annuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim Salon MENSUEL"
-    unique_id: clim_salon_mensuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_salon_mensuel_um')) %} 
-        {{ states('sensor.clim_salon_mensuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim Salon HEBDOMADAIRE"
-    unique_id: clim_salon_hebdomadaire
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_salon_hebdomadaire_um')) %} 
-        {{ states('sensor.clim_salon_hebdomadaire_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim Salon QUOTIDIEN"
-    unique_id: clim_salon_quotidien
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_salon_quotidien_um')) %} 
-        {{ states('sensor.clim_salon_quotidien_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : CLIM SALON (ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN)        │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Clim Salon Annuel" # '[L11] modif'
+      unique_id: clim_salon_annuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_salon_annuel_um') | float(0) | round(2) }}" # '[L16] modif'
 
-#========================================================================
-# RADIATEUR CUISINE ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
-#========================================================================
-- sensor:
-  - name: "Radiateur Cuisine ANNUEL"
-    unique_id: radiateur_elec_cuisine_annuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_elec_cuisine_annuel_um')) %} 
-        {{ states('sensor.radiateur_elec_cuisine_annuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Radiateur Cuisine MENSUEL"
-    unique_id: radiateur_elec_cuisine_mensuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_elec_cuisine_mensuel_um')) %} 
-        {{ states('sensor.radiateur_elec_cuisine_mensuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Radiateur Cuisine HEBDOMADAIRE"
-    unique_id: radiateur_cuisine_elec_hebdomadaire
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_elec_cuisine_hebdomadaire_um')) %} 
-        {{ states('sensor.radiateur_elec_cuisine_hebdomadaire_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Radiateur Cuisine QUOTIDIEN"
-    unique_id: radiateur_elec_cuisine_quotidien
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_elec_cuisine_quotidien_um')) %} 
-        {{ states('sensor.radiateur_elec_cuisine_quotidien_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
+    - name: "Clim Salon Mensuel" # '[L18] modif'
+      unique_id: clim_salon_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_salon_mensuel_um') | float(0) | round(2) }}" # '[L23] modif'
 
-#========================================================================
-# CLIM BUREAU ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
-#========================================================================
-  - name: "Clim du Bureau ANNUEL"
-    unique_id: clim_du_bureau_annuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_du_bureau_annuel_um')) %} 
-        {{ states('sensor.clim_du_bureau_annuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim du Bureau MENSUEL"
-    unique_id: clim_du_bureau_mensuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_du_bureau_mensuel_um')) %} 
-        {{ states('sensor.clim_du_bureau_mensuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim du Bureau HEBDOMADAIRE"
-    unique_id: clim_du_bureau_hebdomadaire
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_du_bureau_hebdomadaire_um')) %} 
-        {{ states('sensor.clim_du_bureau_hebdomadaire_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim du Bureau QUOTIDIEN"
-    unique_id: clim_du_bureau_quotidien
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_du_bureau_quotidien_um')) %} 
-        {{ states('sensor.clim_du_bureau_quotidien_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
+    - name: "Clim Salon Hebdomadaire" # '[L25] modif'
+      unique_id: clim_salon_hebdomadaire
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_salon_hebdomadaire_um') | float(0) | round(2) }}" # '[L30] modif'
 
-#========================================================================
-# SOUFLANT SALLE DE BAIN ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
-#========================================================================
-  - name: "Radiateur SdB ANNUEL"
-    unique_id: radiateur_sdb_annuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_sdb_annuel_um')) %} 
-        {{ states('sensor.radiateur_sdb_annuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Radiateur SdB MENSUEL"
-    unique_id: radiateur_sdb_mensuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_sdb_mensuel_um')) %} 
-        {{ states('sensor.radiateur_sdb_mensuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Radiateur SdB HEBDOMADAIRE"
-    unique_id: radiateur_sdb_hebdomadaire
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_sdb_hebdomadaire_um')) %} 
-        {{ states('sensor.radiateur_sdb_hebdomadaire_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Radiateur SdB QUOTIDIEN"
-    unique_id: radiateur_sdb_quotidien
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.radiateur_sdb_quotidien_um')) %} 
-        {{ states('sensor.radiateur_sdb_quotidien_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
+    - name: "Clim Salon Quotidien" # '[L32] modif'
+      unique_id: clim_salon_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_salon_quotidien_um') | float(0) | round(2) }}" # '[L37] modif'
 
-#========================================================================
-# SECHE-SERV. SALLE DE BAIN ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
-#========================================================================
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : RADIATEUR CUISINE (ANNUEL / MENSUEL / HEBDO / QUOTIDIEN)        │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Radiateur Cuisine Annuel" # '[L42] modif'
+      unique_id: radiateur_cuisine_annuel # '[L43] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_elec_cuisine_annuel_um') | float(0) | round(2) }}"
 
-  - name: "Seche-Serv. SdB ANNUEL"
-    unique_id: seche_serv_sdb_annuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.seche_serviettes_sdb_annuel_um')) %} 
-        {{ states('sensor.seche_serviettes_sdb_annuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Seche-Serv. SdB MENSUEL"
-    unique_id: seche_serv_sdb_mensuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.seche_serviettes_sdb_mensuel_um')) %} 
-        {{ states('sensor.seche_serviettes_sdb_mensuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Seche-Serv. SdB HEBDOMADAIRE"
-    unique_id: seche_serv_sdb_hebdomadaire
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.seche_serviettes_hebdomadaire_um')) %} 
-        {{ states('sensor.seche_serviettes_sdb_hebdomadaire_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Seche-Serv. SdB QUOTIDIEN"
-    unique_id: seche_serv_sdb_quotidien
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.seche_serviettes_sdb_quotidien_um')) %} 
-        {{ states('sensor.seche_serviettes_sdb_quotidien_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
+    - name: "Radiateur Cuisine Mensuel" # '[L49] modif'
+      unique_id: radiateur_cuisine_mensuel # '[L50] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_elec_cuisine_mensuel_um') | float(0) | round(2) }}"
 
-#========================================================================
-# CLIM CHAMBRE ( ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN )
-#========================================================================
-  - name: "Clim Chambre ANNUEL"
-    unique_id: clim_chambre_annuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_chambre_annuel_um')) %} 
-        {{ states('sensor.clim_chambre_annuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim Chambre MENSUEL"
-    unique_id: clim_chambre_mensuel
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_chambre_mensuel_um')) %} 
-        {{ states('sensor.clim_chambre_mensuel_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim Chambre HEBDOMADAIRE"
-    unique_id: clim_chambre_hebdomadaire
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_chambre_hebdomadaire_um')) %} 
-        {{ states('sensor.clim_chambre_hebdomadaire_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
-  - name: "Clim Chambre QUOTIDIEN"
-    unique_id: clim_chambre_quotidien
-    device_class: energy
-    unit_of_measurement: kWh
-    icon: mdi:flash-outline
-    state: >
-      {% if is_number(states('sensor.clim_chambre_quotidien_um')) %} 
-        {{ states('sensor.clim_chambre_quotidien_um') | float | round(2) }}
-      {% else %} 
-        0.00 
-      {% endif %}
+    - name: "Radiateur Cuisine Hebdomadaire" # '[L56] modif'
+      unique_id: radiateur_cuisine_hebdomadaire # '[L57] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_elec_cuisine_hebdomadaire_um') | float(0) | round(2) }}"
+
+    - name: "Radiateur Cuisine Quotidien" # '[L63] modif'
+      unique_id: radiateur_cuisine_quotidien # '[L64] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_elec_cuisine_quotidien_um') | float(0) | round(2) }}"
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : CLIM BUREAU (ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN)       │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Clim Bureau Annuel" # '[L71] modif'
+      unique_id: clim_bureau_annuel # '[L72] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_du_bureau_annuel_um') | float(0) | round(2) }}"
+
+    - name: "Clim Bureau Mensuel" # '[L78] modif'
+      unique_id: clim_bureau_mensuel # '[L79] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_du_bureau_mensuel_um') | float(0) | round(2) }}"
+
+    - name: "Clim Bureau Hebdomadaire" # '[L85] modif'
+      unique_id: clim_bureau_hebdomadaire # '[L86] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_du_bureau_hebdomadaire_um') | float(0) | round(2) }}"
+
+    - name: "Clim Bureau Quotidien" # '[L92] modif'
+      unique_id: clim_bureau_quotidien # '[L93] modif'
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_du_bureau_quotidien_um') | float(0) | round(2) }}"
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SOUFFLANT SDB (ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN)     │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Radiateur Sdb Annuel" # '[L100] modif'
+      unique_id: radiateur_sdb_annuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_sdb_annuel_um') | float(0) | round(2) }}"
+
+    - name: "Radiateur Sdb Mensuel" # '[L107] modif'
+      unique_id: radiateur_sdb_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_sdb_mensuel_um') | float(0) | round(2) }}"
+
+    - name: "Radiateur Sdb Hebdomadaire" # '[L114] modif'
+      unique_id: radiateur_sdb_hebdomadaire
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_sdb_hebdomadaire_um') | float(0) | round(2) }}"
+
+    - name: "Radiateur Sdb Quotidien" # '[L121] modif'
+      unique_id: radiateur_sdb_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.radiateur_sdb_quotidien_um') | float(0) | round(2) }}"
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SECHE-SERV SDB (ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN)    │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Seche Serv Sdb Annuel" # '[L129] modif'
+      unique_id: seche_serv_sdb_annuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.seche_serviettes_sdb_annuel_um') | float(0) | round(2) }}"
+
+    - name: "Seche Serv Sdb Mensuel" # '[L136] modif'
+      unique_id: seche_serv_sdb_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.seche_serviettes_sdb_mensuel_um') | float(0) | round(2) }}"
+
+    - name: "Seche Serv Sdb Hebdomadaire" # '[L143] modif'
+      unique_id: seche_serv_sdb_hebdomadaire
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.seche_serviettes_sdb_hebdomadaire_um') | float(0) | round(2) }}"
+
+    - name: "Seche Serv Sdb Quotidien" # '[L150] modif'
+      unique_id: seche_serv_sdb_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.seche_serviettes_sdb_quotidien_um') | float(0) | round(2) }}"
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : CLIM CHAMBRE (ANNUEL / MENSUEL / HEBDOMADAIRE / QUOTIDIEN)      │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Clim Chambre Annuel" # '[L159] modif'
+      unique_id: clim_chambre_annuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_chambre_annuel_um') | float(0) | round(2) }}"
+
+    - name: "Clim Chambre Mensuel" # '[L166] modif'
+      unique_id: clim_chambre_mensuel
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_chambre_mensuel_um') | float(0) | round(2) }}"
+
+    - name: "Clim Chambre Hebdomadaire" # '[L173] modif'
+      unique_id: clim_chambre_hebdomadaire
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_chambre_hebdomadaire_um') | float(0) | round(2) }}"
+
+    - name: "Clim Chambre Quotidien" # '[L180] modif'
+      unique_id: clim_chambre_quotidien
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:flash-outline
+      state: "{{ states('sensor.clim_chambre_quotidien_um') | float(0) | round(2) }}"
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PERFORMANCE THERMIQUE (SALON / BUREAU / CHAMBRE)                │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    - name: "Performance Thermique Salon" # '[L189] modif'
+      unique_id: performance_thermique_salon
+      unit_of_measurement: "pts"
+      state: >
+        {% set watts = states('sensor.clim_salon_power') | float(0) %}
+        {% set dut = states('sensor.dut_clim_salon') | float(0) %}
+        {% set surface = 25.88 %}
+        {% set delta_t = (states('sensor.temperature_salon') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
+        {% if delta_t > 0 %}
+          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
+        {% else %} 0 {% endif %}
+
+    - name: "Performance Thermique Bureau" # '[L201] modif'
+      unique_id: performance_thermique_bureau
+      unit_of_measurement: "pts"
+      state: >
+        {% set watts = states('sensor.clim_bureau_power') | float(0) %}
+        {% set dut = states('sensor.dut_clim_bureau') | float(0) %}
+        {% set surface = 10.55 %}
+        {% set delta_t = (states('sensor.temperature_bureau') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
+        {% if delta_t > 0 %}
+          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
+        {% else %} 0 {% endif %}
+
+    - name: "Performance Thermique Chambre" # '[L213] modif'
+      unique_id: performance_thermique_chambre
+      unit_of_measurement: "pts"
+      state: >
+        {% set watts = states('sensor.clim_chambre_power') | float(0) %}
+        {% set dut = states('sensor.dut_clim_chambre') | float(0) %}
+        {% set surface = 11.26 %}
+        {% set delta_t = (states('sensor.temperature_chambre') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
+        {% if delta_t > 0 %}
+          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
+        {% else %} 0 {% endif %}
+
+# annotations_log:
+# - '[L1-L225] Reformatage complet selon les règles IA_CONTEXT_BASE.md du 2026-01-03.'
+# - '[L11-L187] Harmonisation des unique_id et name (Espaces/Majuscules vs Underscores).'
+# - '[L16, L23, etc.] Simplification des templates Jinja2 (remplacement de if is_number par float(0)).'
+# - '[L1, L188, etc.] Application des nouveaux encadrés de titres YAML.'
