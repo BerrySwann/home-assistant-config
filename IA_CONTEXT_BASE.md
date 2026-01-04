@@ -68,7 +68,7 @@
 
 ## 📏 RÈGLE CARD_MOD : Obligation d'ajouter systématiquement le bloc suivant à la fin de chaque carte :
 
-YAML "sauf exception de lisibilité ou d'incompatibilité"
+YAML "sauf exception de lisibilité ou d'incompatibilité technique."
 
 card_mod:
   style: |
@@ -146,19 +146,19 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 ## 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
 
 ### 1. Pôle Chauffage / Clim
-- **4. SALON** : clim_salon.
+- **4. SALON** : clim_salon_entree.
 - **5. CUISINE** : radiateur_cuisine.
 - **7. BUREAU** : clim_bureau.
-- **8. SDB** : soufflant, seche_serv.
+- **8. SDB** : soufflant_sdb, seche_serv_sdb.
 - **9. CHAMBRE** : clim_chambre.
 
 ### 2. Pôle Prises
-- **1. ENTRÉE** : box_internet, horloge.
-- **4. SALON** : pc_s_gege, salon_chargeur.
-- **5. CUISINE** : micro_ondes, lave_linge, lave_vaisselle, airfryer, four_plaque, frigo, congel.
-- **7. BUREAU** : bureau_pc, fer.
-- **9. CHAMBRE** : tete_de_lit, tv.
-- **10. 10. AUTRE** : all_standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov.
+- **1. ENTRÉE** : box_internet_entree, horloge_entree.
+- **4. SALON** : pc_s_gege_salon, salon_chargeur_salon.
+- **5. CUISINE** : micro_ondes_cuisine, lave_linge_cuisine, lave_vaisselle_cuisine, airfryer_cuisine, four_plaque_cuisine, frigo_cuisine, congel_cuisine.
+- **7. BUREAU** : bureau_pc, fer_a_repasser_bureau.
+- **9. CHAMBRE** : tete_de_lit_chambre, tv_chambre.
+- **10. AUTRE** : all_standby, Ecojoko, Mini-PC, Linky, pm25_salon, pm25_bureau, pm25_chambre & tcov_salon, tcov_bureau, tcov_chambre.
 
 ### 3. Pôle Éclairage (le Pôle 3 est la vue physique (matériel).)
 - **1. ENTRÉE**  : Hue White.
@@ -167,7 +167,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **6. COULOIR** : Hue White.
 - **7. BUREAU**  : Play 1, 2, 3, Hue White 1, 2.
 - **8. SDB**     : Miroir Sonoff, Hue White.
-- **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
+- **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone 1, 2.
 
 ### 4. Pôle Éclairage spécifique (utility_meter) (le Pôle 4 est une vue logique (somme))
 - **1, 5 & 6 Eclairage APPARTEMENT** (3x Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
