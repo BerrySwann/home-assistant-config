@@ -35,7 +35,7 @@
 
 ---
 
-## 📏 RÈGLES DE STRUCTURATION ET DE TITRAGE (YAML)
+## 📏 RÈGLES DE STRUCTURATION GENRALE ET DE TITRAGE (YAML) (sauf eception)
 **Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml).**
 
 ### 1. HIÉRARCHIE VISUELLE (LES TITRES)
@@ -48,7 +48,7 @@
     - **Largeur** : 37 caractères.
     - **Style** : MAJUSCULES, respectant la numérotation officielle (1 à 10).
 - **TITRE TERTIAIRE (Équipement)**
-    - **Format** : `# --- slug_de_l_entite ---`
+    - **Format** : `# --- slug_de_l_entite ---` (exemple) # --- congelateur_cuisine ---
     - **Usage** : Obligatoire juste au-dessus du bloc de configuration de chaque appareil.
 
 ### 2. LOGIQUE DE TRI (SÉPARATION STRICTE)
@@ -148,14 +148,14 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ## 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
 
-### 1. Pôle Chauffage / Clim
+### 1. Pôle Chauffage / Clim (Pôle 1)
 - **4. SALON** : clim_salon_entree.
 - **5. CUISINE** : radiateur_cuisine.
 - **7. BUREAU** : clim_bureau.
 - **8. SDB** : soufflant_sdb, seche_serv_sdb.
 - **9. CHAMBRE** : clim_chambre.
 
-### 2. Pôle Prises
+### 2. Pôle Prises (Pôle 2)
 - **1. ENTRÉE** : box_internet_entree, horloge_entree.
 - **4. SALON** : pc_s_gege_salon, salon_chargeur_salon.
 - **5. CUISINE** : micro_ondes_cuisine, lave_linge_cuisine, lave_vaisselle_cuisine, airfryer_cuisine, four_plaque_cuisine, frigo_cuisine, congel_cuisine.
@@ -163,7 +163,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **9. CHAMBRE** : tete_de_lit_chambre, tv_chambre.
 - **10. AUTRE** : all_standby, Ecojoko, Mini-PC, Linky, pm25_salon, pm25_bureau, pm25_chambre & tcov_salon, tcov_bureau, tcov_chambre.
 
-### 3. Pôle Éclairage (le Pôle 3 est la vue physique (matériel).)
+### 3. Pôle Éclairage (le Pôle 3 est la vue physique (matériel))
 - **1. ENTRÉE**  : Hue White.
 - **4. SALON**   : Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
 - **5. CUISINE** : Hue White.
@@ -172,7 +172,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **8. SDB**     : Miroir Sonoff, Hue White.
 - **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone 1, 2.
 
-### 4. Pôle Éclairage spécifique (utility_meter) (le Pôle 4 est une vue logique (somme))
+### 4. Pôle Éclairage spécifique (utility_meter) (le Pôle 3 est une vue logique (somme))
 - **1, 5 & 6 Eclairage APPARTEMENT** (3x Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
 - **1 & 6 Eclairage APPARTEMENT** (2x Éclairages - 1. ENTRÉE & 6. COULOIR) 
 
@@ -186,7 +186,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ---
 
-## 📊 LOGIQUE DE TRI PAR UNITÉ (SENSORS)
+## 📊 LOGIQUE DE TRI PAR UNITÉ (SENSORS.YAML)
 Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.
 
 ### CAPTEURS SYSTÈMES & SERVICES
@@ -209,7 +209,7 @@ Chaque équipement doit être classé selon sa nature technique pour éviter les
 
 ---
 
-## 📊 LOGIQUE DE TRI PAR UNITÉ (UTILITY_METER)
+## 📊 LOGIQUE DE TRI PAR UNITÉ (UTILITY_METER.YAML)
 **Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
 
 ### 1. PÔLE 1 : CHAUFFAGE & CLIM (LOGIQUE THERMIQUE)
