@@ -1,139 +1,85 @@
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 01_2. MÉTÉO — FOUDRE (windrose-card / LABEL / AZIMUT / TIMER)        │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
 
-#========================================================================
-#
-# windrose-card - LABEL Direction et distance de(s) (l')élaire(s)
-#
-# Foudre (direction / distance / azimut / timer)
-#
-#========================================================================
 - sensor:
-# ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : TEMPS ÉCOULÉ FOUDRE (SÉRIE 01)                                  │
-# ╰──────────────────────────────────────────────────────────────────────────╯
-  - name: "Dernier Impact de Foudre Temps Ecoule" # [L17] modif
-    unique_id: dernier_impact_de_foudre_temps_ecoule # [L18] modif
-    icon: mdi:lightning-bolt
-    state: >
-      {% set last_lightning = states('input_datetime.dernier_eclair') %}
-      {% if last_lightning | has_value %}
-        {% set last_lightning_ts = as_timestamp(last_lightning) %}
-        {% set time_since_last = as_timestamp(now()) - last_lightning_ts %}
-        {% set minutes = ((time_since_last % 3600) // 60) | int %}
-        {% set hours = ((time_since_last // 3600) % 24) | int %}
-        {% set days = (time_since_last // 86400) | int %}
-        {% if days > 0 %}
-          Dernier impact il y a {{ days }} jours, {{ hours }} h et {{ minutes }} min
-        {% elif hours > 0 %}
-          Dernier impact il y a {{ hours }} h et {{ minutes }} min
-        {% else %}
-            Dernier impact il y a {{ minutes }} min
-        {% endif %}
-        {% else %}
-          Dernier impact de foudre : Inconnu
-        {% endif %}
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : windrose-card - LABEL DIRECTION ET DISTANCE           │
+# └───────────────────────────────────────────────────────────────────┘
 
-#========================================================================
+# --- lightning_direction_label ---
 # windrose-card - LABEL Lightning direction label
-#========================================================================
-
-  - name: "Lightning direction label"
-    unique_id: lightning_direction_label
-    state: >
-      {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
-      {% if bearing in ['unknown', 'unavailable'] %}
-        Non disponible
-      {% else %}
-        {% set bearing = bearing | int(default=0) %}  <-- CORRECTION ICI
-        {% if bearing >= 348.75 or bearing < 11.25 %}
-          Nord
-        {% elif bearing >= 11.25 and bearing < 33.75 %}
-          Nord-Nord-Est
-        {% elif bearing >= 33.75 and bearing < 56.25 %}
-          Nord-Est
-        {% elif bearing >= 56.25 and bearing < 78.75 %}
-          Est-Nord-Est
-        {% elif bearing >= 78.75 and bearing < 101.25 %}
-          Est
-        {% elif bearing >= 101.25 and bearing < 123.75 %}
-          Est-Sud-Est
-        {% elif bearing >= 123.75 and bearing < 146.25 %}
-          Sud-Est
-        {% elif bearing >= 146.25 and bearing < 168.75 %}
-          Sud-Sud-Est
-        {% elif bearing >= 168.75 and bearing < 191.25 %}
-          Sud
-        {% elif bearing >= 191.25 and bearing < 213.75 %}
-          Sud-Sud-Ouest
-        {% elif bearing >= 213.75 and bearing < 236.25 %}
-          Sud-Ouest
-        {% elif bearing >= 236.25 and bearing < 258.75 %}
-          Ouest-Sud-Ouest
-        {% elif bearing >= 258.75 and bearing < 281.25 %}
-          Ouest
-        {% elif bearing >= 281.25 and bearing < 303.75 %}
-          Ouest-Nord-Ouest
-        {% elif bearing >= 303.75 and bearing < 326.25 %}
-          Nord-Ouest
-        {% elif bearing >= 326.25 and bearing < 348.75 %}
-          Nord-Nord-Ouest
-        {% else %}
+    - name: "Lightning direction label"
+      unique_id: lightning_direction_label
+      state: >
+        {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
+        {% if bearing in ['unknown', 'unavailable'] %}
           Non disponible
-        {% endif %}
-      {% endif %}
-
-#========================================================================
-# windrose-card - LABEL Lightning distance km
-#========================================================================
-- sensor:
-  - name: "Lightning distance km"
-    unique_id: lightning_distance_km
-    state: >
-      {% set distance_km = states('sensor.blitzortung_lightning_distance') %}
-      {% if distance_km in ['unknown', 'unavailable'] %}
-        0
-      {% else %}
-        {{ (distance_km | float (0)) | round(1) }}
-      {% endif %}
-    unit_of_measurement: "km"
-
-#========================================================================
-# windrose-card - LABEL Lightning bearing
-#========================================================================
-- sensor:
-  - name: "Lightning bearing"
-    unique_id: lightning_bearing
-    state: >
-      {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
-      {% if bearing in ['unknown', 'unavailable'] %}
-        0
-      {% else %}
-        {% set bearing = bearing | float (0) | round(0) %}
-        {% if bearing == 0 %}
-          1
         {% else %}
-          {{ bearing }}
+          {% set bearing = bearing | int(default=0) %}
+          {% if bearing >= 348.75 or bearing < 11.25 %} Nord
+          {% elif bearing >= 11.25 and bearing < 33.75 %} Nord-Nord-Est
+          {% elif bearing >= 33.75 and bearing < 56.25 %} Nord-Est
+          {% elif bearing >= 56.25 and bearing < 78.75 %} Est-Nord-Est
+          {% elif bearing >= 78.75 and bearing < 101.25 %} Est
+          {% elif bearing >= 101.25 and bearing < 123.75 %} Est-Sud-Est
+          {% elif bearing >= 123.75 and bearing < 146.25 %} Sud-Est
+          {% elif bearing >= 146.25 and bearing < 168.75 %} Sud-Sud-Est
+          {% elif bearing >= 168.75 and bearing < 191.25 %} Sud
+          {% elif bearing >= 191.25 and bearing < 213.75 %} Sud-Sud-Ouest
+          {% elif bearing >= 213.75 and bearing < 236.25 %} Sud-Ouest
+          {% elif bearing >= 236.25 and bearing < 258.75 %} Ouest-Sud-Ouest
+          {% elif bearing >= 258.75 and bearing < 281.25 %} Ouest
+          {% elif bearing >= 281.25 and bearing < 303.75 %} Ouest-Nord-Ouest
+          {% elif bearing >= 303.75 and bearing < 326.25 %} Nord-Ouest
+          {% elif bearing >= 326.25 and bearing < 348.75 %} Nord-Nord-Ouest
+          {% else %} Non disponible
+          {% endif %}
         {% endif %}
-      {% endif %}
 
-#========================================================================
-# Card - Temps depuis le dernier impact de foudre
-# Point d'impact TIMER "LAST CHANGE"
-#========================================================================
-- sensor:
-  - name: "Temps depuis le dernier impact de foudre"
-    unique_id: temps_depuis_le_dernier_impact_de_foudre
-    unit_of_measurement: "seconds"
-    state: >
-      {% set impact_time_state = states('sensor.blitzortung_lightning_last_impact_time') %}
-      {% set last_impact = as_timestamp(impact_time_state if impact_time_state != 'unknown' else '1970-01-01T00:00:00+00:00') | default(0) | int(0) %}
-      {% set now = as_timestamp(now()) %}
-      {% if (now - last_impact) > 7200 %}
-        0
-      {% else %}
-        {% set time_diff = now - last_impact %}
-        {% set seconds = (time_diff % 60) | int (0) %}
-        {% set minutes = ((time_diff % 3600) / 60) | int (0) %}
-        {% set hours = ((time_diff % 86400) / 3600) | int (0) %}
-        {% set days = (time_diff / 86400) | int %}
-        {{ days }} jours, {{ hours }} heures, {{ minutes }} minutes, {{ seconds }} secondes
-      {% endif %}
+# --- lightning_distance_km ---
+# windrose-card - LABEL Lightning distance km
+    - name: "Lightning distance km"
+      unique_id: lightning_distance_km
+      unit_of_measurement: "km"
+      state: >
+        {% set distance_km = states('sensor.blitzortung_lightning_distance') %}
+        {% if distance_km in ['unknown', 'unavailable'] %} 0
+        {% else %} {{ (distance_km | float (0)) | round(1) }}
+        {% endif %}
+
+# --- lightning_bearing ---
+# windrose-card - LABEL Lightning bearing
+    - name: "Lightning bearing"
+      unique_id: lightning_bearing
+      state: >
+        {% set bearing = states('sensor.blitzortung_lightning_azimuth') %}
+        {% if bearing in ['unknown', 'unavailable'] %} 0
+        {% else %}
+          {% set bearing = bearing | float (0) | round(0) %}
+          {% if bearing == 0 %} 1
+          {% else %} {{ bearing }}
+          {% endif %}
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : Card - TEMPS DEPUIS IMPACT (TIMER "LAST CHANGE")      │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- temps_depuis_le_dernier_impact_de_foudre ---
+    - name: "Temps depuis le dernier impact de foudre"
+      unique_id: temps_depuis_le_dernier_impact_de_foudre
+      unit_of_measurement: "seconds"
+      state: >
+        {% set impact_time_state = states('sensor.blitzortung_lightning_last_impact_time') %}
+        {% set last_impact = as_timestamp(impact_time_state if impact_time_state != 'unknown' else '1970-01-01T00:00:00+00:00') | default(0) | int(0) %}
+        {% set now = as_timestamp(now()) %}
+        {% if (now - last_impact) > 7200 %} 0
+        {% else %}
+          {% set time_diff = now - last_impact %}
+          {% set seconds = (time_diff % 60) | int (0) %}
+          {% set minutes = ((time_diff % 3600) / 60) | int (0) %}
+          {% set hours = ((time_diff % 86400) / 3600) | int (0) %}
+          {% set days = (time_diff / 86400) | int %}
+          {{ days }} jours, {{ hours }} heures, {{ minutes }} minutes, {{ seconds }} secondes
+        {% endif %}

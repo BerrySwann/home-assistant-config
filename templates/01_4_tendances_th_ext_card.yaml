@@ -1,40 +1,38 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 01_4. TENDANCES — TEMPÉRATURE / HUMIDITÉ (BALCON NORD) │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 
-#========================================================================
-#
-# TENDANCES — Température / Humidité (balcon nord)
-#
-#========================================================================
-
-#========================================================================
-# Température (balcon nord)
-#========================================================================
 - sensor:
-  - name: "th balcon nord humidity trend"
-    unique_id: th_balcon_nord_humidity_trend
-    state: >
-      {% set current = states('sensor.th_balcon_nord_humidity') | float (0) | round(2) %}
-      {% set previous = states('input_number.th_balcon_nord_humidity_previous') | float (0) | round(2) %}
-      {% if current > previous %}
-        increasing
-      {% elif current < previous %}
-        decreasing
-      {% else %}
-        stable
-      {% endif %}
+# ┌───────────────────────────────────────────────────┐
+# │ 10. AUTRE : LOGIQUE TENDANCES (BALCON NORD)       │
+# └───────────────────────────────────────────────────┘
 
-#========================================================================
-# THumidité (balcon nord)
-#========================================================================
-- sensor:
-  - name: "th balcon nord temperature trend"
-    unique_id: th_balcon_nord_temperature_trend
-    state: >
-      {% set current = states('sensor.th_balcon_nord_temperature') | float (0) | round(2) %}
-      {% set previous = states('input_number.th_balcon_nord_temperature_previous') | float (0) | round(2) %}
-      {% if current > previous %}
-        increasing
-      {% elif current < previous %}
-        decreasing
-      {% else %}
-        stable
-      {% endif %}
+# --- th_balcon_nord_temperature_trend ---
+# Tendance Température (balcon nord)
+    - name: "th balcon nord temperature trend"
+      unique_id: th_balcon_nord_temperature_trend
+      state: >
+        {% set current = states('sensor.th_balcon_nord_temperature') | float (0) | round(2) %}
+        {% set previous = states('input_number.th_balcon_nord_temperature_previous') | float (0) | round(2) %}
+        {% if current > previous %}
+          increasing
+        {% elif current < previous %}
+          decreasing
+        {% else %}
+          stable
+        {% endif %}
+
+# --- th_balcon_nord_humidity_trend ---
+# Tendance Humidité (balcon nord)
+    - name: "th balcon nord humidity trend"
+      unique_id: th_balcon_nord_humidity_trend
+      state: >
+        {% set current = states('sensor.th_balcon_nord_humidity') | float (0) | round(2) %}
+        {% set previous = states('input_number.th_balcon_nord_humidity_previous') | float (0) | round(2) %}
+        {% if current > previous %}
+          increasing
+        {% elif current < previous %}
+          decreasing
+        {% else %}
+          stable
+        {% endif %}
