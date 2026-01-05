@@ -163,7 +163,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **9. CHAMBRE** : tete_de_lit_chambre, tv_chambre.
 - **10. AUTRE** : all_standby, Ecojoko, Mini-PC, Linky, pm25_salon, pm25_bureau, pm25_chambre & tcov_salon, tcov_bureau, tcov_chambre.
 
-### 3. Pôle Éclairage (le Pôle 3 est la vue physique (matériel))
+### 3. Pôle Éclairage (Pôle 2) (le Pôle 3 est la vue physique (matériel))
 - **1. ENTRÉE**  : Hue White.
 - **4. SALON**   : Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
 - **5. CUISINE** : Hue White.
@@ -172,17 +172,21 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **8. SDB**     : Miroir Sonoff, Hue White.
 - **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone 1, 2.
 
-### 4. Pôle Éclairage spécifique (utility_meter) (le Pôle 3 est une vue logique (somme))
-- **1, 5 & 6 Eclairage APPARTEMENT** (3x Éclairages - 1. ENTRÉE, 5. CUISINE & 6. COULOIR)
-- **1 & 6 Eclairage APPARTEMENT** (2x Éclairages - 1. ENTRÉE & 6. COULOIR) 
-
+### 4. Pôle (Pôle 3 spécifique) Éclairage (Pôle 3 spécifique est une vue logique (somme))
 - **ZONE 4. (5x) SALON** : [somme de] Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
+    (exemple: eclairage_salon_5_*)
 - **ZONE. ((3x) Entrée, cuisine & couloir) (HOME)** : [somme de] Hue White, Hue White, Hue White.
+    (exemple: eclairage_appart_3_*)
 - **ZONE 5. (1x) CUISINE** : [somme de] Hue White.
+    (exemple: eclairage_cuisine_1_*)
 - **ZONE. ((2x) Entrée & couloir) (HOME)** : [somme de] Hue White, Hue White.
+    (exemple: eclairage_appart_2_*)
 - **ZONE 7. (5x) BUREAU** : [somme de] Play 1, 2, 3, Hue White, Hue White.
+    (exemple: eclairage_bureau_5_*)
 - **ZONE 8. (2x) SDB** : [somme de] Miroir Sonoff, Hue White.
+    (exemple: eclairage_sdb_2_*)
 - **ZONE 9. (4x) CHAMBRE** : [somme de] Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
+    (exemple: eclairage_chambre_4_*)
 
 ---
 
