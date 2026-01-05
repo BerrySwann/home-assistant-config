@@ -212,16 +212,20 @@ Chaque équipement doit être classé selon sa nature technique pour éviter les
 ## 📊 LOGIQUE DE TRI PAR UNITÉ (UTILITY_METER.YAML)
 **Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
 
-### 1. PÔLE 1 : CHAUFFAGE & CLIM (LOGIQUE THERMIQUE)
+### 1. PÔLE 1 : CHAUFFAGE & CLIMATISATION (LOGIQUE THERMIQUE)
 - **SOUS-SECTION [_um]** : Uniquement les sources `_energy` brutes (Calculs internes).
-  * *Titre* : `PÔLE 1. ÉNERGIE: [_um] CHAUFFAGE / CLIM`
+  * *Titre* : `PÔLE 1. ÉNERGIE: [_um] CHAUFFAGE & CLIMATISATION`
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
   * *Titre* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION`
 - **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement).
   * *Titre* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION`
 
-### 2. PÔLE 3 : ÉCLAIRAGE (LOGIQUE DE REGROUPEMENT)
-- **SOUS-SECTION ZONES** : Compteurs calculant la somme d'une pièce ou d'un groupe (ex: Salon_5x).
+### 2. PÔLE 2 : PRISES CONNECTÉES)
+- **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
+  * *Titre* : `│ PÔLE 2. ÉNERGIE: [kWh] PRISES CONNECTÉES -> (Daily + Monthly)`
+
+### 3. PÔLE 3 : ÉCLAIRAGE (LOGIQUE DE REGROUPEMENT)
+- **SOUS-SECTION ZONES** : Compteurs calculant la somme d'une pièce (exemple: sensor.eclairage_cuisine_1_annuel) ou d'un groupe (exemple: sensor.eclairage_appart_3_energie, sensor.eclairage_bureau_5_energie, etc).
   * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITÉ`
 - **SOUS-SECTION UNITAIRE** : Compteurs individuels pour chaque ampoule Hue/Sonoff.
   * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITÉ`

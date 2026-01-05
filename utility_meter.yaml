@@ -258,7 +258,7 @@ dut_clim_chambre_mensuel:
   cycle: monthly
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ PÔLE 2. PRISES CONNECTÉES -> (Daily + Monthly)                           │
+# │ PÔLE 2. ÉNERGIE: [kWh] PRISES CONNECTÉES -> (Daily + Monthly)            │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 # ┌────────────────────────────────────┐
 # │ PIÈCE 1. ENTRÉE                    │
