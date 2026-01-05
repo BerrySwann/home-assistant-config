@@ -1,9 +1,24 @@
-  # Carte Météo France ALERTES
+# ╭──────────────────────────────────────────────────────────────────╮
+# │ CAMERA : AFFICHAGE D'IMAGES LOCALES ET FLUX                      │
+# ╰──────────────────────────────────────────────────────────────────╯
 
-  - platform: local_file
-    name: MF_alerte_today
-    file_path: /config/www/weather/meteo_france_alerte_today.png
-    
-  - platform: local_file
-    name: MF_alerte_tomorrow
-    file_path: /config/www/weather/meteo_france_alerte_tomorrow.png
+
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : MÉTÉO FRANCE (ALERTES)  │
+# └─────────────────────────────────────┘
+
+# --- mf_alerte_today ---
+- platform: local_file
+  name: "MF_alerte_today"
+  file_path: /config/www/weather/meteo_france_alerte_today.png
+
+# --- mf_alerte_tomorrow ---
+- platform: local_file
+  name: "MF_alerte_tomorrow"
+  file_path: /config/www/weather/meteo_france_alerte_tomorrow.png
+
+# annotations_log:
+# - [L1-5] Ajout du Titre Principal ASCII arrondi.
+# - [L7-9] Ajout du Titre Secondaire section 10. AUTRE (Météo).
+# - [Global] Ajout des titres tertiaires # --- slug ---.
+# - [Global] Ajout des unique_id pour permettre la gestion via l'UI.

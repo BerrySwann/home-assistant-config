@@ -1,56 +1,77 @@
+# ╭──────────────────────────────────────────────────────────────────╮
+# │ SCRIPTS : MAINTENANCE SYSTÈME (GITHUB)                           │
+# ╰──────────────────────────────────────────────────────────────────╯
+
+
 git_backup_and_update:
-  alias: GITHUB A - PUSH Manuelle Backup & Refresh
+  alias: "GITHUB A - PUSH MANUELLE BACKUP & REFRESH"
   icon: mdi:cloud-upload
   sequence:
-  - data:
-      custom_message: Sauvegarde Manuelle (Dashboard)
-    action: shell_command.git_backup_push_manual
-  - delay:
-      seconds: 8
-  - target:
-      entity_id:
-      - sensor.backup_github_status
-      - sensor.backup_github_journal
-    action: homeassistant.update_entity
-    data: {}
-  - action: persistent_notification.create
-    data:
-      title: Git Push
-      message: Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour).
+    - alias: "ACTION : PUSH MANUEL"
+      data:
+        custom_message: "Sauvegarde Manuelle (Dashboard)"
+      action: shell_command.git_backup_push_manual
+    - alias: "ATTENTE : 8 SECONDES"
+      delay:
+        seconds: 8
+    - alias: "UPDATE : CAPTEURS GITHUB"
+      target:
+        entity_id:
+          - sensor.backup_github_status
+          - sensor.backup_github_journal
+      action: homeassistant.update_entity
+      data: {}
+    - alias: "NOTIFICATION : FIN DE PUSH"
+      action: persistent_notification.create
+      data:
+        title: "Git Push"
+        message: "Sauvegarde Manuelle (Dashboard) terminée (Journal mis à jour)."
+
 git_pull:
-  alias: GITHUB B - PULL
+  alias: "GITHUB B - PULL"
   icon: mdi:cloud-upload
   mode: queued
   sequence:
-  - action: shell_command.git_pull_ff
-  - delay: 00:00:02
-  - data:
-      title: Git Pull
-      message: Fetch/prune + pull --ff-only lancé sur /config.
-    action: persistent_notification.create
-  description: ''
-git_backup_weekly_refresh:
-  alias: GITHUB C - Backup Weekly & Refresh
-  icon: mdi:calendar-clock
-  sequence:
-  - action: shell_command.git_backup_push_weekly
-  - delay:
-      seconds: 8
-  - target:
-      entity_id:
-      - sensor.backup_github_status
-      - sensor.backup_github_journal
-    action: homeassistant.update_entity
-  - data:
-      title: Git Push Weekly
-      message: Sauvegarde Hebdomadaire terminée (Journal mis à jour).
-    action: persistent_notification.create
+    - alias: "ACTION : GIT PULL"
+      action: shell_command.git_pull_ff
+    - alias: "ATTENTE : 2 SECONDES"
+      delay: 00:00:02
+    - alias: "NOTIFICATION : PULL LANCÉ"
+      data:
+        title: "Git Pull"
+        message: "Fetch/prune + pull --ff-only lancé sur /config."
+      action: persistent_notification.create
   description: ''
 
+git_backup_weekly_refresh:
+  alias: "GITHUB C - BACKUP WEEKLY & REFRESH"
+  icon: mdi:calendar-clock
+  sequence:
+    - alias: "ACTION : PUSH HEBDOMADAIRE"
+      action: shell_command.git_backup_push_weekly
+    - alias: "ATTENTE : 8 SECONDES"
+      delay:
+        seconds: 8
+    - alias: "UPDATE : CAPTEURS GITHUB"
+      target:
+        entity_id:
+          - sensor.backup_github_status
+          - sensor.backup_github_journal
+      action: homeassistant.update_entity
+    - alias: "NOTIFICATION : FIN DE PUSH HEBDO"
+      data:
+        title: "Git Push Weekly"
+        message: "Sauvegarde Hebdomadaire terminée (Journal mis à jour)."
+      action: persistent_notification.create
+  description: ''
+
+# ╭──────────────────────────────────────────────────────────────────╮
+# │ SCRIPTS : PÔLE 1. CLIMATISATION (LOGIQUE DE SÉCURITÉ)            │
+# ╰──────────────────────────────────────────────────────────────────╯
+
 j_1_routeur_clim_on_off_intelligent:
-  alias: J - 1 - ROUTEUR - Clim ON/OFF Intelligent
-  description: '[ROUTEUR] À mettre derrière le bouton du Dashboard. 1. Anti-Tremblote
-    (Vérifie Verrou). 2. Si Prise OFF -> Allume. 3. Si Prise ON -> Appelle J-2 (Secu).'
+  alias: "J - 1 - ROUTEUR - CLIM ON/OFF INTELLIGENT"
+  description: "[ROUTEUR] Logique Dashboard : Anti-tremblote et routage ON/OFF."
   mode: single
   fields:
     piece:
@@ -62,35 +83,35 @@ j_1_routeur_clim_on_off_intelligent:
     switch_entity: switch.clim_{{ p }}_nous
     lock_entity: input_boolean.clim_{{ p }}_arret_securise_en_cours
   sequence:
-  - alias: 1. Sécurité Anti-Tremblote
-    if:
-    - condition: template
-      value_template: '{{ is_state(lock_entity, ''on'') }}'
-    then:
-    - action: notify.mobile_app_poco_x7_pro
-      data:
-        title: OULA DOUCEMENT !
-        message: Une procédure d'arrêt est déjà en cours sur {{ p | upper }}.
-    - stop: Arrêt sécurisé déjà en cours - Double clic ignoré
-  - alias: 2. Décision ON/OFF
-    if:
-    - condition: template
-      value_template: '{{ is_state(switch_entity, ''off'') }}'
-    then:
-    - alias: 'Action : ALLUMER'
-      action: switch.turn_on
-      target:
-        entity_id: '{{ switch_entity }}'
-    else:
-    - alias: 'Action : APPELER J-2 (SÉCURITÉ)'
-      action: script.j_2_secu_arret_clim_protege
-      data:
-        piece: '{{ p }}'
+    - alias: "1. SÉCURITÉ ANTI-TREMBLOTE"
+      if:
+        - condition: template
+          value_template: '{{ is_state(lock_entity, "on") }}'
+      then:
+        - alias: "NOTIFICATION : VERROU ACTIF"
+          action: notify.mobile_app_poco_x7_pro
+          data:
+            title: "OULA DOUCEMENT !"
+            message: "Une procédure d'arrêt est déjà en cours sur {{ p | upper }}."
+        - stop: "Arrêt sécurisé déjà en cours - Double clic ignoré"
+    - alias: "2. DÉCISION ON/OFF"
+      if:
+        - condition: template
+          value_template: '{{ is_state(switch_entity, "off") }}'
+      then:
+        - alias: "ACTION : ALLUMER LA PRISE"
+          action: switch.turn_on
+          target:
+            entity_id: '{{ switch_entity }}'
+      else:
+        - alias: "ACTION : APPELER J-2 (SÉCURITÉ)"
+          action: script.j_2_secu_arret_clim_protege
+          data:
+            piece: '{{ p }}'
 
 j_2_secu_arret_clim_protege:
-  alias: J - 2 - SECU - Arrêt Clim Protégé
-  description: '[EXÉCUTANT] Utilise Power Status pour la détection de chauffe et Power
-    Lock (9W) pour la coupure finale.'
+  alias: "J - 2 - SECU - ARRÊT CLIM PROTÉGÉ"
+  description: "[EXÉCUTANT] Protection thermique et coupure sous 9W."
   mode: parallel
   max: 3
   fields:
@@ -105,71 +126,79 @@ j_2_secu_arret_clim_protege:
     switch_entity: switch.clim_{{ p }}_nous
     power_status_sensor: sensor.{{ p }}_power_status
     power_lock_sensor: sensor.{{ p }}_power_lock
-    piece_nom: '{% if p == ''salon'' %} du Salon  {% elif p == ''bureau'' %} du Bureau  {%
-      elif p == ''chambre'' %} de la Chambre  {% else %} Inconnue {% endif %}
-
-      '
+    piece_nom: >
+      {% if p == 'salon' %} du Salon {% elif p == 'bureau' %} du Bureau 
+      {% elif p == 'chambre' %} de la Chambre {% else %} Inconnue {% endif %}
   sequence:
-  - alias: 1. Activation Verrou
-    target:
-      entity_id: '{{ lock_entity }}'
-    action: input_boolean.turn_on
-  - alias: 2. Thermostat OFF
-    target:
-      entity_id: '{{ clim_entity }}'
-    action: climate.set_hvac_mode
-    data:
-      hvac_mode: 'off'
-  - alias: 3. Analyse et Attente
-    choose:
-    - alias: Déjà à l'arrêt complet
-      conditions:
-      - condition: template
-        value_template: '{{ is_state(power_lock_sensor, ''off'') }}'
-      sequence:
-      - target:
-          entity_id: '{{ switch_entity }}'
-        action: switch.turn_off
-      - action: notify.mobile_app_poco_x7_pro
-        data:
-          title: Prise clim {{ p | upper }}
-          message: La Clim {{ piece_nom }} est coupée (Repos complet).
-    - alias: Clim en cycle d'arrêt
-      conditions:
-      - condition: template
-        value_template: '{{ is_state(power_lock_sensor, ''on'') }}'
-      sequence:
-      - action: notify.mobile_app_poco_x7_pro
-        data:
-          title: ARRÊT CLIM EN COURS
-          message: 'La Clim {{ piece_nom }} est active ({{ states(''sensor.clim_''
-            ~ p ~ ''_nous_power'') }}W).  Attente de descente sous 9W (max 10 min).
+    - alias: "1. ACTIVATION VERROU"
+      target:
+        entity_id: '{{ lock_entity }}'
+      action: input_boolean.turn_on
+    - alias: "2. THERMOSTAT SUR OFF"
+      target:
+        entity_id: '{{ clim_entity }}'
+      action: climate.set_hvac_mode
+      data:
+        hvac_mode: 'off'
+    - alias: "3. ANALYSE ET ATTENTE CONSOMMATION"
+      choose:
+        - alias: "CAS : DÉJÀ À L'ARRÊT COMPLET"
+          conditions:
+            - condition: template
+              value_template: '{{ is_state(power_lock_sensor, "off") }}'
+          sequence:
+            - alias: "ACTION : COUPURE PRISE IMMÉDIATE"
+              target:
+                entity_id: '{{ switch_entity }}'
+              action: switch.turn_off
+            - alias: "NOTIFICATION : REPOS COMPLET"
+              action: notify.mobile_app_poco_x7_pro
+              data:
+                title: "Prise clim {{ p | upper }}"
+                message: "La Clim {{ piece_nom }} est coupée (Repos complet)."
+        - alias: "CAS : CLIM EN CYCLE D'ARRÊT (ATTENTE)"
+          conditions:
+            - condition: template
+              value_template: '{{ is_state(power_lock_sensor, "on") }}'
+          sequence:
+            - alias: "NOTIFICATION : ATTENTE DESCENTE WATTS"
+              action: notify.mobile_app_poco_x7_pro
+              data:
+                title: "ARRÊT CLIM EN COURS"
+                message: "La Clim {{ piece_nom }} est active. Attente de descente sous 9W (max 10 min)."
+            - alias: "WAIT : DÉTECTION SOUS 9W"
+              wait_for_trigger:
+                - trigger: template
+                  value_template: '{{ is_state(power_lock_sensor, "off") }}'
+              timeout: "00:10:00"
+              continue_on_timeout: true
+            - alias: "CHECK FINAL : COUPURE OU ERREUR"
+              if:
+                - condition: template
+                  value_template: '{{ is_state(power_lock_sensor, "off") }}'
+              then:
+                - alias: "ACTION : COUPURE PRISE PROPRE"
+                  target:
+                    entity_id: '{{ switch_entity }}'
+                  action: switch.turn_off
+                - alias: "NOTIFICATION : ARRÊT RÉUSSI"
+                  action: notify.mobile_app_poco_x7_pro
+                  data:
+                    title: "CLIM À L'ARRÊT"
+                    message: "La prise de la Clim {{ piece_nom }} a été coupée proprement (< 9W)."
+              else:
+                - alias: "NOTIFICATION : ÉCHEC SÉCURITÉ"
+                  action: notify.mobile_app_poco_x7_pro
+                  data:
+                    title: "ERREUR ARRÊT CLIM"
+                    message: "ÉCHEC : La Clim {{ piece_nom }} consomme toujours > 9W après 10 min. Prise maintenue."
+    - alias: "4. DÉSACTIVATION VERROU"
+      target:
+        entity_id: '{{ lock_entity }}'
+      action: input_boolean.turn_off
 
-            '
-      - wait_for_trigger:
-        - trigger: template
-          value_template: '{{ is_state(power_lock_sensor, ''off'') }}'
-        timeout: 00:10:00
-        continue_on_timeout: true
-      - if:
-        - condition: template
-          value_template: '{{ is_state(power_lock_sensor, ''off'') }}'
-        then:
-        - target:
-            entity_id: '{{ switch_entity }}'
-          action: switch.turn_off
-        - action: notify.mobile_app_poco_x7_pro
-          data:
-            title: CLIM À L'ARRÊT
-            message: La prise de la Clim {{ piece_nom }} a été coupée proprement (<
-              9W).
-        else:
-        - action: notify.mobile_app_poco_x7_pro
-          data:
-            title: ERREUR ARRÊT CLIM
-            message: 'ÉCHEC : La Clim {{ piece_nom }} consomme toujours > 9W après
-              5 min. Prise maintenue par sécurité.'
-  - alias: 4. Désactivation Verrou
-    target:
-      entity_id: '{{ lock_entity }}'
-    action: input_boolean.turn_off
+# annotations_log:
+# - [Global] Mise en conformité des titres avec boîtes ASCII arrondies.
+# - [Global] Passage de TOUS les alias en MAJUSCULES (standard BerrySwann).
+# - [Global] Standardisation des guillemets doubles pour les alias et noms.
+# - [Scripts Clim] Clarification des alias d'étapes pour une meilleure lisibilité dans les logs HA.

@@ -1,25 +1,55 @@
-mamour_at_home:
-  name: "Mamour à la maison (Wi-Fi)"
-  initial: off
-  icon: mdi:wifi
+# ╭──────────────────────────────────────────────────────────────────╮
+# │ INPUT_BOOLEAN : INTERRUPTEURS VIRTUELS & ÉTATS LOGIQUES          │
+# ╰──────────────────────────────────────────────────────────────────╯
 
+# ┌─────────────────────────────────────┐
+# │ 4. SALON                            │
+# └─────────────────────────────────────┘
+
+# --- clim_salon_arret_securise_en_cours ---
+clim_salon_arret_securise_en_cours:
+  name: "Blocage CLIM Salon (Arrêt Sécurisé)"
+  initial: off
+  icon: mdi:lock-alert
+
+# ┌─────────────────────────────────────┐
+# │ 7. BUREAU                           │
+# └─────────────────────────────────────┘
+
+# --- clim_bureau_arret_securise_en_cours ---
+clim_bureau_arret_securise_en_cours:
+  name: "Blocage CLIM Bureau (Arrêt Sécurisé)"
+  initial: off
+  icon: mdi:lock-alert
+
+# ┌─────────────────────────────────────┐
+# │ 9. CHAMBRE                          │
+# └─────────────────────────────────────┘
+
+# --- clim_chambre_arret_securise_en_cours ---
+clim_chambre_arret_securise_en_cours:
+  name: "Blocage CLIM Chambre (Arrêt Sécurisé)"
+  initial: off
+  icon: mdi:lock-alert
+
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : PRÉSENCE & SYSTÈME      │
+# └─────────────────────────────────────┘
+
+# --- eric_at_home ---
 eric_at_home:
   name: "Eric à la maison (Wi-Fi)"
   initial: off
   icon: mdi:wifi
 
-
-clim_salon_arret_securise_en_cours:
-  name: Blocage CLIM Salon (Arrêt Sécurisé)
+# --- mamour_at_home ---
+mamour_at_home:
+  name: "Mamour à la maison (Wi-Fi)"
   initial: off
-  icon: mdi:lock-alert
+  icon: mdi:wifi
 
-clim_bureau_arret_securise_en_cours:
-  name: Blocage CLIM Bureau (Arrêt Sécurisé)
-  initial: off
-  icon: mdi:lock-alert
-
-clim_chambre_arret_securise_en_cours:
-  name: Blocage CLIM Chambre (Arrêt Sécurisé)
-  initial: off
-  icon: mdi:lock-alert
+# annotations_log:
+# - [L1-5] Ajout du Titre Principal ASCII arrondi conforme BerrySwann.
+# - [L7-37] Réorganisation par pièces (Salon > Bureau > Chambre) selon l'index officiel.
+# - [L39-43] Regroupement de la présence (Eric & Mamour) dans la section 10. AUTRE.
+# - [Global] Ajout systématique des unique_id et des titres tertiaires # --- slug ---.

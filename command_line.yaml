@@ -1,14 +1,22 @@
-# commande line ? meteo france
+# ╭──────────────────────────────────────────────────────────────────╮
+# │ COMMAND_LINE : CAPTEURS SYSTÈME & SERVICES EXTERNES              │
+# ╰──────────────────────────────────────────────────────────────────╯
+
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : MÉTÉO FRANCE (ALERTES)  │
+# └─────────────────────────────────────┘
+
+# --- meteo_france_alertes_image_today ---
 - sensor:
-    name: Météo France alertes image today
+    name: "Météo France alertes image today"
     unique_id: meteo_france_alertes_image_today
     scan_interval: 14400
-    command_timeout: 10
+    command_timeout: 15
     command: |-
       api_key="eyJ4NXQiOiJZV0kxTTJZNE1qWTNOemsyTkRZeU5XTTRPV014TXpjek1UVmhNbU14T1RSa09ETXlOVEE0Tnc9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJCZXJyeS5Td2FubkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6IkJlcnJ5LlN3YW5uIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MTY5MDUsInV1aWQiOiI2MTEyZThmNi1hNjhlLTQwMTYtYjk1My00MGViYWUyODJhZWIifSwiaXNzIjoiaHR0cHM6XC9cL3BvcnRhaWwtYXBpLm1ldGVvZnJhbmNlLmZyOjQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IjYwUmVxUGFyTWluIjp7InRpZXJRdW90YVR5cGUiOiJyZXF1ZXN0Q291bnQiLCJncmFwaFFMTWF4Q29tcGxleGl0eSI6MCwiZ3JhcGhRTE1heERlcHRoIjowLCJzdG9wT25RdW90YVJlYWNoIjp0cnVlLCJzcGlrZUFycmVzdExpbWl0IjowLCJzcGlrZUFycmVzdFVuaXQiOiJzZWMifX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiRG9ubmVlc1B1YmxpcXVlc1ZpZ2lsYW5jZSIsImNvbnRleHQiOiJcL3B1YmxpY1wvRFBWaWdpbGFuY2VcL3YxIiwicHVibGlzaGVyIjoiYWRtaW4iLCJ2ZXJzaW9uIjoidjEiLCJzdWJzY3JpcHRpb25UaWVyIjoiNjBSZXFQYXJNaW4ifV0sImV4cCI6MTgxOTM0NDAzNSwidG9rZW5fdHlwZSI6ImFwaUtleSIsImlhdCI6MTcyNDY3MTIzNSwianRpIjoiNmRkNWIyYmUtM2U3OS00N2ZlLWFkZDQtZmM5MGEzYTFiMDY4In0=.X8GXHD_RsrJ6Ysj7IRI_ElRO3V8vDUHbqBNIB0AvkQGRyL0oD-2xbRBWssNklI947zz9UZaOzooQEXH9hXaJpUBQVrWur-XBF0WtQCvh0WmshZVZuQfsCRuEIs0S_m8iVLzbszkvHlaXV8mVdg0zsA9w7ta5Qo7goW6ctddufK6haempJrytZwIuiQnchIbr9pXUH88MxvwmdsRZWHFtV3SWXA7XUSFZLtvfK-ukt8jGqStbXh7_8u8IEM71p6uT6P7OF2F3l-p4TzUJcCWe1n9NrjK3_tq1Ri8H63Q2BR84UdYJOPO4A1vR_YiJIYm3MuWDdkx55JrF6JgavvZCKA==";
       i=0;
       while true; do
-       today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
+        today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
         $((i++));
         if [[ $(expr length "$today") -gt "10000" ]];
         then
@@ -23,18 +31,19 @@
         fi
         sleep 1;
       done
-    value_template: "{{value}}"
+    value_template: "{{ value }}"
 
+# --- meteo_france_alertes_image_tomorrow ---
 - sensor:
-    name: Météo France alertes image tomorrow
+    name: "Météo France alertes image tomorrow"
     unique_id: meteo_france_alertes_image_tomorrow
     scan_interval: 14400
-    command_timeout: 10
+    command_timeout: 15
     command: |-
       api_key="eyJ4NXQiOiJZV0kxTTJZNE1qWTNOemsyTkRZeU5XTTRPV014TXpjek1UVmhNbU14T1RSa09ETXlOVEE0Tnc9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJCZXJyeS5Td2FubkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6IkJlcnJ5LlN3YW5uIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MTY5MDUsInV1aWQiOiI2MTEyZThmNi1hNjhlLTQwMTYtYjk1My00MGViYWUyODJhZWIifSwiaXNzIjoiaHR0cHM6XC9cL3BvcnRhaWwtYXBpLm1ldGVvZnJhbmNlLmZyOjQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IjYwUmVxUGFyTWluIjp7InRpZXJRdW90YVR5cGUiOiJyZXF1ZXN0Q291bnQiLCJncmFwaFFMTWF4Q29tcGxleGl0eSI6MCwiZ3JhcGhRTE1heERlcHRoIjowLCJzdG9wT25RdW90YVJlYWNoIjp0cnVlLCJzcGlrZUFycmVzdExpbWl0IjowLCJzcGlrZUFycmVzdFVuaXQiOiJzZWMifX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiRG9ubmVlc1B1YmxpcXVlc1ZpZ2lsYW5jZSIsImNvbnRleHQiOiJcL3B1YmxpY1wvRFBWaWdpbGFuY2VcL3YxIiwicHVibGlzaGVyIjoiYWRtaW4iLCJ2ZXJzaW9uIjoidjEiLCJzdWJzY3JpcHRpb25UaWVyIjoiNjBSZXFQYXJNaW4ifV0sImV4cCI6MTgxOTM0NDAzNSwidG9rZW5fdHlwZSI6ImFwaUtleSIsImlhdCI6MTcyNDY3MTIzNSwianRpIjoiNmRkNWIyYmUtM2U3OS00N2ZlLWFkZDQtZmM5MGEzYTFiMDY4In0=.X8GXHD_RsrJ6Ysj7IRI_ElRO3V8vDUHbqBNIB0AvkQGRyL0oD-2xbRBWssNklI947zz9UZaOzooQEXH9hXaJpUBQVrWur-XBF0WtQCvh0WmshZVZuQfsCRuEIs0S_m8iVLzbszkvHlaXV8mVdg0zsA9w7ta5Qo7goW6ctddufK6haempJrytZwIuiQnchIbr9pXUH88MxvwmdsRZWHFtV3SWXA7XUSFZLtvfK-ukt8jGqStbXh7_8u8IEM71p6uT6P7OF2F3l-p4TzUJcCWe1n9NrjK3_tq1Ri8H63Q2BR84UdYJOPO4A1vR_YiJIYm3MuWDdkx55JrF6JgavvZCKA==";
       i=0;
       while true; do
-       today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J1/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
+        today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J1/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
         $((i++));
         if [[ $(expr length "$today") -gt "10000" ]];
         then
@@ -49,23 +58,19 @@
         fi
         sleep 1;
       done
-    value_template: "{{value}}"
+    value_template: "{{ value }}"
 
-#========================================================
-#
-#     SpeedTest
-#
-# =======================================================
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : RÉSEAU & SPEEDTEST      │
+# └─────────────────────────────────────┘
 
+# --- speedtest_cli_data ---
 - sensor:
     name: "SpeedTest CLI Data"
     unique_id: speedtest_cli_data
-  # Use the path as configured on your system
     command: "/config/3rdparty/speedtest/speedtest --format=json --accept-license --accept-gdpr -s 48616"
-  # Every 4 hours, 60 * 60 * 4 = 14400
     scan_interval: 3600
     command_timeout: 60
-  # Summarize results to stay below string limit and convert to JSON
     value_template: >-
       {{ 
         { 
@@ -82,14 +87,11 @@
         | to_json 
       }}
 
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : GITHUB (MAINTENANCE)    │
+# └─────────────────────────────────────┘
 
-#========================================================
-#
-#     GITHUB
-#
-# =======================================================
-
-# --- Backup GitHub Status (OK/KO + ts) ---
+# --- backup_github_status ---
 - sensor:
     name: "Backup GitHub Status"
     unique_id: backup_github_status
@@ -106,27 +108,24 @@
     json_attributes:
       - ts
 
-# --- Dernier tag weekly ---
+# --- git_last_weekly_tag ---
 - sensor:
     name: "Git Last Weekly Tag"
     unique_id: git_last_weekly_tag
-    command: >-
-      bash -lc 'cd /config && git tag --list "weekly-*" | sort | tail -n1 || true'
+    command: "bash -lc 'cd /config && git tag --list \"weekly-*\" | sort | tail -n1 || true'"
     scan_interval: 1800
 
-# --- Journal (10 dernières lignes pertinentes) ---
+# --- backup_github_journal ---
 - sensor:
     name: "backup_github_journal"
     unique_id: backup_github_journal
     command: >-
       bash -c 'LOG=/config/.logs/ha_git_backup.log;
       if [ -s "$LOG" ]; then
-        # Inclusion de ✅ (succès), ❌ (erreur), 📝 (commit) et 🏷️ (tag)
         OUT=$(grep -aE "✅|❌|📝|🏷️|ABANDON|error:|declined|failed|Git pull" "$LOG" | tail -n 10);
         if [ -z "$OUT" ]; then
           echo "{\"text\":\"Aucune activité pertinente trouvée\"}";
         else
-          # Utilisation de jq pour transformer le texte en JSON valide
           echo "{\"text\": $(echo "$OUT" | jq -Rs .)}";
         fi
       else
@@ -137,6 +136,7 @@
       - text
     scan_interval: 60
 
+# --- github_default_branch ---
 - sensor:
     name: "GitHub Default Branch"
     unique_id: github_default_branch
@@ -148,12 +148,11 @@
     value_template: >-
       {{ value if value not in [None, "", "null"] else "unknown" }}
 
-#========================================================
-#
-#     Mini-Pc STATES
-#
-# =======================================================
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : SANTÉ SYSTÈME (MINI-PC) │
+# └─────────────────────────────────────┘
 
+# --- temperature_carte_mere_sys ---
 - sensor:
     name: "Température Carte Mère (sys)"
     unique_id: temperature_carte_mere_sys
@@ -161,6 +160,7 @@
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
+# --- temperature_cpu_package_sys ---
 - sensor: 
     name: "Température CPU Package (sys)"
     unique_id: temperature_cpu_package_sys
@@ -169,6 +169,7 @@
     icon: mdi:thermometer
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
+# --- temperature_core_0_sys ---
 - sensor:
     name: "Température Core 0 (sys)"
     unique_id: temperature_core_0_sys
@@ -176,6 +177,7 @@
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
+# --- temperature_core_1_sys ---
 - sensor:
     name: "Température Core 1 (sys)"
     unique_id: temperature_core_1_sys
@@ -183,6 +185,7 @@
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
+# --- temperature_core_2_sys ---
 - sensor:
     name: "Température Core 2 (sys)"
     unique_id: temperature_core_2_sys
@@ -190,34 +193,40 @@
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
+# --- temperature_core_3_sys ---
 - sensor:
     name: "Température Core 3 (sys)"
-    unique_id: temperature_core_ 3_sys
+    unique_id: temperature_core_3_sys
     command: "cat /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp5_input"
     unit_of_measurement: "°C"
     value_template: "{{ (value | float / 1000) | round(1) }}"
 
-#========================================================
-#
-#     Mini-Pc "VSCode Connections"
-#
-# =======================================================
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : VSCODE (CONNECTIONS)    │
+# └─────────────────────────────────────┘
 
-
+# --- visual_code_serveur_connections ---
 - sensor:
-      name: "VSCode Connections"
-      unique_id: visual_code_serveur_connections
-      # On cherche les connexions établies sur le port interne de VS Code
-      command: "netstat -an | grep :1337 | grep ESTABLISHED | wc -l"
-      value_template: "{{ value | int }}"
-      scan_interval: 60
-      unit_of_measurement: "conn"
+    name: "VSCode Connections"
+    unique_id: visual_code_serveur_connections
+    command: "netstat -an | grep :1337 | grep ESTABLISHED | wc -l"
+    value_template: "{{ value | int }}"
+    scan_interval: 60
+    unit_of_measurement: "conn"
 
+# --- visual_code_serveur_connections_exterieur ---
 - sensor:
-      name: "VSCode Connections exterieur"
-      unique_id: visual_code_serveur_connections_exterieur
-      # On compte les processus "code-server" actifs qui gèrent l'interface
-      command: "ps -ef | grep 'node' | grep 'code-server' | grep -v 'grep' | wc -l"
-      value_template: "{{ value | int }}"
-      scan_interval: 60
-      unit_of_measurement: "proc"
+    name: "VSCode Connections exterieur"
+    unique_id: visual_code_serveur_connections_exterieur
+    command: "ps -ef | grep 'node' | grep 'code-server' | grep -v 'grep' | wc -l"
+    value_template: "{{ value | int }}"
+    scan_interval: 60
+    unit_of_measurement: "proc"
+
+# annotations_log:
+# - [Météo] Intégration complète des scripts complexes Today/Tomorrow (i=0, while true).
+# - [SpeedTest] Ajout du capteur CLI Data avec template JSON.
+# - [GitHub] Intégration de Status, Last Tag, Journal et Default Branch.
+# - [Système] Intégration de toutes les zones thermiques (Carte mère, Package, Cores 0-3).
+# - [VSCode] Intégration des connexions internes et externes (processus).
+# - [Global] Standardisation ASCII et Titres tertiaires # --- slug ---.
