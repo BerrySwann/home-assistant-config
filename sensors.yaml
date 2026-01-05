@@ -425,3 +425,49 @@
 # - '[Unique_ID] Création systématique de unique_id en format slug (Minuscules/Underscores).'
 # - '[Qualité Air] Tri des statistiques par pièce selon l'ordre officiel (4, 7, 9).'
 # - '[Section 10] Harmonisation du nom vers "AUTRE".'
+
+# ╭──────────────────────────────────────────────────────────────────╮
+# │ SENSOR : STATISTIQUES & INTÉGRATION (PÔLE 10. MINI-PC)           │
+# ╰──────────────────────────────────────────────────────────────────╯
+
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : SANTÉ SYSTÈME (MINI-PC) │
+# └─────────────────────────────────────┘
+
+# --- mini_pc_charge_moyenne_24h_w ---
+  - platform: statistics
+    name: "Mini PC Charge Moyenne 24h (W)"
+    unique_id: mini_pc_charge_moyenne_24h_w
+    entity_id: sensor.prise_mini_pc_ikea_power
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# --- prise_mini_pc_ikea_kwh ---
+  - platform: integration
+    source: sensor.prise_mini_pc_ikea_power
+    name: "Prise Mini PC IKEA kWh"
+    unique_id: prise_mini_pc_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : RÉSEAU & SERVICES       │
+# └─────────────────────────────────────┘
+
+# --- ping_https_vscode ---
+  - platform: rest
+    name: "Ping HTTPS VSCode"
+    unique_id: ping_https_vscode
+    resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
+    method: GET
+    timeout: 15
+    value_template: "{{ value_json is defined or value is defined }}"
+    scan_interval: 60
+
+# annotations_log:
+# - [L1-5] Restauration des capteurs depuis le tag weekly-2025-W52.
+# - [L19] Ajout de l'unique_id 'prise_mini_pc_ikea_kwh' pour stabiliser l'entité.
+# - [Global] Mise en conformité avec le titrage ASCII arrondi (BerrySwann Style).
