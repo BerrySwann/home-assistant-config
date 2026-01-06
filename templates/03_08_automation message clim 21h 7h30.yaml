@@ -1,4 +1,13 @@
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 03_08. CLIM — MESSAGE PERSONNALISÉ (21h00 <-> 7h30)                  │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
+
 - sensor:
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : GÉNÉRATEUR DE MESSAGE NUIT (LOGIQUE SCÉNARIOS)        │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- message_clim_personnalise_21h00_7h30 ---
   - name: "Message Clim personnalisé 21h00 <-> 7h30"
     unique_id: message_clim_personnalise_21h00_7h30
     state: >
@@ -24,17 +33,17 @@
 
         {# --- PARTIE 1 : TENDANCE --- #}
         {%- if tendance == 'increasing' %}
-          {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
+          {%- set message_tendance = "T°Ext Up ↗ " ~ temp_ext ~ "°" %}
         {%- elif tendance == 'decreasing' %}
-          {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
+          {%- set message_tendance = "T°Ext Down ↘ " ~ temp_ext ~ "°" %}
         {%- else %}
-          {%- set message_tendance = "T°Ext stable " ~ temp_ext ~ "°" %}
+          {%- set message_tendance = "T°Ext stable → " ~ temp_ext ~ "°" %}
         {%- endif %}
 
-        {# --- PARTIE 2 : HEADER --- #}
+        {# --- PARTIE 2 : HEADER --- EN-TÊTE --- #}
         {%- set message_header = presence %}
 
-        {# --- PARTIE 3 : MODE --- #}
+        {# --- PARTIE 3 : MODE --- SCÉNARIO STANDARD --- #}
         {%- if not clims_alimentees %}
           {%- set message_mode = "[UNITS OFF]" %}
         {%- else %}
@@ -70,7 +79,8 @@
       {%- endif %}
 
     availability: >
-      {{ states('sensor.poco_x7_pro_mamour_network_type') not in ['unknown', 'unavailable'] and
-        states('sensor.th_balcon_nord_temperature') not in ['unknown', 'unavailable'] and
-        states('sensor.groupe_clim') not in ['unknown', 'unavailable'] and
-        states('sensor.presence_clim') not in ['unknown', 'unavailable'] }}
+        {{ states('sensor.poco_x7_pro_mamour_network_type') not in ['unknown', 'unavailable'] and
+          states('sensor.poco_x7_pro_network_type') not in ['unknown', 'unavailable'] and
+          states('sensor.th_balcon_nord_temperature') not in ['unknown', 'unavailable'] and
+          states('sensor.groupe_clim') not in ['unknown', 'unavailable'] and
+          states('sensor.presence_clim') not in ['unknown', 'unavailable'] }}

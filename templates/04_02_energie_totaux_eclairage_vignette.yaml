@@ -1,9 +1,9 @@
-#========================================================================
-# TOTAUX ÉCLAIRAGE (DIAGNOSTIC)
-#========================================================================
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 04_02. ÉNERGIE — TOTAUX ÉCLAIRAGE (PYRAMIDE : LAMPES > ZONES > TOTAL)│
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
 
-#--- TOTAL QUOTIDIEN ---
 - sensor:
+  #--- TOTAL QUOTIDIEN ---
   - name: "Conso. Eclairage Total QUOTIDIEN"
     unique_id: conso_eclairage_total_quotidien
     device_class: energy
@@ -17,7 +17,7 @@
         states('sensor.eclairage_sdb_2_quotidien') | float(0) +
         states('sensor.eclairage_chambre_4_quotidien') | float(0)) | round(3) }}
 
-#--- TOTAL MENSUEL ---
+  #--- TOTAL MENSUEL ---
   - name: "Conso. Eclairage Total MENSUEL"
     unique_id: conso_eclairage_total_mensuel
     device_class: energy
@@ -31,18 +31,22 @@
         states('sensor.eclairage_sdb_2_mensuel') | float(0) +
         states('sensor.eclairage_chambre_4_mensuel') | float(0)) | round(3) }}
 
+    # ╭────────────────────────────────────────────────────────────────────────────────────────╮
+    # │SYNTHÈSE PAR PIÈCE - QUOTIDIEN                                                          │
+    # ╰────────────────────────────────────────────────────────────────────────────────────────╯
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 1. ENTRÉE (1 Ampoule)                                             │
+    # └───────────────────────────────────────────────────────────────────┘
 - sensor:
-    # ==========================================
-    # SYNTHÈSE PAR PIÈCE - QUOTIDIEN
-    # ==========================================
-
     - name: eclairage_entree_total_quotidien
       unique_id: eclairage_entree_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
       state: >
         {{ states('sensor.eclairage_hue_white_lamp_entree_quotidien') | float(0) | round(3) }}
-
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 4. SALON (Somme des 5 lampes)                                     │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_salon_total_quotidien
       unique_id: eclairage_salon_total_quotidien
       device_class: energy
@@ -57,6 +61,9 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 5. CUISINE (1 Ampoule)                                            │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_cuisine_total_quotidien
       unique_id: eclairage_cuisine_total_quotidien
       device_class: energy
@@ -64,6 +71,9 @@
       state: >
         {{ states('sensor.eclairage_hue_white_lamp_cuisine_quotidien') | float(0) | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 6. COULOIR (1 Ampoule)                                            │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_couloir_total_quotidien
       unique_id: eclairage_couloir_total_quotidien
       device_class: energy
@@ -71,6 +81,9 @@
       state: >
         {{ states('sensor.eclairage_hue_white_lamp_couloir_quotidien') | float(0) | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 7. BUREAU (5 Ampoules)                                            │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_bureau_total_quotidien
       unique_id: eclairage_bureau_total_quotidien
       device_class: energy
@@ -85,6 +98,9 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 8. SDB (2 Ampoules)                                               │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_salle_de_bain_total_quotidien
       unique_id: eclairage_salle_de_bain_total_quotidien
       device_class: energy
@@ -96,6 +112,9 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 9. CHAMBRE (4 Ampoules)                                           │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_chambre_total_quotidien
       unique_id: eclairage_chambre_total_quotidien
       device_class: energy
@@ -109,10 +128,13 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
-    # ==========================================
-    # SYNTHÈSE PAR PIÈCE - MENSUEL
-    # ==========================================
-
+    # ╭────────────────────────────────────────────────────────────────────────────────────────╮
+    # │SYNTHÈSE PAR PIÈCE - MENSUEL                                                            │
+    # ╰────────────────────────────────────────────────────────────────────────────────────────╯
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 1. ENTRÉE (1 Ampoule)                                             │
+    # └───────────────────────────────────────────────────────────────────┘
+- sensor:
     - name: eclairage_entree_total_mensuel
       unique_id: eclairage_entree_total_mensuel
       device_class: energy
@@ -120,6 +142,9 @@
       state: >
         {{ states('sensor.eclairage_hue_white_lamp_entree_mensuel') | float(0) | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 4. SALON (Somme des 5 lampes)                                     │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_salon_total_mensuel
       unique_id: eclairage_salon_total_mensuel
       device_class: energy
@@ -134,6 +159,9 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 5. CUISINE (1 Ampoule)                                            │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_cuisine_total_mensuel
       unique_id: eclairage_cuisine_total_mensuel
       device_class: energy
@@ -141,6 +169,9 @@
       state: >
         {{ states('sensor.eclairage_hue_white_lamp_cuisine_mensuel') | float(0) | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 6. COULOIR (1 Ampoule)                                            │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_couloir_total_mensuel
       unique_id: eclairage_couloir_total_mensuel
       device_class: energy
@@ -148,6 +179,9 @@
       state: >
         {{ states('sensor.eclairage_hue_white_lamp_couloir_mensuel') | float(0) | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 7. BUREAU (5 Ampoules)                                            │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_bureau_total_mensuel
       unique_id: eclairage_bureau_total_mensuel
       device_class: energy
@@ -162,6 +196,9 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 8. SDB (2 Ampoules)                                               │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_salle_de_bain_total_mensuel
       unique_id: eclairage_salle_de_bain_total_mensuel
       device_class: energy
@@ -173,6 +210,9 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 9. CHAMBRE (4 Ampoules)                                           │
+    # └───────────────────────────────────────────────────────────────────┘
     - name: eclairage_chambre_total_mensuel
       unique_id: eclairage_chambre_total_mensuel
       device_class: energy
@@ -186,6 +226,9 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
+    # ┌───────────────────────────────────────────────────────────────────┐
+    # │ 10. AUTRE : GRAND TOTAL APPARTEMENT (SOMME DES PIÈCES CI-DESSUS)  │
+    # └───────────────────────────────────────────────────────────────────┘
 - sensor:
     # ==========================================
     # GRAND TOTAL ÉCLAIRAGE APPART. - QUOTIDIEN
