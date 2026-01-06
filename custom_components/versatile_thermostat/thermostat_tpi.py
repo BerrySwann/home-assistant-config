@@ -450,6 +450,10 @@ class ThermostatTPI(BaseThermostat[T], Generic[T]):
         # Update the configuration attributes
         await self._async_update_tpi_config_entry()
 
+        if self._is_removed:
+             _LOGGER.debug("%s - Entity is removed, stop service_set_tpi_parameters", self)
+             return
+
         self.recalculate()
         await self.async_control_heating(force=True)
 
@@ -470,6 +474,16 @@ class ThermostatTPI(BaseThermostat[T], Generic[T]):
         target:
             entity_id: climate.thermostat_1
         """
+        # This service is only available for TPI algorithm with Auto TPI enabled
+        if self._proportional_function != PROPORTIONAL_FUNCTION_TPI:
+            raise ServiceValidationError(
+                f"{self} - This service is only available for TPI algorithm."
+            )
+        if not self._entry_infos.get(CONF_AUTO_TPI_MODE, False):
+            raise ServiceValidationError(
+                f"{self} - Auto TPI is not enabled in configuration."
+            )
+
         write_event_log(
             _LOGGER,
             self,
@@ -504,6 +518,16 @@ class ThermostatTPI(BaseThermostat[T], Generic[T]):
         target:
             entity_id: climate.thermostat_1
         """
+        # This service is only available for TPI algorithm with Auto TPI enabled
+        if self._proportional_function != PROPORTIONAL_FUNCTION_TPI:
+            raise ServiceValidationError(
+                f"{self} - This service is only available for TPI algorithm."
+            )
+        if not self._entry_infos.get(CONF_AUTO_TPI_MODE, False):
+            raise ServiceValidationError(
+                f"{self} - Auto TPI is not enabled in configuration."
+            )
+
         write_event_log(_LOGGER, self, f"Calling SERVICE_AUTO_TPI_CALIBRATE_CAPACITY, save_to_config: {save_to_config}, start_date: {start_date}, end_date: {end_date}, min_power_threshold: {min_power_threshold}, capacity_safety_margin: {capacity_safety_margin}")
 
         if not self._auto_tpi_manager:
@@ -584,6 +608,10 @@ class ThermostatTPI(BaseThermostat[T], Generic[T]):
                 new_data = entry.data.copy()
                 new_data[CONF_USE_TPI_CENTRAL_CONFIG] = False
                 self.hass.config_entries.async_update_entry(entry, data=new_data)
+
+            if self._is_removed:
+                 _LOGGER.debug("%s - Entity is removed, stop async_set_auto_tpi_mode", self)
+                 return
 
             # Start timer if we are in HEAT or COOL
             if self.vtherm_hvac_mode in [VThermHvacMode_HEAT, VThermHvacMode_COOL]:
