@@ -1,4 +1,13 @@
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 03_07. CLIM — MESSAGE PERSONNALISÉ (7h30 <-> 21h00)                  │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
+
 - sensor:
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : GÉNÉRATEUR DE MESSAGE (LOGIQUE SCÉNARIOS)             │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- message_clim_personnalise_7h30_21h00 ---
     - name: "Message Clim Personnalise 7h30 <-> 21h00"
       unique_id: message_clim_personnalise_7h30_21h00
       state: >
@@ -15,6 +24,7 @@
           {%- set temp_confort = states('sensor.temperature_confort_jour') | float(19) %}
           {%- set temp_conf_m = states('sensor.temperature_corrige_mamour_hivers') | float(20) %}
           {%- set temp_conf_e = states('sensor.temperature_corrige_eric_hivers') | float(18) %}
+          {%- set temp_conf_c = states('sensor.temperature_corrige_chambre_hivers') | float(18) %}
           {%- set temp_eco = states('sensor.temperature_eco_hiver_corrige') | float(17) %}
           {%- set mode = states('sensor.mode_ete_hiver') %}
           {%- set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
@@ -26,17 +36,17 @@
 
           {# --- PARTIE 1 : TENDANCE --- #}
           {%- if tendance == 'increasing' %}
-            {%- set message_tendance = "T°Ext Up >>> " ~ temp_ext ~ "°" %}
+            {%- set message_tendance = "T°Ext Up ↗ " ~ temp_ext ~ "°" %}
           {%- elif tendance == 'decreasing' %}
-            {%- set message_tendance = "T°Ext Down <<< " ~ temp_ext ~ "°" %}
+            {%- set message_tendance = "T°Ext Down ↘ " ~ temp_ext ~ "°" %}
           {%- else %}
-            {%- set message_tendance = "T°Ext stable " ~ temp_ext ~ "°" %}
+            {%- set message_tendance = "T°Ext stable → " ~ temp_ext ~ "°" %}
           {%- endif %}
 
-          {# --- PARTIE 2 : HEADER --- #}
+          {# --- PARTIE 2 : HEADER --- EN-TÊTE --- #}
           {%- set message_header = presence %}
 
-          {# --- PARTIE 3 : MODE --- #}
+          {# --- PARTIE 3 : MODE --- SCÉNARIO STANDARD --- #}
           {%- if not clims_alimentees %}
             {%- set message_mode = "[UNITS OFF]" %}
           {%- else %}
@@ -53,7 +63,7 @@
 
             {%- elif 'groupe_2' in groupe %}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nSalon " ~ temp_confort ~ "°\nBureau " ~ temp_cible ~ "°\nChambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nSalon " ~ temp_conf_m ~ "°\nBureau " ~ temp_cible ~ "°\nChambre " ~ temp_conf_c ~ "°" %}
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nSalon " ~ temp_confort ~ "°\nBureau " ~ temp_cible ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
@@ -64,7 +74,7 @@
 
             {%- elif 'groupe_3' in groupe %}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nSalon " ~ temp_cible ~ "°\nBureau " ~ temp_confort ~ "°\nChambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nSalon " ~ temp_cible ~ "°\nBureau " ~ temp_conf_e ~ "°\nChambre " ~ temp_conf_c ~ "°" %}
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nSalon " ~ temp_cible ~ "°\nBureau " ~ temp_confort ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}
@@ -75,7 +85,7 @@
 
             {%- elif 'groupe_4' in groupe %}
               {%- if mode == 'heat' %}
-                {%- set message_mode = "[HEAT]\nSalon " ~ temp_confort ~ "°\nBureau " ~ temp_confort ~ "°\nChambre " ~ temp_cible ~ "°" %}
+                {%- set message_mode = "[HEAT]\nSalon " ~ temp_conf_m ~ "°\nBureau " ~ temp_conf_e ~ "°\nChambre " ~ temp_conf_c ~ "°" %}
               {%- elif mode == 'cool' %}
                 {%- set message_mode = "[COOL]\nSalon & Bureau " ~ temp_confort ~ "°\nChambre " ~ temp_cible ~ "°" %}
               {%- elif mode == 'fan_only' %}

@@ -1,6 +1,17 @@
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 03_06. CLIM — LOGIQUE WIFI / CELLULAIRE (GROUPE & PRÉSENCE)          │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
+
 - sensor:
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : DÉTERMINATION DU GROUPE (PRESENCE AUTOMATION)         │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- groupe_clim ---
+# Calcul du groupe (1=Personne, 2=Mamour, 3=Eric, 4=Tous)
     - name: "Groupe Clim"
       unique_id: groupe_clim
+      icon: mdi:account-group
       state: >
         {# 1. Définition de la Cible #}
         {% set target_ssid = "Freebox_GG" %}
@@ -22,9 +33,13 @@
         {% else %}
           groupe_1
         {% endif %}
-      icon: mdi:account-group
 
-- sensor:
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : CALCUL ET AFFICHAGE DES STATUTS RÉSEAU (INTERFACE)    │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- presence_clim ---
+# Affichage textuel complexe (WIFI / CELL / WIFI_!?)
     - name: "Presence Clim"
       unique_id: presence_clim
       icon: mdi:cellphone-information
@@ -68,13 +83,9 @@
 
           {%- if m_here and e_here -%}
             {# Cas où les deux sont là mais statuts différents (ex: "Just Arrived" vs "Home") #}
-            [Tous les 2: {{ m_stat }}/{{ e_stat }}]
-          {%- elif m_here -%}
-            [Mamour: {{ m_stat }}/{{ e_stat }}]
-          {%- elif e_here -%}
-            [Eric: {{ e_stat }}/{{ m_stat }}]
+            [Tous les 2: {{ m_stat }}]
           {%- else -%}
-            {# Fallback : aucun n'est sur le WiFi cible, on affiche juste les statuts #}
-            [{{ m_stat }} / {{ e_stat }}]
+            {# Cas mixte #}
+            M:[{{ m_stat }}] E:[{{ e_stat }}]
           {%- endif -%}
         {%- endif -%}
