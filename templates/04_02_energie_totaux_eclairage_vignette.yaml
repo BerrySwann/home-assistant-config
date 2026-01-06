@@ -151,7 +151,7 @@
       unit_of_measurement: kWh
       state: >
         {% set sensors = [
-          states('sensor.eclairage_hue_white_lamp_table_salon_mensuel'),
+          states('sensor.eclairage_bureau_total_quotidien'),
           states('sensor.eclairage_hue_ambiance_lamp_salon_1_mensuel'),
           states('sensor.eclairage_hue_ambiance_lamp_salon_2_mensuel'),
           states('sensor.eclairage_hue_ambiance_lamp_salon_3_mensuel'),
