@@ -1,44 +1,44 @@
 # ╭────────────────────────────────────────────────────────────────────────────────────────╮
 # │ TEMPLATES : SÉRIE 04_02. ÉNERGIE — TOTAUX ÉCLAIRAGE (PYRAMIDE : LAMPES > ZONES > TOTAL)│
 # ╰────────────────────────────────────────────────────────────────────────────────────────╯
-
+    # ┌────────────────────────────────────────────────────────────────────────┐
+    # │ TOTAL 2x LAMPES APPART. - QUOTIDIEN (1. ENTRÉE + 6. COULOIR)           │
+    # └────────────────────────────────────────────────────────────────────────┘
 - sensor:
-  #--- TOTAL QUOTIDIEN ---
-  - name: "Conso. Eclairage Total QUOTIDIEN"
-    unique_id: conso_eclairage_total_quotidien
-    device_class: energy
-    unit_of_measurement: "kWh"
-    icon: mdi:lightbulb-on-outline
-    state: >
-      {{ (states('sensor.eclairage_salon_5_quotidien') | float(0) +
-        states('sensor.eclairage_cuisine_1_quotidien') | float(0) +
-        states('sensor.eclairage_appart_2_quotidien') | float(0) +
-        states('sensor.eclairage_bureau_5_quotidien') | float(0) +
-        states('sensor.eclairage_sdb_2_quotidien') | float(0) +
-        states('sensor.eclairage_chambre_4_quotidien') | float(0)) | round(3) }}
-
-  #--- TOTAL MENSUEL ---
-  - name: "Conso. Eclairage Total MENSUEL"
-    unique_id: conso_eclairage_total_mensuel
-    device_class: energy
-    unit_of_measurement: "kWh"
-    icon: mdi:lightbulb-on-outline
-    state: >
-      {{ (states('sensor.eclairage_salon_5_mensuel') | float(0) +
-        states('sensor.eclairage_cuisine_1_mensuel') | float(0) +
-        states('sensor.eclairage_appart_2_mensuel') | float(0) +
-        states('sensor.eclairage_bureau_5_mensuel') | float(0) +
-        states('sensor.eclairage_sdb_2_mensuel') | float(0) +
-        states('sensor.eclairage_chambre_4_mensuel') | float(0)) | round(3) }}
-
-    # ╭────────────────────────────────────────────────────────────────────────────────────────╮
-    # │SYNTHÈSE PAR PIÈCE - QUOTIDIEN                                                          │
-    # ╰────────────────────────────────────────────────────────────────────────────────────────╯
+    - name: "2x Lampes Appart Total Quotidien"
+      unique_id: "2x_lampes_appart_total_quotidien"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:lightbulb-group
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_entree_total_quotidien'),
+          states('sensor.eclairage_couloir_total_quotidien')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+    # ┌────────────────────────────────────────────────────────────────────────┐
+    # │ TOTAL 2x LAMPES APPART. - MENSUEL (1. ENTRÉE + 6. COULOIR)             │
+    # └────────────────────────────────────────────────────────────────────────┘
+- sensor:
+    - name: "2x Lampes Appart Total Mensuel"
+      unique_id: "2x_lampes_appart_total_mensuel"
+      device_class: energy
+      unit_of_measurement: kWh
+      icon: mdi:lightbulb-group
+      state: >
+        {% set sensors = [
+          states('sensor.eclairage_entree_total_mensuel'),
+          states('sensor.eclairage_couloir_total_mensuel')
+        ] %}
+        {{ sensors | map('float', 0) | sum | round(3) }}
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ SYNTHÈSE PAR PIÈCE - QUOTIDIEN                                                         │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 1. ENTRÉE (1 Ampoule)                                             │
     # └───────────────────────────────────────────────────────────────────┘
 - sensor:
-    - name: eclairage_entree_total_quotidien
+    - name: "Eclairage Entrée Total Quotidien"
       unique_id: eclairage_entree_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
@@ -47,7 +47,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 4. SALON (Somme des 5 lampes)                                     │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_salon_total_quotidien
+    - name: "Eclairage Salon Total Quotidien"
       unique_id: eclairage_salon_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
@@ -64,7 +64,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 5. CUISINE (1 Ampoule)                                            │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_cuisine_total_quotidien
+    - name: "Eclairage Cuisine Total Quotidien"
       unique_id: eclairage_cuisine_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
@@ -74,7 +74,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 6. COULOIR (1 Ampoule)                                            │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_couloir_total_quotidien
+    - name: "Eclairage Couloir Total Quotidien"
       unique_id: eclairage_couloir_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
@@ -84,7 +84,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 7. BUREAU (5 Ampoules)                                            │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_bureau_total_quotidien
+    - name: "Eclairage Bureau Total Quotidien"
       unique_id: eclairage_bureau_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
@@ -101,8 +101,8 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 8. SDB (2 Ampoules)                                               │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_salle_de_bain_total_quotidien
-      unique_id: eclairage_salle_de_bain_total_quotidien
+    - name: "Eclairage SdB Total Quotidien"
+      unique_id: eclairage_sdb_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
       state: >
@@ -115,7 +115,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 9. CHAMBRE (4 Ampoules)                                           │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_chambre_total_quotidien
+    - name: "Eclairage Chambre Total Quotidien"
       unique_id: eclairage_chambre_total_quotidien
       device_class: energy
       unit_of_measurement: kWh
@@ -128,14 +128,14 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
-    # ╭────────────────────────────────────────────────────────────────────────────────────────╮
-    # │SYNTHÈSE PAR PIÈCE - MENSUEL                                                            │
-    # ╰────────────────────────────────────────────────────────────────────────────────────────╯
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ SYNTHÈSE PAR PIÈCE - MENSUEL                                                           │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 1. ENTRÉE (1 Ampoule)                                             │
     # └───────────────────────────────────────────────────────────────────┘
 - sensor:
-    - name: eclairage_entree_total_mensuel
+    - name: "Eclairage Entrée Total Mensuel"
       unique_id: eclairage_entree_total_mensuel
       device_class: energy
       unit_of_measurement: kWh
@@ -145,7 +145,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 4. SALON (Somme des 5 lampes)                                     │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_salon_total_mensuel
+    - name: "Eclairage Salon Total Mensuel"
       unique_id: eclairage_salon_total_mensuel
       device_class: energy
       unit_of_measurement: kWh
@@ -162,7 +162,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 5. CUISINE (1 Ampoule)                                            │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_cuisine_total_mensuel
+    - name: "Eclairage Cuisine Total Mensuel"
       unique_id: eclairage_cuisine_total_mensuel
       device_class: energy
       unit_of_measurement: kWh
@@ -172,7 +172,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 6. COULOIR (1 Ampoule)                                            │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_couloir_total_mensuel
+    - name: "Eclairage Couloir Total Mensuel"
       unique_id: eclairage_couloir_total_mensuel
       device_class: energy
       unit_of_measurement: kWh
@@ -182,7 +182,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 7. BUREAU (5 Ampoules)                                            │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_bureau_total_mensuel
+    - name: "Eclairage Bureau Total Mensuel"
       unique_id: eclairage_bureau_total_mensuel
       device_class: energy
       unit_of_measurement: kWh
@@ -199,8 +199,8 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 8. SDB (2 Ampoules)                                               │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_salle_de_bain_total_mensuel
-      unique_id: eclairage_salle_de_bain_total_mensuel
+    - name: "Eclairage SdB Total Mensuel"
+      unique_id: eclairage_sdb_total_mensuel
       device_class: energy
       unit_of_measurement: kWh
       state: >
@@ -213,7 +213,7 @@
     # ┌───────────────────────────────────────────────────────────────────┐
     # │ 9. CHAMBRE (4 Ampoules)                                           │
     # └───────────────────────────────────────────────────────────────────┘
-    - name: eclairage_chambre_total_mensuel
+    - name: "Eclairage Chambre Total Mensuel"
       unique_id: eclairage_chambre_total_mensuel
       device_class: energy
       unit_of_measurement: kWh
@@ -226,15 +226,12 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
-    # ┌───────────────────────────────────────────────────────────────────┐
-    # │ 10. AUTRE : GRAND TOTAL APPARTEMENT (SOMME DES PIÈCES CI-DESSUS)  │
-    # └───────────────────────────────────────────────────────────────────┘
+# ┌────────────────────────────────────────────────────────────────────────┐
+# │ GRAND TOTAL ÉCLAIRAGE APPART. - QUOTIDIEN (SOMME DES PIÈCES CI-DESSUS) │
+# └────────────────────────────────────────────────────────────────────────┘
 - sensor:
-    # ==========================================
-    # GRAND TOTAL ÉCLAIRAGE APPART. - QUOTIDIEN
-    # ==========================================
-    - name: "eclairage_appart_total_quotidien"
-      unique_id: "eclairage_appart_total_quotidien"
+    - name: "Conso. Total Eclairage Appart. Quotidien"
+      unique_id: "conso_total_eclairage_appart_quotidien"
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:lightbulb-group
@@ -250,11 +247,11 @@
         ] %}
         {{ sensors | map('float', 0) | sum | round(3) }}
 
-    # ==========================================
-    # GRAND TOTAL ÉCLAIRAGE APPART. - MENSUEL
-    # ==========================================
-    - name: "eclairage_appart_total_mensuel"
-      unique_id: "eclairage_appart_total_mensuel"
+# ┌────────────────────────────────────────────────────────────────────────┐
+# │ GRAND TOTAL ÉCLAIRAGE APPART. - MENSUEL (SOMME DES PIÈCES CI-DESSUS)   │
+# └────────────────────────────────────────────────────────────────────────┘
+    - name: "Conso. Total Eclairage Appart. Mensuel"
+      unique_id: "conso_total_eclairage_appart_mensuel"
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:lightbulb-group-outline
