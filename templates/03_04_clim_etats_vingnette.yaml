@@ -82,7 +82,7 @@
 # --- seche_serv_sdb_etat ---
 # État Sèche-Serviettes Sdb (basé sur consommation)
     - name: "Sèche Serviettes Sdb État"
-      unique_id: seche_serv_sdb_etat
+      unique_id: seche_serviettes_sdb_etat
       state: >
         {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float (0) < 20 %}
           off
