@@ -66,28 +66,22 @@
     - name: "Lumière Bureau État"
       unique_id: lumiere_bureau_etat
       state: >
-        {% if is_state('switch.ecran_p_c_3_play_hue', 'off') %} 
-          {% if is_state('light.bureau', 'on') %}
-            Bureau
-          {% elif is_state('light.bureau', 'on') %}
-            Éco.
-          {% elif is_state('light.bureau', 'off') %}
-            Éco.
-          {% else %}
-            Éco. 3
-          {% endif %}
+        {# Variables simplifiées #}
+        {% set bureau_on = is_state('light.bureau', 'on') %}
+        {% set ecran3_off = is_state('switch.ecran_p_c_3_play_hue', 'off') %}
+        {% set ecrans_pc_on = is_state('light.ecrans_pc', 'on') %}
+
+        {# Logique de décision #}
+        {% if bureau_on and ecrans_pc_on and not ecran3_off %}
+          Allumé
+        {% elif bureau_on and ecran3_off %}
+          Éco.
+        {% elif bureau_on and not ecrans_pc_on %}
+          Bureau
+        {% elif ecrans_pc_on %}
+          Écran
         {% else %}
-          {% if is_state('light.bureau', 'on') and is_state('light.bureau', 'on') %}
-            Allumé
-          {% elif is_state('light.bureau', 'off') and is_state('light.bureau', 'off') %}
-            Éteint
-          {% elif is_state('light.bureau', 'on') and is_state('light.bureau', 'off') %}
-            Bureau
-          {% elif is_state('light.bureau', 'off') and is_state('light.bureau', 'on') %}
-            Écran
-          {% else %}
-            Éco.
-          {% endif %}
+          Éteint
         {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐
