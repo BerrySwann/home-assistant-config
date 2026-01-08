@@ -197,8 +197,22 @@ j_2_secu_arret_clim_protege:
         entity_id: '{{ lock_entity }}'
       action: input_boolean.turn_off
 
-# annotations_log:
-# - [Global] Mise en conformité des titres avec boîtes ASCII arrondies.
-# - [Global] Passage de TOUS les alias en MAJUSCULES (standard BerrySwann).
-# - [Global] Standardisation des guillemets doubles pour les alias et noms.
-# - [Scripts Clim] Clarification des alias d'étapes pour une meilleure lisibilité dans les logs HA.
+toggle_smart_bureau:
+  alias: Toggle Smart Bureau
+  sequence:
+    - if:
+        - condition: state
+          entity_id: light.ecrans_pc
+          state: "on"
+      then:
+        # Si les écrans sont ON, on ne touche qu'aux lampes d'ambiance
+        - action: light.toggle
+          target:
+            entity_id: light.lampes_ambiance_bureau
+      else:
+        # Sinon, on bascule tout le bureau
+        - action: light.toggle
+          target:
+            entity_id: light.bureau
+  mode: single
+  icon: mdi:light-sswitch

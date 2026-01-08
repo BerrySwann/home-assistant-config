@@ -67,7 +67,7 @@
       unique_id: lumiere_bureau_etat
       state: >
         {% if is_state('switch.ecran_p_c_3_play_hue', 'off') %} 
-          {% if is_state('light.bureau_z2m', 'on') %}
+          {% if is_state('light.bureau', 'on') %}
             Bureau
           {% elif is_state('light.bureau', 'on') %}
             Éco.
@@ -77,13 +77,13 @@
             Éco. 3
           {% endif %}
         {% else %}
-          {% if is_state('light.bureau_z2m', 'on') and is_state('light.bureau', 'on') %}
+          {% if is_state('light.bureau', 'on') and is_state('light.bureau', 'on') %}
             Allumé
-          {% elif is_state('light.bureau_z2m', 'off') and is_state('light.bureau', 'off') %}
+          {% elif is_state('light.bureau', 'off') and is_state('light.bureau', 'off') %}
             Éteint
-          {% elif is_state('light.bureau_z2m', 'on') and is_state('light.bureau', 'off') %}
+          {% elif is_state('light.bureau', 'on') and is_state('light.bureau', 'off') %}
             Bureau
-          {% elif is_state('light.bureau_z2m', 'off') and is_state('light.bureau', 'on') %}
+          {% elif is_state('light.bureau', 'off') and is_state('light.bureau', 'on') %}
             Écran
           {% else %}
             Éco.
