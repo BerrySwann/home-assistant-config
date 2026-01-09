@@ -59,7 +59,7 @@
 
 
 # ┌───────────────────────────────────────────────────────────────────┐
-# │ 7. BUREAU                                                         │
+# │ 7. BUREAU --- Bureau ---                                          │
 # └───────────────────────────────────────────────────────────────────┘
 
 # --- lumiere_bureau_etat ---
@@ -89,6 +89,38 @@
             Allumé
           {% elif bureau_on %}
             Bureau
+          {% else %}
+            Éteint
+          {% endif %}
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 7. BUREAU --- Écran ---                                           │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- lumiere_Écran_etat ---
+    - name: "Lumière Écran État"
+      unique_id: lumiere_Ecran_etat
+      state: >
+        {# 1. Définition des variables basées sur tes vraies entités #}
+        {% set bureau_on = is_state('light.hue_white_lamp_1', 'on') or is_state('light.hue_white_lamp_2', 'on') %}
+        {% set ecran3_off = is_state('switch.ecran_p_c_3_play_hue', 'off') %}
+        {% set ecrans_pc_on = is_state('light.hue_play_1_pc_bureau', 'on') or is_state('light.hue_play_2_pc_bureau', 'on') or is_state('light.hue_play_3_pc_bureau', 'on') %}
+
+        {# 2. Logique de décision #}
+        {% if ecran3_off %}
+          {# Si l'écran 3 est OFF, on est soit en mode Bureau seul, soit en Éco #}
+          {% if ecrans_pc_on %}
+            Éco.
+          {% elif ecrans_pc_on %}
+            Éco. 3
+          {% else %}
+            Éco.
+          {% endif %}
+        {% else %}
+          {# Si l'écran 3 est ON, on regarde si tout est allumé ou juste une partie #}
+          {% if bureau_on and ecrans_pc_on %}
+            Allumé
           {% elif ecrans_pc_on %}
             Écran
           {% else %}
