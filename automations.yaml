@@ -1591,7 +1591,7 @@
           entity_id: cover.store_salon
   mode: single
 - id: '1766777192080'
-  alias: Bouton IKEA RODRET - Gestion ON/OFF (JSON)
+  alias: Bouton IKEA RODRET - Soufflant SdB Gestion ON/OFF (JSON)
   description: Pilotage du chauffage SDB via le bouton RODRET (MQTT)
   triggers:
   - trigger: mqtt
@@ -2809,26 +2809,21 @@
 - &id001
   id: bureau_activation_ecran_synchro
   alias: BUREAU - ACTIVATION ÉCRAN POUR SYNCHRO
-  description: Allume la prise et les lumières dès que le PC est détecté pour forcer
-    l'état Synchro
+  description: Force l'allumage de la prise et des Play Hue au démarrage du PC
   triggers:
-  - alias: DÉTECTION ALLUMAGE MONITEUR PC
+  - alias: DÉTECTION ÉTAT ON DU MONITEUR
+    trigger: state
     entity_id: binary_sensor.moniteur_pc
     to: 'on'
-    trigger: state
-  conditions:
-  - alias: VÉRIFICATION SI PRISE ÉCRAN ÉTEINTE
-    condition: state
-    entity_id: switch.ecran_p_c_3_play_hue
-    state: 'off'
+  conditions: []
   actions:
-  - alias: ALLUMAGE DE LA PRISE PHYSIQUE
+  - alias: COMMANDE ALLUMAGE PRISE
     action: switch.turn_on
     target:
       entity_id: switch.ecran_p_c_3_play_hue
-  - alias: ATTENTE CONNEXION ZIGBEE (2S)
+  - alias: DÉLAI DE SYNCHRONISATION ÉLECTRIQUE
     delay: 00:00:02
-  - alias: ALLUMAGE DES PLAY HUE AVEC TRANSITION
+  - alias: COMMANDE ALLUMAGE LUMIÈRES
     action: light.turn_on
     target:
       entity_id:
@@ -2837,7 +2832,7 @@
       - light.hue_play_3_pc_bureau
     data:
       transition: 2
-  - alias: MISE À JOUR FORCÉE DES SENSORS D'AFFICHAGE
+  - alias: FORÇAGE MISE À JOUR AFFICHAGE
     action: homeassistant.update_entity
     target:
       entity_id:
@@ -2845,3 +2840,97 @@
       - sensor.bureau_etat
   mode: restart
 - *id001
+- id: '1768050970786'
+  alias: BUREAU - WATCHDOG SYNCHRONISATION LAMPES BLANCHES
+  description: Assure que les deux lampes de bureau (1 et 2) sont synchronisées si
+    l'une s'allume
+  triggers:
+  - alias: DÉTECTION ALLUMAGE LAMPE BUREAU 1
+    trigger: state
+    entity_id: light.hue_white_lamp_bureau_1
+    to: 'on'
+    for: 00:00:05
+  - alias: DÉTECTION ALLUMAGE LAMPE BUREAU 2
+    trigger: state
+    entity_id: light.hue_white_lamp_bureau_2
+    to: 'on'
+    for: 00:00:05
+  conditions:
+  - alias: VÉRIFICATION SI UNE DES DEUX LAMPES RESTE ÉTEINTE
+    condition: or
+    conditions:
+    - condition: state
+      entity_id: light.hue_white_lamp_bureau_1
+      state: 'off'
+    - condition: state
+      entity_id: light.hue_white_lamp_bureau_2
+      state: 'off'
+  actions:
+  - alias: FORÇAGE ALLUMAGE DES DEUX LAMPES
+    action: light.turn_on
+    target:
+      entity_id:
+      - light.hue_white_lamp_bureau_1
+      - light.hue_white_lamp_bureau_2
+  - alias: MISE À JOUR FORCÉE DE L'ÉTAT DU BUREAU
+    action: homeassistant.update_entity
+    target:
+      entity_id: sensor.bureau_etat
+  mode: restart
+- id: '1768052037755'
+  alias: BUREAU - BOUTON RODRET TOGGLE BLANCHES
+  description: Alterne l'allumage des 2 lampes blanches via MQTT (Mode Fainéant)
+  triggers:
+  - alias: RÉCEPTION MESSAGE MQTT BOUTON RODRET
+    trigger: mqtt
+    topic: zigbee2mqtt/Inter Bureau (RODRET)
+  actions:
+  - alias: DÉCISION SELON LE PAYLOAD MQTT (ON OU OFF)
+    choose:
+    - alias: BOUTON ON OU OFF PRESSÉ -> LOGIQUE TOGGLE
+      conditions:
+      - alias: VÉRIFICATION ACTION DANS LE JSON
+        condition: template
+        value_template: '{{ trigger.payload_json.action in [''on'', ''off''] }}'
+      sequence:
+      - alias: LOGIQUE DE BASCULEMENT (TOGGLE)
+        choose:
+        - alias: SI LUMIÈRE PRÉSENTE -> EXTINCTION
+          conditions:
+          - alias: VÉRIFICATION SI UNE LAMPE EST ON
+            condition: or
+            conditions:
+            - condition: state
+              entity_id: light.hue_white_lamp_bureau_1
+              state: 'on'
+            - condition: state
+              entity_id: light.hue_white_lamp_bureau_2
+              state: 'on'
+          sequence:
+          - alias: EXTINCTION DES 2 LAMPES BLANCHES
+            action: light.turn_off
+            target:
+              entity_id:
+              - light.hue_white_lamp_bureau_1
+              - light.hue_white_lamp_bureau_2
+        - alias: SI TOUT EST NOIR -> ALLUMAGE
+          conditions:
+          - alias: VÉRIFICATION SI TOUT EST OFF
+            condition: state
+            entity_id: light.hue_white_lamp_bureau_1
+            state: 'off'
+          - condition: state
+            entity_id: light.hue_white_lamp_bureau_2
+            state: 'off'
+          sequence:
+          - alias: ALLUMAGE DES 2 LAMPES BLANCHES
+            action: light.turn_on
+            target:
+              entity_id:
+              - light.hue_white_lamp_bureau_1
+              - light.hue_white_lamp_bureau_2
+  - alias: FORÇAGE MISE À JOUR DU SENSOR D'ÉTAT
+    action: homeassistant.update_entity
+    target:
+      entity_id: sensor.bureau_etat
+  mode: restart
