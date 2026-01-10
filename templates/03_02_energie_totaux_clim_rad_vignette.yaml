@@ -1,0 +1,76 @@
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : ÉNERGIE — TOTAUX (QUOTIDIEN / MENSUEL / PUISSANCE INSTANTANÉE)             │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
+
+- sensor:
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : TOTAUX QUOTIDIEN (avg_watts_daily)                    │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- clim_rad_total_avg_watts_daily ---
+    - name: "Clim. Rad. Total Avg Watts Daily"
+      unique_id: clim_rad_total_avg_watts_daily
+      device_class: power
+      unit_of_measurement: "W"
+      icon: mdi:flash-outline
+      state: >
+        {{ (states('sensor.clim_salon_avg_watts_daily') | float(0) +
+          states('sensor.radiateur_cuisine_avg_watts_daily') | float(0) +
+          states('sensor.clim_bureau_avg_watts_daily') | float(0) +
+          states('sensor.soufflant_sdb_avg_watts_daily') | float(0) +
+          states('sensor.seche_serv_avg_watts_daily') | float(0) +
+          states('sensor.clim_chambre_avg_watts_daily') | float(0)) | round(3) }}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : TOTAUX QUOTIDIEN                                      │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- conso_clim_rad_total_quotidien ---
+    - name: "Conso. Clim. Rad. Total QUOTIDIEN"
+      unique_id: conso_clim_rad_total_quotidien
+      device_class: energy
+      unit_of_measurement: "kWh"
+      icon: mdi:flash-outline
+      state: >
+        {{ (states('sensor.clim_salon_quotidien') | float(0) +
+          states('sensor.radiateur_elec_cuisine_quotid1en') | float(0) +
+          states('sensor.clim_du_bureau_quotidien') | float(0) +
+          states('sensor.radiateur_sdb_quotidien') | float(0) +
+          states('sensor.seche_serv_sdb_quotidien') | float(0) +
+          states('sensor.clim_chambre_quotidien') | float(0)) | round(2) }}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : TOTAUX MENSUEL                                        │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- conso_clim_rad_total_mensuel ---
+    - name: "Conso. Clim. Rad. Total MENSUEL"
+      unique_id: conso_clim_rad_total_mensuel
+      device_class: energy
+      unit_of_measurement: "kWh"
+      icon: mdi:flash-outline
+      state: >
+        {{ (states('sensor.clim_salon_mensuel') | float(0) +
+          states('sensor.radiateur_elec_cuisine_mensuel') | float(0) +
+          states('sensor.clim_du_bureau_mensuel') | float(0) +
+          states('sensor.radiateur_sdb_mensuel') | float(0) +
+          states('sensor.seche_serv_sdb_mensuel') | float(0) +
+          states('sensor.clim_chambre_mensuel') | float(0)) | round(3) }}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 10. AUTRE : PUISSANCE INSTANTANEE                                 │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- conso_clim_rad_total ---
+    - name: "Conso Clim Rad Total"
+      unique_id: conso_clim_rad_total
+      device_class: power
+      unit_of_measurement: "W"
+      icon: mdi:flash-outline
+      state: >
+        {{ (states('sensor.clim_salon_nous_power') | float(0) +
+          states('sensor.radiateur_elec_cuisine_power') | float(0) +
+          states('sensor.clim_du_bureau_nous_power') | float(0) +
+          states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) +
+          states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) +
+          states('sensor.clim_chambre_nous_power') | float(0)) | round(3) }}
