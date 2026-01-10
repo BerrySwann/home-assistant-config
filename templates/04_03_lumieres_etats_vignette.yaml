@@ -162,14 +162,13 @@
       unique_id: lumiere_salle_de_bain_etat
       state: >
         {% set hue = states('light.lampe_salle_de_bain_hue') %}
-        {% set sonoff = states('switch.relais_lumiere_sdb_sonoff') %}
         
-        {% if hue == 'on' and sonoff == 'on' %}
+        {% if hue == 'on' %}
           Allumé
-        {% elif hue == 'off' and sonoff == 'off' %}
+        {% elif hue == 'off' %}
           Éteint
         {% else %}
-          N/A
+          erreur
         {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐
