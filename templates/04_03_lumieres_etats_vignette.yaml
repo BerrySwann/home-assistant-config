@@ -94,36 +94,34 @@
 # │ 7. BUREAU --- Écran ---                                           │
 # └───────────────────────────────────────────────────────────────────┘
 
-# --- lumiere_Écran_etat ---
+## --- lumiere_Écran_etat ---
     - name: "Lumière Écran État"
       unique_id: lumiere_ecran_etat
       state: >
-        {# 1. Définition des variables basées sur tes vraies entités #}
+        {% set switch_on = is_state('switch.ecran_p_c_3_play_hue', 'on') %}
         {% set bureau_on = is_state('light.hue_white_lamp_1', 'on') or is_state('light.hue_white_lamp_2', 'on') %}
-        {% set ecran3_off = is_state('switch.ecran_p_c_3_play_hue', 'off') %}
-        {% set ecrans_pc_on = is_state('light.hue_play_1_pc_bureau', 'on') or is_state('light.hue_play_2_pc_bureau', 'on') or is_state('light.hue_play_3_pc_bureau', 'on') %}
+        
+        {# On vérifie si HA voit encore les Play comme 'on' avant qu'elles ne passent en indisponible #}
+        {% set play_on = is_state('light.hue_play_1_pc_bureau', 'on') or is_state('light.hue_play_2_pc_bureau', 'on') or is_state('light.hue_play_3_pc_bureau', 'on') %}
 
-        {# 2. Logique de décision #}
-        {% if ecran3_off %}
-          {# Si l'écran 3 est OFF, on est soit en mode Bureau seul, soit en Éco #}
-          {% if ecrans_pc_on %}
-            Éco.
-          {% else %}
-            Éco.
-          {% endif %}
+        {% if not switch_on %}
+          {# Si la prise est coupée, tout est éteint physiquement #}
+          Éco.
         {% else %}
-          {# Si l'écran 3 est ON, on regarde si tout est allumé ou juste une partie #}
-          {% if bureau_on and ecrans_pc_on %}
+          {# La prise est ON, on regarde la luminosité demandée #}
+          {% if bureau_on and play_on %}
             Allumé
-          {% elif ecrans_pc_on %}
+          {% elif play_on %}
+            {# Ici, on pourrait définir 'Éco.' si la luminosité est faible, #}
+            {# ou rester sur 'Écran' si c'est le mode normal #}
             Écran
           {% else %}
             Éteint
           {% endif %}
         {% endif %}
-
+        
 # ┌───────────────────────────────────────────────────────────────────┐
-# │ 7. BUREAU --- Bureau-Général ---                                          │
+# │ 7. BUREAU --- Bureau-Général ---                                  │
 # └───────────────────────────────────────────────────────────────────┘
 
 # --- bureau_etat ---
