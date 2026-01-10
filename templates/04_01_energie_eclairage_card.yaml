@@ -1,38 +1,38 @@
-# ╭──────────────────────────────────────────────────────────────────╮
-# │ SENSOR : PÔLE 3. ÉNERGIE [kWh] ÉCLAIRAGE (UNITAIRE & ZONES)      │
-# ╰──────────────────────────────────────────────────────────────────╯
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PÔLE 3. ÉCLAIRAGE (PAR PIÈCE À L'UNITÉ)                       │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
-    # ┌─────────────────────────────────────┐
-    # │ 1. ENTRÉE                           │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 1. ENTRÉE                         │
+    # └───────────────────────────────────┘
     # --- hue_white_lamp_entree ---
-    - name: "eclairage_hue_white_lamp_entree_annuel"
-      unique_id: "eclairage_hue_white_lamp_entree_annuel"
+    - name: "Eclairage Entrée Hue White Annuel"
+      unique_id: eclairage_hue_white_lamp_entree_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_entree_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_entree_mensuel"
-      unique_id: "eclairage_hue_white_lamp_entree_mensuel"
+    - name: "Eclairage Entrée Hue White Mensuel"
+      unique_id: eclairage_hue_white_lamp_entree_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_entree_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_entree_hebdomadaire"
-      unique_id: "eclairage_hue_white_lamp_entree_hebdomadaire"
+    - name: "Eclairage Entrée Hue White Hebdomadaire"
+      unique_id: eclairage_hue_white_lamp_entree_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_entree_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_entree_quotidien"
-      unique_id: "eclairage_hue_white_lamp_entree_quotidien"
+    - name: "Eclairage Entrée Hue White Quotidien"
+      unique_id: eclairage_hue_white_lamp_entree_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -40,36 +40,36 @@
         {% set s = states('sensor.eclairage_hue_white_lamp_entree_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 4. SALON                            │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 4. SALON                          │
+    # └───────────────────────────────────┘
     # --- hue_white_lamp_table_salon ---
-    - name: "eclairage_hue_white_lamp_table_salon_annuel"
-      unique_id: "eclairage_hue_white_lamp_table_salon_annuel"
+    - name: "Eclairage Salon Table Hue White Annuel"
+      unique_id: eclairage_hue_white_lamp_table_salon_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_table_salon_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_table_salon_mensuel"
-      unique_id: "eclairage_hue_white_lamp_table_salon_mensuel"
+    - name: "Eclairage Salon Table Hue White Mensuel"
+      unique_id: eclairage_hue_white_lamp_table_salon_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_table_salon_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_table_salon_hebdomadaire"
-      unique_id: "eclairage_hue_white_lamp_table_salon_hebdomadaire"
+    - name: "Eclairage Salon Table Hue White Hebdomadaire"
+      unique_id: eclairage_hue_white_lamp_table_salon_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_table_salon_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_table_salon_quotidien"
-      unique_id: "eclairage_hue_white_lamp_table_salon_quotidien"
+    - name: "Eclairage Salon Table Hue White Quotidien"
+      unique_id: eclairage_hue_white_lamp_table_salon_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -78,32 +78,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_ambiance_lamp_salon_1 ---
-    - name: "eclairage_hue_ambiance_lamp_salon_1_annuel"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_1_annuel"
+    - name: "Eclairage Salon Ambiance 1 Annuel"
+      unique_id: eclairage_hue_ambiance_lamp_salon_1_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_1_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_1_mensuel"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_1_mensuel"
+    - name: "Eclairage Salon Ambiance 1 Mensuel"
+      unique_id: eclairage_hue_ambiance_lamp_salon_1_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_1_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_1_hebdomadaire"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_1_hebdomadaire"
+    - name: "Eclairage Salon Ambiance 1 Hebdomadaire"
+      unique_id: eclairage_hue_ambiance_lamp_salon_1_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_1_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_1_quotidien"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_1_quotidien"
+    - name: "Eclairage Salon Ambiance 1 Quotidien"
+      unique_id: eclairage_hue_ambiance_lamp_salon_1_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -112,32 +112,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_ambiance_lamp_salon_2 ---
-    - name: "eclairage_hue_ambiance_lamp_salon_2_annuel"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_2_annuel"
+    - name: "Eclairage Salon Ambiance 2 Annuel"
+      unique_id: eclairage_hue_ambiance_lamp_salon_2_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_2_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_2_mensuel"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_2_mensuel"
+    - name: "Eclairage Salon Ambiance 2 Mensuel"
+      unique_id: eclairage_hue_ambiance_lamp_salon_2_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_2_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_2_hebdomadaire"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_2_hebdomadaire"
+    - name: "Eclairage Salon Ambiance 2 Hebdomadaire"
+      unique_id: eclairage_hue_ambiance_lamp_salon_2_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_2_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_2_quotidien"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_2_quotidien"
+    - name: "Eclairage Salon Ambiance 2 Quotidien"
+      unique_id: eclairage_hue_ambiance_lamp_salon_2_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -146,32 +146,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_ambiance_lamp_salon_3 ---
-    - name: "eclairage_hue_ambiance_lamp_salon_3_annuel"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_3_annuel"
+    - name: "Eclairage Salon Ambiance 3 Annuel"
+      unique_id: eclairage_hue_ambiance_lamp_salon_3_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_3_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_3_mensuel"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_3_mensuel"
+    - name: "Eclairage Salon Ambiance 3 Mensuel"
+      unique_id: eclairage_hue_ambiance_lamp_salon_3_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_3_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_3_hebdomadaire"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_3_hebdomadaire"
+    - name: "Eclairage Salon Ambiance 3 Hebdomadaire"
+      unique_id: eclairage_hue_ambiance_lamp_salon_3_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_ambiance_lamp_salon_3_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_ambiance_lamp_salon_3_quotidien"
-      unique_id: "eclairage_hue_ambiance_lamp_salon_3_quotidien"
+    - name: "Eclairage Salon Ambiance 3 Quotidien"
+      unique_id: eclairage_hue_ambiance_lamp_salon_3_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -180,32 +180,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_color_candle_salon_1 ---
-    - name: "eclairage_hue_color_candle_salon_1_annuel"
-      unique_id: "eclairage_hue_color_candle_salon_1_annuel"
+    - name: "Eclairage Salon Color Candle 1 Annuel"
+      unique_id: eclairage_hue_color_candle_salon_1_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_salon_1_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_salon_1_mensuel"
-      unique_id: "eclairage_hue_color_candle_salon_1_mensuel"
+    - name: "Eclairage Salon Color Candle 1 Mensuel"
+      unique_id: eclairage_hue_color_candle_salon_1_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_salon_1_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_salon_1_hebdomadaire"
-      unique_id: "eclairage_hue_color_candle_salon_1_hebdomadaire"
+    - name: "Eclairage Salon Color Candle 1 Hebdomadaire"
+      unique_id: eclairage_hue_color_candle_salon_1_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_salon_1_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_salon_1_quotidien"
-      unique_id: "eclairage_hue_color_candle_salon_1_quotidien"
+    - name: "Eclairage Salon Color Candle 1 Quotidien"
+      unique_id: eclairage_hue_color_candle_salon_1_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -213,36 +213,36 @@
         {% set s = states('sensor.eclairage_hue_color_candle_salon_1_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 5. CUISINE                          │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 5. CUISINE                        │
+    # └───────────────────────────────────┘
     # --- hue_white_lamp_cuisine ---
-    - name: "eclairage_hue_white_lamp_cuisine_annuel"
-      unique_id: "eclairage_hue_white_lamp_cuisine_annuel"
+    - name: "Eclairage Cuisine Hue White Annuel"
+      unique_id: eclairage_hue_white_lamp_cuisine_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_cuisine_mensuel"
-      unique_id: "eclairage_hue_white_lamp_cuisine_mensuel"
+    - name: "Eclairage Cuisine Hue White Mensuel"
+      unique_id: eclairage_hue_white_lamp_cuisine_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_cuisine_hebdomadaire"
-      unique_id: "eclairage_hue_white_lamp_cuisine_hebdomadaire"
+    - name: "Eclairage Cuisine Hue White Hebdomadaire"
+      unique_id: eclairage_hue_white_lamp_cuisine_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_cuisine_quotidien"
-      unique_id: "eclairage_hue_white_lamp_cuisine_quotidien"
+    - name: "Eclairage Cuisine Hue White Quotidien"
+      unique_id: eclairage_hue_white_lamp_cuisine_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -250,36 +250,36 @@
         {% set s = states('sensor.eclairage_hue_white_lamp_cuisine_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 6. COULOIR                          │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 6. COULOIR                        │
+    # └───────────────────────────────────┘
     # --- hue_white_lamp_couloir ---
-    - name: "eclairage_hue_white_lamp_couloir_annuel"
-      unique_id: "eclairage_hue_white_lamp_couloir_annuel"
+    - name: "Eclairage Couloir Hue White Annuel"
+      unique_id: eclairage_hue_white_lamp_couloir_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_couloir_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_couloir_mensuel"
-      unique_id: "eclairage_hue_white_lamp_couloir_mensuel"
+    - name: "Eclairage Couloir Hue White Mensuel"
+      unique_id: eclairage_hue_white_lamp_couloir_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_couloir_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_couloir_hebdomadaire"
-      unique_id: "eclairage_hue_white_lamp_couloir_hebdomadaire"
+    - name: "Eclairage Couloir Hue White Hebdomadaire"
+      unique_id: eclairage_hue_white_lamp_couloir_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_couloir_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_couloir_quotidien"
-      unique_id: "eclairage_hue_white_lamp_couloir_quotidien"
+    - name: "Eclairage Couloir Hue White Quotidien"
+      unique_id: eclairage_hue_white_lamp_couloir_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -287,36 +287,36 @@
         {% set s = states('sensor.eclairage_hue_white_lamp_couloir_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 7. BUREAU                           │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 7. BUREAU                         │
+    # └───────────────────────────────────┘
     # --- hue_play_1_pc_bureau ---
-    - name: "eclairage_hue_play_1_pc_bureau_annuel"
-      unique_id: "eclairage_hue_play_1_pc_bureau_annuel"
+    - name: "Eclairage Bureau Play 1 PC Annuel"
+      unique_id: eclairage_hue_play_1_pc_bureau_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_1_pc_bureau_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_1_pc_bureau_mensuel"
-      unique_id: "eclairage_hue_play_1_pc_bureau_mensuel"
+    - name: "Eclairage Bureau Play 1 PC Mensuel"
+      unique_id: eclairage_hue_play_1_pc_bureau_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_1_pc_bureau_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_1_pc_bureau_hebdomadaire"
-      unique_id: "eclairage_hue_play_1_pc_bureau_hebdomadaire"
+    - name: "Eclairage Bureau Play 1 PC Hebdomadaire"
+      unique_id: eclairage_hue_play_1_pc_bureau_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_1_pc_bureau_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_1_pc_bureau_quotidien"
-      unique_id: "eclairage_hue_play_1_pc_bureau_quotidien"
+    - name: "Eclairage Bureau Play 1 PC Quotidien"
+      unique_id: eclairage_hue_play_1_pc_bureau_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -325,32 +325,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_play_2_pc_bureau ---
-    - name: "eclairage_hue_play_2_pc_bureau_annuel"
-      unique_id: "eclairage_hue_play_2_pc_bureau_annuel"
+    - name: "Eclairage Bureau Play 2 PC Annuel"
+      unique_id: eclairage_hue_play_2_pc_bureau_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_2_pc_bureau_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_2_pc_bureau_mensuel"
-      unique_id: "eclairage_hue_play_2_pc_bureau_mensuel"
+    - name: "Eclairage Bureau Play 2 PC Mensuel"
+      unique_id: eclairage_hue_play_2_pc_bureau_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_2_pc_bureau_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_2_pc_bureau_hebdomadaire"
-      unique_id: "eclairage_hue_play_2_pc_bureau_hebdomadaire"
+    - name: "Eclairage Bureau Play 2 PC Hebdomadaire"
+      unique_id: eclairage_hue_play_2_pc_bureau_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_2_pc_bureau_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_2_pc_bureau_quotidien"
-      unique_id: "eclairage_hue_play_2_pc_bureau_quotidien"
+    - name: "Eclairage Bureau Play 2 PC Quotidien"
+      unique_id: eclairage_hue_play_2_pc_bureau_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -359,32 +359,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_play_3_pc_bureau ---
-    - name: "eclairage_hue_play_3_pc_bureau_annuel"
-      unique_id: "eclairage_hue_play_3_pc_bureau_annuel"
+    - name: "Eclairage Bureau Play 3 PC Annuel"
+      unique_id: eclairage_hue_play_3_pc_bureau_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_3_pc_bureau_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_3_pc_bureau_mensuel"
-      unique_id: "eclairage_hue_play_3_pc_bureau_mensuel"
+    - name: "Eclairage Bureau Play 3 PC Mensuel"
+      unique_id: eclairage_hue_play_3_pc_bureau_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_3_pc_bureau_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_3_pc_bureau_hebdomadaire"
-      unique_id: "eclairage_hue_play_3_pc_bureau_hebdomadaire"
+    - name: "Eclairage Bureau Play 3 PC Hebdomadaire"
+      unique_id: eclairage_hue_play_3_pc_bureau_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_play_3_pc_bureau_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_play_3_pc_bureau_quotidien"
-      unique_id: "eclairage_hue_play_3_pc_bureau_quotidien"
+    - name: "Eclairage Bureau Play 3 PC Quotidien"
+      unique_id: eclairage_hue_play_3_pc_bureau_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -393,32 +393,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- lampe_bureau_1_hue ---
-    - name: "eclairage_lampe_bureau_1_hue_annuel"
-      unique_id: "eclairage_lampe_bureau_1_hue_annuel"
+    - name: "Eclairage Bureau Lampe 1 Hue Annuel"
+      unique_id: eclairage_lampe_bureau_1_hue_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_bureau_1_hue_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_bureau_1_hue_mensuel"
-      unique_id: "eclairage_lampe_bureau_1_hue_mensuel"
+    - name: "Eclairage Bureau Lampe 1 Hue Mensuel"
+      unique_id: eclairage_lampe_bureau_1_hue_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_bureau_1_hue_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_bureau_1_hue_hebdomadaire"
-      unique_id: "eclairage_lampe_bureau_1_hue_hebdomadaire"
+    - name: "Eclairage Bureau Lampe 1 Hue Hebdomadaire"
+      unique_id: eclairage_lampe_bureau_1_hue_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_bureau_1_hue_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_bureau_1_hue_quotidien"
-      unique_id: "eclairage_lampe_bureau_1_hue_quotidien"
+    - name: "Eclairage Bureau Lampe 1 Hue Quotidien"
+      unique_id: eclairage_lampe_bureau_1_hue_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -427,32 +427,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- lampe_bureau_2_hue ---
-    - name: "eclairage_lampe_bureau_2_hue_annuel"
-      unique_id: "eclairage_lampe_bureau_2_hue_annuel"
+    - name: "Eclairage Bureau Lampe 2 Hue Annuel"
+      unique_id: eclairage_lampe_bureau_2_hue_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_bureau_2_hue_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_bureau_2_hue_mensuel"
-      unique_id: "eclairage_lampe_bureau_2_hue_mensuel"
+    - name: "Eclairage Bureau Lampe 2 Hue Mensuel"
+      unique_id: eclairage_lampe_bureau_2_hue_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_bureau_2_hue_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_bureau_2_hue_hebdomadaire"
-      unique_id: "eclairage_lampe_bureau_2_hue_hebdomadaire"
+    - name: "Eclairage Bureau Lampe 2 Hue Hebdomadaire"
+      unique_id: eclairage_lampe_bureau_2_hue_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_bureau_2_hue_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_bureau_2_hue_quotidien"
-      unique_id: "eclairage_lampe_bureau_2_hue_quotidien"
+    - name: "Eclairage Bureau Lampe 2 Hue Quotidien"
+      unique_id: eclairage_lampe_bureau_2_hue_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -460,36 +460,36 @@
         {% set s = states('sensor.eclairage_lampe_bureau_2_hue_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 8. SDB                              │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 8. SDB                            │
+    # └───────────────────────────────────┘
     # --- relais_lumiere_sdb_sonoff ---
-    - name: "eclairage_relais_lumiere_sdb_sonoff_annuel"
-      unique_id: "eclairage_relais_lumiere_sdb_sonoff_annuel"
+    - name: "Eclairage SdB Relais Sonoff Annuel"
+      unique_id: eclairage_relais_lumiere_sdb_sonoff_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_relais_lumiere_sdb_sonoff_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_relais_lumiere_sdb_sonoff_mensuel"
-      unique_id: "eclairage_relais_lumiere_sdb_sonoff_mensuel"
+    - name: "Eclairage SdB Relais Sonoff Mensuel"
+      unique_id: eclairage_relais_lumiere_sdb_sonoff_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_relais_lumiere_sdb_sonoff_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_relais_lumiere_sdb_sonoff_hebdomadaire"
-      unique_id: "eclairage_relais_lumiere_sdb_sonoff_hebdomadaire"
+    - name: "Eclairage SdB Relais Sonoff Hebdomadaire"
+      unique_id: eclairage_relais_lumiere_sdb_sonoff_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_relais_lumiere_sdb_sonoff_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_relais_lumiere_sdb_sonoff_quotidien"
-      unique_id: "eclairage_relais_lumiere_sdb_sonoff_quotidien"
+    - name: "Eclairage SdB Relais Sonoff Quotidien"
+      unique_id: eclairage_relais_lumiere_sdb_sonoff_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -498,32 +498,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- lampe_salle_de_bain_hue ---
-    - name: "eclairage_lampe_salle_de_bain_hue_annuel"
-      unique_id: "eclairage_lampe_salle_de_bain_hue_annuel"
+    - name: "Eclairage SdB Lampe Hue Annuel"
+      unique_id: eclairage_lampe_salle_de_bain_hue_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_salle_de_bain_hue_mensuel"
-      unique_id: "eclairage_lampe_salle_de_bain_hue_mensuel"
+    - name: "Eclairage SdB Lampe Hue Mensuel"
+      unique_id: eclairage_lampe_salle_de_bain_hue_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_salle_de_bain_hue_hebdomadaire"
-      unique_id: "eclairage_lampe_salle_de_bain_hue_hebdomadaire"
+    - name: "Eclairage SdB Lampe Hue Hebdomadaire"
+      unique_id: eclairage_lampe_salle_de_bain_hue_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_lampe_salle_de_bain_hue_quotidien"
-      unique_id: "eclairage_lampe_salle_de_bain_hue_quotidien"
+    - name: "Eclairage SdB Lampe Hue Quotidien"
+      unique_id: eclairage_lampe_salle_de_bain_hue_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -531,36 +531,36 @@
         {% set s = states('sensor.eclairage_lampe_salle_de_bain_hue_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 9. CHAMBRE                          │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 9. CHAMBRE                        │
+    # └───────────────────────────────────┘
     # --- hue_white_lamp_chambre_1 ---
-    - name: "eclairage_hue_white_lamp_chambre_1_annuel"
-      unique_id: "eclairage_hue_white_lamp_chambre_1_annuel"
+    - name: "Eclairage Chambre Hue White 1 Annuel"
+      unique_id: eclairage_hue_white_lamp_chambre_1_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_chambre_1_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_chambre_1_mensuel"
-      unique_id: "eclairage_hue_white_lamp_chambre_1_mensuel"
+    - name: "Eclairage Chambre Hue White 1 Mensuel"
+      unique_id: eclairage_hue_white_lamp_chambre_1_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_chambre_1_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_chambre_1_hebdomadaire"
-      unique_id: "eclairage_hue_white_lamp_chambre_1_hebdomadaire"
+    - name: "Eclairage Chambre Hue White 1 Hebdomadaire"
+      unique_id: eclairage_hue_white_lamp_chambre_1_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_chambre_1_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_chambre_1_quotidien"
-      unique_id: "eclairage_hue_white_lamp_chambre_1_quotidien"
+    - name: "Eclairage Chambre Hue White 1 Quotidien"
+      unique_id: eclairage_hue_white_lamp_chambre_1_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -569,32 +569,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_white_lamp_chambre_2 ---
-    - name: "eclairage_hue_white_lamp_chambre_2_annuel"
-      unique_id: "eclairage_hue_white_lamp_chambre_2_annuel"
+    - name: "Eclairage Chambre Hue White 2 Annuel"
+      unique_id: eclairage_hue_white_lamp_chambre_2_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_chambre_2_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_chambre_2_mensuel"
-      unique_id: "eclairage_hue_white_lamp_chambre_2_mensuel"
+    - name: "Eclairage Chambre Hue White 2 Mensuel"
+      unique_id: eclairage_hue_white_lamp_chambre_2_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_chambre_2_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_chambre_2_hebdomadaire"
-      unique_id: "eclairage_hue_white_lamp_chambre_2_hebdomadaire"
+    - name: "Eclairage Chambre Hue White 2 Hebdomadaire"
+      unique_id: eclairage_hue_white_lamp_chambre_2_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_white_lamp_chambre_2_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_white_lamp_chambre_2_quotidien"
-      unique_id: "eclairage_hue_white_lamp_chambre_2_quotidien"
+    - name: "Eclairage Chambre Hue White 2 Quotidien"
+      unique_id: eclairage_hue_white_lamp_chambre_2_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -603,32 +603,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_color_candle_chambre_eric ---
-    - name: "eclairage_hue_color_candle_chambre_eric_annuel"
-      unique_id: "eclairage_hue_color_candle_chambre_eric_annuel"
+    - name: "Eclairage Chambre Color Candle Eric Annuel"
+      unique_id: eclairage_hue_color_candle_chambre_eric_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_chambre_eric_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_chambre_eric_mensuel"
-      unique_id: "eclairage_hue_color_candle_chambre_eric_mensuel"
+    - name: "Eclairage Chambre Color Candle Eric Mensuel"
+      unique_id: eclairage_hue_color_candle_chambre_eric_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_chambre_eric_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_chambre_eric_hebdomadaire"
-      unique_id: "eclairage_hue_color_candle_chambre_eric_hebdomadaire"
+    - name: "Eclairage Chambre Color Candle Eric Hebdomadaire"
+      unique_id: eclairage_hue_color_candle_chambre_eric_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_chambre_eric_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_chambre_eric_quotidien"
-      unique_id: "eclairage_hue_color_candle_chambre_eric_quotidien"
+    - name: "Eclairage Chambre Color Candle Eric Quotidien"
+      unique_id: eclairage_hue_color_candle_chambre_eric_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -637,32 +637,32 @@
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
     # --- hue_color_candle_chambre_gege ---
-    - name: "eclairage_hue_color_candle_chambre_gege_annuel"
-      unique_id: "eclairage_hue_color_candle_chambre_gege_annuel"
+    - name: "Eclairage Chambre Color Candle Gege Annuel"
+      unique_id: eclairage_hue_color_candle_chambre_gege_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_annuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_chambre_gege_mensuel"
-      unique_id: "eclairage_hue_color_candle_chambre_gege_mensuel"
+    - name: "Eclairage Chambre Color Candle Gege Mensuel"
+      unique_id: eclairage_hue_color_candle_chambre_gege_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_mensuel_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_chambre_gege_hebdomadaire"
-      unique_id: "eclairage_hue_color_candle_chambre_gege_hebdomadaire"
+    - name: "Eclairage Chambre Color Candle Gege Hebdomadaire"
+      unique_id: eclairage_hue_color_candle_chambre_gege_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
       state: >
         {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_hebdomadaire_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
-    - name: "eclairage_hue_color_candle_chambre_gege_quotidien"
-      unique_id: "eclairage_hue_color_candle_chambre_gege_quotidien"
+    - name: "Eclairage Chambre Color Candle Gege Quotidien"
+      unique_id: eclairage_hue_color_candle_chambre_gege_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -670,14 +670,14 @@
         {% set s = states('sensor.eclairage_hue_color_candle_chambre_gege_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-# ╭──────────────────────────────────────────────────────────────────╮
-# │ SENSOR : PÔLE 3. ÉNERGIE [kWh] ÉCLAIRAGE (SOMME PAR ZONES)       │
-# ╰──────────────────────────────────────────────────────────────────╯
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PÔLE 3. ÉCLAIRAGE (SOMME PAR ZONES)                           │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
-    # ┌─────────────────────────────────────┐
-    # │ 4. ZONE SALON (5x)                  │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 4. ZONE SALON (5x)                │
+    # └───────────────────────────────────┘
     # --- eclairage_salon_5 ---
     - name: "Eclairage Salon (5) ANNUEL"
       unique_id: eclairage_salon_5_annuel
@@ -712,9 +712,9 @@
         {% set s = states('sensor.eclairage_salon_5_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 5. ZONE CUISINE (1x)                │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 5. ZONE CUISINE (1x)              │
+    # └───────────────────────────────────┘
     # --- eclairage_cuisine_1 ---
     - name: "Eclairage Cuisine (1) ANNUEL"
       unique_id: eclairage_cuisine_1_annuel
@@ -749,9 +749,9 @@
         {% set s = states('sensor.eclairage_cuisine_1_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 7. ZONE BUREAU (5x)                 │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 7. ZONE BUREAU (5x)               │
+    # └───────────────────────────────────┘
     # --- eclairage_bureau_5 ---
     - name: "Eclairage Bureau (5) ANNUEL"
       unique_id: eclairage_bureau_5_annuel
@@ -786,9 +786,9 @@
         {% set s = states('sensor.eclairage_bureau_5_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 8. ZONE SDB (2x)                    │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 8. ZONE SDB (2x)                  │
+    # └───────────────────────────────────┘
     # --- eclairage_sdb_2 ---
     - name: "Eclairage SdB (2) ANNUEL"
       unique_id: eclairage_sdb_2_annuel
@@ -823,9 +823,9 @@
         {% set s = states('sensor.eclairage_sdb_2_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
-    # │ 9. ZONE CHAMBRE (4x)                │
-    # └─────────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 9. ZONE CHAMBRE (4x)              │
+    # └───────────────────────────────────┘
     # --- eclairage_chambre_4 ---
     - name: "Eclairage Chambre (4) ANNUEL"
       unique_id: eclairage_chambre_4_annuel
@@ -860,9 +860,9 @@
         {% set s = states('sensor.eclairage_chambre_4_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌─────────────────────────────────────┐
+    # ┌───────────────────────────────────┐
     # │ 10. ZONES APPARTEMENT (LOGIQUE HOME)│
-    # └─────────────────────────────────────┘
+    # └───────────────────────────────────┘
     # --- eclairage_appart_3 ---
     - name: "Eclairage Appart. (3) ANNUEL"
       unique_id: eclairage_appart_3_annuel
@@ -936,3 +936,5 @@
 # - [L15-L600] Boîtes ASCII carrées (Titres Secondaires 1 à 10).
 # - [L15-L600] Intégration des titres tertiaires # --- slug --- pour chaque bloc.
 # - [L500+] Regroupement final des Zones (Salon 5, Cuisine 1, Bureau 5, etc) en fin de fichier.
+# - [L1-L600] Standardisation des titres (74/37 chars) et noms lisibles selon IA_CONTEXT_BASE.
+# - [Global] Suppression des guillemets sur unique_id.

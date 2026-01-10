@@ -176,6 +176,7 @@ CONF_AUTO_TPI_AVG_INITIAL_WEIGHT = "auto_tpi_avg_initial_weight"
 CONF_AUTO_TPI_MAX_COEF_INT = "auto_tpi_max_coef_int"
 CONF_AUTO_TPI_HEATING_POWER = "auto_tpi_heating_rate"
 CONF_AUTO_TPI_COOLING_POWER = "auto_tpi_cooling_rate"
+CONF_AUTO_TPI_AGGRESSIVENESS = "auto_tpi_aggressiveness"
 
 CONF_AUTO_TPI_EMA_DECAY_RATE = "auto_tpi_ema_decay_rate"
 
@@ -470,7 +471,7 @@ ATTR_TOTAL_ENERGY = "total_energy"
 ATTR_MEAN_POWER_CYCLE = "mean_cycle_power"
 
 AUTO_FAN_DTEMP_THRESHOLD = 2
-AUTO_FAN_DEACTIVATED_MODES = ["mute", "auto", "low", "quiet", "1"]
+AUTO_FAN_DEACTIVATED_MODES = ["mute", "quiet", "auto", "low", "quiet", "1"]
 
 CENTRAL_CONFIG_NAME = "Central configuration"
 

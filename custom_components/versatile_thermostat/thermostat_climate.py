@@ -228,14 +228,13 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
 
             if not force and abs(dtemp) < (self._auto_regulation_dtemp or 0):
                 _LOGGER.info(
-                    "%s - dtemp (%.1f) is < %.1f -> forget the regulation send",
+                    "%s - dtemp (%.1f) is < %.1f -> forget the regulation send for %s",
                     self,
                     dtemp,
                     self._auto_regulation_dtemp,
+                    under.entity_id,
                 )
-                return
-
-            self._regulated_target_temp = new_regulated_temp
+                continue
 
             _LOGGER.debug(
                 "%s - The device offset temp for regulation is %.2f - internal temp is %.2f. New target is %.2f",
@@ -250,6 +249,9 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
                 self._attr_max_temp,
                 self._attr_min_temp,
             )
+
+        # Update regulated_target_temp after the loop to avoid affecting dtemp calculation for other underlyings
+        self._regulated_target_temp = new_regulated_temp
 
     def do_send_regulated_temp_later(self):
         """A utility function to set the temperature later on an underlying"""
@@ -633,12 +635,14 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
         #     return
 
         device_power = self._underlying_climate_mean_power_cycle
+
         added_energy = 0
-        if (
-            self.is_over_climate
-            and self._underlying_climate_delta_t is not None
-            and device_power
-        ):
+        self._underlying_climate_delta_t = 0
+        if self._underlying_climate_start_hvac_action_date:
+            delta = self.now - self._underlying_climate_start_hvac_action_date
+            self._underlying_climate_delta_t = delta.total_seconds() / 3600.0
+
+        if self.is_over_climate and self._underlying_climate_delta_t > 0 and device_power is not None and device_power > 0:
             added_energy = device_power * self._underlying_climate_delta_t
 
         if self._total_energy is None:
@@ -655,6 +659,8 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
                 self,
                 self._total_energy,
             )
+
+        self._underlying_climate_start_hvac_action_date = self.now if self.is_device_active else None
 
         _LOGGER.debug(
             "%s - added energy is %.3f . Total energy is now: %.3f",
@@ -818,24 +824,24 @@ class ThermostatOverClimate(BaseThermostat[UnderlyingClimate]):
             changes = True
 
         if old_hvac_action in HVAC_ACTION_ON and new_hvac_action not in HVAC_ACTION_ON:
-            stop_power_date = self.get_last_updated_date_or_now(new_state)
-            if self._underlying_climate_start_hvac_action_date:
-                delta = (
-                    stop_power_date - self._underlying_climate_start_hvac_action_date
-                )
-                self._underlying_climate_delta_t = delta.total_seconds() / 3600.0
+            # stop_power_date = self.get_last_updated_date_or_now(new_state)
+            # if self._underlying_climate_start_hvac_action_date:
+            #     delta = (
+            #         stop_power_date - self._underlying_climate_start_hvac_action_date
+            #     )
+            #     self._underlying_climate_delta_t = delta.total_seconds() / 3600.0
 
-                # increment energy at the end of the cycle
-                self.incremente_energy()
+            # increment energy at the end of the cycle
+            self.incremente_energy()
 
-                self._underlying_climate_start_hvac_action_date = None
+            #    self._underlying_climate_start_hvac_action_date = None
 
-            _LOGGER.info(
-                "%s - underlying just switch OFF at %s. delta_h=%.3f h",
-                self,
-                stop_power_date.isoformat(),
-                self._underlying_climate_delta_t,
-            )
+            # _LOGGER.info(
+            #     "%s - underlying just switch OFF at %s. delta_h=%.3f h",
+            #     self,
+            #     stop_power_date.isoformat(),
+            #     self._underlying_climate_delta_t,
+            # )
             changes = True
 
         # Filter new state when received just after a change from VTherm
