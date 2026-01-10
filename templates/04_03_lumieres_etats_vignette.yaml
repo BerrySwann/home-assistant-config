@@ -130,16 +130,21 @@
     - name: "Bureau État"
       unique_id: bureau_etat
       state: >
-        {% if is_state('sensor.lumiere_bureau_etat', 'Allumé') and is_state('sensor.lumiere_ecran_etat', 'Allumé') %}
+        {% set bureau = states('sensor.lumiere_bureau_etat') %}
+        {% set ecran = states('sensor.lumiere_ecran_etat') %}
+        
+        {% if bureau == 'Allumé' and ecran == 'Allumé' %}
           Allumé
-        {% if is_state('sensor.lumiere_bureau_etat', 'Bureau') and is_state('sensor.lumiere_ecran_etat', 'Éteint') %}
+        {% elif bureau == 'Bureau' and ecran == 'Éteint' %}
           Bureau
-        {% if is_state('sensor.lumiere_bureau_etat', 'Éteint') and is_state('sensor.lumiere_ecran_etat', 'Écran') %}
+        {% elif bureau == 'Éteint' and ecran == 'Écran' %}
           Écran
-        {% if is_state('sensor.lumiere_bureau_etat', 'Bureau') and is_state('sensor.lumiere_ecran_etat', 'Éco.') %}
+        {% elif bureau == 'Bureau' and ecran == 'Éco.' %}
           Bureau
-        {% if is_state('sensor.lumiere_bureau_etat', 'Éteint') and is_state('sensor.lumiere_ecran_etat', 'Éco.') %}
+        {% elif bureau == 'Éteint' and ecran == 'Éco.' %}
           Éco.
+        {% elif bureau == 'Éteint' and ecran == 'Éteint' %}
+          Éteint
         {% else %}
           erreur
         {% endif %}
