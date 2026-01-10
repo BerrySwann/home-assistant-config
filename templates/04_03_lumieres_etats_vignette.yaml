@@ -67,23 +67,26 @@
       unique_id: lumiere_bureau_etat
       state: >
         {# 1. Définition des variables basées sur tes vraies entités #}
-        {% set bureau_on = is_state('light.hue_white_lamp_1', 'on') or is_state('light.hue_white_lamp_2', 'on') %}
+        {% set bureau_on = is_state('light.hue_white_lamp_bureau_1', 'on') or is_state('light.hue_white_lamp_bureau_2', 'on') %}
         {% set ecran3_off = is_state('switch.ecran_p_c_3_play_hue', 'off') %}
         {% set ecrans_pc_on = is_state('light.hue_play_1_pc_bureau', 'on') or is_state('light.hue_play_2_pc_bureau', 'on') or is_state('light.hue_play_3_pc_bureau', 'on') %}
+        {% set pc_running = is_state('binary_sensor.moniteur_pc', 'on') %}
 
         {# 2. Logique de décision #}
         {% if ecran3_off %}
-          {# Si play_3 est OFF, on est soit en mode Bureau seul, soit en Éco #}
           {% if bureau_on %}
             Bureau
           {% else %}
             Éteint
           {% endif %}
         {% else %}
-          {# Si l'écranplay_3 3 est ON, on regarde si tout est allumé ou juste une partie #}
           {% if bureau_on and ecrans_pc_on %}
             Allumé
-          {% elif bureau_on %}
+          {% elif bureau_on and ecrans_pc_on and pc_running %}
+            Allumé
+          {% elif bureau_on and not ecrans_pc_on and not pc_running %}
+            Bureau
+          {% elif bureau_on and not ecrans_pc_on and pc_running %}
             Bureau
           {% else %}
             Éteint
@@ -99,7 +102,7 @@
       unique_id: lumiere_ecran_etat
       state: >
         {% set switch_on = is_state('switch.ecran_p_c_3_play_hue', 'on') %}
-        {% set bureau_on = is_state('light.hue_white_lamp_1', 'on') or is_state('light.hue_white_lamp_2', 'on') %}
+        {% set bureau_on = is_state('light.hue_white_lamp_bureau_1', 'on') or is_state('light.hue_white_lamp_bureau_2', 'on') %}
         {% set play_on = is_state('light.hue_play_1_pc_bureau', 'on') or is_state('light.hue_play_2_pc_bureau', 'on') or is_state('light.hue_play_3_pc_bureau', 'on') %}
         {% set pc_running = is_state('binary_sensor.moniteur_pc', 'on') %}
 
@@ -108,11 +111,11 @@
         {% else %}
           {% if bureau_on and play_on and pc_running%}
             Allumé & Synchro
-          {% if not bureau_on and play_on and pc_running%}
+          {% elif not bureau_on and play_on and pc_running%}
             Synchro
-          {% if bureau_on and play_on %}
+          {% elif bureau_on and play_on %}
             Allumé
-          {% if not bureau_on and play_on %}
+          {% elif not bureau_on and play_on %}
             Écran
           {% else %}
             Éteint
