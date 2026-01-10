@@ -100,20 +100,19 @@
       state: >
         {% set switch_on = is_state('switch.ecran_p_c_3_play_hue', 'on') %}
         {% set bureau_on = is_state('light.hue_white_lamp_1', 'on') or is_state('light.hue_white_lamp_2', 'on') %}
-        
-        {# On vérifie si HA voit encore les Play comme 'on' avant qu'elles ne passent en indisponible #}
         {% set play_on = is_state('light.hue_play_1_pc_bureau', 'on') or is_state('light.hue_play_2_pc_bureau', 'on') or is_state('light.hue_play_3_pc_bureau', 'on') %}
+        {% set pc_running = is_state('binary_sensor.moniteur_pc', 'on') %}
 
         {% if not switch_on %}
-          {# Si la prise est coupée, tout est éteint physiquement #}
           Éco.
         {% else %}
-          {# La prise est ON, on regarde la luminosité demandée #}
+          {% if bureau_on and play_on and pc_running%}
+            Allumé & Synchro
+          {% if not bureau_on and play_on and pc_running%}
+            Synchro
           {% if bureau_on and play_on %}
             Allumé
-          {% elif play_on %}
-            {# Ici, on pourrait définir 'Éco.' si la luminosité est faible, #}
-            {# ou rester sur 'Écran' si c'est le mode normal #}
+          {% if not bureau_on and play_on %}
             Écran
           {% else %}
             Éteint
