@@ -73,18 +73,14 @@
 
         {# 2. Logique de décision #}
         {% if ecran3_off %}
-          {# Si l'écran 3 est OFF, on est soit en mode Bureau seul, soit en Éco #}
-          {% if bureau_on and ecrans_pc_on %}
-            Éco.
-          {% elif bureau_on %}
+          {# Si play_3 est OFF, on est soit en mode Bureau seul, soit en Éco #}
+          {% if bureau_on %}
             Bureau
-          {% elif ecrans_pc_on %}
-            Éco. 3
           {% else %}
-            Éco.
+            Éteint
           {% endif %}
         {% else %}
-          {# Si l'écran 3 est ON, on regarde si tout est allumé ou juste une partie #}
+          {# Si l'écranplay_3 3 est ON, on regarde si tout est allumé ou juste une partie #}
           {% if bureau_on and ecrans_pc_on %}
             Allumé
           {% elif bureau_on %}
@@ -100,7 +96,7 @@
 
 # --- lumiere_Écran_etat ---
     - name: "Lumière Écran État"
-      unique_id: lumiere_Ecran_etat
+      unique_id: lumiere_ecran_etat
       state: >
         {# 1. Définition des variables basées sur tes vraies entités #}
         {% set bureau_on = is_state('light.hue_white_lamp_1', 'on') or is_state('light.hue_white_lamp_2', 'on') %}
@@ -112,8 +108,6 @@
           {# Si l'écran 3 est OFF, on est soit en mode Bureau seul, soit en Éco #}
           {% if ecrans_pc_on %}
             Éco.
-          {% elif ecrans_pc_on %}
-            Éco. 3
           {% else %}
             Éco.
           {% endif %}
@@ -126,6 +120,28 @@
           {% else %}
             Éteint
           {% endif %}
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 7. BUREAU --- Bureau-Général ---                                          │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- bureau_etat ---
+    - name: "Bureau État"
+      unique_id: bureau_etat
+      state: >
+        {% if is_state('sensor.lumiere_bureau_etat', 'Allumé') and is_state('sensor.lumiere_ecran_etat', 'Allumé') %}
+          Allumé
+        {% if is_state('sensor.lumiere_bureau_etat', 'Bureau') and is_state('sensor.lumiere_ecran_etat', 'Éteint') %}
+          Bureau
+        {% if is_state('sensor.lumiere_bureau_etat', 'Éteint') and is_state('sensor.lumiere_ecran_etat', 'Écran') %}
+          Écran
+        {% if is_state('sensor.lumiere_bureau_etat', 'Bureau') and is_state('sensor.lumiere_ecran_etat', 'Éco.') %}
+          Bureau
+        {% if is_state('sensor.lumiere_bureau_etat', 'Éteint') and is_state('sensor.lumiere_ecran_etat', 'Éco.') %}
+          Éco.
+        {% else %}
+          erreur
         {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐

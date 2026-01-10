@@ -33,7 +33,7 @@ hue_devices:
     - sensor.hue_smart_button_table_battery
     - sensor.hue_smart_button_cuisine_battery
     - sensor.hue_smart_button_couloir_battery
-    - sensor.boutton_bureau_hue_battery
+    - sensor.hue_smart_button_batterie
     - sensor.boutton_salle_de_bain_hue_battery
     - sensor.hue_smart_button_chambre_battery
     - sensor.eric_hue_smart_button_chambre_battery
