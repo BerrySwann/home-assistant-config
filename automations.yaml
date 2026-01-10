@@ -2786,3 +2786,23 @@
           : {{ mode_saison | upper }} (NUIT)\n  Salon: {{ t_salon_target }}°\n  Bureau:
           {{ t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{% endif %}\n"
   mode: queued
+- id: '1768036253859'
+  alias: Bureau - Forcer Play ON si PC tourne
+  description: Rallume les Hue Play si elles sont éteintes manuellement alors que
+    la synchro PC est active
+  triggers:
+  - entity_id:
+    - light.hue_play_1_pc_bureau
+    - light.hue_play_2_pc_bureau
+    - light.hue_play_3_pc_bureau
+    to: 'off'
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.moniteur_pc
+    state: 'on'
+  actions:
+  - target:
+      entity_id: '{{ trigger.entity_id }}'
+    action: light.turn_on
+  mode: parallel
