@@ -135,6 +135,10 @@
         
         {% if bureau == 'Allumé' and ecran == 'Allumé' %}
           Allumé
+        {% elif bureau == 'Allumé' and ecran == 'Allumé & Synchro' %}
+          AlluSync
+        {% elif bureau == 'Éteint' and ecran == 'Synchro' %}
+          Synchro
         {% elif bureau == 'Bureau' and ecran == 'Éteint' %}
           Bureau
         {% elif bureau == 'Éteint' and ecran == 'Écran' %}
