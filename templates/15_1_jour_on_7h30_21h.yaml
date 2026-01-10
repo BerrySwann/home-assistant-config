@@ -1,5 +1,19 @@
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ BINARY_SENSOR : SÉRIE 15. TEMPS — JOUR (7H30-21H)                      │
+# ╰────────────────────────────────────────────────────────────────────────╯
+
 - binary_sensor:
-      - name: "Est jour (7h30-21h)"
-        unique_id: est_jour_7h30_21h
-        state: >
-          {{ today_at("07:30") <= now() < today_at("21:00") }}
+    # ┌───────────────────────────────────┐
+    # │ 1. PÉRIODE                        │
+    # └───────────────────────────────────┘
+    # --- est_jour_7h30_21h ---
+    - name: "Est jour (7h30-21h)"
+      unique_id: est_jour_7h30_21h
+      state: >
+        {{ today_at("07:30") <= now() < today_at("21:00") }}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation.

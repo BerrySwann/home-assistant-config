@@ -1,64 +1,72 @@
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 06. TÉLÉPHONES — ÉTAT WI-FI & SYNTHÈSE                  │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
-# ========================================================================
-# TÉLÉPHONES — État Wi-Fi + Synthèse (avec wifi_!?)
-# ========================================================================
 - sensor:
-  - name: "Condition Mamour Wifi"
-    unique_id: condition_mamour_wifi
-    state: >-
-      {% if is_state('sensor.poco_x7_pro_mamour_network_type', 'wifi') %}
-        {% if is_state('sensor.poco_x7_pro_mamour_wi_fi_connection', 'Freebox_GG') %}
-          true
+    # ┌───────────────────────────────────┐
+    # │ 10. AUTRE                         │
+    # └───────────────────────────────────┘
+    # --- condition_mamour_wifi ---
+    - name: "Condition Mamour Wifi"
+      unique_id: condition_mamour_wifi
+      state: >-
+        {% if is_state('sensor.poco_x7_pro_mamour_network_type', 'wifi') %}
+          {% if is_state('sensor.poco_x7_pro_mamour_wi_fi_connection', 'Freebox_GG') %}
+            true
+          {% else %}
+            wifi_!?
+          {% endif %}
         {% else %}
-          wifi_!?
+          false
         {% endif %}
-      {% else %}
-        false
-      {% endif %}
 
-  - name: "Condition Eric Wifi"
-    unique_id: condition_eric_wifi
-    state: >-
-      {% if is_state('sensor.poco_x7_pro_network_type', 'wifi') %}
-        {% if is_state('sensor.poco_x7_pro_wi_fi_connection', 'Freebox_GG') %}
-          true
+    # --- condition_eric_wifi ---
+    - name: "Condition Eric Wifi"
+      unique_id: condition_eric_wifi
+      state: >-
+        {% if is_state('sensor.poco_x7_pro_network_type', 'wifi') %}
+          {% if is_state('sensor.poco_x7_pro_wi_fi_connection', 'Freebox_GG') %}
+            true
+          {% else %}
+            wifi_!?
+          {% endif %}
         {% else %}
-          wifi_!?
+          false
         {% endif %}
-      {% else %}
-        false
-      {% endif %}
 
-#========================================================================
-# Vignette si portable sont en Wifi ou Celullar
-#========================================================================
-- sensor:
-  - name: "Etat Wifi Maison"
-    unique_id: etat_wifi_maison
-    state: >-
-      {% set mamour = is_state('sensor.condition_mamour_wifi', 'true') %}
-      {% set eric = is_state('sensor.condition_eric_wifi', 'true') %}
-      {% if mamour and eric %}
-        2
-      {% elif mamour and not eric %}
-        Mamour
-      {% elif eric and not mamour %}
-        Eric
-      {% else %}
-        0
-      {% endif %}
-    attributes:
-      couleur: >-
-        {# ON DOIT REDÉFINIR LES VARIABLES ICI POUR LES ATTRIBUTS #}
+    # --- etat_wifi_maison ---
+    - name: "État WiFi Maison"
+      unique_id: etat_wifi_maison
+      state: >-
         {% set mamour = is_state('sensor.condition_mamour_wifi', 'true') %}
         {% set eric = is_state('sensor.condition_eric_wifi', 'true') %}
-        
         {% if mamour and eric %}
-          green
+          2
         {% elif mamour and not eric %}
-          orange
+          Mamour
         {% elif eric and not mamour %}
-          gold
+          Eric
         {% else %}
-          red
+          0
         {% endif %}
+      attributes:
+        couleur: >-
+          {# ON DOIT REDÉFINIR LES VARIABLES ICI POUR LES ATTRIBUTS #}
+          {% set mamour = is_state('sensor.condition_mamour_wifi', 'true') %}
+          {% set eric = is_state('sensor.condition_eric_wifi', 'true') %}
+          
+          {% if mamour and eric %}
+            green
+          {% elif mamour and not eric %}
+            orange
+          {% elif eric and not mamour %}
+            gold
+          {% else %}
+            red
+          {% endif %}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9,23,37] Ajout des titres tertiaires (slugs).
+# - [Global] Fusion des blocs sensor et standardisation de l'indentation.

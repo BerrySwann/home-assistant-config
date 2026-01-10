@@ -1,7 +1,12 @@
-# =======================================================================
-# Linky total (HP + HC) -> cumul kWh
-# =======================================================================
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 11. ÉNERGIE — LINKY TOTAL (HP + HC)                     │
+# ╰────────────────────────────────────────────────────────────────────────╯
+
 - sensor:
+    # ┌───────────────────────────────────┐
+    # │ 1. CUMUL TOTAL                    │
+    # └───────────────────────────────────┘
+    # --- linky_total_kwh_medata ---
     - name: "Linky total kWh (MEData)"
       unique_id: linky_total_kwh_medata
       unit_of_measurement: kWh
@@ -11,8 +16,9 @@
         {% set hp = states('sensor.linky_25481620821301_hp_consumption') | float(0) %}
         {% set hc = states('sensor.linky_25481620821301_hc_consumption') | float(0) %}
         {{ (hp + hc) | round(3) }}
-      # "[L12] Nouveau capteur cumulatif = HP + HC"
 
-# ---------------------------------------------------------------------------------
 # annotations_log:
-# - "[L12] Création sensor.linky_total_kwh_medata (HP+HC)"
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation et nettoyage des commentaires.

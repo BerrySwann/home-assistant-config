@@ -1,33 +1,49 @@
-- sensor:
-      - name: "Statut Clim Hiver"
-        state: "{{ states('sensor.groupe_clim') }}"
-        icon: >
-          {% if is_state('weather.vence', 'snowy') %}
-            mdi:snowflake
-          {% elif states('sensor.temperature_exterieure') | float < 15 %}
-            mdi:snowflake-thermometer
-          {% elif states('sensor.temperature_exterieure') | float > 21 %}
-            mdi:weather-sunny
-          {% elif states('sensor.temperature_exterieure') | float < 32 %}
-            mdi:weather-sunny-alert
-          {% else %}
-            mdi:weather-sunny
-          {% endif %}
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 16. CLIMAT — ICÔNES SAISONNIÈRES                        │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
-      - name: "icon th balcon nord temperature"
-        unit_of_measurement: "°C"
-        state: "{{ states('sensor.th_balcon_nord_temperature') }}"
-        icon: >
-          {% set temp = states('sensor.th_balcon_nord_temperature') | float(0) %}
-          {% if is_state('weather.vence', 'snowy') %}
-            mdi:snowflake
-          {% elif temp < 15 %}
-            mdi:snowflake-thermometer
-          {% elif temp >= 32 %}
-            mdi:weather-sunny-alert
-          {% elif temp >= 21 %}
-            mdi:weather-sunny
-          {% else %}
-            mdi:thermometer
-          {% endif %}
+    # ┌───────────────────────────────────┐
+    # │ 1. STATUTS & ICÔNES               │
+    # └───────────────────────────────────┘
+    # --- statut_clim_hiver ---
+    - name: "Statut Clim Hiver"
+      unique_id: statut_clim_hiver
+      state: "{{ states('sensor.groupe_clim') }}"
+      icon: >
+        {% if is_state('weather.vence', 'snowy') %}
+          mdi:snowflake
+        {% elif states('sensor.temperature_exterieure') | float(0) < 15 %}
+          mdi:snowflake-thermometer
+        {% elif states('sensor.temperature_exterieure') | float(0) > 21 %}
+          mdi:weather-sunny
+        {% elif states('sensor.temperature_exterieure') | float(0) < 32 %}
+          mdi:weather-sunny-alert
+        {% else %}
+          mdi:weather-sunny
+        {% endif %}
+
+    # --- icon_th_balcon_nord_temperature ---
+    - name: "Icône TH Balcon Nord"
+      unique_id: icon_th_balcon_nord_temperature
+      unit_of_measurement: "°C"
+      state: "{{ states('sensor.th_balcon_nord_temperature') }}"
+      icon: >
+        {% set temp = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {% if is_state('weather.vence', 'snowy') %}
+          mdi:snowflake
+        {% elif temp < 15 %}
+          mdi:snowflake-thermometer
+        {% elif temp >= 32 %}
+          mdi:weather-sunny-alert
+        {% elif temp >= 21 %}
+          mdi:weather-sunny
+        {% else %}
+          mdi:thermometer
+        {% endif %}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9,26] Ajout des titres tertiaires (slugs).
+# - [Global] Fusion des blocs sensor, ajout des unique_id et standardisation.

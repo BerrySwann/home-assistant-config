@@ -1,35 +1,55 @@
-# =======================================================================
-# Lecture des sondes temperature (Mini PC)
-# =======================================================================
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 12. SYSTÈME — TEMPÉRATURES MINI PC                      │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
-      - name: "Température Carte Mère"
-        unique_id: temperature_carte_mere
-        unit_of_measurement: "°C"
-        device_class: temperature
-        state: "{{ (states('sensor.thermal_zone_0_temp') | float(0) / 1000) | round(1) }}"
-      - name: "Température CPU (Package)"
-        unique_id: temperature_cpu_package
-        unit_of_measurement: "°C"
-        device_class: temperature
-        state: "{{ (states('sensor.temperature_cpu_package') | float(0) / 1000) | round(1) }}"
-      - name: "Température Core 0"
-        unique_id: temperature_core_0
-        unit_of_measurement: "°C"
-        device_class: temperature
-        state: "{{ (states('sensor.temperature_core_0') | float(0) / 1000) | round(1) }}"
-      - name: "Température Core 1"
-        unique_id: temperature_core_1
-        unit_of_measurement: "°C"
-        device_class: temperature
-        state: "{{ (states('sensor.temperature_core_1') | float(0) / 1000) | round(1) }}"
-      - name: "Température Core 2"
-        unique_id: temperature_core_2
-        unit_of_measurement: "°C"
-        device_class: temperature
-        state: "{{ (states('sensor.temperature_core_2') | float(0) / 1000) | round(1) }}"
-      - name: "Température Core 3"
-        unique_id: temperature_core_3
-        unit_of_measurement: "°C"
-        device_class: temperature
-        state: "{{ (states('sensor.temperature_core_3') | float(0) / 1000) | round(1) }}"
+    # ┌───────────────────────────────────┐
+    # │ 1. TEMPÉRATURES                   │
+    # └───────────────────────────────────┘
+    # --- temperature_carte_mere ---
+    - name: "Température Carte Mère"
+      unique_id: temperature_carte_mere
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: "{{ (states('sensor.thermal_zone_0_temp') | float(0) / 1000) | round(1) }}"
+
+    # --- temperature_cpu_package ---
+    - name: "Température CPU (Package)"
+      unique_id: temperature_cpu_package
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: "{{ (states('sensor.temperature_cpu_package') | float(0) / 1000) | round(1) }}"
+
+    # --- temperature_core_0 ---
+    - name: "Température Core 0"
+      unique_id: temperature_core_0
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: "{{ (states('sensor.temperature_core_0') | float(0) / 1000) | round(1) }}"
+
+    # --- temperature_core_1 ---
+    - name: "Température Core 1"
+      unique_id: temperature_core_1
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: "{{ (states('sensor.temperature_core_1') | float(0) / 1000) | round(1) }}"
+
+    # --- temperature_core_2 ---
+    - name: "Température Core 2"
+      unique_id: temperature_core_2
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: "{{ (states('sensor.temperature_core_2') | float(0) / 1000) | round(1) }}"
+
+    # --- temperature_core_3 ---
+    - name: "Température Core 3"
+      unique_id: temperature_core_3
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: "{{ (states('sensor.temperature_core_3') | float(0) / 1000) | round(1) }}"
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9,16,23,30,37,44] Ajout des titres tertiaires (slugs).
+# - [Global] Standardisation de l'indentation.

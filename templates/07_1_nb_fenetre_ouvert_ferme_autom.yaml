@@ -1,32 +1,41 @@
-# OUVERTURES — Comptes fenêtres
-- sensor:
-  - name: "Nbre de fenêtres fermées"
-    unique_id: nbre_de_fenetres_fermees
-    state: >-
-      {{
-        [
-          states('binary_sensor.contact_fenetre_salon_sonoff_contact') == 'off',
-          states('binary_sensor.contact_fenetre_cuisine_sonoff_contact') == 'off',
-          states('binary_sensor.contact_fenetre_bureau_sonoff_contact') == 'off',
-          states('binary_sensor.contact_fenetre_chambre_sonoff_contact') == 'off',
-        ].count(true)
-      }}
-    attributes:
-      friendly_name: "Nombre de fenêtres fermées"
-      icon: mdi:window-shutter
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 07. OUVERTURES — COMPTES FENÊTRES                       │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
-  - name: "Nbre de fenêtres ouvertes"
-    unique_id: nbre_de_fenetres_ouvertes
-    state: >-
-      {{
-        [
-          states('binary_sensor.contact_fenetre_salon_sonoff_contact') == 'on',
-          states('binary_sensor.contact_fenetre_cuisine_sonoff_contact') == 'on',
-          states('binary_sensor.contact_fenetre_bureau_sonoff_contact') == 'on',
-          states('binary_sensor.contact_fenetre_chambre_sonoff_contact') == 'on',
-        ].count(true)
-      }}
-    attributes:
-      friendly_name: "Nombre de fenêtres ouvertes"
+    # ┌───────────────────────────────────┐
+    # │ 1. COMPTEURS                      │
+    # └───────────────────────────────────┘
+    # --- nbre_de_fenetres_fermees ---
+    - name: "Nombre de fenêtres fermées"
+      unique_id: nbre_de_fenetres_fermees
+      icon: mdi:window-shutter
+      state: >-
+        {{
+          [
+            states('binary_sensor.contact_fenetre_salon_sonoff_contact') == 'off',
+            states('binary_sensor.contact_fenetre_cuisine_sonoff_contact') == 'off',
+            states('binary_sensor.contact_fenetre_bureau_sonoff_contact') == 'off',
+            states('binary_sensor.contact_fenetre_chambre_sonoff_contact') == 'off',
+          ].count(true)
+        }}
+
+    # --- nbre_de_fenetres_ouvertes ---
+    - name: "Nombre de fenêtres ouvertes"
+      unique_id: nbre_de_fenetres_ouvertes
       icon: mdi:window-shutter-open
+      state: >-
+        {{
+          [
+            states('binary_sensor.contact_fenetre_salon_sonoff_contact') == 'on',
+            states('binary_sensor.contact_fenetre_cuisine_sonoff_contact') == 'on',
+            states('binary_sensor.contact_fenetre_bureau_sonoff_contact') == 'on',
+            states('binary_sensor.contact_fenetre_chambre_sonoff_contact') == 'on',
+          ].count(true)
+        }}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9,23] Ajout des titres tertiaires (slugs).
+# - [Global] Fusion des blocs sensor et standardisation de l'indentation.

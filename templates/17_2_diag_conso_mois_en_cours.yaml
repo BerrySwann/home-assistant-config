@@ -1,8 +1,12 @@
-#========================================================================
-# DIAGNOSTIC ÉNERGÉTIQUE - 6 POSTES (CUISSON & FROID SÉPARÉS)
-#========================================================================
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 17. DIAGNOSTIC ÉNERGÉTIQUE — 6 POSTES (MOIS)            │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
+    # ┌───────────────────────────────────┐
+    # │ 1. DYNAMIQUE                      │
+    # └───────────────────────────────────┘
+    # --- max_conso_mensuelle_dynamique ---
     - name: "Max Conso Mensuelle Dynamique"
       unique_id: max_conso_mensuelle_dynamique
       unit_of_measurement: "kWh"
@@ -15,7 +19,10 @@
         {% set p6 = states('sensor.diag_poste_6_lumiere_mensuel') | float(0) %}
         {{ ([p1, p2, p3, p4, p5, p6] | max + 10) | round(3) }}
 
-    #--- POSTE 1 : HYGIÈNE (Linge, Vaisselle, Repassage) ---
+    # ┌───────────────────────────────────┐
+    # │ 2. POSTES DÉTAILLÉS               │
+    # └───────────────────────────────────┘
+    # --- diag_poste_1_hygiene_mensuel ---
     - name: "Diag Poste 1 Hygiene mensuel"
       unique_id: diag_poste_1_hygiene_mensuel
       unit_of_measurement: "kWh"
@@ -27,7 +34,7 @@
             states('sensor.prise_lave_vaisselle_nous_monthly') | float(0) +
             states('sensor.prise_bureau_fer_a_repasser_nous_monthly') | float(0)) | round(3) }}
 
-    #--- POSTE 2 : CUISSON (Four, Plaques, Micro-ondes, Airfryer) ---
+    # --- diag_poste_2_cuisson_mensuel ---
     - name: "Diag Poste 2 Cuisson mensuel"
       unique_id: diag_poste_2_cuisson_mensuel
       unit_of_measurement: "kWh"
@@ -39,7 +46,7 @@
             states('sensor.prise_airfryer_ninja_nous_monthly') | float(0) +
             states('sensor.four_et_plaque_de_cuisson_monthly') | float(0)) | round(3) }}
 
-    #--- POSTE 3 : FROID (Frigo, Congélateur) ---
+    # --- diag_poste_3_froid_mensuel ---
     - name: "Diag Poste 3 Froid mensuel"
       unique_id: diag_poste_3_froid_mensuel
       unit_of_measurement: "kWh"
@@ -50,7 +57,7 @@
         {{ (states('sensor.prise_frigo_cuisine_nous_monthly') | float(0) + 
             states('sensor.prise_congelateur_cuisine_nous_monthly') | float(0)) | round(3) }}
 
-    #--- POSTE 4 : CHAUFFAGE (Total Clim + Rads) ---
+    # --- diag_poste_4_chauffage_mensuel ---
     - name: "Diag Poste 4 Chauffage mensuel"
       unique_id: diag_poste_4_chauffage_mensuel
       unit_of_measurement: "kWh"
@@ -60,7 +67,7 @@
       state: >
         {{ states('sensor.conso_clim_rad_total_mensuel') | float(0) | round(3) }}
 
-    #--- POSTE 5 : MULTIMÉDIA (PC, Box, TV) ---
+    # --- diag_poste_5_multimedia_mensuel ---
     - name: "Diag Poste 5 Multimedia mensuel"
       unique_id: diag_poste_5_multimedia_mensuel
       unit_of_measurement: "kWh"
@@ -74,7 +81,7 @@
             states('sensor.prise_tv_salon_nous_monthly') | float(0) +
             states('sensor.prise_tv_chambre_nous_monthly') | float(0)) | round(3) }}
 
-    #--- POSTE 6 : LUMIÈRE (Total Éclairage) ---
+    # --- diag_poste_6_lumiere_mensuel ---
     - name: "Diag Poste 6 Lumiere mensuel"
       unique_id: diag_poste_6_lumiere_mensuel
       unit_of_measurement: "kWh"
@@ -84,7 +91,10 @@
       state: >
         {{ states('sensor.conso_eclairage_total_mensuel') | float(0) | round(3) }}
             
-    #--- TOTAL GÉNÉRAL IDENTIFIÉ ---
+    # ┌───────────────────────────────────┐
+    # │ 3. SYNTHÈSE                       │
+    # └───────────────────────────────────┘
+    # --- diag_conso_totale_identifiee_mensuel ---
     - name: "Diag Conso Totale Identifiee mensuel"
       unique_id: diag_conso_totale_identifiee_mensuel
       unit_of_measurement: "kWh"
@@ -96,3 +106,9 @@
             states('sensor.diag_poste_4_chauffage_mensuel') | float(0) + 
             states('sensor.diag_poste_5_multimedia_mensuel') | float(0) + 
             states('sensor.diag_poste_6_lumiere_mensuel') | float(0)) | round(2) }}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9,23,36,48,59,69,82,95] Ajout des titres tertiaires (slugs).
+# - [Global] Standardisation de l'indentation et regroupement logique.

@@ -1,5 +1,19 @@
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 09. ÉNERGIE — COURANT DE VEILLE                         │
+# ╰────────────────────────────────────────────────────────────────────────╯
+
 - sensor:
-  - name: "all_standby_current"
-    unique_id: all_standby_current
-    unit_of_measurement: "A"
-    state: "0"
+    # ┌───────────────────────────────────┐
+    # │ 1. MESURES                        │
+    # └───────────────────────────────────┘
+    # --- all_standby_current ---
+    - name: "All Standby Current"
+      unique_id: all_standby_current
+      unit_of_measurement: "A"
+      state: "0"
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation et du nom (Title Case).

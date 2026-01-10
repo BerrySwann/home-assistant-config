@@ -1,27 +1,32 @@
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SWITCH : SÉRIE 14. CHAUFFAGE — INTERRUPTEUR SDB                        │
+# ╰────────────────────────────────────────────────────────────────────────╯
+
 - switch:
-      - name: "Interrupteur Radiateur Salle de Bain" 
-        unique_id: switch_radiateur_sdb_inter
-        
-        # Le plus sûr est d'utiliser 'state' comme un Template Sensor
-        state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}" 
-        
-        turn_on:
-          # CORRECTION CLÉ : Ajout de la clé 'sequence:' pour encapsuler l'action.
-          sequence:
-            - service: input_boolean.turn_on
-              target:
-                entity_id: input_boolean.inter_radiateur_salle_de_bain
-              
-        turn_off:
-          # CORRECTION CLÉ : Ajout de la clé 'sequence:'
-          sequence:
-            - service: input_boolean.turn_off
-              target:
-                entity_id: input_boolean.inter_radiateur_salle_de_bain
-            
-        icon: > 
-          {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %}
-            mdi:radiator
-          {% else %}
-            mdi:radiator-off
-          {% endif %}
+    # ┌───────────────────────────────────┐
+    # │ 1. CONTRÔLE                       │
+    # └───────────────────────────────────┘
+    # --- switch_radiateur_sdb_inter ---
+    - name: "Interrupteur Radiateur Salle de Bain"
+      unique_id: switch_radiateur_sdb_inter
+      icon: >
+        {% if is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') %}
+          mdi:radiator
+        {% else %}
+          mdi:radiator-off
+        {% endif %}
+      state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
+      turn_on:
+        - service: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.inter_radiateur_salle_de_bain
+      turn_off:
+        - service: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.inter_radiateur_salle_de_bain
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation et nettoyage de la syntaxe.

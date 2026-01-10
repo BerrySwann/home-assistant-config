@@ -1,16 +1,26 @@
-#========================================================================
-# ALIAS : GESTION DES TARIFS - HEURES CREUSES ÉLECTRIQUES
-#========================================================================
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 11. ÉNERGIE — HEURES CREUSES                            │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
-  - name: "Heures Creuses Électriques"
-    unique_id: heures_creuses_electriques
-    state: >
-      {% set current_time = now().strftime('%H:%M') %}
-      {{ ('01:00' <= current_time < '07:30') or ('13:00' <= current_time < '14:30') }}
-    icon: >
-      {% if is_state('sensor.heures_creuses_electriques', 'True') %}
-        mdi:flash
-      {% else %}
-        mdi:flash-outline
-      {% endif %}
+    # ┌───────────────────────────────────┐
+    # │ 1. TARIFICATION                   │
+    # └───────────────────────────────────┘
+    # --- heures_creuses_electriques ---
+    - name: "Heures Creuses Électriques"
+      unique_id: heures_creuses_electriques
+      icon: >
+        {% if is_state('sensor.heures_creuses_electriques', 'True') %}
+          mdi:flash
+        {% else %}
+          mdi:flash-outline
+        {% endif %}
+      state: >
+        {% set current_time = now().strftime('%H:%M') %}
+        {{ ('01:00' <= current_time < '07:30') or ('13:00' <= current_time < '14:30') }}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation.

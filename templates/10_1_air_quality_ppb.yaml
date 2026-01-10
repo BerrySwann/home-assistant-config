@@ -1,31 +1,41 @@
-# templates/air_quality_ppb.yaml
-# ... (le début du fichier est inchangé) ...
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 10. QUALITÉ DE L'AIR — PPB                              │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
+    # ┌───────────────────────────────────┐
+    # │ 1. MESURES PPB                    │
+    # └───────────────────────────────────┘
+    # --- tcov_salon_ppb ---
     - name: "tCOV Salon (ppb)"
       unique_id: tcov_salon_ppb
-      # LIGNE CORRIGÉE : Utilisation de float(0)
-      state: "{{ states('sensor.qualite_air_salon_ikea_voc_index') | float(0) }}" 
       unit_of_measurement: "ppb"
       device_class: volatile_organic_compounds_parts
       state_class: measurement
       icon: mdi:chemical-weapon
+      state: "{{ states('sensor.qualite_air_salon_ikea_voc_index') | float(0) }}"
 
+    # --- tcov_bureau_ppb ---
     - name: "tCOV Bureau (ppb)"
       unique_id: tcov_bureau_ppb
-      # LIGNE CORRIGÉE : Utilisation de float(0)
-      state: "{{ states('sensor.qualite_air_bureau_ikea_voc_index') | float(0) }}" 
       unit_of_measurement: "ppb"
       device_class: volatile_organic_compounds_parts
       state_class: measurement
       icon: mdi:chemical-weapon
+      state: "{{ states('sensor.qualite_air_bureau_ikea_voc_index') | float(0) }}"
 
+    # --- tcov_chambre_ppb ---
     - name: "tCOV Chambre (ppb)"
       unique_id: tcov_chambre_ppb
-      # LIGNE CORRIGÉE : Utilisation de float(0)
-      state: "{{ states('sensor.qualite_air_chambre_ikea_voc_index') | float(0) }}" 
       unit_of_measurement: "ppb"
       device_class: volatile_organic_compounds_parts
       state_class: measurement
       icon: mdi:chemical-weapon
-# ... (la fin du fichier est inchangée) ...
+      state: "{{ states('sensor.qualite_air_chambre_ikea_voc_index') | float(0) }}"
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9,17,25] Ajout des titres tertiaires (slugs).
+# - [Global] Standardisation de l'ordre des clés.
+# - [Global] Suppression des commentaires superflus.

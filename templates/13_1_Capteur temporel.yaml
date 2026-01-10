@@ -1,4 +1,19 @@
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 13. CAPTEUR TEMPOREL                                    │
+# ╰────────────────────────────────────────────────────────────────────────╯
+
 - sensor:
-      - name: "current_hour"
-        unit_of_measurement: ""
-        state: "{{ now().hour }}"
+    # ┌───────────────────────────────────┐
+    # │ 1. TEMPS                          │
+    # └───────────────────────────────────┘
+    # --- current_hour ---
+    - name: "Current Hour"
+      unique_id: current_hour
+      unit_of_measurement: ""
+      state: "{{ now().hour }}"
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation et du nom (Title Case).

@@ -1,5 +1,12 @@
-# template.yaml
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 11. ECOJOKO — CONSO J-1                                 │
+# ╰────────────────────────────────────────────────────────────────────────╯
+
 - sensor:
+    # ┌───────────────────────────────────┐
+    # │ 1. MESURES                        │
+    # └───────────────────────────────────┘
+    # --- ecojoko_kwh_j_1 ---
     - name: "Ecojoko kWh J-1"
       unique_id: ecojoko_kwh_j_1
       unit_of_measurement: "kWh"
@@ -9,3 +16,9 @@
         {{ (state_attr('sensor.ecojoko_energy_daily', 'last_period') | float(0)) | round(1) }}
       availability: >
         {{ state_attr('sensor.ecojoko_energy_daily', 'last_period') is not none }}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation.

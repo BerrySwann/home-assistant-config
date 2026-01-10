@@ -1,18 +1,25 @@
-
-#========================================================================
-#
-# SYSTÈME — Mises à jour disponibles
-#
-#========================================================================
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : SÉRIE 05. SYSTÈME — MISES À JOUR DISPONIBLES                  │
+# ╰────────────────────────────────────────────────────────────────────────╯
 
 - sensor:
-  - name: "Available Updates"
-    unique_id: available_updates
-    icon: mdi:update
-    state: >
-      {{ 
-        states.update
-        |selectattr('state', 'eq', 'on')
-        |list
-        |count
-      }}
+    # ┌───────────────────────────────────┐
+    # │ 10. AUTRE                         │
+    # └───────────────────────────────────┘
+    # --- available_updates ---
+    - name: "Système Mises à jour Disponibles"
+      unique_id: systeme_mises_a_jour_disponibles
+      icon: mdi:update
+      state: >
+        {{ 
+          states.update
+          |selectattr('state', 'eq', 'on')
+          |list
+          |count
+        }}
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L10] Ajout du titre tertiaire (slug).
+# - [L11-12] Standardisation name/unique_id (Français/Snake_case).

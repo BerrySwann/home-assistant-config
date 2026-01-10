@@ -1,4 +1,18 @@
+# ╭────────────────────────────────────────────────────────────────────────╮
+# │ BINARY_SENSOR : SÉRIE 14. CHAUFFAGE — SDB                              │
+# ╰────────────────────────────────────────────────────────────────────────╯
+
 - binary_sensor:
-      - name: "Radiateur Salle de Bain Actif"
-        unique_id: radiateur_salle_de_bain_actif
-        state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
+    # ┌───────────────────────────────────┐
+    # │ 1. ÉTAT RADIATEUR                 │
+    # └───────────────────────────────────┘
+    # --- radiateur_salle_de_bain_actif ---
+    - name: "Radiateur Salle de Bain Actif"
+      unique_id: radiateur_salle_de_bain_actif
+      state: "{{ is_state('input_boolean.inter_radiateur_salle_de_bain', 'on') }}"
+
+# annotations_log:
+# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
+# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
+# - [L9] Ajout du titre tertiaire (slug).
+# - [Global] Standardisation de l'indentation.
