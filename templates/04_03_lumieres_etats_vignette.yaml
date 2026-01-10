@@ -161,14 +161,16 @@
     - name: "Lumière Salle de Bain État"
       unique_id: lumiere_salle_de_bain_etat
       state: >
-        {% if is_state('light.lampe_salle_de_bain_hue', 'on') and is_state('light.salle_de_bain', 'on') %}
+        {% set hue = states('light.lampe_salle_de_bain_hue') %}
+        {% set sonoff = states('switch.relais_lumiere_sdb_sonoff') %}
+        
+        {% if hue == 'on' and sonoff == 'on' %}
           Allumé
-        {% elif is_state('light.lampe_salle_de_bain_hue', 'off') and is_state('light.salle_de_bain', 'off') %}
+        {% elif hue == 'off' and sonoff == 'off' %}
           Éteint
         {% else %}
-          erreur
+          N/A
         {% endif %}
-
 
 # ┌───────────────────────────────────────────────────────────────────┐
 # │ 9. CHAMBRE (Logique Complexe)                                     │
