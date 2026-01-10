@@ -2806,55 +2806,42 @@
       entity_id: '{{ trigger.entity_id }}'
     action: light.turn_on
   mode: parallel
-- id: bureau_activation_ecran_synchro
-  alias: Bureau - Activation Écran pour Synchro
+- &id001
+  id: bureau_activation_ecran_synchro
+  alias: BUREAU - ACTIVATION ÉCRAN POUR SYNCHRO
   description: Allume la prise et les lumières dès que le PC est détecté pour forcer
     l'état Synchro
   triggers:
-  - entity_id: binary_sensor.moniteur_pc
+  - alias: DÉTECTION ALLUMAGE MONITEUR PC
+    entity_id: binary_sensor.moniteur_pc
     to: 'on'
     trigger: state
   conditions:
-  - condition: state
+  - alias: VÉRIFICATION SI PRISE ÉCRAN ÉTEINTE
+    condition: state
     entity_id: switch.ecran_p_c_3_play_hue
     state: 'off'
   actions:
-  - action: switch.turn_on
+  - alias: ALLUMAGE DE LA PRISE PHYSIQUE
+    action: switch.turn_on
     target:
       entity_id: switch.ecran_p_c_3_play_hue
-  - delay:
-      seconds: 2
-  - action: light.turn_on
+  - alias: ATTENTE CONNEXION ZIGBEE (2S)
+    delay: 00:00:02
+  - alias: ALLUMAGE DES PLAY HUE AVEC TRANSITION
+    action: light.turn_on
     target:
-      entity_id: light.ecrans_pc
-  - action: homeassistant.update_entity
+      entity_id:
+      - light.hue_play_1_pc_bureau
+      - light.hue_play_2_pc_bureau
+      - light.hue_play_3_pc_bureau
+    data:
+      transition: 2
+  - alias: MISE À JOUR FORCÉE DES SENSORS D'AFFICHAGE
+    action: homeassistant.update_entity
     target:
-      entity_id: sensor.lumiere_ecran_etat
-  - action: homeassistant.update_entity
-    target:
-      entity_id: sensor.bureau_etat
+      entity_id:
+      - sensor.lumiere_ecran_etat
+      - sensor.bureau_etat
   mode: restart
-- id: bureau_activation_ecran_synchro
-  alias: Bureau - Activation Écran pour Synchro
-  description: Allume la prise et les lumières dès que le PC est détecté
-  triggers:
-  - entity_id: binary_sensor.moniteur_pc
-    to: 'on'
-    trigger: state
-  conditions:
-  - condition: state
-    entity_id: switch.ecran_p_c_3_play_hue
-    state: 'off'
-  actions:
-  - action: switch.turn_on
-    target:
-      entity_id: switch.ecran_p_c_3_play_hue
-  - delay:
-      seconds: 2
-  - action: light.turn_on
-    target:
-      entity_id: light.ecrans_pc
-  - action: homeassistant.update_entity
-    target:
-      entity_id: sensor.lumiere_ecran_etat
-  mode: restart
+- *id001
