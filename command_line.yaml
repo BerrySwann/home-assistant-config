@@ -17,7 +17,7 @@
       i=0;
       while true; do
         today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
-        $((i++));
+        ((i++));
         if [[ $(expr length "$today") -gt "10000" ]];
         then
           echo "$today" | base64 -d > ./www/weather/meteo_france_alerte_today.png;
@@ -44,7 +44,7 @@
       i=0;
       while true; do
         today=$(curl -X GET "https://public-api.meteofrance.fr/public/DPVigilance/v1/vignettenationale-J1/encours" -H "accept: */*" -H "apikey: $api_key"| base64 -w 0);
-        $((i++));
+        ((i++));
         if [[ $(expr length "$today") -gt "10000" ]];
         then
           echo "$today" | base64 -d > ./www/weather/meteo_france_alerte_tomorrow.png;
@@ -222,11 +222,3 @@
     value_template: "{{ value | int }}"
     scan_interval: 60
     unit_of_measurement: "proc"
-
-# annotations_log:
-# - [Météo] Intégration complète des scripts complexes Today/Tomorrow (i=0, while true).
-# - [SpeedTest] Ajout du capteur CLI Data avec template JSON.
-# - [GitHub] Intégration de Status, Last Tag, Journal et Default Branch.
-# - [Système] Intégration de toutes les zones thermiques (Carte mère, Package, Cores 0-3).
-# - [VSCode] Intégration des connexions internes et externes (processus).
-# - [Global] Standardisation ASCII et Titres tertiaires # --- slug ---.

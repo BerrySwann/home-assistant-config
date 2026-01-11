@@ -1,82 +1,83 @@
 # ╭──────────────────────────────────────────────────────────────────────────────╮
 # │ TEMPLATES : SÉRIE 03_04. CLIM — ÉTATS (VIGNETTE)                             │
 # ╰──────────────────────────────────────────────────────────────────────────────╯
-  - sensor:
+- sensor:
     # ┌───────────────────────────────────┐
     # │ 4. SALON                          │
     # └───────────────────────────────────┘
     # --- clim_salon_etat ---
-      - name: "Clim Salon État"
-        unique_id: clim_salon_etat
-        state: >
-          {% if is_state('climate.clim_salon_rm4_mini', 'off') %} Off
-          {% elif is_state('climate.clim_salon_rm4_mini', 'cool') %} Cool
-          {% elif is_state('climate.clim_salon_rm4_mini', 'heat') %} Heat
-          {% elif is_state('climate.clim_salon_rm4_mini', 'fan_only') %} Fan
-          {% else %} Erreur {% endif %}
+    - name: "Clim Salon État"
+      unique_id: clim_salon_etat
+      state: >
+        {% if is_state('climate.clim_salon_rm4_mini', 'off') %} Off
+        {% elif is_state('climate.clim_salon_rm4_mini', 'cool') %} Cool
+        {% elif is_state('climate.clim_salon_rm4_mini', 'heat') %} Heat
+        {% elif is_state('climate.clim_salon_rm4_mini', 'fan_only') %} Fan
+        {% else %} Erreur {% endif %}
 
     # ┌───────────────────────────────────┐
     # │ 5. CUISINE                        │
     # └───────────────────────────────────┘
     # --- radiateur_cuisine_etat ---
-      - name: "Radiateur Cuisine État"
-        unique_id: radiateur_cuisine_etat
-        state: >
-          {% if is_state('climate.radiateur_cuisine', 'off') %} Off
-          {% elif is_state('climate.radiateur_cuisine', 'heat') %} Heat
-          {% else %} Erreur {% endif %}
+    - name: "Radiateur Cuisine État"
+      unique_id: radiateur_cuisine_etat
+      state: >
+        {% if is_state('climate.radiateur_cuisine', 'off') %} Off
+        {% elif is_state('climate.radiateur_cuisine', 'heat') %} Heat
+        {% else %} Erreur {% endif %}
 
     # ┌───────────────────────────────────┐
     # │ 7. BUREAU                         │
     # └───────────────────────────────────┘
     # --- clim_bureau_etat ---
-      - name: "Clim Bureau État"
-        unique_id: clim_bureau_etat
-        state: >
-          {% if is_state('climate.clim_bureau_rm4_mini', 'off') %} Off
-          {% elif is_state('climate.clim_bureau_rm4_mini', 'cool') %} Cool
-          {% elif is_state('climate.clim_bureau_rm4_mini', 'heat') %} Heat
-          {% elif is_state('climate.clim_bureau_rm4_mini', 'fan_only') %} Fan
-          {% else %} Erreur {% endif %}
+    - name: "Clim Bureau État"
+      unique_id: clim_bureau_etat
+      state: >
+        {% if is_state('climate.clim_bureau_rm4_mini', 'off') %} Off
+        {% elif is_state('climate.clim_bureau_rm4_mini', 'cool') %} Cool
+        {% elif is_state('climate.clim_bureau_rm4_mini', 'heat') %} Heat
+        {% elif is_state('climate.clim_bureau_rm4_mini', 'fan_only') %} Fan
+        {% else %} Erreur {% endif %}
 
     # ┌───────────────────────────────────┐
     # │ 8. SDB                            │
     # └───────────────────────────────────┘
     # --- sdb_soufflant_power_etat ---
-      - name: "SdB Soufflant Power Etat"
-        unique_id: sdb_soufflant_power_etat
-        state: >
-          {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) >= 20 %} Heat
-          {% else %} Off {% endif %}
+    - name: "SdB Soufflant Power Etat"
+      unique_id: sdb_soufflant_power_etat
+      state: >
+        {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) >= 20 %} Heat
+        {% else %} Off {% endif %}
 
     # --- sdb_seche_serviettes_etat ---
-      - name: "SdB Sèche Serviettes État"
-        unique_id: sdb_seche_serviettes_etat
-        state: >
-          {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) >= 20 %} Heat
-          {% else %} Off {% endif %}
+    - name: "SdB Sèche Serviettes État"
+      unique_id: sdb_seche_serviettes_etat
+      state: >
+        {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) >= 20 %} Heat
+        {% else %} Off {% endif %}
 
     # ┌───────────────────────────────────┐
     # │ 9. CHAMBRE                        │
     # └───────────────────────────────────┘
     # --- clim_chambre_etat ---
-      - name: "Clim Chambre État"
-        unique_id: clim_chambre_etat
-        state: >
-          {% if is_state('climate.clim_chambre_rm4_mini', 'off') %} Off
-          {% elif is_state('climate.clim_chambre_rm4_mini', 'cool') %} Cool
-          {% elif is_state('climate.clim_chambre_rm4_mini', 'heat') %} Heat
-          {% elif is_state('climate.clim_chambre_rm4_mini', 'fan_only') %} Fan
-          {% else %} Erreur {% endif %}
+    - name: "Clim Chambre État"
+      unique_id: clim_chambre_etat
+      state: >
+        {% if is_state('climate.clim_chambre_rm4_mini', 'off') %} Off
+        {% elif is_state('climate.clim_chambre_rm4_mini', 'cool') %} Cool
+        {% elif is_state('climate.clim_chambre_rm4_mini', 'heat') %} Heat
+        {% elif is_state('climate.clim_chambre_rm4_mini', 'fan_only') %} Fan
+        {% else %} Erreur {% endif %}
 
     # ┌───────────────────────────────────┐
     # │ 10. AUTRE : LOGIQUE GLOBALE       │
     # └───────────────────────────────────┘
     # --- mode_ete_hiver_etat ---
-      - name: "Mode été Hiver État"
-        unique_id: mode_ete_hiver_etat
-        state: >
-          {% if is_state('sensor.mode_ete_hiver', 'cool') %} Cool
-          {% elif is_state('sensor.mode_ete_hiver', 'heat') %} Heat
-          {% elif is_state('sensor.mode_ete_hiver', 'fan_only') %} Fan
-          {% else %} Erreur {% endif %}
+    - name: "Mode été Hiver État"
+      unique_id: mode_ete_hiver_etat
+      state: >
+        {% set m = states('sensor.mode_ete_hiver') %}
+        {% if m == 'cool' %} Cool
+        {% elif m == 'heat' %} Heat
+        {% elif m == 'fan_only' %} Fan
+        {% else %} Off {% endif %}
