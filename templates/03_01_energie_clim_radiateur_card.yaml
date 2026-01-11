@@ -219,23 +219,15 @@
       icon: mdi:flash-outline
       state: "{{ states('sensor.clim_chambre_quotidien_um') | float(0) | round(2) }}"
 
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PÔLE 1. DURÉE D'UTILISATION [DUT] (TOTAL SALLE DE BAIN)         │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+    # ┌───────────────────────────────────┐
+    # │ 8. SDB                            │
+    # └───────────────────────────────────┘
 
-
-    
-    
-    - name: "Performance Thermique Bureau"
-      unique_id: performance_thermique_bureau
-      unit_of_measurement: "pts"
-      state: >
-        {% set watts = states('sensor.clim_bureau_power') | float(0) %}
-        {% set dut = states('sensor.dut_clim_bureau') | float(0) %}
-        {% set surface = 10.55 %}
-        {% set delta_t = (states('sensor.temperature_bureau') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
-        {% if delta_t > 0 %}
-          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %} 0 {% endif %}
-
-    
+    # --- dut_sdb_total ---
+    # Durée totale d'utilisation (Soufflant + Sèche-Serviettes)
     - name: "DUT SdB Total"
       unique_id: dut_sdb_total
       unit_of_measurement: "h"
@@ -245,37 +237,8 @@
         {% set seche_serv = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
         {{ (soufflant + seche_serv) | round(2) }}
 
-    # --- performance_thermique_sdb ---
-    - name: "Performance Thermique SdB"
-      unique_id: performance_thermique_sdb
-      unit_of_measurement: "pts"
-      state: >
-        {% set watts_total = (states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0)) + (states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0)) %}
-        {% set dut_total = (states('sensor.dut_sdb_soufflant') | float(0)) + (states('sensor.dut_sdb_seche_serviettes') | float(0)) %}
-        {% set surface = 3.13 %}
-        {% set delta_t = (states('sensor.th_salle_de_bain_temperature') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
-        {% if delta_t > 0 and surface > 0 %}
-          {{ ((watts_total * dut_total) / (surface * delta_t)) | round(1) }}
-        {% else %} 0 {% endif %}
-
-    # ┌───────────────────────────────────┐
-    # │ 9. CHAMBRE                        │
-    # └───────────────────────────────────┘
-    # --- performance_thermique_chambre ---
-    - name: "Performance Thermique Chambre"
-      unique_id: performance_thermique_chambre
-      unit_of_measurement: "pts"
-      state: >
-        {% set watts = states('sensor.clim_chambre_power') | float(0) %}
-        {% set dut = states('sensor.dut_clim_chambre') | float(0) %}
-        {% set surface = 11.26 %}
-        {% set delta_t = (states('sensor.temperature_chambre') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
-        {% if delta_t > 0 %}
-          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %} 0 {% endif %}
-
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : PERFORMANCE THERMIQUE (CORRIGÉ SELON DIMENSIONS RÉELLES)        │
+# │ SENSOR : PÔLE 1. PERFORMANCE THERMIQUE                                   │
 # ╰──────────────────────────────────────────────────────────────────────────╯
     # ┌───────────────────────────────────┐
     # │ 4. SALON                          │
@@ -346,11 +309,11 @@
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
 
-# ┌───────────────────────────────────┐
+    # ┌───────────────────────────────────┐
     # │ 9. CHAMBRE                        │
     # └───────────────────────────────────┘
     # --- performance_thermique_chambre ---
-# --- 9. CHAMBRE (11.26 m²) ---
+    # --- 9. CHAMBRE (11.26 m²) ---
     - name: "Performance Thermique Chambre"
       unique_id: performance_thermique_chambre
       unit_of_measurement: "pts"
