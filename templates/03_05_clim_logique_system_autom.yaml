@@ -95,10 +95,12 @@
       device_class: temperature
       state: >
         {% set temp_conf_m = states('sensor.temperature_confort_jour') | float(0) %}
+        {% set delta = states('sensor.delta_1') | float(0) %}  {# Correction de la variable dalta_1 #}
+        
         {% if states('sensor.mode_ete_hiver') == 'cool' %}
           {{ temp_conf_m }}
         {% else %}
-          {{ temp_conf_m + 0 }}
+          {{ [ (temp_conf_m + delta_1), 21.0 ] | min | round(1) }}
         {% endif %}
 
 # --- temperature_corrige_eric_hivers ---
@@ -111,7 +113,7 @@
         {% if states('sensor.mode_ete_hiver') == 'cool' %}
           {{ temp_conf_e }}
         {% else %}
-          {{ temp_conf_e - 1 }}
+          {{ [ (temp_conf_e - delta_1), 19.0 ] | min | round(1) }}
         {% endif %}
 
 # --- temperature_corrige_chambre_hivers ---

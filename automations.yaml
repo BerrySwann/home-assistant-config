@@ -2411,25 +2411,25 @@
         delay: 00:00:30
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
-      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
-        ''cool'', ''fan_only''] %} {{ m | trim }} {% else %} off {% endif %}
-
-        '
-      groupe_presence: '{{ states(''sensor.groupe_clim'') | default(''groupe_1'')
-        }}'
-      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',\n
-        \         'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-        \         'binary_sensor.contact_fenetre_chambre_sonoff_contact')\n   | selectattr('state',
-        'eq', 'on') | list | count > 0 }}\n"
-      temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
-        }}'
-      temp_cible: '{{ states(''sensor.temperature_cible'') | float(18) }}'
-      temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(19)
-        }}'
-      temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(19)
-        }}'
-      temp_conf_c: '{{ states(''sensor.temperature_corrige_chambre_hivers'') | float(18)
-        }}'
+      variables:
+        mode_saison: "mode_saison: >\n  {% set m = states('sensor.mode_ete_hiver')
+          | trim %}\n  {% if m in ['heat', 'cool', 'fan_only', 'off'] %}\n    {{ m
+          }}\n  {% else %}\n    off\n  {% endif %}\n"
+        groupe_presence: '{{ states(''sensor.groupe_clim'') | string | default(''groupe_1'')
+          }}'
+        fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',\n
+          \         'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
+          \         'binary_sensor.contact_fenetre_chambre_sonoff_contact')\n   |
+          selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
+        temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
+          }}'
+        temp_cible: '{{ states(''sensor.temperature_cible'') | float(18) }}'
+        temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(19)
+          }}'
+        temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(19)
+          }}'
+        temp_conf_c: '{{ states(''sensor.temperature_corrige_chambre_hivers'') | float(18)
+          }}'
       t_salon_target: "{% if 'groupe_1' in groupe_presence %} \n  {{ temp_eco_c if
         mode_saison == 'heat' else temp_cible }}\n{% elif 'groupe_2' in groupe_presence
         or 'groupe_4' in groupe_presence %}\n  {{ temp_conf_m }}\n{% else %}\n  {{
@@ -2650,11 +2650,11 @@
         delay: 00:00:30
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
-      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
+      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %} {% if m in [''heat'',
         ''cool'', ''fan_only''] %} {{ m | trim }} {% else %} off {% endif %}
 
         '
-      groupe_presence: '{{ states(''sensor.groupe_clim'') | default(''groupe_1'')
+      groupe_presence: '{{ states(''sensor.groupe_clim'') | string | default(''groupe_1'')
         }}'
       fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',\n
         \         'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
@@ -2664,20 +2664,15 @@
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(19) }}'
       temp_nuit: '{{ states(''sensor.temperature_confort_nuit'') | float(18) }}'
-      t_salon_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if mode_saison
-        == ''heat'' else temp_cible }} {% else %} {{ temp_nuit }} {% endif %}
-
-        '
-      t_bureau_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
-        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_nuit }} {% endif
-        %}
-
-        '
-      t_chambre_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
-        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_nuit }} {% endif
-        %}
-
-        '
+      t_salon_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
+        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_nuit }}\n{%
+        endif %}\n"
+      t_bureau_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
+        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_nuit }}\n{%
+        endif %}\n"
+      t_chambre_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
+        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_nuit }}\n{%
+        endif %}\n"
   - alias: 'LOGIQUE : SÉCURITÉ FENÊTRES VS GESTION STANDARD'
     choose:
     - alias: 'CAS URGENCE : FENÊTRE OUVERTE DÉTECTÉE'

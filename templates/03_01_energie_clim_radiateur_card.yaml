@@ -357,3 +357,40 @@
       availability: >
         {# Le capteur est disponible même si personne ne chauffe #}
         {{ true }}
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │  ____  ____  _____                                                       │
+# │ |  _ \|  _ \| ____|                                                      │
+# │ | | | | |_) |  _|                                                        │
+# │ | |_| |  __/| |___                                                       │
+# │ |____/|_|   |_____|  CLASSE ÉNERGÉTIQUE                                  │
+# │                                                                          │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# --- classe_energetique_dpe ---
+    - name: "Classe Énergétique DPE"
+      unique_id: classe_energetique_dpe
+      icon: mdi:gauge
+      state: >
+        {% set p = states('sensor.performance_thermique_totale') | float(0) %}
+        {% if p <= 0 %} "N/A"
+        {% elif p <= 10 %} "A"
+        {% elif p <= 20 %} "B"
+        {% elif p <= 30 %} "C"
+        {% elif p <= 45 %} "D"
+        {% elif p <= 60 %} "E"
+        {% elif p <= 80 %} "F"
+        {% else %} "G"
+        {% endif %}
+      attributes:
+        score_pts: "{{ states('sensor.performance_thermique_totale') | float(0) }}"
+        couleur_dpe: >
+          {% set p = states('sensor.performance_thermique_totale') | float(0) %}
+          {% if p <= 10 %} "#008055"
+          {% elif p <= 20 %} "#2FB044"
+          {% elif p <= 30 %} "#BED100"
+          {% elif p <= 45 %} "#FFD100"
+          {% elif p <= 60 %} "#FFB300"
+          {% elif p <= 80 %} "#af7a46ff"
+          {% else %} "#FF0000"
+          {% endif %}
