@@ -2311,7 +2311,7 @@
         '
   mode: single
 - id: '1767373340706'
-  alias: (A - 0) 2026-01-02 AUTOMATISATION CLIM JOUR (07H30 <-> 21H00)
+  alias: (A - 0) 2026-01-11 AUTOMATISATION CLIM JOUR (07H30 <-> 21H00)
   description: Pilotage clims jour avec boucle de relance et notification ciblée fenêtres
   triggers:
   - alias: 'SYSTEM : REDÉMARRAGE HOME ASSISTANT'
@@ -2399,8 +2399,8 @@
       sequence:
       - alias: 'CONDITION : NOTIF UNIQUEMENT SI ÉCHEC'
         condition: template
-        value_template: "{{ \n  states('sensor.mode_ete_hiver') in ['unknown', 'unavailable']
-          or\n  states('sensor.groupe_clim') in ['unknown', 'unavailable']\n}}\n"
+        value_template: "{{ \n  states('sensor.mode_ete_hiver') in ['unknown', 'unavailable']\n
+          \ or\n  states('sensor.groupe_clim') in ['unknown', 'unavailable']\n}}\n"
       - alias: 'NOTIF : ALERTE ATTENTE CAPTEURS'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
@@ -2411,36 +2411,34 @@
         delay: 00:00:30
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
-      variables:
-        mode_saison: "mode_saison: >\n  {% set m = states('sensor.mode_ete_hiver')
-          | trim %}\n  {% if m in ['heat', 'cool', 'fan_only', 'off'] %}\n    {{ m
-          }}\n  {% else %}\n    off\n  {% endif %}\n"
-        groupe_presence: '{{ states(''sensor.groupe_clim'') | string | default(''groupe_1'')
-          }}'
-        fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',\n
-          \         'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-          \         'binary_sensor.contact_fenetre_chambre_sonoff_contact')\n   |
-          selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
-        temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
-          }}'
-        temp_cible: '{{ states(''sensor.temperature_cible'') | float(18) }}'
-        temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(19)
-          }}'
-        temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(19)
-          }}'
-        temp_conf_c: '{{ states(''sensor.temperature_corrige_chambre_hivers'') | float(18)
-          }}'
+      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
+        ''cool'', ''fan_only''] %} {{ m | trim }} {% else %} off {% endif %}'
+      groupe_presence: '{{ states(''sensor.groupe_clim'') | default(''groupe_1'')
+        }}'
+      fenetres_ouvertes: '{{ expand(''binary_sensor.contact_fenetre_salon_sonoff_contact'',
+        ''binary_sensor.contact_fenetre_cuisine_sonoff_contact'', ''binary_sensor.contact_fenetre_bureau_sonoff_contact'',
+        ''binary_sensor.contact_fenetre_chambre_sonoff_contact'') | selectattr(''state'',
+        ''eq'', ''on'') | list | count > 0 }}'
+      temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
+        }}'
+      temp_cible: '{{ states(''sensor.temperature_cible'') | float(18) }}'
+      temp_conf_m: '{{ states(''sensor.temperature_corrige_mamour_hivers'') | float(19)
+        }}'
+      temp_conf_e: '{{ states(''sensor.temperature_corrige_eric_hivers'') | float(19)
+        }}'
+      temp_conf_c: '{{ states(''sensor.temperature_corrige_chambre_hivers'') | float(18)
+        }}'
       t_salon_target: "{% if 'groupe_1' in groupe_presence %} \n  {{ temp_eco_c if
-        mode_saison == 'heat' else temp_cible }}\n{% elif 'groupe_2' in groupe_presence
-        or 'groupe_4' in groupe_presence %}\n  {{ temp_conf_m }}\n{% else %}\n  {{
-        temp_cible }}\n{% endif %}\n"
+        mode_saison == 'heat' else temp_cible }}\n    {% elif 'groupe_2' in groupe_presence
+        or 'groupe_4' in groupe_presence %}\n      {{ temp_conf_m }}\n    {% else
+        %}\n  {{ temp_cible }}\n{% endif %}"
       t_bureau_target: "{% if 'groupe_1' in groupe_presence %} \n  {{ temp_eco_c if
-        mode_saison =='heat' else temp_cible }} \n{% elif 'groupe_3' in groupe_presence
-        or 'groupe_4' in groupe_presence %} \n  {{ temp_conf_e }}\n{% else %}\n  {{
-        temp_cible }}\n{% endif %}\n"
-      t_chambre_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
-        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_conf_c }}\n{%
-        endif %}\n"
+        mode_saison =='heat' else temp_cible }}\n    {% elif 'groupe_3' in groupe_presence
+        or 'groupe_4' in groupe_presence %}\n      {{ temp_conf_e }}\n    {% else
+        %}\n  {{ temp_cible }}\n{% endif %}"
+      t_chambre_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
+        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_conf_c }} {%
+        endif %}'
   - alias: 'LOGIQUE : SÉCURITÉ FENÊTRES VS GESTION STANDARD'
     choose:
     - alias: 'CAS URGENCE : FENÊTRE OUVERTE DÉTECTÉE'
@@ -2471,7 +2469,7 @@
             'on') %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
             == 'binary_sensor.contact_fenetre_chambre_sonoff_contact' and is_state('binary_sensor.contact_fenetre_chambre_sonoff_contact',
             'on') %}\n  La fenêtre de la Chambre a été ouverte.\n{% else %}\n  Une
-            fenêtre est ouverte (Mise à jour globale).\n{% endif %}\n{% if states('sensor.nbre_de_fenetres_ouvertes')
+            fenêtre est ouverte (Mise à jour globale).\n{% endif %} {% if states('sensor.nbre_de_fenetres_ouvertes')
             | int == 4 %}\n  Toutes les fenêtres sont ouvertes.\n{% endif %}\n"
       - alias: 'SÉCURITÉ : ARRÊT IMMÉDIAT POUR ÉVITER DOUBLON'
         stop: Coupure fenêtre effectuée
@@ -2496,7 +2494,7 @@
             data:
               hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
                 and is_state('climate.clim_salon_rm4_mini', 'off') %}\n  off\n{% else
-                %}\n  {{ mode_saison }}\n{% endif %}"
+                %}\n  {{ mode_saison }}\n{% endif %}\n"
               temperature: '{{ t_salon_target }}'
       - alias: LOGIQUE BUREAU
         choose:
@@ -2516,7 +2514,7 @@
             data:
               hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
                 and is_state('climate.clim_bureau_rm4_mini', 'off') %}\n  off\n{%
-                else %}\n  {{ mode_saison }}\n{% endif %}"
+                else %}\n  {{ mode_saison }}\n{% endif %}\n"
               temperature: '{{ t_bureau_target }}'
       - alias: LOGIQUE CHAMBRE
         choose:
@@ -2536,7 +2534,7 @@
             data:
               hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
                 and is_state('climate.clim_chambre_rm4_mini', 'off') %}\n  off\n{%
-                else %}\n  {{ mode_saison }}\n{% endif %}"
+                else %}\n  {{ mode_saison }}\n{% endif %}\n"
               temperature: '{{ t_chambre_target }}'
     - alias: 'PAUSE : SÉCURITÉ RÉCEPTION'
       delay: 00:00:02
@@ -2550,7 +2548,7 @@
           t_bureau_target }}°\n  Chambre: {{ t_chambre_target }}°\n{% endif %}\n"
   mode: queued
 - id: '1767373801871'
-  alias: (B - 0) 2026-01-02 AUTOMATISATION CLIM NUIT (21H00 <-> 07H30)
+  alias: (B - 0) 2026-01-11 AUTOMATISATION CLIM NUIT (21H00 <-> 07H30)
   description: Pilotage clims nuit avec boucle de relance et notification ciblée fenêtres
   triggers:
   - alias: 'SYSTEM : REDÉMARRAGE HOME ASSISTANT'
@@ -2638,41 +2636,38 @@
       sequence:
       - alias: 'CONDITION : NOTIF UNIQUEMENT SI ÉCHEC'
         condition: template
-        value_template: "{{ \n  states('sensor.mode_ete_hiver') in ['unknown', 'unavailable']
-          or\n  states('sensor.groupe_clim') in ['unknown', 'unavailable']\n}}\n"
+        value_template: "{{ \n  states('sensor.mode_ete_hiver') in ['unknown', 'unavailable']\n
+          \ or\n  states('sensor.groupe_clim') in ['unknown', 'unavailable']\n}}\n"
       - alias: 'NOTIF : ALERTE ATTENTE CAPTEURS'
         action: notify.mobile_app_poco_x7_pro_eric
         data:
-          title: '[AJ] ATTENTE CAPTEURS'
+          title: '[AN] ATTENTE CAPTEURS'
           message: Essai n°{{ repeat.index }}... Les capteurs de nuit ne sont pas
             prêts. Pause 30s.
       - alias: 'PAUSE : AVANT NOUVEL ESSAI'
         delay: 00:00:30
   - alias: 'INIT : CALCUL GLOBAL DES VARIABLES'
     variables:
-      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %} {% if m in [''heat'',
-        ''cool'', ''fan_only''] %} {{ m | trim }} {% else %} off {% endif %}
-
-        '
-      groupe_presence: '{{ states(''sensor.groupe_clim'') | string | default(''groupe_1'')
+      mode_saison: '{% set m = states(''sensor.mode_ete_hiver'') %}  {% if m in [''heat'',
+        ''cool'', ''fan_only''] %} {{ m | trim }} {% else %} off {% endif %}'
+      groupe_presence: '{{ states(''sensor.groupe_clim'') | default(''groupe_1'')
         }}'
-      fenetres_ouvertes: "{{ expand('binary_sensor.contact_fenetre_salon_sonoff_contact',\n
-        \         'binary_sensor.contact_fenetre_cuisine_sonoff_contact',\n          'binary_sensor.contact_fenetre_bureau_sonoff_contact',\n
-        \         'binary_sensor.contact_fenetre_chambre_sonoff_contact')\n   | selectattr('state',
-        'eq', 'on') | list | count > 0 }}\n"
+      fenetres_ouvertes: '{{ expand(''binary_sensor.contact_fenetre_salon_sonoff_contact'',
+        ''binary_sensor.contact_fenetre_cuisine_sonoff_contact'', ''binary_sensor.contact_fenetre_bureau_sonoff_contact'',
+        ''binary_sensor.contact_fenetre_chambre_sonoff_contact'') | selectattr(''state'',
+        ''eq'', ''on'') | list | count > 0 }}'
       temp_eco_c: '{{ states(''sensor.temperature_eco_hiver_corrige'') | float(17)
         }}'
       temp_cible: '{{ states(''sensor.temperature_cible'') | float(19) }}'
       temp_nuit: '{{ states(''sensor.temperature_confort_nuit'') | float(18) }}'
-      t_salon_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
-        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_nuit }}\n{%
-        endif %}\n"
-      t_bureau_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
-        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_nuit }}\n{%
-        endif %}\n"
-      t_chambre_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
-        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_nuit }}\n{%
-        endif %}\n"
+      t_salon_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if mode_saison
+        == ''heat'' else temp_cible }} {% else %} {{ temp_nuit }} {% endif %}'
+      t_bureau_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
+        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_nuit }} {% endif
+        %}'
+      t_chambre_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
+        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_nuit }} {% endif
+        %}'
   - alias: 'LOGIQUE : SÉCURITÉ FENÊTRES VS GESTION STANDARD'
     choose:
     - alias: 'CAS URGENCE : FENÊTRE OUVERTE DÉTECTÉE'
@@ -2703,7 +2698,7 @@
             'on') %}\n  La fenêtre du Bureau a été ouverte.\n{% elif trigger.entity_id
             == 'binary_sensor.contact_fenetre_chambre_sonoff_contact' and is_state('binary_sensor.contact_fenetre_chambre_sonoff_contact',
             'on') %}\n  La fenêtre de la Chambre a été ouverte.\n{% else %}\n  Une
-            fenêtre est ouverte (Mise à jour globale).\n{% endif %}\n{% if states('sensor.nbre_de_fenetres_ouvertes')
+            fenêtre est ouverte (Mise à jour globale).\n{% endif %} {% if states('sensor.nbre_de_fenetres_ouvertes')
             | int == 4 %}\n  Toutes les fenêtres sont ouvertes.\n{% endif %}\n"
       - alias: 'SÉCURITÉ : ARRÊT IMMÉDIAT POUR ÉVITER DOUBLON'
         stop: Coupure fenêtre effectuée
@@ -2728,7 +2723,7 @@
             data:
               hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
                 and is_state('climate.clim_salon_rm4_mini', 'off') %}\n  off\n{% else
-                %}\n  {{ mode_saison }}\n{% endif %}"
+                %}\n  {{ mode_saison }}\n{% endif %}\n"
               temperature: '{{ t_salon_target }}'
       - alias: LOGIQUE BUREAU
         choose:
@@ -2748,7 +2743,7 @@
             data:
               hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
                 and is_state('climate.clim_bureau_rm4_mini', 'off') %}\n  off\n{%
-                else %}\n  {{ mode_saison }}\n{% endif %}"
+                else %}\n  {{ mode_saison }}\n{% endif %}\n"
               temperature: '{{ t_bureau_target }}'
       - alias: LOGIQUE CHAMBRE
         choose:
@@ -2768,7 +2763,7 @@
             data:
               hvac_mode: "{% if trigger is defined and trigger.id == 'sensor_update'
                 and is_state('climate.clim_chambre_rm4_mini', 'off') %}\n  off\n{%
-                else %}\n  {{ mode_saison }}\n{% endif %}"
+                else %}\n  {{ mode_saison }}\n{% endif %}\n"
               temperature: '{{ t_chambre_target }}'
     - alias: 'PAUSE : SÉCURITÉ RÉCEPTION'
       delay: 00:00:02
@@ -2801,8 +2796,7 @@
       entity_id: '{{ trigger.entity_id }}'
     action: light.turn_on
   mode: parallel
-- &id001
-  id: bureau_activation_ecran_synchro
+- id: bureau_activation_ecran_synchro
   alias: BUREAU - ACTIVATION ÉCRAN POUR SYNCHRO
   description: Force l'allumage de la prise et des Play Hue au démarrage du PC
   triggers:
@@ -2834,7 +2828,6 @@
       - sensor.lumiere_ecran_etat
       - sensor.bureau_etat
   mode: restart
-- *id001
 - id: '1768050970786'
   alias: BUREAU - WATCHDOG SYNCHRONISATION LAMPES BLANCHES
   description: Assure que les deux lampes de bureau (1 et 2) sont synchronisées si

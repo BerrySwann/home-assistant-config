@@ -16,27 +16,23 @@
         {# 1. Définition de la Cible #}
         {% set target_ssid = "Freebox_GG" %}
         
-        {# 2. Vérification (Sécurisée avec lower) #}
-        {% set mamour_is_home = states('sensor.poco_x7_pro_mamour_network_type') | lower == 'wifi' 
+        {# 2. Vérification Booléenne (Vrai ou Faux) #}
+        {% set mamour_is_home = states('sensor.poco_x7_pro_mamour_network_type') == 'wifi' 
                                 and states('sensor.poco_x7_pro_mamour_wi_fi_connection') == target_ssid %}
         
-        {% set eric_is_home = states('sensor.poco_x7_pro_network_type') | lower == 'wifi' 
+        {% set eric_is_home = states('sensor.poco_x7_pro_network_type') == 'wifi' 
                               and states('sensor.poco_x7_pro_wi_fi_connection') == target_ssid %}
 
         {# 3. Déduction du Groupe #}
         {% if mamour_is_home and eric_is_home %}
-          4
+          groupe_4
         {% elif eric_is_home %}
-          3
+          groupe_3
         {% elif mamour_is_home %}
-          2
+          groupe_2
         {% else %}
-          1
+          groupe_1
         {% endif %}
-      attributes:
-        description: >
-          {% set g = this.state | int(1) %}
-          {% if g == 4 %} Tous {% elif g == 3 %} Eric {% elif g == 2 %} Mamour {% else %} Personne {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐
 # │ 10. AUTRE : CALCUL ET AFFICHAGE DES STATUTS RÉSEAU (INTERFACE)    │
@@ -85,15 +81,11 @@
           {%- set m_here = (m_net == 'wifi' and m_ssid == target_ssid) -%}
           {%- set e_here = (e_net == 'wifi' and e_ssid == target_ssid) -%}
 
-          {{%- if m_here and e_here -%}
+          {%- if m_here and e_here -%}
             {# Cas où les deux sont là mais statuts différents (ex: "Just Arrived" vs "Home") #}
-            [Tous les 2: {{ m_stat }}/{{ e_stat }}]
-          {%- elif m_here -%}
-            [Mamour: {{ m_stat }}/{{ e_stat }}]
-          {%- elif e_here -%}
-            [Eric: {{ e_stat }}/{{ m_stat }}]
+            [Tous les 2: {{ m_stat }}]
           {%- else -%}
-            {# Fallback : aucun n'est sur le WiFi cible, on affiche juste les statuts #}
-            [{{ m_stat }} / {{ e_stat }}]
+            {# Cas mixte #}
+            M:[{{ m_stat }}] E:[{{ e_stat }}]
           {%- endif -%}
         {%- endif -%}

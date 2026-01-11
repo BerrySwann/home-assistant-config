@@ -94,13 +94,13 @@
       unit_of_measurement: "°C"
       device_class: temperature
       state: >
-        {% set temp_conf_m = states('sensor.temperature_confort_jour') | float(0) %}
-        {% set delta = states('sensor.delta_1') | float(0) %}  {# Correction de la variable dalta_1 #}
-        
+        {% set temp_conf_m = states('sensor.temperature_confort_jour') | float(20) %}
+        {% set delta_1 = states('sensor.delta_1') | float(0) %}
         {% if states('sensor.mode_ete_hiver') == 'cool' %}
           {{ temp_conf_m }}
         {% else %}
-          {{ [ (temp_conf_m + delta_1), 21.0 ] | min | round(1) }}
+          {% set resultat = temp_conf_m + delta_1 %}
+          {{ [ resultat | float(19), 21.0 ] | min | round(1) }}
         {% endif %}
 
 # --- temperature_corrige_eric_hivers ---
@@ -109,11 +109,13 @@
       unit_of_measurement: "°C"
       device_class: temperature
       state: >
-        {% set temp_conf_e = states('sensor.temperature_confort_jour') | float(0) %}
+        {% set temp_conf_e = states('sensor.temperature_confort_jour') | float(19) %}
+        {% set delta_1 = states('sensor.delta_1') | float(0) %}
         {% if states('sensor.mode_ete_hiver') == 'cool' %}
           {{ temp_conf_e }}
         {% else %}
-          {{ [ (temp_conf_e - delta_1), 19.0 ] | min | round(1) }}
+          {% set resultat = temp_conf_e - delta_1 %}}
+          {{ [ resultat | float(19), 19.0 ] | min | round(1) }}
         {% endif %}
 
 # --- temperature_corrige_chambre_hivers ---
@@ -190,10 +192,12 @@
         {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
         {% set temp_eco = states('sensor.temperature_eco_hiver') | float(0) %}
         {% set delta_1 = states('sensor.delta_1') | float(0) %}
-        
-        {% if temp_ext < 10 %} 
+        {% set delta_2 = states('sensor.delta_2') | float(0) %}
+        {% if temp_ext < 5 %}
+          {{ (temp_eco + delta_2) | float(1) }}
+        {% elif temp_ext < 10 %}
           {{ (temp_eco + delta_1) | float(1) }}
-        {% else %} 
+        {% else %}
           {{ temp_eco | float(0) }}
         {% endif %}
 
