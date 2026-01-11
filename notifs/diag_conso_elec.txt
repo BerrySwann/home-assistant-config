@@ -702,3 +702,5 @@ Home Assistant notifications (Log started: 2025-12-20T19:43:03.751958+00:00)
 11/01 00:30 | Hyg:0.0 | Cuis:0.0 | Froid:0.03 | Chauff:0.12 | Avg P4:224.0 | Multi:0.4 | Lum:0.0 | T̄i:19.6°C | Ext:7.5°C | DUT S/R/B/C:0.0/0.0/0.2/0.3h
 11/01 00:45 | Hyg:0.0 | Cuis:0.0 | Froid:0.04 | Chauff:0.18 | Avg P4:225.3 | Multi:0.42 | Lum:0.0 | T̄i:19.6°C | Ext:7.3°C | DUT S/R/B/C:0.0/0.0/0.3/0.5h
 11/01 01:00 | Hyg:0.0 | Cuis:0.0 | Froid:0.04 | Chauff:0.24 | Avg P4:225.0 | Multi:0.43 | Lum:0.0 | T̄i:19.6°C | Ext:7.3°C | DUT S/R/B/C:0.0/0.0/0.4/0.6h
+11/01 01:15 | Hyg:0.0 | Cuis:0.0 | Froid:0.04 | Chauff:0.3 | Avg P4:227.2 | Multi:0.43 | Lum:0.0 | T̄i:19.6°C | Ext:7.1°C | DUT S/R/B/C:0.0/0.0/0.5/0.8h
+11/01 01:30 | Hyg:0.0 | Cuis:0.0 | Froid:0.05 | Chauff:0.36 | Avg P4:231.3 | Multi:0.44 | Lum:0.0 | T̄i:19.5°C | Ext:7.1°C | DUT S/R/B/C:0.0/0.0/0.6/1.0h
