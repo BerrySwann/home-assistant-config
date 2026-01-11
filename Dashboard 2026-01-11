@@ -888,7 +888,7 @@ streamline_templates:
             func: last
             duration: 1m
         - entity: '[[avg_daily_entity]]'
-          name: Moy. depuis minuit
+          name: Moy. /H.
           yaxis_id: Watts
           type: line
           color: '#F44336'
@@ -896,10 +896,8 @@ streamline_templates:
           stroke_width: 2.5
           stroke_dash: 8
         - entity: '[[conso_daily_kwh_entity]]'
-          transform: return x * 1000;
-          name: Jour en cours
+          name: Conso. /Jrs
           color: '#F44336'
-          unit: Wh
           show:
             in_header: true
             in_brush: false
@@ -1637,6 +1635,36 @@ views:
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/temperatures
+                entities:
+                  - sensor.th_balcon_nord_temperature
+                  - sensor.th_balcon_nord_humidity
+                  - sensor.th_salon_temperature
+                  - sensor.th_salon_humidity
+                  - sensor.th_cellier_temperature
+                  - sensor.th_cellier_humidity
+                  - sensor.th_cuisine_temperature
+                  - sensor.th_cuisine_humidity
+                  - sensor.th_bureau_temperature
+                  - sensor.th_bureau_humidity
+                  - sensor.th_salle_de_bain_temperature
+                  - sensor.th_salle_de_bain_humidity
+                  - sensor.th_chambre_temperature
+                  - sensor.th_chambre_humidity
+                triggers_update:
+                  - sensor.th_balcon_nord_temperature
+                  - sensor.th_balcon_nord_humidity
+                  - sensor.th_salon_temperature
+                  - sensor.th_salon_humidity
+                  - sensor.th_cellier_temperature
+                  - sensor.th_cellier_humidity
+                  - sensor.th_cuisine_temperature
+                  - sensor.th_cuisine_humidity
+                  - sensor.th_bureau_temperature
+                  - sensor.th_bureau_humidity
+                  - sensor.th_salle_de_bain_temperature
+                  - sensor.th_salle_de_bain_humidity
+                  - sensor.th_chambre_temperature
+                  - sensor.th_chambre_humidity
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -1679,9 +1707,7 @@ views:
                       - text-align: right
                 custom_fields:
                   titre: |
-                    [[[
-                      return 'Courbes Température'
-                    ]]]
+                    [[[ return 'Courbes Température' ]]]
                   piece: |
                     [[[
                       return '<span style="display: block; text-align: left; line-height: 1.2;">Balcon N.</span>' +
@@ -1694,82 +1720,70 @@ views:
                     ]]]
                   temp: |
                     [[[
-                      var tempBalconN = parseFloat(states['sensor.th_balcon_nord_temperature']?.state ?? 'NaN').toFixed(1);
-                      var tempSalon = parseFloat(states['sensor.th_salon_temperature']?.state ?? 'NaN').toFixed(1);
-                      var tempCellier = parseFloat(states['sensor.th_cellier_temperature']?.state ?? 'NaN').toFixed(1);
-                      var tempCuisine = parseFloat(states['sensor.th_cuisine_temperature']?.state ?? 'NaN').toFixed(1);
-                      var tempBureau = parseFloat(states['sensor.th_bureau_temperature']?.state ?? 'NaN').toFixed(1);
-                      var tempSalleDeBain = parseFloat(states['sensor.th_salle_de_bain_temperature']?.state ?? 'NaN').toFixed(1);
-                      var tempChambre = parseFloat(states['sensor.th_chambre_temperature']?.state ?? 'NaN').toFixed(1);
-
                       function getTemperatureColor(temp) {
-                        if (temp === 'NaN') return '#808080'; // Gris pour NaN
-                        var tempFloat = parseFloat(temp);
-                        if (tempFloat < 5) return '#3674B5'; // Bleu
-                        if (tempFloat < 13) return '#578FCA'; // Light Blue
-                        if (tempFloat < 19) return '#A1E3F9'; // bleu ciel
-                        if (tempFloat < 25) return 'lightgreen'; // Lime Green
-                        if (tempFloat < 32) return '#FFD700'; // Or
-                        if (tempFloat < 36) return '#FFA500'; // Orange
-                        if (tempFloat < 40) return '#F44336'; // Rouge
-                        return '#00FF00'; // Lime Green
+                        if (temp === 'NaN') return '#808080';
+                        var t = parseFloat(temp);
+                        if (t < 5) return '#3674B5';
+                        if (t < 13) return '#578FCA';
+                        if (t < 19) return '#A1E3F9';
+                        if (t < 25) return 'lightgreen';
+                        if (t < 32) return '#FFD700';
+                        if (t < 36) return '#FFA500';
+                        if (t < 40) return '#F44336';
+                        return 'lightgreen';
                       }
                       
-                      function formatTemperature(temp) {
-                        return temp === 'NaN' ? 'N/A' : temp + '°C';
+                      function formatTemp(entityId) {
+                        var s = states[entityId]?.state;
+                        var val = (s && s !== 'unknown' && s !== 'unavailable') ? parseFloat(s).toFixed(1) : 'NaN';
+                        var color = getTemperatureColor(val);
+                        var text = val === 'NaN' ? 'N/A' : val + '°C';
+                        return `<span style="display: block; text-align: center; line-height: 1.2; color: ${color};">${text}</span>`;
                       }
 
-                      return '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempBalconN) + ';">' + formatTemperature(tempBalconN) + '</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempSalon) + ';">' + formatTemperature(tempSalon) + '</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempCellier) + ';">' + formatTemperature(tempCellier) + '</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempCuisine) + ';">' + formatTemperature(tempCuisine) + '</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempBureau) + ';">' + formatTemperature(tempBureau) + '</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempSalleDeBain) + ';">' + formatTemperature(tempSalleDeBain) + '</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2; color: ' + getTemperatureColor(tempChambre) + ';">' + formatTemperature(tempChambre) + '</span>';
+                      return formatTemp('sensor.th_balcon_nord_temperature') +
+                             formatTemp('sensor.th_salon_temperature') +
+                             formatTemp('sensor.th_cellier_temperature') +
+                             formatTemp('sensor.th_cuisine_temperature') +
+                             formatTemp('sensor.th_bureau_temperature') +
+                             formatTemp('sensor.th_salle_de_bain_temperature') +
+                             formatTemp('sensor.th_chambre_temperature');
                     ]]]
                   espace: |
                     [[[
-                      return '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>' +
-                             '<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>'; // Ajouté le 7ème espace pour correspondre aux 7 lignes de données
+                      return Array(7).fill('<span style="display: block; text-align: center; line-height: 1.2;">&nbsp;&nbsp;</span>').join('');
                     ]]]
                   humidite: |
                     [[[
-                      var humiditeBalconN = parseFloat(states['sensor.th_balcon_nord_humidity']?.state ?? 'NaN').toFixed(1);
-                      var humiditeSalon = parseFloat(states['sensor.th_salon_humidity']?.state ?? 'NaN').toFixed(1);
-                      var humiditeCellier = parseFloat(states['sensor.th_cellier_humidity']?.state ?? 'NaN').toFixed(1);
-                      var humiditeCuisine = parseFloat(states['sensor.th_cuisine_humidity']?.state ?? 'NaN').toFixed(1);
-                      var humiditeBureau = parseFloat(states['sensor.th_bureau_humidity']?.state ?? 'NaN').toFixed(1);
-                      var humiditeSalleDeBain = parseFloat(states['sensor.th_salle_de_bain_humidity']?.state ?? 'NaN').toFixed(1);
-                      var humiditeChambre = parseFloat(states['sensor.th_chambre_humidity']?.state ?? 'NaN').toFixed(1);
-
-                      function getHumidityColor(humidity) {
-                        if (humidity === 'NaN') return '#808080'; // Gris pour NaN
-                        var humidityFloat = parseFloat(humidity);
-                        if (humidityFloat > 75) return '#F44336'; // Rouge
-                        if (humidityFloat > 55) return '#FFA500'; // Orange
-                        return 'white'; // Blanc
+                      function getHumidityColor(h) {
+                        if (h === 'NaN') return '#808080';
+                        var val = parseFloat(h);
+                        if (val > 75) return '#F44336';
+                        if (val > 55) return '#FFA500';
+                        return 'white';
                       }
                       
-                      function formatHumidity(humidity) {
-                        return humidity === 'NaN' ? 'N/A' : humidity + '%';
+                      function formatHum(entityId) {
+                        var s = states[entityId]?.state;
+                        var val = (s && s !== 'unknown' && s !== 'unavailable') ? parseFloat(s).toFixed(1) : 'NaN';
+                        var color = getHumidityColor(val);
+                        var text = val === 'NaN' ? 'N/A' : val + '%';
+                        return `<span style="display: block; text-align: right; line-height: 1.2; color: ${color};">${text}</span>`;
                       }
 
-                      return '<span style="color: ' + getHumidityColor(humiditeBalconN) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeBalconN) + '</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeSalon) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeSalon) + '</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeCellier) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeCellier) + '</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeCuisine) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeCuisine) + '</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeBureau) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeBureau) + '</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeSalleDeBain) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeSalleDeBain) + '</span>' +
-                             '<span style="color: ' + getHumidityColor(humiditeChambre) + '; display: block; text-align: right; line-height: 1.2;">' + formatHumidity(humiditeChambre) + '</span>';
+                      return formatHum('sensor.th_balcon_nord_humidity') +
+                             formatHum('sensor.th_salon_humidity') +
+                             formatHum('sensor.th_cellier_humidity') +
+                             formatHum('sensor.th_cuisine_humidity') +
+                             formatHum('sensor.th_bureau_humidity') +
+                             formatHum('sensor.th_salle_de_bain_humidity') +
+                             formatHum('sensor.th_chambre_humidity');
                     ]]]
               - type: custom:button-card
                 entities:
+                  - sensor.temperature_moyenne_interieure
                   - sensor.delta_ademe_recommande
+                  - sensor.mode_ete_hiver_etat
                   - sensor.clim_salon_etat
                   - sensor.radiateur_cuisine_etat
                   - sensor.clim_bureau_etat
@@ -1778,16 +1792,17 @@ views:
                   - sensor.salon_power_status
                   - sensor.cuisine_power_status
                   - sensor.bureau_power_status
-                  - sensor.sdb_power_status
+                  - sensor.sdb_soufflant_power_status
                   - sensor.chambre_power_status
-                  - sensor.mode_ete_hiver_etat
-                  - sensor.temperature_moyenne_interieure
                   - climate.clim_salon_rm4_mini
                   - climate.radiateur_cuisine
                   - climate.clim_bureau_rm4_mini
+                  - climate.soufflant_salle_de_bain
                   - climate.clim_chambre_rm4_mini
                 triggers_update:
+                  - sensor.temperature_moyenne_interieure
                   - sensor.delta_ademe_recommande
+                  - sensor.mode_ete_hiver_etat
                   - sensor.clim_salon_etat
                   - sensor.radiateur_cuisine_etat
                   - sensor.clim_bureau_etat
@@ -1796,13 +1811,12 @@ views:
                   - sensor.salon_power_status
                   - sensor.cuisine_power_status
                   - sensor.bureau_power_status
-                  - sensor.sdb_power_status
+                  - sensor.sdb_soufflant_power_status
                   - sensor.chambre_power_status
-                  - sensor.mode_ete_hiver_etat
-                  - sensor.temperature_moyenne_interieure
                   - climate.clim_salon_rm4_mini
                   - climate.radiateur_cuisine
                   - climate.clim_bureau_rm4_mini
+                  - climate.soufflant_salle_de_bain
                   - climate.clim_chambre_rm4_mini
                 tap_action:
                   action: navigate
@@ -1872,7 +1886,7 @@ views:
                         { name: 'Salon', power: safeState('sensor.salon_power_status'), mode: safeState('sensor.clim_salon_etat') },
                         { name: 'Cuisine', power: safeState('sensor.cuisine_power_status'), mode: safeState('sensor.radiateur_cuisine_etat') },
                         { name: 'Bureau', power: safeState('sensor.bureau_power_status'), mode: safeState('sensor.clim_bureau_etat') },
-                        { name: 'SdB', power: safeState('sensor.sdb_power_status'), mode: safeState('sensor.radiateur_sdb_etat') },
+                        { name: 'SdB', power: safeState('sensor.sdb_soufflant_power_status'), mode: safeState('sensor.sdb_soufflant_power_etat') },
                         { name: 'Chambre', power: safeState('sensor.chambre_power_status'), mode: safeState('sensor.clim_chambre_etat') }
                       ];
 
@@ -1912,7 +1926,7 @@ views:
                         { entity: 'sensor.clim_salon_etat', label: 'Salon' },
                         { entity: 'sensor.radiateur_cuisine_etat', label: 'Cuisine' },
                         { entity: 'sensor.clim_bureau_etat', label: 'Bureau' },
-                        { entity: 'sensor.radiateur_sdb_etat', label: 'SdB' },
+                        { entity: 'sensor.sdb_soufflant_power_etat', label: 'SdB' },
                         { entity: 'sensor.clim_chambre_etat', label: 'Chambre' }
                       ];
 
@@ -1963,7 +1977,7 @@ views:
                       const consigneSalon = safeState('climate.clim_salon_rm4_mini');
                       const consigneCuisine = safeState('climate.radiateur_cuisine');
                       const consigneBureau = safeState('climate.clim_bureau_rm4_mini');
-                      const consigneSdB = safeState('sensor.th_salle_de_bain_temperature');
+                      const consigneSdB = safeState('climate.soufflant_salle_de_bain');
                       const consigneChambre = safeState('climate.clim_chambre_rm4_mini');
 
                       return [
@@ -1981,6 +1995,22 @@ views:
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/energie
+                entities:
+                  - sensor.conso_mini
+                  - sensor.ecojoko_consommation_temps_reel
+                  - sensor.conso_maxi
+                  - sensor.ecojoko_consommation_hp_reseau
+                  - sensor.ecojoko_consommation_hc_reseau
+                  - sensor.tarif_heures_pleines_ttc
+                  - sensor.tarif_heures_creuses_ttc
+                triggers_update:
+                  - sensor.conso_mini
+                  - sensor.ecojoko_consommation_temps_reel
+                  - sensor.conso_maxi
+                  - sensor.ecojoko_consommation_hp_reseau
+                  - sensor.ecojoko_consommation_hc_reseau
+                  - sensor.tarif_heures_pleines_ttc
+                  - sensor.tarif_heures_creuses_ttc
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2034,17 +2064,15 @@ views:
                       - margin-right: 7px
                       - font-weight: bold
                 custom_fields:
-                  titre_1: |
-                    [[[
-                      return 'Home Consumption<br><br>Mini -- Realtime -- Maxi';
-                    ]]]
+                  titre_1: >
+                    [[[ return 'Home Consumption<br><br>Mini -- Realtime --
+                    Maxi'; ]]]
                   mini: |
                     [[[
                       const value = parseFloat(states['sensor.conso_mini']?.state || 0);
                       let color = 'white';
                       if (value > 75) { color = 'rgb(244,67,54)'; }
-                      else if (value > 50) { color = 'orange'; }
-                      else if (value > 0) { color = 'white'; }
+                      else if (value > 50) { color = '#FFA500'; }
                       return `<span style='color:${color}; font-weight:bold;'>${value} W</span>`;
                     ]]]
                   realtime: |
@@ -2052,8 +2080,8 @@ views:
                       const value = parseFloat(states['sensor.ecojoko_consommation_temps_reel']?.state || 0);
                       let color = 'white';
                       if (value > 4000) { color = 'rgb(244,67,54)'; }
-                      else if (value > 2000) { color = 'orange'; }
-                      else if (value > 1000) { color = 'lime'; }
+                      else if (value > 2000) { color = '#FFA500'; }
+                      else if (value > 1000) { color = 'lightgreen'; }
                       return `<span style='color:${color}; font-weight:bold;'>${value} W</span>`;
                     ]]]
                   maxi: |
@@ -2061,14 +2089,12 @@ views:
                       const value = parseFloat(states['sensor.conso_maxi']?.state || 0);
                       let color = 'white';
                       if (value > 4000) { color = 'rgb(244,67,54)'; }
-                      else if (value > 2000) { color = 'orange'; }
-                      else if (value > 0) { color = 'white'; }
+                      else if (value > 2000) { color = '#FFA500'; }
                       return `<span style='color:${color}; font-weight:bold;'>${value} W</span>`;
                     ]]]
-                  titre_2: |
-                    [[[
-                      return '__________________________<br><br>Coûts Total = H.P. + H.C.';
-                    ]]]
+                  titre_2: >
+                    [[[ return '__________________________<br><br>Coûts Total =
+                    H.P. + H.C.'; ]]]
                   toto: |
                     [[[
                       const hp = parseFloat(states['sensor.ecojoko_consommation_hp_reseau']?.state || 0);
@@ -2076,7 +2102,7 @@ views:
                       const tarif_hp = parseFloat(states['sensor.tarif_heures_pleines_ttc']?.state || 0);
                       const tarif_hc = parseFloat(states['sensor.tarif_heures_creuses_ttc']?.state || 0);
                       const total = (hp * tarif_hp) + (hc * tarif_hc);
-                      return `<span style="display:block; text-align:right; line-height:1.2;">
+                      return `<span style="display:block; text-align:right; line-height:1.2; color:lightgreen;">
                         ${total.toFixed(2)}<span style="font-size:9px;"> €</span>
                       </span>`;
                     ]]]
@@ -2085,7 +2111,6 @@ views:
                       const hc_value = parseFloat(states['sensor.ecojoko_consommation_hc_reseau']?.state || 0);
                       const tarif_hc = parseFloat(states['sensor.tarif_heures_creuses_ttc']?.state || 0);
                       const hc_total = hc_value * tarif_hc;
-
                       return `<span style="display:block; text-align:right; line-height:1.2;">
                         ${hc_total.toFixed(2)}<span style="font-size:9px;"> €</span>
                       </span>`;
@@ -2095,54 +2120,61 @@ views:
                       const hp_value = parseFloat(states['sensor.ecojoko_consommation_hp_reseau']?.state || 0);
                       const tarif_hp = parseFloat(states['sensor.tarif_heures_pleines_ttc']?.state || 0);
                       const hp_total = hp_value * tarif_hp;
-
                       return `<span style="display:block; text-align:right; line-height:1.2;">
                         ${hp_total.toFixed(2)}<span style="font-size:9px;"> €</span>
                       </span>`;
                     ]]]
               - type: custom:button-card
                 entities:
-                  - sensor.salon_power_status
                   - climate.clim_salon_rm4_mini
-                  - sensor.cuisine_power_status
                   - climate.radiateur_cuisine
-                  - sensor.bureau_power_status
                   - climate.clim_bureau_rm4_mini
-                  - sensor.sdb_power_status
-                  - sensor.chambre_power_status
+                  - climate.soufflant_salle_de_bain
                   - climate.clim_chambre_rm4_mini
+                  - sensor.salon_power_status
+                  - sensor.cuisine_power_status
+                  - sensor.bureau_power_status
+                  - sensor.sdb_soufflant_power_status
+                  - sensor.sdb_seche_serv_power_status
+                  - sensor.chambre_power_status
                   - sensor.clim_salon_quotidien
                   - sensor.radiateur_elec_cuisine_quotidien
                   - sensor.clim_du_bureau_quotidien
                   - sensor.radiateur_sdb_quotidien
+                  - sensor.seche_serv_sdb_quotidien
                   - sensor.clim_chambre_quotidien
                   - sensor.conso_clim_rad_total_quotidien
                   - sensor.clim_salon_mensuel
                   - sensor.radiateur_elec_cuisine_mensuel
                   - sensor.clim_du_bureau_mensuel
                   - sensor.radiateur_sdb_mensuel
+                  - sensor.seche_serv_sdb_mensuel
                   - sensor.clim_chambre_mensuel
                   - sensor.conso_clim_rad_total_mensuel
                 triggers_update:
-                  - sensor.salon_power_status
                   - climate.clim_salon_rm4_mini
-                  - sensor.cuisine_power_status
                   - climate.radiateur_cuisine
-                  - sensor.bureau_power_status
                   - climate.clim_bureau_rm4_mini
-                  - sensor.sdb_power_status
-                  - sensor.chambre_power_status
+                  - climate.soufflant_salle_de_bain
                   - climate.clim_chambre_rm4_mini
+                  - sensor.salon_power_status
+                  - sensor.cuisine_power_status
+                  - sensor.bureau_power_status
+                  - sensor.sdb_soufflant_power_status
+                  - sensor.sdb_seche_serv_power_status
+                  - sensor.chambre_power_status
                   - sensor.clim_salon_quotidien
                   - sensor.radiateur_elec_cuisine_quotidien
                   - sensor.clim_du_bureau_quotidien
                   - sensor.radiateur_sdb_quotidien
+                  - sensor.seche_serv_sdb_quotidien
                   - sensor.clim_chambre_quotidien
                   - sensor.conso_clim_rad_total_quotidien
                   - sensor.clim_salon_mensuel
                   - sensor.radiateur_elec_cuisine_mensuel
                   - sensor.clim_du_bureau_mensuel
                   - sensor.radiateur_sdb_mensuel
+                  - sensor.seche_serv_sdb_mensuel
                   - sensor.clim_chambre_mensuel
                   - sensor.conso_clim_rad_total_mensuel
                 tap_action:
@@ -2174,15 +2206,15 @@ views:
                       - font-weight: bold
                     piece:
                       - justify-self: start
-                      - margin-left: 7px
+                      - margin-left: 8px
                       - text-align: left
                     quotidien:
                       - justify-self: start
-                      - margin-left: 7px
+                      - margin-left: 8px
                       - text-align: left
                     mensuel:
                       - justify-self: end
-                      - margin-right: 6px
+                      - margin-right: 5px
                       - text-align: right
                 custom_fields:
                   titre: Consommation CLIM
@@ -2192,57 +2224,40 @@ views:
                         'off_off': 'rgb(244,67,54)',
                         'on_cool': 'skyblue',
                         'on_heat': '#FFA500',
-                        'on_fan_only': 'turquoise',
+                        'on_fan': 'turquoise',
                         'off': 'white',
-                        'on_off': '#aaaaaa', 
-                        'off_cool': '#aaaaaa', 
-                        'off_heat': '#aaaaaa', 
-                        'off_fan_only': '#aaaaaa', 
+                        'on_off': '#aaaaaa'
                       };
 
                       function getColorForStatus(powerStatus, mode) {
                         if (powerStatus === 'off') {
                           return mode === 'off' ? colorMap['off_off'] : colorMap['off'];
                         } else {
-                          const key = `on_${mode}`;
-                          return colorMap[key] || colorMap['off'];
+                          return colorMap[`on_${mode}`] || colorMap['off'];
                         }
                       }
 
                       function safeState(entityId) {
-                        const state = states[entityId]?.state;
-                        return state ? state.toLowerCase() : 'off';
+                        return states[entityId]?.state?.toLowerCase() || 'off';
                       }
 
                       const pieces = [
                         { name: 'Salon', power: safeState('sensor.salon_power_status'), mode: safeState('climate.clim_salon_rm4_mini') },
                         { name: 'Cuisine', power: safeState('sensor.cuisine_power_status'), mode: safeState('climate.radiateur_cuisine') },
                         { name: 'Bureau', power: safeState('sensor.bureau_power_status'), mode: safeState('climate.clim_bureau_rm4_mini') },
-                        { name: 'SdB Sft', power: safeState('sensor.sdb_power_status'), mode: safeState('sensor.radiateur_sdb_etat') },
-                        { name: 'SdB SèS', power: safeState('sensor.sdb_seche_serviettes_power_status'), mode: safeState('sensor.seche_serviettes_sdb_etat') },
+                        { name: 'SdB Sft', power: safeState('sensor.sdb_soufflant_power_status'), mode: safeState('sensor.sdb_soufflant_power_etat') },
+                        { name: 'SdB SèS', power: safeState('sensor.sdb_seche_serv_power_status'), mode: safeState('sensor.sdb_seche_serviettes_etat') },
                         { name: 'Chambre', power: safeState('sensor.chambre_power_status'), mode: safeState('climate.clim_chambre_rm4_mini') },
-                        { name: 'TOTAL', color: 'lightgreen' }
+                        { name: 'TOTAL', color: 'lightgreen', bold: true }
                       ];
 
                       return pieces.map(piece =>
-                        `<span style="display: block; text-align: left; line-height: 1.2; color: ${piece.color || getColorForStatus(piece.power, piece.mode)};">${piece.name}</span>`
+                        `<span style="display: block; text-align: left; line-height: 1.2; color: ${piece.color || getColorForStatus(piece.power, piece.mode)}; ${piece.bold ? 'font-weight: bold;' : ''}">${piece.name}</span>`
                       ).join('');
                     ]]]
                   quotidien: |
                     [[[
-                      function safeState(entityId) {
-                        var value = parseFloat(states[entityId]?.state || 0);
-                        if (isNaN(value)) {
-                          return '0 <span style="font-size: 5px;">Wh</span>';
-                        }
-                        if (value < 1) {
-                          return (value * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
-                        } else {
-                          return value.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
-                        }
-                      }
-
-                      const sensors = [
+                      const list = [
                         'sensor.clim_salon_quotidien',
                         'sensor.radiateur_elec_cuisine_quotidien',
                         'sensor.clim_du_bureau_quotidien',
@@ -2252,25 +2267,17 @@ views:
                         'sensor.conso_clim_rad_total_quotidien'
                       ];
 
-                      return sensors.map((sensor, i) =>
-                        `<span style="display: block; text-align: right; line-height: 1.2; ${i === sensors.length - 1 ? 'color: lightgreen;' : ''}">${safeState(sensor)}</span>`
-                      ).join('');
+                      return list.map((sensor, i) => {
+                        let val = parseFloat(states[sensor]?.state || 0);
+                        let unit = val < 1 ? 'Wh' : 'kWh';
+                        let displayVal = val < 1 ? (val * 1000).toFixed(0) : val.toFixed(2);
+                        let style = i === list.length - 1 ? 'color: lightgreen; font-weight: bold;' : '';
+                        return `<span style="display: block; text-align: right; line-height: 1.2; ${style}">${displayVal} <span style="font-size: 5px;">${unit}</span></span>`;
+                      }).join('');
                     ]]]
                   mensuel: |
                     [[[
-                      function safeState(entityId) {
-                        var value = parseFloat(states[entityId]?.state || 0);
-                        if (isNaN(value)) {
-                          return '0 <span style="font-size: 5px;">Wh</span>';
-                        }
-                        if (value < 1) {
-                          return (value * 1000).toFixed(0) + ' <span style="font-size: 5px;">Wh</span>';
-                        } else {
-                          return value.toFixed(2) + ' <span style="font-size: 5px;">kWh</span>';
-                        }
-                      }
-
-                      const sensors = [
+                      const list = [
                         'sensor.clim_salon_mensuel',
                         'sensor.radiateur_elec_cuisine_mensuel',
                         'sensor.clim_du_bureau_mensuel',
@@ -2280,23 +2287,60 @@ views:
                         'sensor.conso_clim_rad_total_mensuel'
                       ];
 
-                      return sensors.map((sensor, i) =>
-                        `<span style="display: block; text-align: right; line-height: 1.2; ${i === sensors.length - 1 ? 'color: lightgreen;' : ''}">${safeState(sensor)}</span>`
-                      ).join('');
+                      return list.map((sensor, i) => {
+                        let val = parseFloat(states[sensor]?.state || 0);
+                        let unit = val < 1 ? 'Wh' : 'kWh';
+                        let displayVal = val < 1 ? (val * 1000).toFixed(0) : val.toFixed(2);
+                        let style = i === list.length - 1 ? 'color: lightgreen; font-weight: bold;' : '';
+                        return `<span style="display: block; text-align: right; line-height: 1.2; ${style}">${displayVal} <span style="font-size: 5px;">${unit}</span></span>`;
+                      }).join('');
                     ]]]
               - type: custom:button-card
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/energie-lampes
-                triggers_update:
-                  - sensor.conso_eclairage_total_quotidien
-                  - sensor.conso_eclairage_total_mensuel
+                entities:
                   - sensor.lumiere_appartement_etat
                   - sensor.lumiere_salon_etat
                   - sensor.lumiere_cuisine_etat
                   - sensor.lumiere_bureau_etat
                   - sensor.lumiere_salle_de_bain_etat
                   - sensor.lumiere_chambre_etat
+                  - sensor.2x_lampes_appart_total_quotidien
+                  - sensor.eclairage_salon_total_quotidien
+                  - sensor.eclairage_cuisine_total_quotidien
+                  - sensor.eclairage_bureau_total_quotidien
+                  - sensor.eclairage_sdb_total_quotidien
+                  - sensor.eclairage_chambre_total_quotidien
+                  - sensor.conso_total_eclairage_appart_quotidien
+                  - sensor.2x_lampes_appart_total_mensuel
+                  - sensor.eclairage_salon_total_mensuel
+                  - sensor.eclairage_cuisine_total_mensuel
+                  - sensor.eclairage_bureau_total_mensuel
+                  - sensor.eclairage_sdb_total_mensuel
+                  - sensor.eclairage_chambre_total_mensuel
+                  - sensor.conso_total_eclairage_appart_mensuel
+                triggers_update:
+                  - sensor.lumiere_appartement_etat
+                  - sensor.lumiere_salon_etat
+                  - sensor.lumiere_cuisine_etat
+                  - sensor.lumiere_bureau_etat
+                  - sensor.lumiere_salle_de_bain_etat
+                  - sensor.lumiere_chambre_etat
+                  - sensor.2x_lampes_appart_total_quotidien
+                  - sensor.eclairage_salon_total_quotidien
+                  - sensor.eclairage_cuisine_total_quotidien
+                  - sensor.eclairage_bureau_total_quotidien
+                  - sensor.eclairage_sdb_total_quotidien
+                  - sensor.eclairage_chambre_total_quotidien
+                  - sensor.conso_total_eclairage_appart_quotidien
+                  - sensor.2x_lampes_appart_total_mensuel
+                  - sensor.eclairage_salon_total_mensuel
+                  - sensor.eclairage_cuisine_total_mensuel
+                  - sensor.eclairage_bureau_total_mensuel
+                  - sensor.eclairage_sdb_total_mensuel
+                  - sensor.eclairage_chambre_total_mensuel
+                  - sensor.conso_total_eclairage_appart_mensuel
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2352,11 +2396,11 @@ views:
                         { name: 'Bureau', color: getCol('sensor.lumiere_bureau_etat', true) },
                         { name: 'SdB', color: getCol('sensor.lumiere_salle_de_bain_etat') },
                         { name: 'Chambre', color: getCol('sensor.lumiere_chambre_etat', true) },
-                        { name: 'TOTAL', color: 'lightgreen' }
+                        { name: 'TOTAL', color: 'lightgreen', bold: true }
                       ];
 
                       return pieces.map(p => 
-                        `<span style="display: block; text-align: left; line-height: 1.2; color: ${p.color};">${p.name}</span>`
+                        `<span style="display: block; text-align: left; line-height: 1.2; color: ${p.color}; ${p.bold ? 'font-weight: bold;' : ''}">${p.name}</span>`
                       ).join('');
                     ]]]
                   quotidien: |
@@ -2372,18 +2416,19 @@ views:
                       }
 
                       const sensors = [
-                        'sensor.eclairage_appart_2_quotidien',
-                        'sensor.eclairage_salon_5_quotidien',
-                        'sensor.eclairage_cuisine_1_quotidien',
-                        'sensor.eclairage_bureau_5_quotidien',
-                        'sensor.eclairage_sdb_2_quotidien',
-                        'sensor.eclairage_chambre_4_quotidien',
-                        'sensor.conso_eclairage_total_quotidien'
+                        'sensor.2x_lampes_appart_total_quotidien',
+                        'sensor.eclairage_salon_total_quotidien',
+                        'sensor.eclairage_cuisine_total_quotidien',
+                        'sensor.eclairage_bureau_total_quotidien',
+                        'sensor.eclairage_sdb_total_quotidien',
+                        'sensor.eclairage_chambre_total_quotidien',
+                        'sensor.conso_total_eclairage_appart_quotidien'
                       ];
 
-                      return sensors.map((s, i) => 
-                        `<span style="display: block; text-align: right; line-height: 1.2; ${i === sensors.length - 1 ? 'color: lightgreen;' : ''}">${safeState(s)}</span>`
-                      ).join('');
+                      return sensors.map((s, i) => {
+                        const isLast = i === sensors.length - 1;
+                        return `<span style="display: block; text-align: right; line-height: 1.2; ${isLast ? 'color: lightgreen; font-weight: bold;' : ''}">${safeState(s)}</span>`;
+                      }).join('');
                     ]]]
                   mensuel: |
                     [[[
@@ -2398,23 +2443,60 @@ views:
                       }
 
                       const sensors = [
-                        'sensor.eclairage_appart_2_mensuel',
-                        'sensor.eclairage_salon_5_mensuel',
-                        'sensor.eclairage_cuisine_1_mensuel',
-                        'sensor.eclairage_bureau_5_mensuel',
-                        'sensor.eclairage_sdb_2_mensuel',
-                        'sensor.eclairage_chambre_4_mensuel',
-                        'sensor.conso_eclairage_total_mensuel'
+                        'sensor.2x_lampes_appart_total_mensuel',
+                        'sensor.eclairage_salon_total_mensuel',
+                        'sensor.eclairage_cuisine_total_mensuel',
+                        'sensor.eclairage_bureau_total_mensuel',
+                        'sensor.eclairage_sdb_total_mensuel',
+                        'sensor.eclairage_chambre_total_mensuel',
+                        'sensor.conso_total_eclairage_appart_mensuel'
                       ];
 
-                      return sensors.map((s, i) => 
-                        `<span style="display: block; text-align: right; line-height: 1.2; ${i === sensors.length - 1 ? 'color: lightgreen;' : ''}">${safeState(s)}</span>`
-                      ).join('');
+                      return sensors.map((s, i) => {
+                        const isLast = i === sensors.length - 1;
+                        return `<span style="display: block; text-align: right; line-height: 1.2; ${isLast ? 'color: lightgreen; font-weight: bold;' : ''}">${safeState(s)}</span>`;
+                      }).join('');
                     ]]]
               - type: custom:button-card
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/lumieres
+                entities:
+                  - sensor.lumiere_appartement_etat
+                  - sensor.lumiere_salon_etat
+                  - sensor.lumiere_cuisine_etat
+                  - sensor.bureau_etat
+                  - sensor.lumiere_salle_de_bain_etat
+                  - sensor.lumiere_chambre_etat
+                  - sensor.lumiere_ecran_etat
+                  - light.entree
+                  - light.couloir
+                  - light.salon
+                  - light.table
+                  - light.cuisine
+                  - light.lampe_salle_de_bain_hue
+                  - light.chambre
+                  - light.hue_color_candle_chambre_gege
+                  - light.hue_color_candle_chambre_eric
+                  - switch.prise_tete_de_lit_chambre
+                triggers_update:
+                  - sensor.lumiere_appartement_etat
+                  - sensor.lumiere_salon_etat
+                  - sensor.lumiere_cuisine_etat
+                  - sensor.bureau_etat
+                  - sensor.lumiere_salle_de_bain_etat
+                  - sensor.lumiere_chambre_etat
+                  - sensor.lumiere_ecran_etat
+                  - light.entree
+                  - light.couloir
+                  - light.salon
+                  - light.table
+                  - light.cuisine
+                  - light.lampe_salle_de_bain_hue
+                  - light.chambre
+                  - light.hue_color_candle_chambre_gege
+                  - light.hue_color_candle_chambre_eric
+                  - switch.prise_tete_de_lit_chambre
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2456,151 +2538,114 @@ views:
                       - text-align: right
                 custom_fields:
                   titre: |
-                    [[[
-                      return 'Commande LAMPES'
-                    ]]]
-                  piece: |
-                    [[[
-                      return `
-                      <div>
-                        <div>Appart.</div>
-                        <div>Salon</div>
-                        <div>Cuisine</div>
-                        <div>Bureau</div>
-                        <div>SdB</div>
-                        <div>Chambre</div>
-                      </div>
-                      `;
+                    [[[ return 'Commande LAMPES' ]]]
+                  piece: >
+                    [[[ return
+                    `<div><div>Appart.</div><div>Salon</div><div>Cuisine</div><div>Bureau</div><div>SdB</div><div>Chambre</div></div>`;
                     ]]]
                   etat: |
                     [[[
                       function getColorForStatus(status) {
-                        if (status === 'N/A') return '#aaaaaa'; // Gris pour N/A
-                        if (status === 'Allumé') return 'lime';
+                        if (status === 'N/A' || status === 'erreur') return '#aaaaaa';
+                        if (status === 'Allumé') return 'lightgreen';
                         if (status === 'Éteint') return 'rgb(244,67,54)';
-                        if (status === 'Éco.') return 'orange';
-                        if (status === 'erreur') return '#aaaaaa';
+                        if (status === 'AlluSync' || status === 'Synchro' || status === 'Éco.') return '#FFA500';
 
-                        if (status === 'Entrée') return 'lightgreen';
-                        if (status === 'Couloir') return 'lightgreen';
-
-                        if (status === 'Salon') return 'lightgreen';
-                        if (status === 'Table') return 'lightgreen';
-                        if (status === 'Bureau') return 'lightgreen';
-                        if (status === 'Écran') return 'lightgreen';
-                        if (status === 'Chambre') return 'lightgreen';
-                        if (status === 'Zone G.') return 'lightgreen';
-                        if (status === 'Zone É.') return 'lightgreen';
-                        if (status === 'Tête Lit') return 'lightgreen';
-                        if (status === 'Ch.+zG') return 'lightgreen';
-                        if (status === 'Ch.+zÉ') return 'lightgreen';
-                        
-                        return 'white'; // Fallback
+                        const greenStates = [
+                          'Entrée', 'Couloir', 'Salon', 'Table', 'Bureau', 
+                          'Écran', 'Chambre', 'Zone G.', 'Zone É.', 
+                          'Tête Lit', 'Ch.+zG', 'Ch.+zÉ'
+                        ];
+                        if (greenStates.includes(status)) return 'lightgreen';
+                        return 'white';
                       }
 
                       function safeState(entityId) {
                         const state = states[entityId]?.state;
-                        if (!state || state === 'unavailable' || state === 'unknown') {
-                          return 'N/A';
-                        }
-                        return state;
+                        return (!state || state === 'unavailable' || state === 'unknown') ? 'N/A' : state;
                       }
 
-                      var appartementStatus = safeState('sensor.lumiere_appartement_etat');
-                      var salonStatus = safeState('sensor.lumiere_salon_etat');
-                      var cuisineStatus = safeState('sensor.lumiere_cuisine_etat');
-                      var bureauStatus = safeState('sensor.lumiere_bureau_etat');
-                      var sdbStatus = safeState('sensor.lumiere_salle_de_bain_etat');
-                      var chambreStatus = safeState('sensor.lumiere_chambre_etat');
+                      var appStat = safeState('sensor.lumiere_appartement_etat');
+                      var salStat = safeState('sensor.lumiere_salon_etat');
+                      var cuiStat = safeState('sensor.lumiere_cuisine_etat');
+                      var burStat = safeState('sensor.bureau_etat');
+                      var sdbStat = safeState('sensor.lumiere_salle_de_bain_etat');
+                      var chaStat = safeState('sensor.lumiere_chambre_etat');
 
-                      return `
-                      <div>
-                        <div style="color: ${getColorForStatus(appartementStatus)};">${appartementStatus}</div>
-                        <div style="color: ${getColorForStatus(salonStatus)};">${salonStatus}</div>
-                        <div style="color: ${getColorForStatus(cuisineStatus)};">${cuisineStatus}</div>
-                        <div style="color: ${getColorForStatus(bureauStatus)};">${bureauStatus}</div>
-                        <div style="color: ${getColorForStatus(sdbStatus)};">${sdbStatus}</div>
-                        <div style="color: ${getColorForStatus(chambreStatus)};">${chambreStatus}</div>
-                      </div>
-                      `;
+                      return `<div>
+                        <div style="color: ${getColorForStatus(appStat)};">${appStat}</div>
+                        <div style="color: ${getColorForStatus(salStat)};">${salStat}</div>
+                        <div style="color: ${getColorForStatus(cuiStat)};">${cuiStat}</div>
+                        <div style="color: ${getColorForStatus(burStat)};">${burStat}</div>
+                        <div style="color: ${getColorForStatus(sdbStat)};">${sdbStat}</div>
+                        <div style="color: ${getColorForStatus(chaStat)};">${chaStat}</div>
+                      </div>`;
                     ]]]
                   active: |
                     [[[
-                      // Fonction sécurisée : si l'entité n'existe pas, on considère qu'elle n'est pas 'on'
                       function countActiveEntities(entities) {
                         return entities.filter(entity => states[entity]?.state === 'on').length;
                       }
-
-                      function safeStateCheck(entityId) {
-                         return states[entityId]?.state === 'on';
-                      }
-
                       function getColorForCount(activeCount, totalCount) {
-                        if (activeCount === totalCount) return 'lightgreen';
+                        if (activeCount === totalCount && totalCount > 0) return 'lightgreen';
                         if (activeCount === 0) return 'rgb(244,67,54)';
-                        return 'orange';
+                        return '#FFA500';
                       }
 
-                      var appartement = {
-                        activeCount: countActiveEntities(['light.entree', 'light.couloir']),
-                        totalCount: 2,
-                        color: getColorForCount(countActiveEntities(['light.entree', 'light.couloir']), 2)
-                      };
+                      var appartement = { activeCount: countActiveEntities(['light.entree', 'light.couloir']), totalCount: 2 };
+                      var salon = { activeCount: countActiveEntities(['light.salon', 'light.table']), totalCount: 2 };
+                      var cuisine = { activeCount: countActiveEntities(['light.cuisine']), totalCount: 1 };
+                      
+                      var statusB = states['sensor.bureau_etat']?.state;
+                      var ecranS = states['sensor.lumiere_ecran_etat']?.state;
+                      var bTxt = "0/2";
+                      var bCol = "rgb(244,67,54)";
 
-                      var salon = {
-                        activeCount: countActiveEntities(['light.salon', 'light.table']),
-                        totalCount: 2,
-                        color: getColorForCount(countActiveEntities(['light.salon', 'light.table']), 2)
-                      };
-
-                      var cuisine = {
-                        activeCount: countActiveEntities(['light.cuisine']),
-                        totalCount: 1,
-                        color: getColorForCount(countActiveEntities(['light.cuisine']), 1)
-                      };
-
-                      var bureauEntities = ['light.bureau_z2m'];
-                      if (safeStateCheck('switch.ecran_p_c_3_play_hue')) {
-                        bureauEntities.push('light.bureau');
+                      if (statusB === 'AlluSync') { bTxt = "2/2"; bCol = "#FFA500"; }
+                      else if (statusB === 'Synchro') { bTxt = "1/2"; bCol = "#FFA500"; }
+                      else if (statusB === 'Allumé') { bTxt = "2/2"; bCol = "lightgreen"; }
+                      else if (statusB === 'Bureau') { 
+                        if (ecranS === 'Éco.') { bTxt = "1/1"; bCol = "lightgreen"; }
+                        else { bTxt = "1/2"; bCol = "#FFA500"; }
                       }
-                      var bureau = {
-                        activeCount: countActiveEntities(bureauEntities),
-                        totalCount: bureauEntities.length,
-                        color: getColorForCount(countActiveEntities(bureauEntities), bureauEntities.length)
-                      };
+                      else if (statusB === 'Écran') { bTxt = "1/2"; bCol = "#FFA500"; }
+                      else if (statusB === 'Éco.') { bTxt = "0/1"; bCol = "#FFA500"; }
+                      else { bTxt = "0/2"; bCol = "rgb(244,67,54)"; }
 
-                      var sdb = {
-                        activeCount: safeStateCheck('light.lampe_salle_de_bain_hue') ? 1 : 0,
-                        totalCount: 1,
-                        color: getColorForCount(safeStateCheck('light.lampe_salle_de_bain_hue') ? 1 : 0, 1)
-                      };
-
-                      var chambreEntities = ['light.chambre'];
-                      if (safeStateCheck('switch.prise_tete_de_lit_chambre')) {
-                        chambreEntities.push('light.hue_color_candle_chambre_gege');
-                        chambreEntities.push('light.hue_color_candle_chambre_eric');
+                      var sdbActive = states['light.lampe_salle_de_bain_hue']?.state === 'on' ? 1 : 0;
+                      var chEnt = ['light.chambre'];
+                      if (states['switch.prise_tete_de_lit_chambre']?.state === 'on') { 
+                        chEnt.push('light.hue_color_candle_chambre_gege', 'light.hue_color_candle_chambre_eric'); 
                       }
-                      var chambre = {
-                        activeCount: countActiveEntities(chambreEntities),
-                        totalCount: chambreEntities.length,
-                        color: getColorForCount(countActiveEntities(chambreEntities), chambreEntities.length)
-                      };
+                      var chActive = countActiveEntities(chEnt);
 
-                      return `
-                      <div>
-                        <div style="color: ${appartement.color};">${appartement.activeCount}/${appartement.totalCount}</div>
-                        <div style="color: ${salon.color};">${salon.activeCount}/${salon.totalCount}</div>
-                        <div style="color: ${cuisine.color};">${cuisine.activeCount}/${cuisine.totalCount}</div>
-                        <div style="color: ${bureau.color};">${bureau.activeCount}/${bureau.totalCount}</div>
-                        <div style="color: ${sdb.color};">${sdb.activeCount}/${sdb.totalCount}</div>
-                        <div style="color: ${chambre.color};">${chambre.activeCount}/${chambre.totalCount}</div>
-                      </div>
-                      `;
+                      return `<div>
+                        <div style="color: ${getColorForCount(appartement.activeCount, 2)};">${appartement.activeCount}/2</div>
+                        <div style="color: ${getColorForCount(salon.activeCount, 2)};">${salon.activeCount}/2</div>
+                        <div style="color: ${getColorForCount(cuisine.activeCount, 1)};">${cuisine.activeCount}/1</div>
+                        <div style="color: ${bCol};">${bTxt}</div>
+                        <div style="color: ${getColorForCount(sdbActive, 1)};">${sdbActive}/1</div>
+                        <div style="color: ${getColorForCount(chActive, chEnt.length)};">${chActive}/${chEnt.length}</div>
+                      </div>`;
                     ]]]
               - type: custom:button-card
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/prises
+                entities:
+                  - switch.prise_horloge_ikea
+                  - switch.hue_smart_eco_pc_bureau
+                  - switch.prise_tete_de_lit_chambre
+                  - light.hue_smart_salon
+                  - light.hue_smart_tv_salon
+                  - light.hue_smart_tv_chambre
+                triggers_update:
+                  - switch.prise_horloge_ikea
+                  - switch.hue_smart_eco_pc_bureau
+                  - switch.prise_tete_de_lit_chambre
+                  - light.hue_smart_salon
+                  - light.hue_smart_tv_salon
+                  - light.hue_smart_tv_chambre
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2637,9 +2682,7 @@ views:
                       - text-align: left
                 custom_fields:
                   titre: |
-                    [[[
-                      return 'Commande éCO.'
-                    ]]]
+                    [[[ return 'Commande éCO.' ]]]
                   piece: |
                     [[[
                       return `
@@ -2655,10 +2698,8 @@ views:
                     ]]]
                   etat: |
                     [[[
-                      // Fonction pour récupérer l'état de manière sécurisée
                       function safeState(entityId) {
                         const entity = states[entityId];
-                        // Si l'entité n'existe pas, est indisponible ou inconnue -> N/A
                         if (!entity || entity.state === 'unavailable' || entity.state === 'unknown') {
                           return 'N/A';
                         }
@@ -2666,7 +2707,7 @@ views:
                       }
 
                       function getColorForStatus(status) {
-                        if (status === 'N/A') return '#aaaaaa'; // Gris
+                        if (status === 'N/A') return '#aaaaaa';
                         return status === 'on' ? 'lightgreen' : 'rgb(244,67,54)';
                       }
 
@@ -2675,21 +2716,21 @@ views:
                         return status === 'on' ? 'Allumé' : 'Éteint';
                       }
 
-                      var horlogeStatus = safeState('switch.prise_horloge_ikea');
-                      var salonStatus = safeState('light.hue_smart_salon');
-                      var tvSalonStatus = safeState('light.hue_smart_tv_salon');
-                      var pcBureauStatus = safeState('switch.hue_smart_eco_pc_bureau');
-                      var tvChambreStatus = safeState('light.hue_smart_tv_chambre');
-                      var teteDeLitStatus = safeState('switch.prise_tete_de_lit_chambre');
+                      const hStat = safeState('switch.prise_horloge_ikea');
+                      const sStat = safeState('light.hue_smart_salon');
+                      const tsStat = safeState('light.hue_smart_tv_salon');
+                      const pStat = safeState('switch.hue_smart_eco_pc_bureau');
+                      const tcStat = safeState('light.hue_smart_tv_chambre');
+                      const tlStat = safeState('switch.prise_tete_de_lit_chambre');
 
                       return `
                       <div>
-                        <div style="color: ${getColorForStatus(horlogeStatus)};">${getStatusText(horlogeStatus)}</div>
-                        <div style="color: ${getColorForStatus(salonStatus)};">${getStatusText(salonStatus)}</div>
-                        <div style="color: ${getColorForStatus(tvSalonStatus)};">${getStatusText(tvSalonStatus)}</div>
-                        <div style="color: ${getColorForStatus(pcBureauStatus)};">${getStatusText(pcBureauStatus)}</div>
-                        <div style="color: ${getColorForStatus(tvChambreStatus)};">${getStatusText(tvChambreStatus)}</div>
-                        <div style="color: ${getColorForStatus(teteDeLitStatus)};">${getStatusText(teteDeLitStatus)}</div>
+                        <div style="color: ${getColorForStatus(hStat)};">${getStatusText(hStat)}</div>
+                        <div style="color: ${getColorForStatus(sStat)};">${getStatusText(sStat)}</div>
+                        <div style="color: ${getColorForStatus(tsStat)};">${getStatusText(tsStat)}</div>
+                        <div style="color: ${getColorForStatus(pStat)};">${getStatusText(pStat)}</div>
+                        <div style="color: ${getColorForStatus(tcStat)};">${getStatusText(tcStat)}</div>
+                        <div style="color: ${getColorForStatus(tlStat)};">${getStatusText(tlStat)}</div>
                       </div>
                       `;
                     ]]]
@@ -2697,6 +2738,24 @@ views:
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/stores
+                entities:
+                  - binary_sensor.contact_fenetre_salon_sonoff_contact
+                  - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+                  - binary_sensor.contact_fenetre_bureau_sonoff_contact
+                  - binary_sensor.contact_fenetre_chambre_sonoff_contact
+                  - sensor.store_salon_status
+                  - sensor.store_cuisine_status
+                  - sensor.store_bureau_status
+                  - sensor.store_chambre_status
+                triggers_update:
+                  - binary_sensor.contact_fenetre_salon_sonoff_contact
+                  - binary_sensor.contact_fenetre_cuisine_sonoff_contact
+                  - binary_sensor.contact_fenetre_bureau_sonoff_contact
+                  - binary_sensor.contact_fenetre_chambre_sonoff_contact
+                  - sensor.store_salon_status
+                  - sensor.store_cuisine_status
+                  - sensor.store_bureau_status
+                  - sensor.store_chambre_status
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -2737,7 +2796,7 @@ views:
                     stores:
                       - grid-area: stores
                       - justify-self: end
-                      - margin-right: 8px
+                      - margin-right: 7px
                       - text-align: right
                 custom_fields:
                   titre: |
@@ -2745,9 +2804,7 @@ views:
                       return 'Commande Stores<BR>Pièces / Fenêtres / Stores';
                     ]]]
                   espace: |
-                    [[[
-                      return ' ';
-                    ]]]
+                    [[[ return ' '; ]]]
                   piece: |
                     [[[
                       return `
@@ -2763,18 +2820,15 @@ views:
                     [[[
                       function getColorForFenetreStatus(entityId) {
                         const state = states[entityId]?.state;
-
-                        if (state === 'on') { return '<span style="color: rgb(244,67,54);">Ouvert</span>'; }
-                        if (state === 'off') { return '<span style="color: lightgreen;">Fermé</span>'; }
-                        
-                        // N/A en gris si erreur ou inconnu
+                        if (state === 'on') return '<span style="color: rgb(244,67,54);">Ouvert</span>';
+                        if (state === 'off') return '<span style="color: lightgreen;">Fermé</span>';
                         return '<span style="color: #aaaaaa;">N/A</span>';
                       }
 
-                      var salon = getColorForFenetreStatus('binary_sensor.contact_fenetre_salon_ikea_contact');
-                      var cuisine = getColorForFenetreStatus('binary_sensor.contact_fenetre_cuisine_ikea_contact');
-                      var bureau = getColorForFenetreStatus('binary_sensor.contact_fenetre_bureau_ikea_contact');
-                      var chambre = getColorForFenetreStatus('binary_sensor.contact_fenetre_chambre_ikea_contact');
+                      var salon = getColorForFenetreStatus('binary_sensor.contact_fenetre_salon_sonoff_contact');
+                      var cuisine = getColorForFenetreStatus('binary_sensor.contact_fenetre_cuisine_sonoff_contact');
+                      var bureau = getColorForFenetreStatus('binary_sensor.contact_fenetre_bureau_sonoff_contact');
+                      var chambre = getColorForFenetreStatus('binary_sensor.contact_fenetre_chambre_sonoff_contact');
 
                       return `
                       <div>
@@ -2789,17 +2843,13 @@ views:
                     [[[
                       function getStoreStatus(entityId) {
                         const entity = states[entityId];
-
-                        // REMIS COMME AVANT : Si l'entité n'existe pas (Cuisine/Chambre), on retourne un tiret
                         if (!entity) return '-';
-                        
                         const state = entity.state;
-
-                        // Si l'entité existe mais est en erreur, on retourne N/A en gris
                         if (state === 'unavailable' || state === 'unknown' || state === 'N/A') {
                           return '<span style="color: #aaaaaa;">N/A</span>';
                         }
-                        
+                        // Harmonisation : si le store est "Ouvert", on peut aussi le mettre en rouge si tu veux, 
+                        // mais ici on garde le texte brut du sensor de statut.
                         return state;
                       }
 
@@ -2807,7 +2857,7 @@ views:
                       var cuisineStoreStatus = getStoreStatus('sensor.store_cuisine_status');
                       var bureauStoreStatus = getStoreStatus('sensor.store_bureau_status');
                       var chambreStoreStatus = getStoreStatus('sensor.store_chambre_status'); 
-                      
+
                       return `
                       <div>
                         <div>${salonStoreStatus}</div>
@@ -2853,6 +2903,18 @@ views:
                 icon: phu:intel-nuc
                 aspect_ratio: 1/1
                 name: _____ Mini - P.C. _____
+                entities:
+                  - sensor.system_monitor_temperature_du_processeur
+                  - sensor.system_monitor_utilisation_du_processeur
+                  - sensor.system_monitor_utilisation_de_la_memoire
+                  - sensor.system_monitor_utilisation_du_disque
+                  - sensor.prise_mini_pc_ikea_power
+                triggers_update:
+                  - sensor.system_monitor_temperature_du_processeur
+                  - sensor.system_monitor_utilisation_du_processeur
+                  - sensor.system_monitor_utilisation_de_la_memoire
+                  - sensor.system_monitor_utilisation_du_disque
+                  - sensor.prise_mini_pc_ikea_power
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/systeme-mini-pc
@@ -3052,6 +3114,14 @@ views:
                 tap_action:
                   action: navigate
                   navigation_path: /dashboard-tablette/battery-bp
+                  entities:
+                    - group.hue_devices
+                    - group.ikea_devices
+                    - group.sonoff_devices
+                triggers_update:
+                  - group.hue_devices
+                  - group.ikea_devices
+                  - group.sonoff_devices
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -3125,10 +3195,6 @@ views:
                     ]]]
                   count: |
                     [[[
-                      function countGroupEntities(groupName) {
-                        var group = states[groupName];
-                        return group ? group.attributes.entity_id.length : 0;
-                      }
                       function hasBatteryBelowThreshold(groupName, threshold) {
                         var group = states[groupName];
                         if (!group) return false;
@@ -3138,8 +3204,9 @@ views:
                         });
                       }
                       function getStyledCount(groupName) {
-                        if (hasBatteryBelowThreshold(groupName, 11)) {
-                          return '⚠️';
+                        if (hasBatteryBelowThreshold(groupName, 10)) {
+                          // L'émoji ⚠️ avec ton rouge et en gras (font-weight: bold)
+                          return '<span style="color: rgb(244,67,54); font-weight: bold;">⚠️</span>';
                         }
                         var group = states[groupName];
                         return group ? group.attributes.entity_id.length : 0;
@@ -3147,13 +3214,7 @@ views:
                       var hueCount = getStyledCount('group.hue_devices');
                       var ikeaCount = getStyledCount('group.ikea_devices');
                       var sonoffCount = getStyledCount('group.sonoff_devices');
-                      return `
-                      <div>
-                        <div>${hueCount}</div>
-                        <div>${ikeaCount}</div>
-                        <div>${sonoffCount}</div>
-                      </div>
-                      `;
+                      return `<div><div>${hueCount}</div><div>${ikeaCount}</div><div>${sonoffCount}</div></div>`;
                     ]]]
                   marque: |
                     [[[
@@ -3166,18 +3227,13 @@ views:
                         });
                       }
                       function getStyledMarque(name, groupName) {
-                        if (hasBatteryBelowThreshold(groupName, 11)) {
+                        if (hasBatteryBelowThreshold(groupName, 10)) {
+                          // Le nom de la marque passe aussi en ROUGE et en GRAS
                           return `<span style="color: rgb(244,67,54); font-weight: bold;">${name}</span>`;
                         }
                         return name;
                       }
-                      return `
-                      <div>
-                        <div>${getStyledMarque('HUE', 'group.hue_devices')}</div>
-                        <div>${getStyledMarque('IKEA', 'group.ikea_devices')}</div>
-                        <div>${getStyledMarque('SONOFF', 'group.sonoff_devices')}</div>
-                      </div>
-                      `;
+                      return `<div><div>${getStyledMarque('HUE', 'group.hue_devices')}</div><div>${getStyledMarque('IKEA', 'group.ikea_devices')}</div><div>${getStyledMarque('SONOFF', 'group.sonoff_devices')}</div></div>`;
                     ]]]
                   100_75_battery: |
                     [[[
@@ -3191,7 +3247,7 @@ views:
                       }
                       function getStyledCount(count) {
                         if (count > 0) {
-                          return `<span style="color: orange;">${count}</span>`;
+                          return `<span style="color: #FFA500;">${count}</span>`;
                         }
                         return count;
                       }
@@ -3218,7 +3274,7 @@ views:
                       }
                       function getStyledCount(count) {
                         if (count > 0) {
-                          return `<span style="color: orange;">${count}</span>`;
+                          return `<span style="color: #FFA500;">${count}</span>`;
                         }
                         return count;
                       }
@@ -3245,7 +3301,7 @@ views:
                       }
                       function getStyledCount(count) {
                         if (count > 0) {
-                          return `<span style="color: orange;">${count}</span>`;
+                          return `<span style="color: #FFA500;">${count}</span>`;
                         }
                         return count;
                       }
@@ -3272,7 +3328,7 @@ views:
                       }
                       function getStyledCount(count) {
                         if (count > 0) {
-                          return `<span style="color: orange;">${count}</span>`;
+                          return `<span style="color: #FFA500;">${count}</span>`;
                         }
                         return count;
                       }
@@ -6585,75 +6641,111 @@ views:
           - type: heading
             icon: mdi:desktop-tower-monitor
             heading_style: title
+            heading: Bureau
+            grid_options:
+              columns: 12
+              rows: 1
             badges:
               - type: entity
-                show_state: true
-                show_icon: true
                 entity: sensor.th_bureau_temperature
                 color: green
-              - type: entity
                 show_state: true
-                show_icon: true
+              - type: entity
+                entity: sensor.lumiere_bureau_etat
+                icon: hue:flourish-alt
+                card_mod:
+                  style: |
+                    :host {
+                      {% set etat = states('sensor.lumiere_bureau_etat') %}
+                      {% if etat in ['Bureau', 'Allumé'] %}
+                        --label-badge-red: #FFBF00 !important;
+                        --ha-label-badge-color: #FFBF00 !important;
+                        color: #FFBF00 !important;
+                      {% else %}
+                        --ha-label-badge-color: grey !important;
+                        color: grey !important;
+                      {% endif %}
+                    }
+                    ha-state-icon {
+                      color: {% if states('sensor.lumiere_bureau_etat') in ['Bureau', 'Allumé'] %} #FFBF00 {% else %} grey {% endif %} !important;
+                    }
+              - type: entity
+                entity: sensor.lumiere_ecran_etat
+                icon: mdi:monitor-dashboard
+                card_mod:
+                  style: |
+                    :host {
+                      {% set etat = states('sensor.lumiere_ecran_etat') %}
+                      {% if etat == 'Éco.' %}
+                        /* Couleur Verte quand Éco. */
+                        --label-badge-red: var(--green-color) !important;
+                        --ha-label-badge-color: var(--green-color) !important;
+                        color: var(--green-color) !important;
+                      {% elif etat in ['Écran', 'Allumé'] %}
+                        /* Couleur Ambre pour le reste */
+                        --label-badge-red: #FFBF00 !important;
+                        --ha-label-badge-color: #FFBF00 !important;
+                        color: #FFBF00 !important;
+                      {% else %}
+                        /* Gris par défaut */
+                        --ha-label-badge-color: grey !important;
+                        color: grey !important;
+                      {% endif %}
+                    }
+                    ha-state-icon {
+                      {% set etat = states('sensor.lumiere_ecran_etat') %}
+                      color: {% if etat == 'Éco.' %} var(--green-color) {% elif etat in ['Écran', 'Allumé'] %} #FFBF00 {% else %} grey {% endif %} !important;
+                    }
+              - type: entity
                 entity: cover.store_bureau
                 color: state
-                tap_action:
-                  action: more-info
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.bureau_z2m
-                icon: hue:flourish-alt
-                color: state
-                state_content: state
-              - type: entity
-                show_state: true
-                show_icon: true
-                entity: light.bureau
-                color: state
-                icon: mdi:television
-                state_content: state
-            heading: Bureau
           - type: custom:vertical-stack-in-card
             cards:
               - type: custom:mushroom-template-card
-                entity: light.bureau_z2m
+                entity: light.bureau
                 primary: Bureau
                 secondary: |
-                  {% if is_state('light.bureau_z2m', 'on') %}
-                    Allumée
-                  {% else %}
-                    Éteint
+                  {% set etat = states('sensor.lumiere_bureau_etat') %}
+                  {% if etat == 'Allumé' %} Allumée
+                  {% elif etat == 'Bureau' %} Bureau
+                  {% else %} Éteint
                   {% endif %}
-                icon: |
-                  {% if is_state('light.bureau_z2m', 'on') %}
+                icon: >
+                  {% if states('sensor.lumiere_bureau_etat') in ['Allumé',
+                  'Bureau', 'Allumé & Synchro'] %}
                     hue:flourish-alt
                   {% else %}
                     hue:flourish
                   {% endif %}
-                badge_icon: |
-                  {% if is_state('light.bureau_z2m', 'on') %}
+                badge_icon: >
+                  {% if states('sensor.lumiere_bureau_etat') in ['Allumé',
+                  'Bureau', 'Allumé & Synchro'] %}
                     mdi:checkbox-marked-circle
                   {% else %}
                     mdi:checkbox-blank-circle-outline
                   {% endif %}
-                badge_color: |
-                  {% if is_state('light.bureau_z2m', 'on') %}
+                badge_color: >
+                  {% if states('sensor.lumiere_bureau_etat') in ['Allumé',
+                  'Bureau', 'Allumé & Synchro'] %}
                     green
                   {% else %}
                     grey
                   {% endif %}
-                color: |
-                  {% if is_state('light.bureau_z2m', 'on') %}
+                color: >
+                  {% if states('sensor.lumiere_bureau_etat') in ['Allumé',
+                  'Bureau', 'Allumé & Synchro'] %}
                     green
                   {% else %}
                     grey
                   {% endif %}
                 features_position: bottom
                 tap_action:
-                  action: toggle
-                grid_options:
-                  columns: 6
-                  rows: 2
+                  action: call-service
+                  service: light.toggle
+                  target:
+                    entity_id:
+                      - light.hue_white_lamp_bureau_1
+                      - light.hue_white_lamp_bureau_2
                 card_mod:
                   style:
                     mushroom-state-info$: |
@@ -6674,51 +6766,53 @@ views:
                       :host {
                         --mush-icon-size: 70px;
                       }
-                    style: |
                       ha-card {
-                        border: 1px solid {% if is_state('light.bureau_z2m', 'on') %} green {% else %} grey {% endif %};
-                        background-color: {% if is_state('light.bureau_z2m', 'on') %} rgba(0, 255, 0, 0.0) 
-                        {% else %} 
-                          transparent 
-                        {% endif %};
+                        border: none !important;
+                        background-color: transparent !important;
                       }
               - type: custom:mushroom-chips-card
                 chips:
                   - type: template
-                    entity: light.bureau_z2m
+                    entity: sensor.lumiere_bureau_etat
                     tap_action:
                       action: navigate
-                      navigation_path: '#bureau_z2m'
-                    icon: |
-                      {% if is_state('light.bureau_z2m', 'on') %}
+                      navigation_path: '#bureau'
+                    icon: >
+                      {% if states('sensor.lumiere_bureau_etat') in ['Allumé',
+                      'Bureau', 'Allumé & Synchro'] %}
                         hue:flourish-alt
                       {% else %}
                         hue:flourish
                       {% endif %}
-                    icon_color: |
-                      {% if is_state(entity, 'on') %}
+                    icon_color: >
+                      {% if states('sensor.lumiere_bureau_etat') in ['Allumé',
+                      'Bureau', 'Allumé & Synchro'] %}
                         green
-                      {% elif is_state(entity, 'off') %}
+                      {% else %}
                         grey
                       {% endif %}
                 card_mod:
                   style: |
                     ha-card {
-                      --chip-border-width: 1;
-                      --chip-border-color: {% if is_state('light.bureau_z2m', 'on') %} green {% else %} grey {% endif %};
-                      --chip-height: 30px;
-                      margin-left: 80%;
-                      bottom: 10px;
+                      --chip-border-width: 1px;
+                      --chip-border-color: {% if states('sensor.lumiere_bureau_etat') in ['Allumé', 'Bureau', 'Allumé & Synchro'] %} green {% else %} grey {% endif %};
+                      --chip-height: 40px;
+                      height: 65px !important;
+                      margin-left: 196px;
+                      bottom: -18px;
+                      background: none !important;
+                      border: none !important;
+                      box-shadow: none !important;
                     }
             card_mod:
               style: |
                 ha-card {
-                  border: 1px solid {% if is_state('light.bureau_z2m', 'on') %} green {% else %} grey {% endif %};
-                  background-color: {% if is_state('light.bureau_z2m', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
+                  border: 1px solid {% if states('sensor.lumiere_bureau_etat') in ['Allumé', 'Bureau', 'Allumé & Synchro'] %} green {% else %} grey {% endif %} !important;
+                  background-color: {% if states('sensor.lumiere_bureau_etat') in ['Allumé', 'Bureau', 'Allumé & Synchro'] %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %} !important;
                 }
             grid_options:
               columns: 6
-              rows: 2
+              rows: auto
           - type: conditional
             conditions:
               - entity: switch.ecran_p_c_3_play_hue
@@ -6727,44 +6821,42 @@ views:
               type: custom:vertical-stack-in-card
               cards:
                 - type: custom:mushroom-template-card
-                  entity: light.bureau
+                  entity: light.ecrans_pc
                   primary: Ecran
                   secondary: |
-                    {% if is_state('light.bureau', 'on') %}
-                      Allumée
-                    {% else %}
-                      Éteint
-                    {% endif %}
-                  icon: |
-                    {% if is_state('light.bureau', 'on') %}
-                      mdi:television
-                    {% else %}
-                      mdi:television
-                    {% endif %}
-                  icon_color: |
-                    {% if is_state('light.bureau', 'on') %}
-                      green
-                    {% else %}
-                      grey
-                    {% endif %}
-                  badge_icon: |
-                    {% if is_state('light.bureau', 'on') %}
-                      mdi:checkbox-marked-circle
-                    {% else %}
-                      mdi:checkbox-blank-circle-outline
-                    {% endif %}
-                  badge_color: |
-                    {% if is_state('light.bureau', 'on') %}
-                      green
-                    {% else %}
-                      grey
-                    {% endif %}
-                  color: |
-                    {% if is_state('light.bureau', 'on') %}
-                      green
-                    {% else %}
-                      grey
-                    {% endif %}
+                    {% set etat = states('sensor.lumiere_ecran_etat') %}
+                    {{ etat if etat != 'unavailable' else 'Éteint' }}
+                  icon: >
+                    {% set etat = states('sensor.lumiere_ecran_etat') %}
+
+                    {% set actif = etat in ['Écran', 'Allumé', 'Allumé &
+                    Synchro', 'Synchro'] %}
+
+                    {{ 'mdi:monitor-dashboard' if actif else 'mdi:monitor' }}
+                  icon_color: >
+                    {% set actif = states('sensor.lumiere_ecran_etat') in
+                    ['Écran', 'Allumé', 'Allumé & Synchro', 'Synchro'] %}
+
+                    {{ 'green' if actif else 'grey' }}
+                  badge_icon: >
+                    {% set actif = states('sensor.lumiere_ecran_etat') in
+                    ['Écran', 'Allumé', 'Allumé & Synchro', 'Synchro'] %}
+
+                    {{ 'mdi:checkbox-marked-circle' if actif else
+                    'mdi:checkbox-blank-circle-outline' }}
+                  badge_color: >
+                    {% set actif = states('sensor.lumiere_ecran_etat') in
+                    ['Écran', 'Allumé', 'Allumé & Synchro', 'Synchro'] %}
+
+                    {{ 'green' if actif else 'grey' }}
+                  tap_action:
+                    action: call-service
+                    service: light.toggle
+                    target:
+                      entity_id:
+                        - light.hue_play_1_pc_bureau
+                        - light.hue_play_2_pc_bureau
+                        - light.hue_play_3_pc_bureau
                   features_position: bottom
                   card_mod:
                     style:
@@ -6786,54 +6878,54 @@ views:
                         :host {
                           --mush-icon-size: 70px;
                         }
-                      style: |
                         ha-card {
                           padding: 0 !important;
                           border: none !important;
-                          background-color: {% if is_state('light.bureau', 'on') %} transparent {% else %} transparent {% endif %};
+                          background-color: transparent !important;
                         }
-                  tap_action:
-                    action: toggle
-                  grid_options:
-                    columns: 6
-                    rows: 2
                 - type: custom:mushroom-chips-card
                   chips:
                     - type: template
-                      entity: light.bureau
+                      entity: sensor.lumiere_bureau_etat
                       tap_action:
                         action: navigate
                         navigation_path: '#ecranpc'
-                      icon: |
-                        {% if is_state('light.bureau', 'on') %}
-                          mdi:television
-                        {% else %}
-                          mdi:television
-                        {% endif %}
-                      icon_color: |
-                        {% if is_state(entity, 'on') %}
-                          green
-                        {% elif is_state(entity, 'off') %}
-                          grey
-                        {% endif %}
+                      icon: >
+                        {% set actif = states('sensor.lumiere_ecran_etat') in
+                        ['Écran', 'Allumé', 'Allumé & Synchro', 'Synchro'] %}
+
+                        {{ 'mdi:monitor-dashboard' if actif else 'mdi:monitor'
+                        }}
+                      icon_color: >
+                        {% set actif = states('sensor.lumiere_ecran_etat') in
+                        ['Écran', 'Allumé', 'Allumé & Synchro', 'Synchro'] %}
+
+                        {{ 'green' if actif else 'grey' }}
                   card_mod:
-                    style: |
+                    style: >
+                      {% set actif = states('sensor.lumiere_ecran_etat') in
+                      ['Écran', 'Allumé', 'Allumé & Synchro', 'Synchro'] %}
+
                       ha-card {
-                        --chip-border-width: 1;
-                        --chip-border-color: {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
-                        --chip-height: 30px;
-                        margin-left: 80%;
-                        bottom: 10px;
+                        --chip-border-width: 1px;
+                        --chip-border-color: {{ 'green' if actif else 'grey' }};
+                        --chip-height: 40px;
+                        height: 65px !important;
+                        margin-left: 196px;
+                        bottom: -18px;
                         padding: 0 !important;
                         background-color: none !important;
                         box-shadow: none !important;
                         border: none !important;
                       }
               card_mod:
-                style: |
+                style: >
+                  {% set actif = states('sensor.lumiere_ecran_etat') in
+                  ['Écran', 'Allumé', 'Allumé & Synchro', 'Synchro'] %}
+
                   ha-card {
-                    border: 1px solid {% if is_state('light.bureau', 'on') %} green {% else %} grey {% endif %};
-                    background-color: {% if is_state('light.bureau', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
+                    border: 1px solid {{ 'green' if actif else 'grey' }} !important;
+                    background-color: {{ 'rgba(0, 255, 0, 0.1)' if actif else 'transparent' }} !important;
                   }
             grid_options:
               columns: 6
@@ -6862,43 +6954,45 @@ views:
                 color: state
                 icon: mdi:mirror-rectangle
           - type: custom:mushroom-template-card
-            entity: switch.salle_de_bain
+            entity: light.lampe_salle_de_bain_hue
             primary: Salle de Bain
             secondary: |
-              {% if is_state('light.salle_de_bain', 'on') %}
+              {% if is_state('light.lampe_salle_de_bain_hue', 'on') %}
                 Allumée
               {% else %}
                 Éteint
               {% endif %}
             icon: |
-              {% if is_state('light.salle_de_bain', 'on') %}
+              {% if is_state('light.lampe_salle_de_bain_hue', 'on') %}
                 mdi:ceiling-light
               {% else %}
                 mdi:ceiling-light-outline
               {% endif %}
-            icon_color: |
-              {% if is_state('light.salle_de_bain', 'on') %}
-                green
-              {% else %}
-                grey
-              {% endif %}
             badge_icon: |
-              {% if is_state('light.salle_de_bain', 'on') %}
+              {% if is_state('light.lampe_salle_de_bain_hue', 'on') %}
                 mdi:checkbox-marked-circle
               {% else %}
                 mdi:checkbox-blank-circle-outline
               {% endif %}
             badge_color: |
-              {% if is_state('light.salle_de_bain', 'on') %}
+              {% if is_state('light.lampe_salle_de_bain_hue', 'on') %}
                 green
               {% else %}
                 grey
               {% endif %}
             tap_action:
-              action: toggle
-            grid_options:
-              columns: 12
-              rows: 2
+              action: call-service
+              service: light.toggle
+              target:
+                entity_id:
+                  - light.lampe_salle_de_bain_hue
+            features_position: bottom
+            color: |
+              {% if is_state('light.lampe_salle_de_bain_hue', 'on') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
             card_mod:
               style:
                 mushroom-state-info$: |
@@ -6919,11 +7013,13 @@ views:
                   :host {
                     --mush-icon-size: 70px;
                   }
-                style: |
                   ha-card {
-                    border: 1px solid {% if is_state('light.salle_de_bain', 'on') %} green {% else %} grey {% endif %};
-                    background-color: {% if is_state('light.salle_de_bain', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
+                    border: 1px solid {% if is_state('light.lampe_salle_de_bain_hue', 'on') %} green {% else %} grey {% endif %};
+                    background-color: {% if is_state('light.lampe_salle_de_bain_hue', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
                   }
+            grid_options:
+              columns: 12
+              rows: 2
           - type: heading
             icon: mdi:bed
             heading: Chambre
@@ -6956,12 +7052,6 @@ views:
               {% else %}
                 hue:flourish
               {% endif %}
-            icon_color: |
-              {% if is_state('light.chambre', 'on') %}
-                green
-              {% else %}
-                grey
-              {% endif %}
             badge_icon: |
               {% if is_state('light.chambre', 'on') %}
                 mdi:checkbox-marked-circle
@@ -6975,10 +7065,22 @@ views:
                 grey
               {% endif %}
             tap_action:
-              action: toggle
+              action: call-service
+              service: light.toggle
+              target:
+                entity_id:
+                  - light.hue_white_lamp_chambre_1
+                  - light.hue_white_lamp_chambre_2
             grid_options:
               columns: 12
               rows: 2
+            color: |
+              {% if is_state('light.chambre', 'on') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            features_position: bottom
             card_mod:
               style:
                 mushroom-state-info$: |
@@ -7048,44 +7150,35 @@ views:
                   secondary: >
                     {% set on_lights =
                     expand('light.hue_color_candle_chambre_gege',
-                    'light.hue_color_candle_chambre_eric') | selectattr('state',
-                    'eq', 'on') | list %}
-
+                    'light.hue_color_candle_chambre_eric') 
+                       | selectattr('state', 'eq', 'on') | list %}
                     {% if on_lights | length > 0 %}
                       {{ on_lights | length }} lampe(s) allumée(s)
                     {% else %}
                       Aucune lampe allumée
                     {% endif %}
-                  icon: |
-                    {% if is_state('light.lit', 'on') %}
-                      mdi:bed
-                    {% else %}
-                      mdi:bed-outline
-                    {% endif %}
+                  icon: >
+                    {{ 'mdi:bed' if is_state('light.lit', 'on') else
+                    'mdi:bed-outline' }}
                   icon_color: |
-                    {% if is_state('light.lit', 'on') %}
-                      green
-                    {% else %}
-                      grey
-                    {% endif %}
-                  badge_icon: |
-                    {% if is_state('light.lit', 'on') %}
-                      mdi:checkbox-marked-circle
-                    {% else %}
-                      mdi:checkbox-blank-circle-outline
-                    {% endif %}
+                    {{ 'green' if is_state('light.lit', 'on') else 'grey' }}
+                  badge_icon: >
+                    {{ 'mdi:checkbox-marked-circle' if is_state('light.lit',
+                    'on') else 'mdi:checkbox-blank-circle-outline' }}
                   badge_color: |
-                    {% if is_state('light.lit', 'on') %}
-                      green
-                    {% else %}
-                      grey
-                    {% endif %}
+                    {{ 'green' if is_state('light.lit', 'on') else 'grey' }}
                   tap_action:
-                    action: toggle
+                    action: call-service
+                    service: light.toggle
+                    target:
+                      entity_id:
+                        - light.hue_color_candle_chambre_gege
+                        - light.hue_color_candle_chambre_eric
                   card_mod:
                     style:
                       mushroom-state-info$: |
                         .primary {
+                          position: relative;
                           top: -5px;
                           left: 10px;
                           font-size: 24px !important;
@@ -7093,20 +7186,18 @@ views:
                         }
                         .secondary {
                           position: relative;
-                          top: 7px;
-                          left: 3px;
+                          top: 5px;
+                          left: 10px;
                           font-size: 12px !important;
                         }
                       .: |
                         :host {
                           --mush-icon-size: 65px;
                         }
-                      style: |
                         ha-card {
-                          min-height: 5px !important;
-                          max-height: 5px !important;
-                          background-color: {% if is_state('light.lit', 'on') %} transparent {% else %} transparent {% endif %};
-                          margin-top: 55px;
+                          background-color: transparent !important;
+                          border: none !important;
+                          padding: 0 !important;
                         }
                 - type: custom:mushroom-chips-card
                   chips:
@@ -7115,35 +7206,31 @@ views:
                       tap_action:
                         action: navigate
                         navigation_path: '#tete_de_lit'
-                      icon: |
-                        {% if is_state('light.lit', 'on') %}
-                          mdi:floor-lamp
-                        {% else %}
-                          mdi:floor-lamp-outline
-                        {% endif %}
+                      icon: >
+                        {{ 'mdi:floor-lamp' if is_state('light.lit', 'on') else
+                        'mdi:floor-lamp-outline' }}
                       icon_color: |
-                        {% if is_state(entity, 'on') %}
-                          green
-                        {% elif is_state(entity, 'off') %}
-                          grey
-                        {% endif %}
+                        {{ 'green' if is_state('light.lit', 'on') else 'grey' }}
                   card_mod:
                     style: |
                       ha-card {
-                        --chip-border-width: 1;
-                        --chip-border-color: {% if is_state('light.lit', 'on') %} green {% else %} grey {% endif %};
-                        --chip-height: 50px;
-                        margin-left: 80%;
-                        bottom: 30px;
-                        background: none !important;
+                        --chip-border-width: 1px;
+                        --chip-border-color: {{ 'green' if is_state('light.lit', 'on') else 'grey' }};
+                        --chip-height: 40px;
+                        height: 65px !important;
+                        margin-left: 450px;
+                        bottom: -18px;
+                        padding: 0 !important;
+                        background-color: none !important;
                         box-shadow: none !important;
                         border: none !important;
                       }
               card_mod:
                 style: |
+                  {% set actif = is_state('light.lit', 'on') %}
                   ha-card {
-                    border: 1px solid {% if is_state('light.lit', 'on') %} green {% else %} grey {% endif %};
-                    background-color: {% if is_state('light.lit', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
+                    border: 1px solid {{ 'green' if actif else 'grey' }} !important;
+                    background-color: {{ 'rgba(0, 255, 0, 0.1)' if actif else 'transparent' }} !important;
                   }
           - type: vertical-stack
             cards:
@@ -7636,7 +7723,7 @@ views:
             cards:
               - type: custom:bubble-card
                 card_type: pop-up
-                hash: '#bureau_z2m'
+                hash: '#bureau'
                 show_header: true
                 force_icon: false
                 show_state: false
@@ -7654,263 +7741,9 @@ views:
               - type: vertical-stack
                 cards:
                   - type: custom:mushroom-light-card
-                    entity: light.bureau_z2m
+                    entity: light.bureau
                     name: Lampes Bureau
                     icon: hue:flourish-alt
-                    icon_color: green
-                    layout: normal
-                    use_light_color: false
-                    show_brightness_control: true
-                    show_color_temp_control: false
-                    show_color_control: false
-                    collapsible_controls: false
-                    card_mod:
-                      style: |
-                        ha-card {
-                          border: 2px solid {% if is_state('light.bureau_z2m', 'on') %} green {% else %} grey {% endif %};
-                          background-color: {% if is_state('light.bureau_z2m', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
-                        }
-                  - type: custom:layout-card
-                    layout_type: custom:grid-layout
-                    layout:
-                      grid-template-columns: 25% 25% 25% 25%
-                      grid-template-rows: 100%
-                      grid-template-areas: |
-                        "zone1 zone2 zone3 zone4"
-                    cards:
-                      - type: custom:button-card
-                        view_layout:
-                          grid-area: zone1
-                        label: 25%
-                        show_label: true
-                        tap_action:
-                          action: call-service
-                          service: light.turn_on
-                          service_data:
-                            entity_id: light.bureau_z2m
-                            brightness_pct: 25
-                        styles:
-                          grid:
-                            - grid-template-areas: '"i" "n" "l"'
-                            - grid-template-rows: min-content min-content 1fr
-                          card:
-                            - aspect-ratio: 1/1
-                            - background-color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 63 && brightness <= 65)
-                                    return "rgba(0, 255, 0, 0.1)";
-                                  else
-                                    return "transparent";
-                                ]]]
-                            - border-width: 1px
-                            - border-color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 63 && brightness <= 65)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          icon:
-                            - color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 63 && brightness <= 65)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          label:
-                            - font-weight: bold
-                            - color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 63 && brightness <= 65)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                      - type: custom:button-card
-                        view_layout:
-                          grid-area: zone2
-                        label: 50%
-                        show_label: true
-                        tap_action:
-                          action: call-service
-                          service: light.turn_on
-                          service_data:
-                            entity_id: light.bureau_z2m
-                            brightness_pct: 50
-                        styles:
-                          grid:
-                            - grid-template-areas: '"i" "n" "l"'
-                            - grid-template-rows: min-content min-content 1fr
-                          card:
-                            - aspect-ratio: 1/1
-                            - background-color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 127 && brightness <= 129)
-                                    return "rgba(0, 255, 0, 0.1)";
-                                  else
-                                    return "transparent";
-                                ]]]
-                            - border-width: 1px
-                            - border-color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 127 && brightness <= 129)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          icon:
-                            - color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 127 && brightness <= 129)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          label:
-                            - font-weight: bold
-                            - color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 127 && brightness <= 129)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                      - type: custom:button-card
-                        view_layout:
-                          grid-area: zone3
-                        label: 75%
-                        show_label: true
-                        tap_action:
-                          action: call-service
-                          service: light.turn_on
-                          service_data:
-                            entity_id: light.bureau_z2m
-                            brightness_pct: 75
-                        styles:
-                          grid:
-                            - grid-template-areas: '"i" "n" "l"'
-                            - grid-template-rows: min-content min-content 1fr
-                          card:
-                            - aspect-ratio: 1/1
-                            - background-color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 190 && brightness <= 192)
-                                    return "rgba(0, 255, 0, 0.1)";
-                                  else
-                                    return "transparent";
-                                ]]]
-                            - border-width: 1px
-                            - border-color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 190 && brightness <= 192)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          icon:
-                            - color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 190 && brightness <= 192)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          label:
-                            - font-weight: bold
-                            - color: |
-                                [[[
-                                  var brightness = states['light.bureau_z2m'].attributes.brightness;
-                                  if (states['light.bureau_z2m'].state == "on" && brightness >= 190 && brightness <= 192)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                      - type: custom:button-card
-                        view_layout:
-                          grid-area: zone4
-                        label: 100%
-                        show_label: true
-                        tap_action:
-                          action: call-service
-                          service: light.turn_on
-                          service_data:
-                            entity_id: light.bureau_z2m
-                            brightness_pct: 100
-                        styles:
-                          grid:
-                            - grid-template-areas: '"i" "n" "l"'
-                            - grid-template-rows: min-content min-content 1fr
-                          card:
-                            - aspect-ratio: 1/1
-                            - background-color: |
-                                [[[
-                                  if (states['light.bureau_z2m'].state == "on" && states['light.bureau_z2m'].attributes.brightness == 255)
-                                    return "rgba(0, 255, 0, 0.1)";
-                                  else
-                                    return "transparent";
-                                ]]]
-                            - border-width: 1px
-                            - border-color: |
-                                [[[
-                                  if (states['light.bureau_z2m'].state == "on" && states['light.bureau_z2m'].attributes.brightness == 255)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          icon:
-                            - color: |
-                                [[[
-                                  if (states['light.bureau_z2m'].state == "on" && states['light.bureau_z2m'].attributes.brightness == 255)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-                          label:
-                            - font-weight: bold
-                            - color: |
-                                [[[
-                                  if (states['light.bureau_z2m'].state == "on" && states['light.bureau_z2m'].attributes.brightness == 255)
-                                    return "green";
-                                  else
-                                    return "grey";
-                                ]]]
-          - type: vertical-stack
-            cards:
-              - type: custom:bubble-card
-                card_type: pop-up
-                hash: '#ecranpc'
-                show_header: true
-                force_icon: false
-                show_state: false
-                show_last_changed: false
-                show_attribute: false
-                button_type: name
-                name: Ecran P.C.
-                icon: mdi:television
-                show_icon: true
-                show_name: true
-                card_layout: normal
-                hide_backdrop: false
-                close_on_click: false
-                bg_opacity: '0'
-              - type: vertical-stack
-                cards:
-                  - type: custom:mushroom-light-card
-                    entity: light.bureau
-                    name: Ecran P.C.
-                    icon: mdi:television
                     icon_color: green
                     layout: normal
                     use_light_color: false
@@ -8136,6 +7969,260 @@ views:
                             - color: |
                                 [[[
                                   if (states['light.bureau'].state == "on" && states['light.bureau'].attributes.brightness == 255)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#ecranpc'
+                show_header: true
+                force_icon: false
+                show_state: false
+                show_last_changed: false
+                show_attribute: false
+                button_type: name
+                name: Ecrans P.C.
+                icon: mdi:television
+                show_icon: true
+                show_name: true
+                card_layout: normal
+                hide_backdrop: false
+                close_on_click: false
+                bg_opacity: '0'
+              - type: vertical-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.ecrans_pc
+                    name: Ecrans P.C.
+                    icon: mdi:television
+                    icon_color: green
+                    layout: normal
+                    use_light_color: false
+                    show_brightness_control: true
+                    show_color_temp_control: false
+                    show_color_control: false
+                    collapsible_controls: false
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: 2px solid {% if is_state('light.ecrans_pc', 'on') %} green {% else %} grey {% endif %};
+                          background-color: {% if is_state('light.ecrans_pc', 'on') %} rgba(0, 255, 0, 0.1) {% else %} transparent {% endif %};
+                        }
+                  - type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout:
+                      grid-template-columns: 25% 25% 25% 25%
+                      grid-template-rows: 100%
+                      grid-template-areas: |
+                        "zone1 zone2 zone3 zone4"
+                    cards:
+                      - type: custom:button-card
+                        view_layout:
+                          grid-area: zone1
+                        label: 25%
+                        show_label: true
+                        tap_action:
+                          action: call-service
+                          service: light.turn_on
+                          service_data:
+                            entity_id: light.ecrans_pc
+                            brightness_pct: 25
+                        styles:
+                          grid:
+                            - grid-template-areas: '"i" "n" "l"'
+                            - grid-template-rows: min-content min-content 1fr
+                          card:
+                            - aspect-ratio: 1/1
+                            - background-color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 63 && brightness <= 65)
+                                    return "rgba(0, 255, 0, 0.1)";
+                                  else
+                                    return "transparent";
+                                ]]]
+                            - border-width: 1px
+                            - border-color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 63 && brightness <= 65)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          icon:
+                            - color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 63 && brightness <= 65)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          label:
+                            - font-weight: bold
+                            - color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 63 && brightness <= 65)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                      - type: custom:button-card
+                        view_layout:
+                          grid-area: zone2
+                        label: 50%
+                        show_label: true
+                        tap_action:
+                          action: call-service
+                          service: light.turn_on
+                          service_data:
+                            entity_id: light.ecrans_pc
+                            brightness_pct: 50
+                        styles:
+                          grid:
+                            - grid-template-areas: '"i" "n" "l"'
+                            - grid-template-rows: min-content min-content 1fr
+                          card:
+                            - aspect-ratio: 1/1
+                            - background-color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 127 && brightness <= 129)
+                                    return "rgba(0, 255, 0, 0.1)";
+                                  else
+                                    return "transparent";
+                                ]]]
+                            - border-width: 1px
+                            - border-color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 127 && brightness <= 129)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          icon:
+                            - color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 127 && brightness <= 129)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          label:
+                            - font-weight: bold
+                            - color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 127 && brightness <= 129)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                      - type: custom:button-card
+                        view_layout:
+                          grid-area: zone3
+                        label: 75%
+                        show_label: true
+                        tap_action:
+                          action: call-service
+                          service: light.turn_on
+                          service_data:
+                            entity_id: light.ecrans_pc
+                            brightness_pct: 75
+                        styles:
+                          grid:
+                            - grid-template-areas: '"i" "n" "l"'
+                            - grid-template-rows: min-content min-content 1fr
+                          card:
+                            - aspect-ratio: 1/1
+                            - background-color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 190 && brightness <= 192)
+                                    return "rgba(0, 255, 0, 0.1)";
+                                  else
+                                    return "transparent";
+                                ]]]
+                            - border-width: 1px
+                            - border-color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 190 && brightness <= 192)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          icon:
+                            - color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 190 && brightness <= 192)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          label:
+                            - font-weight: bold
+                            - color: |
+                                [[[
+                                  var brightness = states['light.ecrans_pc'].attributes.brightness;
+                                  if (states['light.ecrans_pc'].state == "on" && brightness >= 190 && brightness <= 192)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                      - type: custom:button-card
+                        view_layout:
+                          grid-area: zone4
+                        label: 100%
+                        show_label: true
+                        tap_action:
+                          action: call-service
+                          service: light.turn_on
+                          service_data:
+                            entity_id: light.ecrans_pc
+                            brightness_pct: 100
+                        styles:
+                          grid:
+                            - grid-template-areas: '"i" "n" "l"'
+                            - grid-template-rows: min-content min-content 1fr
+                          card:
+                            - aspect-ratio: 1/1
+                            - background-color: |
+                                [[[
+                                  if (states['light.ecrans_pc'].state == "on" && states['light.ecrans_pc'].attributes.brightness == 255)
+                                    return "rgba(0, 255, 0, 0.1)";
+                                  else
+                                    return "transparent";
+                                ]]]
+                            - border-width: 1px
+                            - border-color: |
+                                [[[
+                                  if (states['light.ecrans_pc'].state == "on" && states['light.ecrans_pc'].attributes.brightness == 255)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          icon:
+                            - color: |
+                                [[[
+                                  if (states['light.ecrans_pc'].state == "on" && states['light.ecrans_pc'].attributes.brightness == 255)
+                                    return "green";
+                                  else
+                                    return "grey";
+                                ]]]
+                          label:
+                            - font-weight: bold
+                            - color: |
+                                [[[
+                                  if (states['light.ecrans_pc'].state == "on" && states['light.ecrans_pc'].attributes.brightness == 255)
                                     return "green";
                                   else
                                     return "grey";
@@ -8658,7 +8745,7 @@ views:
             all_series_config:
               group_by:
                 func: last
-                duration: 30m
+                duration: 60m
               show:
                 legend_value: false
             series:
@@ -9763,26 +9850,16 @@ views:
                 chip:
                   type: template
                   icon: mdi:air-conditioner
-                  icon_color: |
-                    {% if is_state('sensor.clim_salon_etat', 'Cool') %}
-                      #87CEEB
+                  icon_color: >-
+                    {% if is_state('sensor.clim_salon_etat', 'Cool') %} #87CEEB
+
                     {% elif is_state('sensor.clim_salon_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: |
-                    Salon: {% if is_state('sensor.clim_salon_etat', 'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
+                    #ff6100
+
+                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %} #40E0D0
+
+                    {% else %} #FF0000 {% endif %}
+                  content: 'Salon: {{ states(''sensor.clim_salon_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
@@ -9792,19 +9869,12 @@ views:
                 chip:
                   type: template
                   icon: mdi:heating-coil
-                  icon_color: |
+                  icon_color: >-
                     {% if is_state('sensor.radiateur_cuisine_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Cuisine: {% if is_state('sensor.radiateur_cuisine_etat',
-                    'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
-                      Off
-                    {% endif %}
+                    #ff6100
+
+                    {% else %} #FF0000 {% endif %}
+                  content: 'Cuisine: {{ states(''sensor.radiateur_cuisine_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
@@ -9814,48 +9884,51 @@ views:
                 chip:
                   type: template
                   icon: mdi:air-conditioner
-                  icon_color: |
-                    {% if is_state('sensor.clim_bureau_etat', 'Cool') %}
-                      #87CEEB
+                  icon_color: >-
+                    {% if is_state('sensor.clim_bureau_etat', 'Cool') %} #87CEEB
+
                     {% elif is_state('sensor.clim_bureau_etat', 'Heat') %}
-                      #ff6100
+                    #ff6100
+
                     {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: |
-                    Bureau: {% if is_state('sensor.clim_bureau_etat', 'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
+                    #40E0D0
+
+                    {% else %} #FF0000 {% endif %}
+                  content: 'Bureau: {{ states(''sensor.clim_bureau_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
                 conditions:
-                  - entity: sensor.radiateur_sdb_etat
+                  - entity: sensor.sdb_soufflant_power_status
+                    state_not: 'off'
+                chip:
+                  type: template
+                  icon: mdi:heat-wave
+                  icon_color: >-
+                    {% if is_state('sensor.sdb_soufflant_power_etat', 'Heat') %}
+                    #ff6100
+
+                    {% else %} #FF0000 {% endif %}
+                  content: >-
+                    SdB Soufflant: {{ states('sensor.sdb_soufflant_power_etat')
+                    }}
+                  tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: sensor.sdb_seche_serv_power_status
                     state_not: 'off'
                 chip:
                   type: template
                   icon: mdi:heating-coil
-                  icon_color: |
-                    {% if is_state('sensor.radiateur_sdb_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.radiateur_sdb_etat', 'off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Salle de Bain: {% if is_state('sensor.radiateur_sdb_etat',
-                    'Heat') %}
-                      Heat
-                    {% else %}
-                      Off
-                    {% endif %}
+                  icon_color: >-
+                    {% if is_state('sensor.sdb_seche_serviettes_etat', 'Heat')
+                    %} #ff6100
+
+                    {% else %} #FF0000 {% endif %}
+                  content: >-
+                    SdB Serviettes: {{
+                    states('sensor.sdb_seche_serviettes_etat') }}
                   tap_action:
                     action: none
               - type: conditional
@@ -9865,27 +9938,18 @@ views:
                 chip:
                   type: template
                   icon: mdi:air-conditioner
-                  icon_color: |
+                  icon_color: >-
                     {% if is_state('sensor.clim_chambre_etat', 'Cool') %}
-                      #87CEEB
+                    #87CEEB
+
                     {% elif is_state('sensor.clim_chambre_etat', 'Heat') %}
-                      #ff6100
+                    #ff6100
+
                     {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Chambre: {% if is_state('sensor.clim_chambre_etat', 'Heat')
-                    %}
-                      Heat
-                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
+                    #40E0D0
+
+                    {% else %} #FF0000 {% endif %}
+                  content: 'Chambre: {{ states(''sensor.clim_chambre_etat'') }}'
                   tap_action:
                     action: none
             alignment: center
@@ -12508,15 +12572,15 @@ views:
                 show_icon: true
                 entity: sensor.th_balcon_nord_temperature
                 color: green
-            heading: Auto open at +18° or auto close at +34°
+            heading: Auto close at +34°
             card_mod:
               style: |
                 ha-card {
                   border: none !important;
                   box-shadow: none !important;
                   background: none !important;
-                  margin: -20px 0px 0px 90px;
-                  padding: 0;
+                  margin: -18px 0px 0px 165px;
+
                 }
           - card_mod:
               style: |
@@ -12572,13 +12636,13 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: binary_sensor.contact_fenetre_salon_ikea_contact
+                entity: binary_sensor.contact_fenetre_salon_sonoff_contact
                 color: green
                 state_content: state
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.contact_fenetre_salon_ikea_battery
+                entity: sensor.contact_fenetre_salon_sonoff_battery
                 color: state
                 tap_action:
                   action: more-info
@@ -12609,20 +12673,32 @@ views:
                       box-shadow: none !important;
                       background: none !important;
                       margin: -55px 0px 0px 0px;
-                      padding: 0;
                     }
-              - type: markdown
-                content: >
-                  <div style="text-align: center;">Salon : {{
-                  states('sensor.store_salon_status') | default('-') }}</div>
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: transparent;
-                      border: transparent;
-                      text-align: center;
-                      margin-top: -45px;
-                    }
+              - type: custom:button-card
+                entity: sensor.store_salon_status
+                entities:
+                  - sensor.store_salon_status
+                  - cover.store_salon
+                triggers_update:
+                  - sensor.store_salon_status
+                  - cover.store_salon
+                show_name: false
+                show_icon: false
+                show_state: true
+                styles:
+                  card:
+                    - background: transparent
+                    - border: none
+                    - box-shadow: none
+                    - margin-top: '-40px'
+                    - height: 30px
+                  state:
+                    - font-size: 14px
+                    - justify-self: center
+                state_display: |
+                  [[[
+                    return 'Salon : ' + entity.state;
+                  ]]]
               - type: horizontal-stack
                 cards:
                   - type: custom:button-card
@@ -12636,11 +12712,14 @@ views:
                     styles:
                       card:
                         - background-color: transparent
-                        - border: 1px solid
+                        - border: 1px solid white
                         - border-radius: 5px
                         - padding: 10px
+                        - height: 40px
                       name:
                         - color: white
+                        - font-size: 12px
+                        - font-weight: bold
                   - type: custom:button-card
                     name: 75%
                     tap_action:
@@ -12652,11 +12731,14 @@ views:
                     styles:
                       card:
                         - background-color: transparent
-                        - border: 1px solid
+                        - border: 1px solid white
                         - border-radius: 5px
                         - padding: 10px
+                        - height: 40px
                       name:
                         - color: white
+                        - font-size: 12px
+                        - font-weight: bold
                   - type: custom:button-card
                     name: 50%
                     tap_action:
@@ -12668,11 +12750,14 @@ views:
                     styles:
                       card:
                         - background-color: transparent
-                        - border: 1px solid
+                        - border: 1px solid white
                         - border-radius: 5px
                         - padding: 10px
+                        - height: 40px
                       name:
                         - color: white
+                        - font-size: 12px
+                        - font-weight: bold
                   - type: custom:button-card
                     name: 25%
                     tap_action:
@@ -12684,11 +12769,14 @@ views:
                     styles:
                       card:
                         - background-color: transparent
-                        - border: 1px solid
+                        - border: 1px solid white
                         - border-radius: 5px
                         - padding: 10px
+                        - height: 40px
                       name:
                         - color: white
+                        - font-size: 12px
+                        - font-weight: bold
                   - type: custom:button-card
                     name: 10%
                     tap_action:
@@ -12700,11 +12788,14 @@ views:
                     styles:
                       card:
                         - background-color: transparent
-                        - border: 1px solid
+                        - border: 1px solid white
                         - border-radius: 5px
                         - padding: 10px
+                        - height: 40px
                       name:
                         - color: white
+                        - font-size: 12px
+                        - font-weight: bold
           - type: custom:mushroom-light-card
             entity: light.smart_roller_shutter_2309261223820570080348e1e9dc6401_dnd
             grid_options:
@@ -12843,14 +12934,14 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: binary_sensor.contact_fenetre_bureau_ikea_contact
+                entity: binary_sensor.contact_fenetre_bureau_sonoff_contact
                 color: green
                 state_content: state
                 icon: mdi:door-open
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.contact_fenetre_bureau_ikea_battery
+                entity: sensor.contact_fenetre_bureau_sonoff_battery
                 color: state
                 tap_action:
                   action: more-info
@@ -12886,23 +12977,36 @@ views:
                 card_mod:
                   style: |
                     ha-card {
+                      background: none !important;
                       border: none !important;
                       box-shadow: none !important;
-                      background: none !important;
                       margin: -55px 0px 0px 0px;
-                      padding: 0;
                     }
-              - type: markdown
-                content: >
-                  <div style="text-align: center;">Bureau : {{
-                  states('sensor.store_bureau_status') | default('-') }}</div>
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: transparent;
-                      border: transparent;
-                      text-align: center;
-                      margin-top: -45px;
+              - type: custom:button-card
+                entity: sensor.store_bureau_status
+                entities:
+                  - sensor.store_bureau_status
+                  - cover.store_bureau
+                triggers_update:
+                  - sensor.store_bureau_status
+                  - cover.store_bureau
+                show_name: false
+                show_icon: false
+                show_state: true
+                styles:
+                  card:
+                    - background: transparent
+                    - border: none
+                    - box-shadow: none
+                    - margin-top: '-40px'
+                    - height: 30px
+                  state:
+                    - font-size: 14px
+                    - justify-self: center
+                state_display: |
+                  [[[
+                    return 'Bureau : ' + entity.state;
+                  ]]]
               - type: horizontal-stack
                 cards:
                   - type: custom:button-card
@@ -15073,7 +15177,94 @@ views:
                     box-shadow: none !important;
                     background: none !important;
                   }
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-chips-card
+                alignment: center
+                chips:
+                  - type: template
+                    entity: sensor.dut_clim_salon
+                    content: |
+                      Salon: {% set t = states(entity) | float(0) %}
+                      {% set h = t | int %}{% set m = ((t - h) * 60) | int %}
+                      {{ h }}h{{ '{:02d}'.format(m) }}
+                    icon: |-
+                      {% if is_state('sensor.ete_hiver', 'Été') %}
+                        mdi:snowflake
+                      {% else %}
+                        mdi:fire
+                      {% endif %}
+                    icon_color: >-
+                      {% if is_state('sensor.ete_hiver', 'Été') %} #03a9f4 {%
+                      else %} #ff9800 {% endif %}
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none !important;
+                          box-shadow: none !important;
+                          background: transparent;
+                        }
+                  - type: template
+                    entity: sensor.dut_radiateur_cuisine
+                    content: |
+                      Cuisine: {% set t = states(entity) | float(0) %}
+                      {% set h = t | int %}{% set m = ((t - h) * 60) | int %}
+                      {{ h }}h{{ '{:02d}'.format(m) }}
+                    icon: mdi:radiator
+                    icon_color: '#f44336'
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none !important;
+                          box-shadow: none !important;
+                          background: transparent;
+                        }
+                  - type: template
+                    entity: sensor.dut_clim_bureau
+                    content: |
+                      Bureau: {% set t = states(entity) | float(0) %}
+                      {% set h = t | int %}{% set m = ((t - h) * 60) | int %}
+                      {{ h }}h{{ '{:02d}'.format(m) }}
+                    icon: |-
+                      {% if is_state('sensor.ete_hiver', 'Été') %}
+                        mdi:snowflake
+                      {% else %}
+                        mdi:fire
+                      {% endif %}
+                    icon_color: >-
+                      {% if is_state('sensor.ete_hiver', 'Été') %} #03a9f4 {%
+                      else %} #ff9800 {% endif %}
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none !important;
+                          box-shadow: none !important;
+                          background: transparent;
+                        }
+                  - type: template
+                    entity: sensor.dut_clim_chambre
+                    content: |
+                      Chambre: {% set t = states(entity) | float(0) %}
+                      {% set h = t | int %}{% set m = ((t - h) * 60) | int %}
+                      {{ h }}h{{ '{:02d}'.format(m) }}
+                    icon: |-
+                      {% if is_state('sensor.ete_hiver', 'Été') %}
+                        mdi:snowflake
+                      {% else %}
+                        mdi:fire
+                      {% endif %}
+                    icon_color: >-
+                      {% if is_state('sensor.ete_hiver', 'Été') %} #03a9f4 {%
+                      else %} #ff9800 {% endif %}
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none !important;
+                          box-shadow: none !important;
+                          background: transparent;
+                        }
           - type: custom:mushroom-chips-card
+            alignment: center
             chips:
               - type: conditional
                 conditions:
@@ -15082,26 +15273,16 @@ views:
                 chip:
                   type: template
                   icon: mdi:air-conditioner
-                  icon_color: |
-                    {% if is_state('sensor.clim_salon_etat', 'Cool') %}
-                      #87CEEB
+                  icon_color: >
+                    {% if is_state('sensor.clim_salon_etat', 'Cool') %} #87CEEB
+
                     {% elif is_state('sensor.clim_salon_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: |
-                    Salon: {% if is_state('sensor.clim_salon_etat', 'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_salon_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
+                    #ff6100
+
+                    {% elif is_state('sensor.clim_salon_etat', 'Fan') %} #40E0D0
+
+                    {% else %} #FF0000 {% endif %}
+                  content: 'Salon: {{ states(''sensor.clim_salon_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
@@ -15111,19 +15292,8 @@ views:
                 chip:
                   type: template
                   icon: mdi:heating-coil
-                  icon_color: |
-                    {% if is_state('sensor.radiateur_cuisine_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Cuisine: {% if is_state('sensor.radiateur_cuisine_etat',
-                    'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.radiateur_cuisine_etat', 'Off') %}
-                      Off
-                    {% endif %}
+                  icon_color: '#ff6100'
+                  content: 'Cuisine: {{ states(''sensor.radiateur_cuisine_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
@@ -15133,72 +15303,39 @@ views:
                 chip:
                   type: template
                   icon: mdi:air-conditioner
-                  icon_color: |
-                    {% if is_state('sensor.clim_bureau_etat', 'Cool') %}
-                      #87CEEB
+                  icon_color: >
+                    {% if is_state('sensor.clim_bureau_etat', 'Cool') %} #87CEEB
+
                     {% elif is_state('sensor.clim_bureau_etat', 'Heat') %}
-                      #ff6100
+                    #ff6100
+
                     {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: |
-                    Bureau: {% if is_state('sensor.clim_bureau_etat', 'Heat') %}
-                      Heat
-                    {% elif is_state('sensor.clim_bureau_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_bureau_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
+                    #40E0D0
+
+                    {% else %} #FF0000 {% endif %}
+                  content: 'Bureau: {{ states(''sensor.clim_bureau_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
                 conditions:
-                  - entity: sensor.radiateur_sdb_etat
-                    state_not: 'off'
+                  - entity: sensor.sdb_soufflant_power_etat
+                    state_not: 'Off'
                 chip:
                   type: template
                   icon: mdi:heat-wave
-                  icon_color: |
-                    {% if is_state('sensor.radiateur_sdb_etat', 'Heat') %}
-                      #ff6100
-                    {% elif is_state('sensor.radiateur_sdb_etat', 'off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Salle de Bain: {% if is_state('sensor.radiateur_sdb_etat',
-                    'Heat') %}
-                      Heat
-                    {% else %}
-                      Off
-                    {% endif %}
+                  icon_color: '#ff6100'
+                  content: 'SdB: {{ states(''sensor.sdb_soufflant_power_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
                 conditions:
-                  - entity: sensor.seche_serviettes_sdb_etat
-                    state_not: 'off'
+                  - entity: sensor.sdb_seche_serviettes_etat
+                    state_not: 'Off'
                 chip:
                   type: template
                   icon: mdi:heating-coil
-                  icon_color: >
-                    {% if is_state('sensor.seche_serviettes_sdb_etat', 'Heat')
-                    %}
-                      #ff6100
-                    {% elif is_state('sensor.seche_serviettes_sdb_etat', 'off')
-                    %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Salle de Bain: {% if
-                    is_state('sensor.seche_serviettes_sdb_etat', 'Heat') %}
-                      Heat
-                    {% else %}
-                      Off
-                    {% endif %}
+                  icon_color: '#ff6100'
+                  content: 'SdB: {{ states(''sensor.sdb_seche_serviettes_etat'') }}'
                   tap_action:
                     action: none
               - type: conditional
@@ -15208,30 +15345,20 @@ views:
                 chip:
                   type: template
                   icon: mdi:air-conditioner
-                  icon_color: |
+                  icon_color: >
                     {% if is_state('sensor.clim_chambre_etat', 'Cool') %}
-                      #87CEEB
+                    #87CEEB
+
                     {% elif is_state('sensor.clim_chambre_etat', 'Heat') %}
-                      #ff6100
+                    #ff6100
+
                     {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
-                      #40E0D0
-                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
-                      #FF0000
-                    {% endif %}
-                  content: >
-                    Chambre: {% if is_state('sensor.clim_chambre_etat', 'Heat')
-                    %}
-                      Heat
-                    {% elif is_state('sensor.clim_chambre_etat', 'Fan') %}
-                      Fan
-                    {% elif is_state('sensor.clim_chambre_etat', 'Off') %}
-                      Off
-                    {% else %}
-                      Cool
-                    {% endif %}
+                    #40E0D0
+
+                    {% else %} #FF0000 {% endif %}
+                  content: 'Chambre: {{ states(''sensor.clim_chambre_etat'') }}'
                   tap_action:
                     action: none
-            alignment: center
           - type: vertical-stack
             cards:
               - type: custom:auto-entities
@@ -15368,8 +15495,8 @@ views:
                 name: Souff. SdB (R)
                 color: magenta
                 float_precision: 2
-              - entity: sensor.seche_serv_daily
-                name: Sèche-S. SdB (R)
+              - entity: sensor.seche_serv_sdb_daily
+                name: Sèche-Serv. SdB (R)
                 color: purple
                 float_precision: 2
               - entity: sensor.clim_chambre_daily
@@ -15447,8 +15574,8 @@ views:
                 name: Souff. SdB (R)
                 color: magenta
                 float_precision: 2
-              - entity: sensor.seche_serv_monthly
-                name: Sèche-Serv. SdB(R)
+              - entity: sensor.seche_serv_sdb_monthly
+                name: Sèche-Serv. SdB (R)
                 color: purple
                 float_precision: 2
               - entity: sensor.clim_chambre_monthly
@@ -15648,7 +15775,7 @@ views:
             all_series_config:
               group_by:
                 func: last
-                duration: 30m
+                duration: 60m
               show:
                 legend_value: false
             series:
@@ -15710,6 +15837,229 @@ views:
                   box-shadow: none !important;
                   border: none !important;
                   font-size: 12px;
+                }
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+              offset: +0m
+            apex_config:
+              chart:
+                height: 340px
+            now:
+              show: true
+              color: '#f44336'
+              label: Now
+            header:
+              show: true
+              title: D.U.T. Pièces vs Performance Totale
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temp
+                decimals: 0
+                show: false
+              - id: hours
+                min: 0
+                max: 24
+                decimals: 0
+                opposite: true
+                apex_config:
+                  tickAmount: 12
+              - id: perf
+                show: false
+                min: 0
+                max: 80
+            all_series_config:
+              curve: smooth
+              group_by:
+                func: last
+                duration: 5m
+              show:
+                legend_value: false
+            series:
+              - entity: sensor.th_balcon_nord_temperature
+                yaxis_id: temp
+                name: Temp. Ext.
+                type: area
+                opacity: 0.2
+                color: '#44739e'
+                stroke_width: 1
+              - entity: sensor.dut_clim_salon
+                name: Salon
+                yaxis_id: hours
+                color: rgb(174,68,90)
+                stroke_width: 2
+              - entity: sensor.dut_radiateur_cuisine
+                name: Cuisine
+                yaxis_id: hours
+                color: rgb(168, 136, 181)
+                stroke_width: 2
+              - entity: sensor.dut_clim_bureau
+                name: Bureau
+                yaxis_id: hours
+                color: orange
+                stroke_width: 2
+              - entity: sensor.dut_sdb_total
+                name: SdB
+                yaxis_id: hours
+                color: magenta
+                stroke_width: 2
+              - entity: sensor.dut_clim_chambre
+                name: Chambre
+                yaxis_id: hours
+                color: rgb(30,81,40)
+                stroke_width: 2
+              - entity: sensor.performance_thermique_totale
+                name: PERF. APPART
+                yaxis_id: perf
+                type: line
+                stroke_width: 4
+                color: '#FFFFFF'
+                show:
+                  legend_value: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+              offset: +0m
+            apex_config:
+              chart:
+                height: 340px
+              annotations:
+                yaxis:
+                  - 'y': 0
+                    y2: 10
+                    fillColor: '#008055'
+                    opacity: 0.1
+                    label:
+                      text: A
+                      style:
+                        color: '#008055'
+                        background: transparent
+                  - 'y': 11
+                    y2: 20
+                    fillColor: '#2FB044'
+                    opacity: 0.1
+                    label:
+                      text: B
+                      style:
+                        color: '#2FB044'
+                        background: transparent
+                  - 'y': 21
+                    y2: 30
+                    fillColor: '#BED100'
+                    opacity: 0.1
+                    label:
+                      text: C
+                      style:
+                        color: '#BED100'
+                        background: transparent
+                  - 'y': 31
+                    y2: 45
+                    fillColor: '#FFD100'
+                    opacity: 0.1
+                    label:
+                      text: D
+                      style:
+                        color: '#FFD100'
+                        background: transparent
+                  - 'y': 46
+                    y2: 60
+                    fillColor: '#FFB300'
+                    opacity: 0.1
+                    label:
+                      text: E
+                      style:
+                        color: '#FFB300'
+                        background: transparent
+            now:
+              show: true
+              color: '#f44336'
+              label: Now
+            header:
+              show: true
+              title: Comparatif Performances Thermiques (DPE)
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temp
+                decimals: 0
+                show: false
+              - id: perf
+                min: 0
+                max: ~40
+                decimals: 0
+                opposite: true
+                apex_config:
+                  tickAmount: 8
+            all_series_config:
+              stroke_width: 1
+              curve: smooth
+              group_by:
+                func: last
+                duration: 5m
+              show:
+                legend_value: false
+            series:
+              - entity: sensor.th_balcon_nord_temperature
+                yaxis_id: temp
+                name: Temp. Ext.
+                type: area
+                opacity: 0.2
+                color: '#44739e'
+              - entity: sensor.performance_thermique_salon
+                name: Perf. Salon
+                yaxis_id: perf
+                color: rgb(174,68,90)
+                stroke_width: 2
+              - entity: sensor.performance_thermique_cuisine
+                name: Perf. Cuisine
+                yaxis_id: perf
+                color: rgb(168, 136, 181)
+                stroke_width: 2
+              - entity: sensor.performance_thermique_bureau
+                name: Perf. Bureau
+                yaxis_id: perf
+                color: orange
+                stroke_width: 2
+              - entity: sensor.performance_thermique_sdb
+                name: Perf. SdB
+                yaxis_id: perf
+                color: magenta
+                stroke_width: 2
+              - entity: sensor.performance_thermique_chambre
+                name: Perf. Chambre
+                yaxis_id: perf
+                color: rgb(30,81,40)
+                stroke_width: 2
+              - entity: sensor.performance_thermique_totale
+                name: MOYENNE APPART
+                yaxis_id: perf
+                type: line
+                stroke_width: 3
+                color: '#FFFFFF'
+                show:
+                  legend_value: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
                 }
           - type: heading
             icon: mdi:sofa
@@ -15794,10 +16144,8 @@ views:
               current_color: rgb(255, 41, 41)
               avg_daily_entity: sensor.clim_salon_avg_watts_daily
               conso_daily_kwh_entity: sensor.clim_salon_daily
-              power_entity: sensor.clim_salon_nous_power
-              power_color: rgb(174,68,90)
-              span_offset: +3m
-              group_duration: 1s
+              span_offset: '-1m'
+              group_duration: 1m
           - type: heading
             icon: mdi:sofa
             heading_style: subtitle
@@ -15852,6 +16200,99 @@ views:
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
               conso_monthly_kwh_entity: sensor.clim_salon_monthly
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+              offset: +0m
+            apex_config:
+              chart:
+                height: 340px
+              annotations:
+                yaxis:
+                  - 'y': 5
+                    y2: 50
+                    borderColor: '#f44336'
+                    fillColor: '#f44336'
+                    opacity: 0.1
+                    label:
+                      text: Zone Critique
+                      style:
+                        color: '#f44336'
+                        background: transparent
+            now:
+              show: true
+              color: '#f44336'
+              label: Now
+            header:
+              show: true
+              title: D.U.T. & Performance Salon
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temp
+                decimals: 0
+              - id: hours
+                min: 0
+                max: 24
+                decimals: 0
+                opposite: true
+                apex_config:
+                  tickAmount: 12
+              - id: perf
+                show: false
+                min: 0
+                max: 60
+            all_series_config:
+              show:
+                legend_value: false
+                extremas: true
+              curve: smooth
+            series:
+              - entity: sensor.th_balcon_nord_temperature
+                yaxis_id: temp
+                name: Temp. Extérieure
+                type: area
+                stroke_width: 1
+                color: '#44739e'
+                opacity: 0.2
+              - entity: sensor.dut_clim_salon
+                name: D.U.T. Salon
+                yaxis_id: hours
+                type: area
+                color: rgb(174,68,90)
+                stroke_width: 1
+                opacity: 0.4
+                group_by:
+                  func: last
+                  duration: 5m
+                color_threshold:
+                  - value: 0
+                    color: '#0f9d58'
+                  - value: 4
+                    color: '#fdd835'
+                  - value: 6
+                    color: '#ff9800'
+                  - value: 10
+                    color: '#f44336'
+              - entity: sensor.performance_thermique_salon
+                name: Performance
+                yaxis_id: perf
+                type: line
+                stroke_width: 2
+                color: '#f44336'
+                show:
+                  legend_value: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: heading
             icon: mdi:fridge
             heading_style: title
@@ -15989,6 +16430,99 @@ views:
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
               conso_monthly_kwh_entity: sensor.radiateur_cuisine_monthly
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+              offset: +0m
+            apex_config:
+              chart:
+                height: 340px
+              annotations:
+                yaxis:
+                  - 'y': 5
+                    y2: 50
+                    borderColor: '#f44336'
+                    fillColor: '#f44336'
+                    opacity: 0.1
+                    label:
+                      text: Performance Faible
+                      style:
+                        color: '#f44336'
+                        background: transparent
+            now:
+              show: true
+              color: '#f44336'
+              label: Now
+            header:
+              show: true
+              title: D.U.T. & Performance Cuisine
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temp
+                decimals: 0
+              - id: hours
+                min: 0
+                max: 24
+                decimals: 0
+                opposite: true
+                apex_config:
+                  tickAmount: 12
+              - id: perf
+                show: false
+                min: 0
+                max: 60
+            all_series_config:
+              show:
+                legend_value: false
+                extremas: true
+              curve: smooth
+            series:
+              - entity: sensor.th_balcon_nord_temperature
+                yaxis_id: temp
+                name: Temp. Extérieure
+                type: area
+                stroke_width: 1
+                color: '#44739e'
+                opacity: 0.2
+              - entity: sensor.dut_radiateur_cuisine
+                name: D.U.T. Cuisine
+                yaxis_id: hours
+                type: area
+                color: rgb(168, 136, 181)
+                stroke_width: 1
+                opacity: 0.4
+                group_by:
+                  func: last
+                  duration: 5m
+                color_threshold:
+                  - value: 0
+                    color: '#0f9d58'
+                  - value: 4
+                    color: '#fdd835'
+                  - value: 6
+                    color: '#ff9800'
+                  - value: 10
+                    color: '#f44336'
+              - entity: sensor.performance_thermique_cuisine
+                name: Score Performance
+                yaxis_id: perf
+                type: line
+                stroke_width: 2
+                color: '#f44336'
+                show:
+                  legend_value: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: heading
             icon: mdi:desktop-tower-monitor
             heading_style: title
@@ -16131,6 +16665,99 @@ views:
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
               conso_monthly_kwh_entity: sensor.clim_bureau_monthly
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+              offset: +0m
+            apex_config:
+              chart:
+                height: 340px
+              annotations:
+                yaxis:
+                  - 'y': 5
+                    y2: 50
+                    borderColor: '#f44336'
+                    fillColor: '#f44336'
+                    opacity: 0.1
+                    label:
+                      text: Zone Critique
+                      style:
+                        color: '#f44336'
+                        background: transparent
+            now:
+              show: true
+              color: '#f44336'
+              label: Now
+            header:
+              show: true
+              title: D.U.T. & Performance Bureau
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temp
+                decimals: 0
+              - id: hours
+                min: 0
+                max: 24
+                decimals: 0
+                opposite: true
+                apex_config:
+                  tickAmount: 12
+              - id: perf
+                show: false
+                min: 0
+                max: 60
+            all_series_config:
+              show:
+                legend_value: false
+                extremas: true
+              curve: smooth
+            series:
+              - entity: sensor.th_balcon_nord_temperature
+                yaxis_id: temp
+                name: Temp. Extérieure
+                type: area
+                stroke_width: 1
+                color: '#44739e'
+                opacity: 0.2
+              - entity: sensor.dut_clim_bureau
+                name: D.U.T. Bureau
+                yaxis_id: hours
+                type: area
+                color: rgb(174,68,90)
+                stroke_width: 1
+                opacity: 0.4
+                group_by:
+                  func: last
+                  duration: 5m
+                color_threshold:
+                  - value: 0
+                    color: '#0f9d58'
+                  - value: 4
+                    color: '#fdd835'
+                  - value: 6
+                    color: '#ff9800'
+                  - value: 10
+                    color: '#f44336'
+              - entity: sensor.performance_thermique_bureau
+                name: Performance
+                yaxis_id: perf
+                type: line
+                stroke_width: 2
+                color: '#f44336'
+                show:
+                  legend_value: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: heading
             icon: hue:room-bathroom
             heading: SALLE DE BAIN
@@ -16355,7 +16982,7 @@ views:
               current_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_current
               current_color: rgb(255, 41, 41)
               avg_daily_entity: sensor.seche_serv_avg_watts_daily
-              conso_daily_kwh_entity: sensor.seche_serv_daily
+              conso_daily_kwh_entity: sensor.seche_serv_sdb_daily
               power_entity: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
               power_color: rgb(255, 215, 0)
               span_offset: +15m
@@ -16413,7 +17040,100 @@ views:
               avg_monthly_entity: sensor.seche_serv_avg_watts_monthly
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
-              conso_monthly_kwh_entity: sensor.seche_serv_monthly
+              conso_monthly_kwh_entity: sensor.seche_serv_sdb_monthly
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+              offset: +0m
+            apex_config:
+              chart:
+                height: 340px
+              annotations:
+                yaxis:
+                  - 'y': 5
+                    y2: 50
+                    borderColor: '#f44336'
+                    fillColor: '#f44336'
+                    opacity: 0.1
+                    label:
+                      text: Pic de conso
+                      style:
+                        color: '#f44336'
+                        background: transparent
+            now:
+              show: true
+              color: '#f44336'
+              label: Now
+            header:
+              show: true
+              title: D.U.T. & Performance SdB
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temp
+                decimals: 0
+              - id: hours
+                min: 0
+                max: 24
+                decimals: 0
+                opposite: true
+                apex_config:
+                  tickAmount: 12
+              - id: perf
+                show: false
+                min: 0
+                max: 60
+            all_series_config:
+              show:
+                legend_value: false
+                extremas: true
+              curve: smooth
+            series:
+              - entity: sensor.th_balcon_nord_temperature
+                yaxis_id: temp
+                name: Temp. Extérieure
+                type: area
+                stroke_width: 1
+                color: '#44739e'
+                opacity: 0.2
+              - entity: sensor.dut_sdb_total
+                name: D.U.T. SdB
+                yaxis_id: hours
+                type: area
+                color: magenta
+                stroke_width: 1
+                opacity: 0.4
+                group_by:
+                  func: last
+                  duration: 5m
+                color_threshold:
+                  - value: 0
+                    color: '#0f9d58'
+                  - value: 4
+                    color: '#fdd835'
+                  - value: 6
+                    color: '#ff9800'
+                  - value: 10
+                    color: '#f44336'
+              - entity: sensor.performance_thermique_sdb
+                name: Performance
+                yaxis_id: perf
+                type: line
+                stroke_width: 2
+                color: '#f44336'
+                show:
+                  legend_value: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: heading
             icon: mdi:bed
             heading_style: title
@@ -16555,6 +17275,99 @@ views:
               temp_entity: sensor.th_balcon_nord_temperature
               temp_color: rgb(126, 24, 145)
               conso_monthly_kwh_entity: sensor.clim_chambre_monthly
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            graph_span: 24h
+            cache: true
+            span:
+              start: day
+              offset: +0m
+            apex_config:
+              chart:
+                height: 340px
+              annotations:
+                yaxis:
+                  - 'y': 5
+                    y2: 50
+                    borderColor: '#f44336'
+                    fillColor: '#f44336'
+                    opacity: 0.1
+                    label:
+                      text: Zone de déperdition
+                      style:
+                        color: '#f44336'
+                        background: transparent
+            now:
+              show: true
+              color: '#f44336'
+              label: Now
+            header:
+              show: true
+              title: D.U.T. & Performance Chambre
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: temp
+                decimals: 0
+              - id: hours
+                min: 0
+                max: 24
+                decimals: 0
+                opposite: true
+                apex_config:
+                  tickAmount: 12
+              - id: perf
+                show: false
+                min: 0
+                max: 60
+            all_series_config:
+              show:
+                legend_value: false
+                extremas: true
+              curve: smooth
+            series:
+              - entity: sensor.th_balcon_nord_temperature
+                yaxis_id: temp
+                name: Temp. Extérieure
+                type: area
+                stroke_width: 1
+                color: '#44739e'
+                opacity: 0.2
+              - entity: sensor.dut_clim_chambre
+                name: D.U.T. Chambre
+                yaxis_id: hours
+                type: area
+                color: rgb(174,68,90)
+                stroke_width: 1
+                opacity: 0.4
+                group_by:
+                  func: last
+                  duration: 5m
+                color_threshold:
+                  - value: 0
+                    color: '#0f9d58'
+                  - value: 4
+                    color: '#fdd835'
+                  - value: 6
+                    color: '#ff9800'
+                  - value: 10
+                    color: '#f44336'
+              - entity: sensor.performance_thermique_chambre
+                name: Performance
+                yaxis_id: perf
+                type: line
+                stroke_width: 2
+                color: '#f44336'
+                show:
+                  legend_value: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: vertical-stack
             cards:
               - type: custom:bubble-card
@@ -18792,7 +19605,7 @@ views:
                   - sensor.hue_smart_button_table_battery
                   - sensor.hue_smart_button_cuisine_battery
                   - sensor.hue_smart_button_couloir_battery
-                  - sensor.boutton_bureau_hue_battery
+                  - sensor.hue_smart_button_batterie
                   - sensor.boutton_salle_de_bain_hue_battery
                   - sensor.hue_smart_button_chambre_battery
                   - sensor.eric_hue_smart_button_chambre_battery
@@ -20085,7 +20898,7 @@ views:
                             }
                       - type: custom:bar-card
                         entities:
-                          - entity: sensor.temperature_core_3_sys
+                          - entity: sensor.temperature_core_3_sys_2
                             name: Core 3
                             color: darkgreen
                             height: 25px
