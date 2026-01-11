@@ -15,25 +15,6 @@
     json_attributes:
       - features
 
-# --- mini_pc_charge_moyenne_24h_w ---
-  - platform: statistics
-    name: "Mini PC Charge Moyenne 24h (W)"
-    unique_id: mini_pc_charge_moyenne_24h_w
-    entity_id: sensor.prise_mini_pc_ikea_power
-    state_characteristic: mean
-    max_age: { hours: 24 }
-    precision: 1
-
-# --- ping_https_vscode ---
-  - platform: rest
-    name: "Ping HTTPS VSCode"
-    unique_id: ping_https_vscode
-    resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
-    method: GET
-    timeout: 15
-    value_template: "{{ value_json is defined or value is defined }}"
-    scan_interval: 60
-
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)                         │
 # ╰──────────────────────────────────────────────────────────────────────────╯
@@ -181,7 +162,7 @@
     round: 3
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : PÔLE 1. DURÉE D'UTILISATION [DUT] (CHAUFFAGE & CLIM)            │ # [L1] modif : Section isolée
+# │ SENSOR : PÔLE 1. DURÉE D'UTILISATION [DUT] (CHAUFFAGE & CLIM)            │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
 # ┌───────────────────────────────────┐
@@ -211,14 +192,24 @@
     end: "{{ now() }}"
 
 # ┌───────────────────────────────────┐
-# │ 7. BUREAU                         │
+# │ 8. SDB                            │
 # └───────────────────────────────────┘
-# --- dut_clim_bureau ---
+# --- dut_sdb_soufflant ---
   - platform: history_stats
-    name: "DUT Clim Bureau" 
-    unique_id: dut_clim_bureau 
-    entity_id: sensor.bureau_power_status
-    state: "on"
+    name: "DUT SdB Soufflant" 
+    unique_id: dut_sdb_soufflant
+    entity_id: sensor.sdb_soufflant_power_etat
+    state: "Heat"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+# --- dut_sdb_seche_serviettes ---
+  - platform: history_stats
+    name: "DUT SdB Seche Serviettes" 
+    unique_id: dut_sdb_seche_serviettes
+    entity_id: sensor.sdb_seche_serviettes_etat
+    state: "Heat"
     type: time
     start: "{{ now().replace(hour=0, minute=0, second=0) }}"
     end: "{{ now() }}"
@@ -418,14 +409,6 @@
     unit_time: h
     round: 3
 
-# annotations_log:
-# - '[Pôles] Séparation stricte des capteurs Integration par type (Chauffage vs Prises).'
-# - '[Titrage] Application des boîtes ASCII 74 car. (arrondies) et 37 car. (carrées).'
-# - '[Naming] Conversion de tous les "name" en Nom Lisible (Majuscules/Espaces).'
-# - '[Unique_ID] Création systématique de unique_id en format slug (Minuscules/Underscores).'
-# - '[Qualité Air] Tri des statistiques par pièce selon l'ordre officiel (4, 7, 9).'
-# - '[Section 10] Harmonisation du nom vers "AUTRE".'
-
 # ╭──────────────────────────────────────────────────────────────────╮
 # │ SENSOR : STATISTIQUES & INTÉGRATION (PÔLE 10. MINI-PC)           │
 # ╰──────────────────────────────────────────────────────────────────╯
@@ -466,8 +449,3 @@
     timeout: 15
     value_template: "{{ value_json is defined or value is defined }}"
     scan_interval: 60
-
-# annotations_log:
-# - [L1-5] Restauration des capteurs depuis le tag weekly-2025-W52.
-# - [L19] Ajout de l'unique_id 'prise_mini_pc_ikea_kwh' pour stabiliser l'entité.
-# - [Global] Mise en conformité avec le titrage ASCII arrondi (BerrySwann Style).

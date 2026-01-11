@@ -190,7 +190,7 @@
       state: "{{ states('sensor.clim_chambre_quotidien_um') | float(0) | round(2) }}"
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : PERFORMANCE THERMIQUE (SALON / BUREAU / CHAMBRE)                │
+# │ SENSOR : PERFORMANCE THERMIQUE (SALON / BUREAU / SbB / CHAMBRE)          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
     - name: "Performance Thermique Salon"
       unique_id: performance_thermique_salon
@@ -215,6 +215,38 @@
         {% if delta_t > 0 %}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
+
+# ┌───────────────────────────────────┐
+# │ 8. SDB                            │
+# └───────────────────────────────────┘
+
+# --- performance_thermique_sdb ---
+    - name: "Performance Thermique SdB"
+      unique_id: performance_thermique_sdb
+      unit_of_measurement: "pts"
+      state: >
+        {# Puissance totale (Watts) #}
+        {% set watts_soufflant = states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) %}
+        {% set watts_seche_serv = states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) %}
+        {% set watts_total = watts_soufflant + watts_seche_serv %}
+
+        {# Durée d'utilisation cumulée (en heures) #}
+        {% set dut_soufflant = states('sensor.dut_sdb_soufflant') | float(0) %}
+        {% set dut_seche_serv = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
+        {% set dut_total = dut_soufflant + dut_seche_serv %}
+
+        {# Paramètres physiques #}
+        {% set surface = 3.13 %}
+        {% set temp_sdb = states('sensor.th_salle_de_bain_temperature') | float(0) %}
+        {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {% set delta_t = temp_sdb - temp_ext %}
+
+        {# Calcul final #}
+        {% if delta_t > 0 and surface > 0 %}
+          {{ ((watts_total * dut_total) / (surface * delta_t)) | round(1) }}
+        {% else %}
+          0
+        {% endif %}
 
     - name: "Performance Thermique Chambre"
       unique_id: performance_thermique_chambre
