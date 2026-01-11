@@ -185,11 +185,14 @@
       unique_id: temperature_eco_hiver_corrige
       unit_of_measurement: "°C"
       state: >
-        {% set temp_ext = states('sensor.th_balcon_nord_temperature') | int (0) %}
-        {% set temp_eco = states('sensor.temperature_eco_hiver') | int (0) %}
-        {% set delta_1 = states('sensor.delta_1') | int (0) %}
-        {% if temp_ext < 10 %} {{ (temp_eco + delta_2) | int (0) }}
-        {% else %} {{ temp_eco | int (0) }}
+        {% set temp_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {% set temp_eco = states('sensor.temperature_eco_hiver') | float(0) %}
+        {% set delta_1 = states('sensor.delta_1') | float(0) %}
+        
+        {% if temp_ext < 10 %} 
+          {{ (temp_eco + delta_1) | float(1) }}
+        {% else %} 
+          {{ temp_eco | float(0) }}
         {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐

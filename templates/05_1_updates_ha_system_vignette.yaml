@@ -7,8 +7,8 @@
     # │ 10. AUTRE                         │
     # └───────────────────────────────────┘
     # --- available_updates ---
-    - name: "Système Mises à jour Disponibles"
-      unique_id: systeme_mises_a_jour_disponibles
+    - name: "Available Updates"
+      unique_id: available_updates
       icon: mdi:update
       state: >
         {{ 

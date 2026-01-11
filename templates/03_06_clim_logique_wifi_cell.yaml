@@ -81,11 +81,15 @@
           {%- set m_here = (m_net == 'wifi' and m_ssid == target_ssid) -%}
           {%- set e_here = (e_net == 'wifi' and e_ssid == target_ssid) -%}
 
-          {%- if m_here and e_here -%}
+          {{%- if m_here and e_here -%}
             {# Cas où les deux sont là mais statuts différents (ex: "Just Arrived" vs "Home") #}
-            [Tous les 2: {{ m_stat }}]
+            [Tous les 2: {{ m_stat }}/{{ e_stat }}]
+          {%- elif m_here -%}
+            [Mamour: {{ m_stat }}/{{ e_stat }}]
+          {%- elif e_here -%}
+            [Eric: {{ e_stat }}/{{ m_stat }}]
           {%- else -%}
-            {# Cas mixte #}
-            M:[{{ m_stat }}] E:[{{ e_stat }}]
+            {# Fallback : aucun n'est sur le WiFi cible, on affiche juste les statuts #}
+            [{{ m_stat }} / {{ e_stat }}]
           {%- endif -%}
         {%- endif -%}
