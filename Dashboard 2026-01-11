@@ -2135,7 +2135,7 @@ views:
                   - sensor.cuisine_power_status
                   - sensor.bureau_power_status
                   - sensor.sdb_soufflant_power_status
-                  - sensor.sdb_seche_serv_power_status
+                  - sdb_seche_serviettes_etat
                   - sensor.chambre_power_status
                   - sensor.clim_salon_quotidien
                   - sensor.radiateur_elec_cuisine_quotidien
@@ -2161,7 +2161,7 @@ views:
                   - sensor.cuisine_power_status
                   - sensor.bureau_power_status
                   - sensor.sdb_soufflant_power_status
-                  - sensor.sdb_seche_serv_power_status
+                  - sdb_seche_serviettes_etat
                   - sensor.chambre_power_status
                   - sensor.clim_salon_quotidien
                   - sensor.radiateur_elec_cuisine_quotidien
@@ -2246,7 +2246,7 @@ views:
                         { name: 'Cuisine', power: safeState('sensor.cuisine_power_status'), mode: safeState('climate.radiateur_cuisine') },
                         { name: 'Bureau', power: safeState('sensor.bureau_power_status'), mode: safeState('climate.clim_bureau_rm4_mini') },
                         { name: 'SdB Sft', power: safeState('sensor.sdb_soufflant_power_status'), mode: safeState('sensor.sdb_soufflant_power_etat') },
-                        { name: 'SdB SèS', power: safeState('sensor.sdb_seche_serv_power_status'), mode: safeState('sensor.sdb_seche_serviettes_etat') },
+                        { name: 'SdB SèS', power: safeState('sdb_seche_serviettes_etat'), mode: safeState('sensor.sdb_seche_serviettes_etat') },
                         { name: 'Chambre', power: safeState('sensor.chambre_power_status'), mode: safeState('climate.clim_chambre_rm4_mini') },
                         { name: 'TOTAL', color: 'lightgreen', bold: true }
                       ];
@@ -2744,18 +2744,14 @@ views:
                   - binary_sensor.contact_fenetre_bureau_sonoff_contact
                   - binary_sensor.contact_fenetre_chambre_sonoff_contact
                   - sensor.store_salon_status
-                  - sensor.store_cuisine_status
                   - sensor.store_bureau_status
-                  - sensor.store_chambre_status
                 triggers_update:
                   - binary_sensor.contact_fenetre_salon_sonoff_contact
                   - binary_sensor.contact_fenetre_cuisine_sonoff_contact
                   - binary_sensor.contact_fenetre_bureau_sonoff_contact
                   - binary_sensor.contact_fenetre_chambre_sonoff_contact
                   - sensor.store_salon_status
-                  - sensor.store_cuisine_status
                   - sensor.store_bureau_status
-                  - sensor.store_chambre_status
                 styles:
                   card:
                     - aspect-ratio: 1/1
@@ -8657,22 +8653,22 @@ views:
                     action: none
               - type: conditional
                 conditions:
-                  - entity: sensor.seche_serviettes_sdb_etat
+                  - entity: sensor.sdb_seche_serviettes_etat
                     state_not: 'off'
                 chip:
                   type: template
                   icon: mdi:heating-coil
                   icon_color: >
-                    {% if is_state('sensor.seche_serviettes_sdb_etat', 'Heat')
+                    {% if is_state('sensor.sdb_seche_serviettes_etat', 'Heat')
                     %}
                       #ff6100
-                    {% elif is_state('sensor.seche_serviettes_sdb_etat', 'off')
+                    {% elif is_state('sensor.sdb_seche_serviettes_etat', 'off')
                     %}
                       #FF0000
                     {% endif %}
                   content: >
                     Salle de Bain: {% if
-                    is_state('sensor.seche_serviettes_sdb_etat', 'Heat') %}
+                    is_state('sensor.sdb_seche_serviettes_etat', 'Heat') %}
                       Heat
                     {% else %}
                       Off
@@ -9916,7 +9912,8 @@ views:
                     action: none
               - type: conditional
                 conditions:
-                  - entity: sensor.sdb_seche_serv_power_status
+                  - condition: state
+                    entity: sensor.sdb_seche_serviettes_power_status
                     state_not: 'off'
                 chip:
                   type: template

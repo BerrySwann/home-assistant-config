@@ -122,7 +122,7 @@
     # └───────────────────────────────────┘
     # --- sdb_seche_serviettes_power_status ---
     - name: "SdB Sèche-Serviettes Power Status"
-      unique_id: sdb_seche_serv_power_status
+      unique_id: sdb_seche_Serviettes_power_status
       state: >
         {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) > 20 %}
           on

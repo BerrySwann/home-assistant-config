@@ -45,21 +45,25 @@
     - name: "Direction du Vent Vence"
       unique_id: vence_wind_bearing
       state: >
-        {% set bearing = states.weather.vence.attributes.wind_bearing | default(None) %}
+        {% set bearing = state_attr('weather.vence', 'wind_bearing') %}
         {% if bearing is not none %}
-          {% set bearing = bearing | float (0) | round(0) %}
-          {% if bearing == 0 %} 1
-          {% else %} {{ bearing }}
+          {% set b = bearing | float(0) | round(0) %}
+          {% if b == 0 %} 1
+          {% else %} {{ b }}
           {% endif %}
-        {% else %} Inconnu
-        {% endif %}
+        {% else %} 0 {% endif %}
+      unit_of_measurement: "°"
 
 # --- vence_wind_speed_kmh ---
 # windrose-card - Vitesse du Vent Vence
     - name: "Vitesse du Vent Vence"
       unique_id: vence_wind_speed_kmh
       state: >
-        {% set wind_speed_ms = states.weather.weather_vence.attributes.wind_speed | float (0) %}
-        {% set wind_speed_kmh = (wind_speed_ms * 3.6) | round(1) %}
-        {{ wind_speed_kmh }}
+        {% set wind = state_attr('weather.vence', 'wind_speed') %}
+        {% if wind is not none %}
+          {{ (wind | float(0) * 3.6) | round(1) }}
+        {% else %}
+          0
+        {% endif %}
       unit_of_measurement: "km/h"
+      device_class: wind_speed
