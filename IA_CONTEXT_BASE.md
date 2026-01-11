@@ -21,7 +21,7 @@
 3. **BUREAU (Nord) :** 3.95m x 2.67m (10.55 m²).
    - *Équipement :* Split mural, Volet motorisé. 
    - *Auto :* Ouvert uniquement si T° Ext [18°C - 25°C].
-4. **SDB (Interne) :** Pas de fenêtre.
+4. **SDB (Interne) :** 1.96m x 1.58m (3.13 m²) Pas de fenêtre.
    - *Équipement :* Soufflant (2x1000W), Sèche-serviette (150W).
    - *Auto :* Soufflant OFF si >23°C. Sèche-serviette 1h après douche.
 5. **CHAMBRE (Nord) :** 3.95m x 2.85m (11.26 m²).
