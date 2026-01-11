@@ -66,10 +66,10 @@
 # │ 8. SDB                            │
 # └───────────────────────────────────┘
 
-# --- radiateur_sdb_etat ---
+# --- sdb_soufflant_power_etat ---
 # État Radiateur Sdb (basé sur consommation)
-    - name: "Radiateur Sdb État"
-      unique_id: radiateur_sdb_etat
+    - name: "SdB Soufflant Power Etat"
+      unique_id: sensor.sdb_soufflant_power_etat
       state: >
         {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float (0) < 20 %}
           off
@@ -81,8 +81,8 @@
 
 # --- seche_serv_sdb_etat ---
 # État Sèche-Serviettes Sdb (basé sur consommation)
-    - name: "Sèche Serviettes Sdb État"
-      unique_id: seche_serviettes_sdb_etat
+    - name: "SdB Sèche Serviettes État"
+      unique_id: sdb_seche_serviettes_etat
       state: >
         {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float (0) < 20 %}
           off

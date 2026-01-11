@@ -8,7 +8,6 @@
 # └───────────────────────────────────┘
 
 # --- salon_power_status ---
-# Clim Salon (ON) si (_power) superieur a 50 Watts
     - name: "Salon Power Status"
       unique_id: salon_power_status
       state: >
@@ -43,11 +42,20 @@
 # └───────────────────────────────────┘
 
 # --- cuisine_power_status ---
-# Radiateur Cuisine (ON) si (_power) superieur a 50 Watts
     - name: "Cuisine Power Status"
       unique_id: cuisine_power_status
       state: >
         {% if states('sensor.radiateur_elec_cuisine_power') | float (0) > 50 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+
+# --- cuisine_power_status_affichage ---
+    - name: "Cuisine Power Status Affichage"
+      unique_id: cuisine_power_status_affichage
+      state: >
+        {% if states('sensor.radiateur_elec_cuisine_power') | float (0) > 1 %}
           on
         {% else %}
           off
@@ -58,7 +66,6 @@
 # └───────────────────────────────────┘
 
 # --- bureau_power_status ---
-# Clim Bureau (ON) si (_power) superieur a 50 Watts
     - name: "Bureau Power Status"
       unique_id: bureau_power_status
       state: >
@@ -68,23 +75,57 @@
           off
         {% endif %}
 
-# ┌───────────────────────────────────┐
-# │ 8. SDB                            │
-# └───────────────────────────────────┘
-
-# --- sdb_soufflant_power_status ---
-# SdB Soufflant (ON) si (_power) superieur a 50 Watts
-    - name: "SdB Soufflant Power Status"
-      unique_id: sdb_soufflant_power_status
+# --- bureau_power_locks ---
+    - name: "Bureau Power Lock"
+      unique_id: bureau_power_locks
       state: >
-        {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float (0) > 50 %}
+        {% if states('sensor.clim_du_bureau_nous_power') | float (0) >= 9 %}
           on
         {% else %}
           off
         {% endif %}
 
-# --- sdb_seche_serv_power_status ---
-# SdB Sèche-Serviettes Power Status (superieur a 20 Watts)
+# --- bureau_power_status_affichage ---
+    - name: "Bureau Power Status Affichage"
+      unique_id: bureau_power_status_affichage
+      state: >
+        {% if states('sensor.clim_du_bureau_nous_power') | float (0) > 1 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+
+# ┌───────────────────────────────────┐
+# │ 8. Salle de Bain                  │
+# └───────────────────────────────────┘
+
+    # ┌───────────────────────────────────┐
+    # │ 8.1. --- Souflant ---             │
+    # └───────────────────────────────────┘
+    # --- sdb_soufflant_power_status ---
+    - name: "SdB Soufflant Power Status"
+      unique_id: sdb_soufflant_power_status
+      state: >
+        {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float (0) > 20 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+
+    # --- sdb_power_status_affichage ---
+    - name: "SdB Power Status Affichage"
+      unique_id: sdb_power_status_affichage
+      state: >
+        {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float (0) > 1 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+
+    # ┌───────────────────────────────────┐
+    # │ 8.1. --- Sèche-Serviettes ---     │
+    # └───────────────────────────────────┘
+    # --- sdb_seche_serviettes_power_status ---
     - name: "SdB Sèche-Serviettes Power Status"
       unique_id: sdb_seche_serv_power_status
       state: >
@@ -94,7 +135,7 @@
           off
         {% endif %}
 
-# --- sdb_seche_serviettes_power_status_affichage ---
+    # --- sdb_seche_serviettes_power_status_affichage ---
     - name: "SdB Sèche-Serviettes Power Status Affichage"
       unique_id: sdb_seche_serviettes_power_status_affichage
       state: >
@@ -107,9 +148,7 @@
 # ┌───────────────────────────────────┐
 # │ 9. CHAMBRE                        │
 # └───────────────────────────────────┘
-
 # --- chambre_power_status ---
-# Clim Chambre (ON) si (_power) superieur a 50 Watts
     - name: "Chambre Power Status"
       unique_id: chambre_power_status
       state: >
@@ -124,6 +163,16 @@
       unique_id: chambre_power_locks
       state: >
         {% if states('sensor.clim_chambre_nous_power') | float (0) >= 9 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+
+# --- cchambre_power_status_affichage ---
+    - name: "Chambre Power Status Affichage"
+      unique_id: chambre_power_status_affichage
+      state: >
+        {% if states('sensor.clim_chambre_nous_power') | float (0) > 1 %}
           on
         {% else %}
           off
