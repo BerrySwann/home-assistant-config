@@ -16,23 +16,27 @@
         {# 1. Définition de la Cible #}
         {% set target_ssid = "Freebox_GG" %}
         
-        {# 2. Vérification Booléenne (Vrai ou Faux) #}
-        {% set mamour_is_home = states('sensor.poco_x7_pro_mamour_network_type') == 'wifi' 
+        {# 2. Vérification (Sécurisée avec lower) #}
+        {% set mamour_is_home = states('sensor.poco_x7_pro_mamour_network_type') | lower == 'wifi' 
                                 and states('sensor.poco_x7_pro_mamour_wi_fi_connection') == target_ssid %}
         
-        {% set eric_is_home = states('sensor.poco_x7_pro_network_type') == 'wifi' 
+        {% set eric_is_home = states('sensor.poco_x7_pro_network_type') | lower == 'wifi' 
                               and states('sensor.poco_x7_pro_wi_fi_connection') == target_ssid %}
 
         {# 3. Déduction du Groupe #}
         {% if mamour_is_home and eric_is_home %}
-          groupe_4
+          4
         {% elif eric_is_home %}
-          groupe_3
+          3
         {% elif mamour_is_home %}
-          groupe_2
+          2
         {% else %}
-          groupe_1
+          1
         {% endif %}
+      attributes:
+        description: >
+          {% set g = this.state | int(1) %}
+          {% if g == 4 %} Tous {% elif g == 3 %} Eric {% elif g == 2 %} Mamour {% else %} Personne {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐
 # │ 10. AUTRE : CALCUL ET AFFICHAGE DES STATUTS RÉSEAU (INTERFACE)    │

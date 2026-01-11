@@ -292,22 +292,27 @@
         {% else %} 0 {% endif %}
 
     # ┌───────────────────────────────────┐
-    # │ 8. SDB                            │
+    # │ 8. SDB (3.13 m²)                  │
     # └───────────────────────────────────┘
-    # --- dut_sdb_total ---
-    # Durée totale d'utilisation (Soufflant + Sèche-Serviettes)
-    # --- 8. SDB (3.13 m²) ---
+    # --- performance_thermique_sdb ---
     - name: "Performance Thermique SdB"
       unique_id: performance_thermique_sdb
       unit_of_measurement: "pts"
       state: >
-        {% set watts = (states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0)) + (states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0)) %}
+        {% set p1 = states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) %}
+        {% set p2 = states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) %}
+        {% set watts = p1 + p2 %}
         {% set dut = states('sensor.dut_sdb_total') | float(0) %}
-        {% set surface = 3.13 %} {# Mis à jour à 3.13 #}
-        {% set delta_t = (states('sensor.th_salle_de_bain_temperature') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
-        {% if delta_t > 0 and surface > 0 %}
+        {% set surface = 3.13 %}
+        {% set t_int = states('sensor.th_salle_de_bain_temperature') | float(0) %}
+        {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {% set delta_t = t_int - t_ext %}
+        
+        {% if delta_t > 0 and surface > 0 and watts > 0 %}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %} 0 {% endif %}
+        {% else %}
+          0
+        {% endif %}
 
     # ┌───────────────────────────────────┐
     # │ 9. CHAMBRE                        │
@@ -325,3 +330,30 @@
         {% if delta_t > 0 and surface > 0 %}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
+
+    # ┌───────────────────────────────────┐
+    # │ 10. TOTAL HABITAT                 │
+    # └───────────────────────────────────┘
+    # --- performance_thermique_total ---
+    - name: "Performance Thermique Totale"
+      unique_id: performance_thermique_totale
+      unit_of_measurement: "pts"
+      icon: mdi:home-thermometer
+      state: >
+        {# On récupère les valeurs en forçant le 0 si l'état n'est pas numérique #}
+        {% set s = states('sensor.performance_thermique_salon') | float(0) %}
+        {% set kui = states('sensor.performance_thermique_cuisine') | float(0) %}
+        {% set b = states('sensor.performance_thermique_bureau') | float(0) %}
+        {% set sdb = states('sensor.performance_thermique_sdb') | float(0) %}
+        {% set c = states('sensor.performance_thermique_chambre') | float(0) %}
+        
+        {% set pieces = [s, kui, b, sdb, c] | select('gt', 0) | list %}
+        
+        {% if pieces | length > 0 %}
+          {{ (pieces | sum / pieces | length) | round(1) }}
+        {% else %}
+          0
+        {% endif %}
+      availability: >
+        {# Le capteur est disponible même si personne ne chauffe #}
+        {{ true }}
