@@ -15,7 +15,7 @@
 1. **SALON (Sud) :** 6.52m x 3.97m (25.88 m²). 
    - *Équipement :* Split mural, Volet motorisé (Auto: 7h30 -> Coucher soleil / Fermé si Absence / Fermé si >34°C).
    - *Note :* Apport solaire crucial dès 15h.
-2. **CUISINE (Nord) :** Surface non définie (~10m²).
+2. **CUISINE (Nord) :** 4.86m x 2.18m (10.59 m²).
    - *Équipement : "radiateur_cuisine" (Bain d'huile avec relais connectée). 
    - *Auto :* L-Ma-Me-Je (4h45-7h), Ve-Sa-Di (5h45-8h).
 3. **BUREAU (Nord) :** 3.95m x 2.67m (10.55 m²).

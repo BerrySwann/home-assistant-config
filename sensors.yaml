@@ -192,6 +192,19 @@
     end: "{{ now() }}"
 
 # ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- dut_clim_bureau ---
+  - platform: history_stats
+    name: "DUT Clim Bureau" 
+    unique_id: dut_clim_bureau 
+    entity_id: sensor.bureau_power_status
+    state: "on"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+# ┌───────────────────────────────────┐
 # │ 8. SDB                            │
 # └───────────────────────────────────┘
 # --- dut_sdb_soufflant ---
