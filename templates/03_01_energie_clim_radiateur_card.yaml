@@ -115,73 +115,73 @@
 # │ SENSOR : SOUFFLANT SDB (ANNUEL / MENSUEL / HEBDO / QUOTIDIEN)            │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
-# --- radiateur_sdb_annuel ---
-    - name: "Radiateur Sdb Annuel"
-      unique_id: radiateur_sdb_annuel
+# --- soufflant_sdb_annuel ---
+    - name: "Soufflant Sdb Annuel"
+      unique_id: soufflant_sdb_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.radiateur_sdb_annuel_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.soufflant_sdb_annuel_um') | float(0) | round(2) }}"
 
-# --- radiateur_sdb_mensuel ---
-    - name: "Radiateur Sdb Mensuel"
-      unique_id: radiateur_sdb_mensuel
+# --- soufflant_sdb_mensuel ---
+    - name: "soufflant Sdb Mensuel"
+      unique_id: soufflant_sdb_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.radiateur_sdb_mensuel_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.soufflant_sdb__mensuel_um') | float(0) | round(2) }}"
 
-# --- radiateur_sdb_hebdomadaire ---
-    - name: "Radiateur Sdb Hebdomadaire"
-      unique_id: radiateur_sdb_hebdomadaire
+# --- soufflant_sdb_hebdomadaire ---
+    - name: "Soufflant Sdb Hebdomadaire"
+      unique_id: soufflant_sdb_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.radiateur_sdb_hebdomadaire_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.soufflant_sdb_hebdomadaire_um') | float(0) | round(2) }}"
 
-# --- radiateur_sdb_quotidien ---
-    - name: "Radiateur Sdb Quotidien"
-      unique_id: radiateur_sdb_quotidien
+# --- soufflant_sdb_quotidien ---
+    - name: "Soufflant Sdb Quotidien"
+      unique_id: soufflant_sdb_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.radiateur_sdb_quotidien_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.soufflant_sdb_quotidien_um') | float(0) | round(2) }}"
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ SENSOR : SECHE-SERV SDB (ANNUEL / MENSUEL / HEBDO / QUOTIDIEN)           │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
-# --- seche_serv_sdb_annuel ---
-    - name: "Seche Serv Sdb Annuel"
-      unique_id: seche_serv_sdb_annuel
+# --- seche_serviette_sdb_annuel ---
+    - name: "Seche Serviette Sdb Annuel"
+      unique_id: seche_serviette_sdb_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.seche_serviettes_sdb_annuel_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.seche_serviette_sdb_annuel_um') | float(0) | round(2) }}"
 
-# --- seche_serv_sdb_mensuel ---
-    - name: "Seche Serv Sdb Mensuel"
-      unique_id: seche_serv_sdb_mensuel
+# --- sseche_serviette_sdb_mensuel ---
+    - name: "Seche Serviette Sdb Mensuel"
+      unique_id: seche_serviette_sdb_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.seche_serviettes_sdb_mensuel_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.seche_serviette_sdb_mensuel_um') | float(0) | round(2) }}"
 
-# --- seche_serv_sdb_hebdomadaire ---
-    - name: "Seche Serv Sdb Hebdomadaire"
-      unique_id: seche_serv_sdb_hebdomadaire
+# --- seche_serviette_sdb_hebdomadaire ---
+    - name: "Seche Serviette Sdb Hebdomadaire"
+      unique_id: seche_serviette_sdb_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.seche_serviettes_sdb_hebdomadaire_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.seche_serviette_sdb_hebdomadaire_um') | float(0) | round(2) }}"
 
-# --- seche_serv_sdb_quotidien ---
-    - name: "Seche Serv Sdb Quotidien"
-      unique_id: seche_serv_sdb_quotidien
+# --- seche_serviette_sdb_quotidien ---
+    - name: "Seche Serviette Sdb Quotidien"
+      unique_id: seche_serviette_sdb_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.seche_serviettes_sdb_quotidien_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.seche_serviette_sdb_quotidien_um') | float(0) | round(2) }}"
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ SENSOR : CLIM CHAMBRE (ANNUEL / MENSUEL / HEBDO / QUOTIDIEN)             │
@@ -299,8 +299,8 @@
       unique_id: performance_thermique_sdb
       unit_of_measurement: "pts"
       state: >
-        {% set p1 = states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) %}
-        {% set p2 = states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) %}
+        {% set p1 = states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) %}
+        {% set p2 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
         {% set watts = p1 + p2 %}
         {% set dut = states('sensor.dut_sdb_total') | float(0) %}
         {% set surface = 3.13 %}

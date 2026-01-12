@@ -94,37 +94,37 @@ clim_du_bureau_quotidien_um:
 # │ PIÈCE 8. SDB                       │
 # └────────────────────────────────────┘
 # --- soufflant_sdb ---
-radiateur_sdb_annuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+soufflant_sdb_annuel_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
   cycle: yearly
 
-radiateur_sdb_mensuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+soufflant_sdb_mensuel_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
   cycle: monthly
 
-radiateur_sdb_hebdomadaire_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+soufflant_sdb_hebdomadaire_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
   cycle: weekly
 
-radiateur_sdb_quotidien_um:
-  source: sensor.prise_radiateur_salle_de_bain_nous_energy
+soufflant_sdb_quotidien_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
   cycle: daily
 
 # --- Seche_serv ---
-seche_serviettes_sdb_annuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+seche_serviette_sdb_annuel_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
   cycle: yearly
 
-seche_serviettes_sdb_mensuel_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+seche_serviette_sdb_mensuel_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
   cycle: monthly
 
-seche_serviettes_sdb_hebdomadaire_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+seche_serviette_sdb_hebdomadaire_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
   cycle: weekly
 
-seche_serviettes_sdb_quotidien_um:
-  source: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_energy
+seche_serviette_sdb_quotidien_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
   cycle: daily
 
 # ┌────────────────────────────────────┐

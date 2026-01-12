@@ -1160,13 +1160,14 @@
   actions:
   - alias: 'MATÉRIEL : ALLUMAGE DE LA PRISE PHYSIQUE'
     action: switch.turn_on
+    data: {}
     target:
-      entity_id: switch.prise_radiateur_salle_de_bain_nous
+      entity_id: switch.prise_soufflant_salle_de_bain_nous
   - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
     delay: 00:00:02
   - alias: 'SÉCURITÉ : VÉRIFICATION ALIMENTATION PRISE'
     condition: state
-    entity_id: switch.prise_radiateur_salle_de_bain_nous
+    entity_id: switch.prise_soufflant_salle_de_bain_nous
     state: 'on'
   - alias: 'IR : ENVOI COMMANDE POWER ON'
     action: remote.send_command
@@ -1309,8 +1310,9 @@
     delay: 00:01:00
   - alias: 'MATÉRIEL : COUPURE PHYSIQUE DE LA PRISE'
     action: switch.turn_off
+    data: {}
     target:
-      entity_id: switch.prise_radiateur_salle_de_bain_nous
+      entity_id: switch.prise_soufflant_salle_de_bain_nous
   mode: single
 - id: '1766776405670'
   alias: D - WATCHDOG SÉCURITÉ RADIATEUR SDB
