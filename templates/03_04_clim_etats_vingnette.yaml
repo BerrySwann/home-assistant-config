@@ -50,8 +50,8 @@
         {% else %} Off {% endif %}
 
     # --- sdb_seche_serviettes_etat ---
-    - name: "SdB Sèche Serviettes État"
-      unique_id: sdb_seche_serviettes_etat
+    - name: "SdB Sèche Serviette Power État"
+      unique_id: sdb_seche_serviette_power_etat
       state: >
         {% if states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) >= 20 %} Heat
         {% else %} Off {% endif %}
