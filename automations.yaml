@@ -1153,14 +1153,13 @@
     entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'on'
   conditions:
-  - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 24°C'
+  - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 25°C'
     condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
-    below: 24
+    below: 25
   actions:
   - alias: 'MATÉRIEL : ALLUMAGE DE LA PRISE PHYSIQUE'
     action: switch.turn_on
-    data: {}
     target:
       entity_id: switch.prise_soufflant_salle_de_bain_nous
   - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
@@ -1242,8 +1241,9 @@
     state: 'on'
   - alias: 'SÉCURITÉ : PRISE PHYSIQUE DOIT ÊTRE ON'
     condition: state
-    entity_id: switch.prise_radiateur_salle_de_bain_nous
-    state: 'on'
+    entity_id: switch.prise_soufflant_salle_de_bain_nous
+    state:
+    - 'on'
   actions:
   - alias: 'ACTION : AJUSTEMENT DE LA RÉSISTANCE'
     choose:
@@ -1290,8 +1290,9 @@
   conditions:
   - alias: 'SÉCURITÉ : VÉRIFIER SI LA PRISE EST ENCORE ALIMENTÉE'
     condition: state
-    entity_id: switch.prise_radiateur_salle_de_bain_nous
-    state: 'on'
+    entity_id: switch.prise_soufflant_salle_de_bain_nous
+    state:
+    - 'on'
   actions:
   - alias: 'ETAT : THERMOSTAT VIRTUEL SUR OFF'
     action: climate.set_hvac_mode
@@ -1322,7 +1323,7 @@
   - alias: 'SURVEILLANCE : TEMPÉRATURE > 24°C'
     trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
-    above: 24
+    above: 25
   actions:
   - alias: 'VÉRIFICATION : LE RADIATEUR EST-IL ACTIF ?'
     condition: state
@@ -1336,7 +1337,7 @@
     action: notify.mobile_app_poco_x7_pro_eric
     data:
       title: ⚠️ SÉCURITÉ RADIATEUR SDB
-      message: Température de 24°C atteinte. Extinction automatique de sécurité lancée.
+      message: Température de 25°C atteinte. Extinction automatique de sécurité lancée.
 - id: '1766776477442'
   alias: '[Backup] Git au démarrage HA'
   description: Push Git immédiatement au boot de Home Assistant

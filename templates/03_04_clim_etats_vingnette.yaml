@@ -46,14 +46,14 @@
     - name: "SdB Soufflant Power Etat"
       unique_id: sdb_soufflant_power_etat
       state: >
-        {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) >= 20 %} Heat
+        {% if states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) >= 20 %} Heat
         {% else %} Off {% endif %}
 
     # --- sdb_seche_serviettes_etat ---
     - name: "SdB Sèche Serviettes État"
       unique_id: sdb_seche_serviettes_etat
       state: >
-        {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) >= 20 %} Heat
+        {% if states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) >= 20 %} Heat
         {% else %} Off {% endif %}
 
     # ┌───────────────────────────────────┐

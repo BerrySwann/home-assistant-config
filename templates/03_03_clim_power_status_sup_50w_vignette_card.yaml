@@ -101,7 +101,7 @@
     - name: "SdB Soufflant Power Status"
       unique_id: sdb_soufflant_power_status
       state: >
-        {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) > 20 %}
+        {% if states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) > 20 %}
           on
         {% else %}
           off
@@ -111,7 +111,7 @@
     - name: "SdB Power Status Affichage"
       unique_id: sdb_power_status_affichage
       state: >
-        {% if states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) > 1 %}
+        {% if states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) > 1 %}
           on
         {% else %}
           off
@@ -121,20 +121,20 @@
     # │ 8.1. --- Sèche-Serviettes ---     │
     # └───────────────────────────────────┘
     # --- sdb_seche_serviettes_power_status ---
-    - name: "SdB Sèche-Serviettes Power Status"
-      unique_id: sdb_seche_Serviettes_power_status
+    - name: "SdB Sèche-Serviette Power Status"
+      unique_id: sdb_seche_serviette_power_status
       state: >
-        {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) > 20 %}
+        {% if states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) > 20 %}
           on
         {% else %}
           off
         {% endif %}
 
     # --- sdb_seche_serviettes_power_status_affichage ---
-    - name: "SdB Sèche-Serviettes Power Status Affichage"
-      unique_id: sdb_seche_serviettes_power_status_affichage
+    - name: "SdB Sèche-Serviette Power Status Affichage"
+      unique_id: sdb_seche_serviette_power_status_affichage
       state: >
-        {% if states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) > 1 %}
+        {% if states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) > 1 %}
           on
         {% else %}
           off

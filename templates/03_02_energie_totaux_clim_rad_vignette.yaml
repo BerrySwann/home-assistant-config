@@ -35,8 +35,8 @@
         {{ (states('sensor.clim_salon_quotidien') | float(0) +
           states('sensor.radiateur_elec_cuisine_quotid1en') | float(0) +
           states('sensor.clim_du_bureau_quotidien') | float(0) +
-          states('sensor.radiateur_sdb_quotidien') | float(0) +
-          states('sensor.seche_serv_sdb_quotidien') | float(0) +
+          states('sensor.soufflant_sdb_quotidien') | float(0) +
+          states('sensor.seche_serviette_sdb_quotidien') | float(0) +
           states('sensor.clim_chambre_quotidien') | float(0)) | round(2) }}
 
 # ┌───────────────────────────────────────────────────────────────────┐
@@ -53,8 +53,8 @@
         {{ (states('sensor.clim_salon_mensuel') | float(0) +
           states('sensor.radiateur_elec_cuisine_mensuel') | float(0) +
           states('sensor.clim_du_bureau_mensuel') | float(0) +
-          states('sensor.radiateur_sdb_mensuel') | float(0) +
-          states('sensor.seche_serv_sdb_mensuel') | float(0) +
+          states('sensor.soufflant_sdb_mensuel') | float(0) +
+          states('sensor.seche_serviette_sdb_mensuel') | float(0) +
           states('sensor.clim_chambre_mensuel') | float(0)) | round(3) }}
 
 # ┌───────────────────────────────────────────────────────────────────┐
@@ -71,6 +71,6 @@
         {{ (states('sensor.clim_salon_nous_power') | float(0) +
           states('sensor.radiateur_elec_cuisine_power') | float(0) +
           states('sensor.clim_du_bureau_nous_power') | float(0) +
-          states('sensor.prise_radiateur_salle_de_bain_nous_power') | float(0) +
-          states('sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power') | float(0) +
+          states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) +
+          states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) +
           states('sensor.clim_chambre_nous_power') | float(0)) | round(3) }}
