@@ -309,6 +309,14 @@ prise_four_micro_ondes_nous_monthly:
   source: sensor.prise_four_micro_ondes_nous_kwh
   cycle: monthly
 
+# --- prise_petit_dejeune_nous_power_kwh ---
+prise_petit_dejeune_nous_daily:
+  source: sensor.prise_petit_dejeune_nous_kwh
+  cycle: daily
+prise_petit_dejeune_nous_monthly:
+  source: sensor.prise_petit_dejeune_nous_kwh
+  cycle: monthly
+
 # --- lave_linge ---
 prise_lave_linge_nous_daily:
   source: sensor.prise_lave_linge_nous_kwh
