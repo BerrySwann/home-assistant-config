@@ -241,103 +241,40 @@
 # │ SENSOR : PÔLE 1. PERFORMANCE THERMIQUE                                   │
 # ╰──────────────────────────────────────────────────────────────────────────╯
     # ┌───────────────────────────────────┐
-    # │ 4. SALON                          │
+    # │ 4. SALON (25.88 m²)               │
     # └───────────────────────────────────┘
     # --- performance_thermique_salon ---
-    # --- 4. SALON (25.88 m²) ---
-    - name: "Performance Thermique Salon"
+    - name: "Performance Thermique Salon (25.88 m²)"
       unique_id: performance_thermique_salon
       unit_of_measurement: "pts"
       state: >
         {% set watts = states('sensor.clim_salon_nous_power') | float(0) %}
         {% set dut = states('sensor.dut_clim_salon') | float(0) %}
         {% set surface = 25.88 %}
-        {% set delta_t = (states('sensor.temperature_salon') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
-        {% if delta_t > 0 and surface > 0 %}
-          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %} 0 {% endif %}
-
-    # ┌───────────────────────────────────┐
-    # │ 5. CUISINE                        │
-    # └───────────────────────────────────┘
-    # --- performance_thermique_cuisine ---
-    # --- 5. CUISINE (10.59 m²) ---
-    - name: "Performance Thermique Cuisine"
-      unique_id: performance_thermique_cuisine
-      unit_of_measurement: "pts"
-      state: >
-        {% set watts = states('sensor.radiateur_elec_cuisine_power') | float(0) %}
-        {% set dut = states('sensor.dut_radiateur_cuisine') | float(0) %}
-        {% set surface = 10.59 %}
-        {% set delta_t = (states('sensor.temperature_cuisine') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
-        {% if delta_t > 0 and surface > 0 %}
-          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %} 0 {% endif %}
-
-    # ┌───────────────────────────────────┐
-    # │ 7. BUREAU                         │
-    # └───────────────────────────────────┘
-    # --- performance_thermique_bureau ---
-    # --- 7. BUREAU (10.55 m²) ---
-    - name: "Performance Thermique Bureau"
-      unique_id: performance_thermique_bureau
-      unit_of_measurement: "pts"
-      state: >
-        {% set watts = states('sensor.clim_du_bureau_nous_power') | float(0) %}
-        {% set dut = states('sensor.dut_clim_bureau') | float(0) %}
-        {% set surface = 10.55 %}  {# Mis à jour de 6.86 à 10.55 #}
-        {% set delta_t = (states('sensor.temperature_bureau') | float(0)) - (states('sensor.th_balcon_nord_temperature') | float(0)) %}
-        {% if delta_t > 0 and surface > 0 %}
-          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %} 0 {% endif %}
-
-    # ┌───────────────────────────────────┐
-    # │ 8. SDB (3.13 m²)                  │
-    # └───────────────────────────────────┘
-    # --- performance_thermique_sdb ---
-    - name: "Performance Thermique SdB"
-      unique_id: performance_thermique_sdb
-      unit_of_measurement: "pts"
-      state: >
-        {% set p1 = states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) %}
-        {% set p2 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
-        {% set watts = p1 + p2 %}
-        {% set dut = states('sensor.dut_sdb_total') | float(0) %}
-        {% set surface = 3.13 %}
-        {% set t_int = states('sensor.th_salle_de_bain_temperature') | float(0) %}
+        {% set t_int = states('sensor.th_salon_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
         {% set delta_t = t_int - t_ext %}
-        
-        {% if delta_t > 0 and surface > 0 and watts > 0 %}
+        {% if delta_t > 0 and surface > 0 and watts > 5 %}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %}
-          0
-        {% endif %}
+        {% else %} 0 {% endif %}
 
     # ┌───────────────────────────────────┐
-    # │ 9. CHAMBRE                        │
+    # │ 9. CHAMBRE (11.26 m²)             │
     # └───────────────────────────────────┘
     # --- performance_thermique_chambre ---
-    # --- 9. CHAMBRE (11.26 m²) ---
-    - name: "Performance Thermique Chambre"
+    - name: "Performance Thermique Chambre (11.26 m²)"
       unique_id: performance_thermique_chambre
       unit_of_measurement: "pts"
       state: >
         {% set watts = states('sensor.clim_chambre_nous_power') | float(0) %}
         {% set dut = states('sensor.dut_clim_chambre') | float(0) %}
         {% set surface = 11.26 %}
-        
-        {# CORRECTION ICI : th_chambre_temperature au lieu de temperature_chambre #}
         {% set t_int = states('sensor.th_chambre_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
         {% set delta_t = t_int - t_ext %}
-
-        {# On baisse la sécurité à watts > 5 pour que ça passe même à 10W #}
         {% if delta_t > 0 and surface > 0 and watts > 5 %}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
-        {% else %}
-          0
-        {% endif %}
+        {% else %} 0 {% endif %}
 
     # ┌───────────────────────────────────┐
     # │ 10. TOTAL HABITAT                 │
@@ -366,13 +303,23 @@
         {# Le capteur est disponible même si personne ne chauffe #}
         {{ true }}
 
+    #--- performance_thermique_totale_stable ---
+    - name: "Performance Thermique Totale Stable"
+      unique_id: performance_thermique_totale_stable
+      unit_of_measurement: "pts"
+      state: >
+        {% set s = states('sensor.performance_salon_moyenne_jour') | float(0) %}
+        {% set kui = states('sensor.perf_cuisine_moy_jour') | float(0) %}
+        {% set b = states('sensor.perf_bureau_moy_jour') | float(0) %}
+        {% set sdb = states('sensor.perf_sdb_moy_jour') | float(0) %}
+        {% set c = states('sensor.performance_chambre_moyenne_jour') | float(0) %}
+        
+        {% set pieces = [s, kui, b, sdb, c] | select('gt', 0) | list %}
+        {{ (pieces | sum / pieces | length) | round(1) if pieces | length > 0 else 0 }}
+
+
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │  ____  ____  _____                                                       │
-# │ |  _ \|  _ \| ____|                                                      │
-# │ | | | | |_) |  _|                                                        │
-# │ | |_| |  __/| |___                                                       │
-# │ |____/|_|   |_____|  CLASSE ÉNERGÉTIQUE                                  │
-# │                                                                          │
+# │       D.P.E.             --- CLASSE ÉNERGÉTIQUE DPE ---                  │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
 # --- classe_energetique_dpe ---
@@ -380,25 +327,26 @@
       unique_id: classe_energetique_dpe
       icon: mdi:gauge
       state: >
-        {% set p = states('sensor.performance_thermique_totale') | float(0) %}
+        {# Utilisation de la moyenne stable pour éviter les sauts de lettre #}
+        {% set p = states('sensor.performance_thermique_totale_stable') | float(0) %}
         {% if p <= 0 %} "N/A"
-        {% elif p <= 10 %} "A"
-        {% elif p <= 20 %} "B"
-        {% elif p <= 30 %} "C"
-        {% elif p <= 45 %} "D"
-        {% elif p <= 60 %} "E"
-        {% elif p <= 80 %} "F"
+        {% elif p <= 1.5 %} "A"
+        {% elif p <= 2.5 %} "B"
+        {% elif p <= 3.5 %} "C"
+        {% elif p <= 5.0 %} "D"
+        {% elif p <= 7.0 %} "E"
+        {% elif p <= 10.0 %} "F"
         {% else %} "G"
         {% endif %}
       attributes:
-        score_pts: "{{ states('sensor.performance_thermique_totale') | float(0) }}"
+        score_pts: "{{ states('sensor.performance_thermique_totale_stable') | float(0) }}"
         couleur_dpe: >
-          {% set p = states('sensor.performance_thermique_totale') | float(0) %}
-          {% if p <= 10 %} "#008055"
-          {% elif p <= 20 %} "#2FB044"
-          {% elif p <= 30 %} "#BED100"
-          {% elif p <= 45 %} "#FFD100"
-          {% elif p <= 60 %} "#FFB300"
-          {% elif p <= 80 %} "#af7a46ff"
+          {% set p = states('sensor.performance_thermique_totale_stable') | float(0) %}
+          {% if p <= 1.5 %} "#008055"
+          {% elif p <= 2.5 %} "#2FB044"
+          {% elif p <= 3.5 %} "#BED100"
+          {% elif p <= 5.0 %} "#FFD100"
+          {% elif p <= 7.0 %} "#FFB300"
+          {% elif p <= 10.0 %} "#af7a46ff"
           {% else %} "#FF0000"
           {% endif %}
