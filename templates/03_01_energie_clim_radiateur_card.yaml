@@ -326,12 +326,14 @@
         {% set watts = states('sensor.clim_chambre_nous_power') | float(0) %}
         {% set dut = states('sensor.dut_clim_chambre') | float(0) %}
         {% set surface = 11.26 %}
-        {% set t_int = states('sensor.temperature_chambre') | float(0) %}
+        
+        {# CORRECTION ICI : th_chambre_temperature au lieu de temperature_chambre #}
+        {% set t_int = states('sensor.th_chambre_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
         {% set delta_t = t_int - t_ext %}
 
-        {# Le calcul ne s'exécute que si on chauffe ET qu'il fait plus froid dehors #}
-        {% if delta_t > 0.5 and watts > 10 and dut > 0 %}
+        {# On baisse la sécurité à watts > 5 pour que ça passe même à 10W #}
+        {% if delta_t > 0 and surface > 0 and watts > 5 %}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %}
           0
