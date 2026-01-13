@@ -59,6 +59,7 @@
       icon: mdi:stove
       state: >
         {{ (states('sensor.prise_four_micro_ondes_nous_monthly') | float(0) +
+            states('sensor.prise_petit_dejeune_nous_monthly') | float(0) +
             states('sensor.prise_airfryer_ninja_nous_monthly') | float(0) +
             states('sensor.four_et_plaque_de_cuisson_monthly') | float(0)) | round(3) }}
 
@@ -94,7 +95,6 @@
         {{ (states('sensor.prise_box_internet_ikea_monthly') | float(0) + 
             states('sensor.prise_pc_s_gege_ikea_monthly') | float(0) + 
             states('sensor.prise_bureau_pc_ikea_monthly') | float(0) +
-            states('sensor.prise_tv_salon_nous_monthly') | float(0) +
             states('sensor.prise_tv_chambre_nous_monthly') | float(0)) | round(3) }}
 
     # --- diag_poste_6_lumiere_mensuel ---
