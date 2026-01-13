@@ -306,7 +306,7 @@
 # --- prise_petit_dejeune_nous_kwh ---
   - platform: integration
     source: sensor.prise_petit_dejeune_nous_power
-    name: "Prise Petit Dejeune Nous kWh"
+    name: "Prise Petit Dejeuner kWh"
     unique_id: prise_petit_dejeune_nous_kwh
     method: left
     unit_prefix: k

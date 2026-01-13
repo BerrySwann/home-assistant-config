@@ -272,8 +272,8 @@
       device_class: power
       state: >
         {% set conso = states('sensor.prise_petit_dejeune_nous_monthly') | float(0) %}
-        {% set h = now().hour + (now().minute / 60) %}
-        {{ ((conso * 1000) / h if h > 0.1 else 0) | round(1) }}
+        {% set hm = ((now().day - 1) * 24) + now().hour + (now().minute / 60) %}
+        {{ ((conso * 1000) / hm if hm > 0.1 else 0) | round(1) }}
 
     # --- lave_linge_avg_watts_daily ---
     - name: "Lave Linge Avg Watts Daily"
