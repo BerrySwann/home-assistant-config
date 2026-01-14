@@ -1317,10 +1317,10 @@
   mode: single
 - id: '1766776405670'
   alias: D - WATCHDOG SÉCURITÉ RADIATEUR SDB
-  description: Coupe automatiquement le chauffage si la température dépasse 24°C pour
+  description: Coupe automatiquement le chauffage si la température dépasse 25°C pour
     éviter la surchauffe.
   triggers:
-  - alias: 'SURVEILLANCE : TEMPÉRATURE > 24°C'
+  - alias: 'SURVEILLANCE : TEMPÉRATURE > 25°C'
     trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     above: 25
