@@ -277,6 +277,28 @@
         {% else %} 0 {% endif %}
 
     # ┌───────────────────────────────────┐
+    # │ 7. BUREAU (10.55 m²)              │
+    # └───────────────────────────────────┘
+    # --- performance_thermique_bureau ---
+    - name: "Performance Thermique Bureau (10.55 m²)"
+      unique_id: performance_thermique_bureau
+      unit_of_measurement: "pts"
+      state: >
+        {% set watts = states('sensor.clim_bureau_power') | float(0) %}
+        {% set dut = states('sensor.dut_clim_bureau') | float(0) %}
+        {% set surface = 10.55 %}
+        {% set t_int = states('sensor.th_bureau_temperature') | float(0) %}
+        {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {% set delta_t = t_int - t_ext %}
+        {% if delta_t > 0 and surface > 0 and watts > 5 %}
+          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
+        {% else %} 0 {% endif %}
+
+# annotations_log:
+# [L...] Ajout du capteur de performance Bureau (10.55 m²) avec clim_bureau_power.
+# [L...] Respect scrupuleux de la hiérarchie visuelle et de la surface de la base de contexte.
+
+    # ┌───────────────────────────────────┐
     # │ 8. SDB (3.13 m²)                  │
     # └───────────────────────────────────┘
     # --- performance_thermique_sdb ---
