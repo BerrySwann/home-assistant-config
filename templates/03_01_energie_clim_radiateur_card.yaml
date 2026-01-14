@@ -259,6 +259,42 @@
         {% else %} 0 {% endif %}
 
     # ┌───────────────────────────────────┐
+    # │ 5. CUISINE (10.59 m²)             │
+    # └───────────────────────────────────┘
+    # --- performance_thermique_cuisine ---
+    - name: "Performance Thermique Cuisine (10.59 m²)"
+      unique_id: performance_thermique_cuisine
+      unit_of_measurement: "pts"
+      state: >
+        {% set watts = states('sensor.radiateur_cuisine_power') | float(0) %}
+        {% set dut = states('sensor.dut_radiateur_cuisine') | float(0) %}
+        {% set surface = 10.59 %}
+        {% set t_int = states('sensor.th_cuisine_temperature') | float(0) %}
+        {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {% set delta_t = t_int - t_ext %}
+        {% if delta_t > 0 and surface > 0 and watts > 5 %}
+          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
+        {% else %} 0 {% endif %}
+
+    # ┌───────────────────────────────────┐
+    # │ 8. SDB (3.13 m²)                  │
+    # └───────────────────────────────────┘
+    # --- performance_thermique_sdb ---
+    - name: "Performance Thermique SdB (3.13 m²)"
+      unique_id: performance_thermique_sdb
+      unit_of_measurement: "pts"
+      state: >
+        {% set watts = states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) %}
+        {% set dut = states('sensor.dut_soufflant_sdb') | float(0) %}
+        {% set surface = 3.13 %}
+        {% set t_int = states('sensor.th_salle_de_bain_temperature') | float(0) %}
+        {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {% set delta_t = t_int - t_ext %}
+        {% if delta_t > 0 and surface > 0 and watts > 5 %}
+          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
+        {% else %} 0 {% endif %}
+
+    # ┌───────────────────────────────────┐
     # │ 9. CHAMBRE (11.26 m²)             │
     # └───────────────────────────────────┘
     # --- performance_thermique_chambre ---

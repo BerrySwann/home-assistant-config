@@ -1210,27 +1210,32 @@
   mode: single
 - id: '1766776781417'
   alias: E - Minuterie Sèche Serviettes Salle de Bain (1h)
-  description: 'Coupe la prise si la puissance > 50W pendant 1 heure, puis la rallume  après
-    1 minute (protection surchauffe/oubli).
-
-    '
+  description: Détection > 50W, décompte 1h, coupure de sécurité, puis réarmement.
   triggers:
-  - trigger: numeric_state
-    entity_id: sensor.prise_radiateur_salle_de_bain_inspelning_ikea_power
+  - alias: 'DÉCLENCHEMENT : DÉTECTION CONSOMMATION > 50W'
+    trigger: numeric_state
+    entity_id: sensor.prise_seche_serviette_salle_de_bain_nous_power
     above: 50
     for:
       hours: 1
       minutes: 0
       seconds: 0
-  conditions: []
+  conditions:
+  - alias: 'VÉRIFICATION : LA PRISE EST BIEN ACTIVE'
+    condition: state
+    entity_id: switch.prise_seche_serviette_salle_de_bain_nous
+    state: 'on'
   actions:
-  - action: switch.turn_off
+  - alias: 'MATÉRIEL : COUPURE DE SÉCURITÉ (ANTI-OUBLI)'
+    action: switch.turn_off
     target:
-      entity_id: switch.prise_radiateur_salle_de_bain_inspelning_ikea
-  - delay: 00:01:00
-  - action: switch.turn_on
+      entity_id: switch.prise_seche_serviette_salle_de_bain_nous
+  - alias: 'SÉCURITÉ : DÉLAI D''ATTENTE AVANT RÉARMEMENT'
+    delay: 00:01:00
+  - alias: 'MATÉRIEL : REMISE EN SERVICE DE LA PRISE'
+    action: switch.turn_on
     target:
-      entity_id: switch.prise_radiateur_salle_de_bain_inspelning_ikea
+      entity_id: switch.prise_seche_serviette_salle_de_bain_nous
   mode: single
 - id: '1766776971420'
   alias: Gestion Optimisée du Store Bureau
@@ -2699,3 +2704,187 @@
     target:
       entity_id: sensor.bureau_etat
   mode: restart
+- id: '1768415849392'
+  alias: BUREAU_ACTIVATION_ECRAN_SYNCHRO
+  description: Synchronise l'état de l'écran avec l'activité du PC bureau.
+  triggers:
+  - alias: 'DÉCLENCHEMENT : PC BUREAU ALLUMÉ'
+    trigger: state
+    entity_id: binary_sensor.bureau_pc_status
+    to: 'on'
+    id: pc_on
+  - alias: 'DÉCLENCHEMENT : PC BUREAU ÉTEINT'
+    trigger: state
+    entity_id: binary_sensor.bureau_pc_status
+    to: 'off'
+    for: 00:02:00
+    id: pc_off
+  conditions: []
+  actions:
+  - alias: 'ACTION : SYNCHRONISATION ALIMENTATION ÉCRAN'
+    choose:
+    - alias: 'CAS : PC ON -> ALLUMER ÉCRAN'
+      conditions:
+      - condition: trigger
+        id: pc_on
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.prise_ecran_bureau
+    - alias: 'CAS : PC OFF -> ÉTEINDRE ÉCRAN'
+      conditions:
+      - condition: trigger
+        id: pc_off
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.prise_ecran_bureau
+  mode: restart
+- id: '1768415943951'
+  alias: A - DÉMARRAGE ET INITIALISATION RADIATEUR SDB
+  description: Gère l'allumage physique, l'amorçage IR et le réglage initial.
+  triggers:
+  - alias: 'DÉCLENCHEMENT : PASSAGE À ON DU BOOLEAN SDB'
+    trigger: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    to: 'on'
+  conditions:
+  - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 25°C'
+    condition: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    below: 25
+  actions:
+  - alias: 'MATÉRIEL : ALLUMAGE DE LA PRISE PHYSIQUE'
+    action: switch.turn_on
+    target:
+      entity_id: switch.prise_soufflant_salle_de_bain_nous
+  - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
+    delay: 00:00:10
+  - alias: 'IR : ENVOI COMMANDE POWER ON'
+    action: remote.send_command
+    target:
+      entity_id: remote.radiateur_sdb_rm4_mini
+    data:
+      command: on_off
+      device: radiateur_sdb
+  - alias: 'PAUSE : ATTENTE RÉCEPTION IR'
+    delay: 00:00:02
+  - alias: 'PUISSANCE INITIALE : CHOIX SELON TEMPÉRATURE'
+    action: remote.send_command
+    target:
+      entity_id: remote.radiateur_sdb_rm4_mini
+    data:
+      command: 1000w
+      device: radiateur_sdb
+      num_repeats: '{{ 2 if states(''sensor.th_salle_de_bain_temperature'') | float
+        < 21 else 1 }}'
+  - alias: 'IR : ACTIVATION DU SWING'
+    action: remote.send_command
+    target:
+      entity_id: remote.radiateur_sdb_rm4_mini
+    data:
+      command: swing
+      device: radiateur_sdb
+  mode: single
+- id: '1768415963940'
+  alias: B - RÉGULATION DYNAMIQUE PUISSANCE SDB
+  description: Ajuste la résistance (1000W/2000W) selon la température.
+  triggers:
+  - alias: 'SEUIL HAUT : TEMPÉRATURE > 22.9°C'
+    trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    above: 22.9
+    for: 00:01:00
+    id: vers_1000w
+  - alias: 'SEUIL BAS : TEMPÉRATURE < 20.9°C'
+    trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    below: 20.9
+    for: 00:01:00
+    id: vers_2000w
+  conditions:
+  - alias: 'VÉRIFICATION : RADIATEUR ACTIF'
+    condition: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    state: 'on'
+  actions:
+  - alias: 'ACTION : AJUSTEMENT DE LA RÉSISTANCE'
+    choose:
+    - alias: PASSAGE À 1000W
+      conditions:
+      - condition: trigger
+        id: vers_1000w
+      sequence:
+      - action: remote.send_command
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+    - alias: PASSAGE À 2000W
+      conditions:
+      - condition: trigger
+        id: vers_2000w
+      sequence:
+      - action: remote.send_command
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+          num_repeats: 2
+  mode: restart
+- id: '1768415982605'
+  alias: C - ARRÊT SÉCURISÉ RADIATEUR SDB
+  description: Procédure d'extinction avec cycle de refroidissement.
+  triggers:
+  - alias: 'DÉCLENCHEMENT : PASSAGE À OFF DU BOOLEAN'
+    trigger: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    to: 'off'
+  conditions:
+  - alias: 'SÉCURITÉ ANTI-CONFLIT : PRISE ON DEPUIS > 20S'
+    condition: state
+    entity_id: switch.prise_soufflant_salle_de_bain_nous
+    state: 'on'
+    for: 00:00:20
+  actions:
+  - alias: 'IR : ENVOI COMMANDE POWER OFF'
+    action: remote.send_command
+    target:
+      entity_id: remote.radiateur_sdb_rm4_mini
+    data:
+      command: on_off
+      device: radiateur_sdb
+  - alias: 'SÉCURITÉ : DÉLAI DE REFROIDISSEMENT'
+    delay: 00:01:00
+  - alias: 'MATÉRIEL : COUPURE PHYSIQUE DE LA PRISE'
+    action: switch.turn_off
+    target:
+      entity_id: switch.prise_soufflant_salle_de_bain_nous
+  mode: restart
+- id: '1768416002120'
+  alias: D - WATCHDOG SÉCURITÉ RADIATEUR SDB
+  description: Sécurité surchauffe > 25°C.
+  triggers:
+  - alias: 'SURVEILLANCE : TEMPÉRATURE > 25°C'
+    trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    above: 25
+    for: 00:00:30
+  conditions:
+  - alias: 'VÉRIFICATION : RADIATEUR ACTIF'
+    condition: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    state: 'on'
+  actions:
+  - alias: 'ACTION : PASSAGE DU BOOLEAN SUR OFF'
+    action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.inter_radiateur_salle_de_bain
+  - alias: 'NOTIF : ALERTE SÉCURITÉ POCO'
+    action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: ⚠️ SÉCURITÉ RADIATEUR SDB
+      message: Température critique atteinte (>25°C). Arrêt automatique lancé.
+  mode: single
