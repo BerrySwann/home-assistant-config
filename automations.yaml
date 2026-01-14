@@ -2605,38 +2605,6 @@
       entity_id: '{{ trigger.entity_id }}'
     action: light.turn_on
   mode: parallel
-- id: bureau_activation_ecran_synchro
-  alias: BUREAU - ACTIVATION ÉCRAN POUR SYNCHRO
-  description: Force l'allumage de la prise et des Play Hue au démarrage du PC
-  triggers:
-  - alias: DÉTECTION ÉTAT ON DU MONITEUR
-    trigger: state
-    entity_id: binary_sensor.moniteur_pc
-    to: 'on'
-  conditions: []
-  actions:
-  - alias: COMMANDE ALLUMAGE PRISE
-    action: switch.turn_on
-    target:
-      entity_id: switch.ecran_p_c_3_play_hue
-  - alias: DÉLAI DE SYNCHRONISATION ÉLECTRIQUE
-    delay: 00:00:02
-  - alias: COMMANDE ALLUMAGE LUMIÈRES
-    action: light.turn_on
-    target:
-      entity_id:
-      - light.hue_play_1_pc_bureau
-      - light.hue_play_2_pc_bureau
-      - light.hue_play_3_pc_bureau
-    data:
-      transition: 2
-  - alias: FORÇAGE MISE À JOUR AFFICHAGE
-    action: homeassistant.update_entity
-    target:
-      entity_id:
-      - sensor.lumiere_ecran_etat
-      - sensor.bureau_etat
-  mode: restart
 - id: '1768050970786'
   alias: BUREAU - WATCHDOG SYNCHRONISATION LAMPES BLANCHES
   description: Assure que les deux lampes de bureau (1 et 2) sont synchronisées si
