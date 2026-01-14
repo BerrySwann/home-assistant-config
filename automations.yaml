@@ -1144,200 +1144,157 @@
         data:
           message: /!\ Chauffage Cuisine 'OFF' /!\
   mode: single
-- id: '1766776187713'
-  alias: A - DÉMARRAGE ET INITIALISATION RADIATEUR SDB
-  description: Gère l'allumage physique, l'amorçage IR et le réglage initial de puissance.
+- id: sdb_start_safe
+  alias: A - DÉMARRAGE RADIATEUR SDB
   triggers:
-  - alias: 'DÉCLENCHEMENT : PASSAGE À ON DU BOOLEAN SDB'
-    trigger: state
-    entity_id: input_boolean.inter_radiateur_salle_de_bain
+  - entity_id: input_boolean.inter_radiateur_salle_de_bain
     to: 'on'
+    trigger: state
   conditions:
-  - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 25°C'
-    condition: numeric_state
+  - condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 25
   actions:
-  - alias: 'MATÉRIEL : ALLUMAGE DE LA PRISE PHYSIQUE'
-    action: switch.turn_on
+  - action: switch.turn_on
     target:
       entity_id: switch.prise_soufflant_salle_de_bain_nous
-  - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
-    delay: 00:00:02
-  - alias: 'SÉCURITÉ : VÉRIFICATION ALIMENTATION PRISE'
-    condition: state
-    entity_id: switch.prise_soufflant_salle_de_bain_nous
-    state: 'on'
-  - alias: 'IR : ENVOI COMMANDE POWER ON'
-    action: remote.send_command
+  - delay: 00:00:05
+  - action: remote.send_command
     target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: on_off
       device: radiateur_sdb
-  - alias: 'PAUSE : ATTENTE RÉCEPTION IR'
-    delay: 00:00:01
-  - alias: 'PUISSANCE INITIALE : CHOIX SELON TEMPÉRATURE ACTUELLE'
-    choose:
-    - alias: 'CAS FROID : INFÉRIEUR À 21°C -> 2000W'
+  - delay: 00:00:02
+  - choose:
+    - alias: Mode 2000W si < 21°C
       conditions:
       - condition: numeric_state
         entity_id: sensor.th_salle_de_bain_temperature
         below: 21
       sequence:
       - action: remote.send_command
-        target:
-          entity_id: remote.radiateur_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-    - alias: 'CAS MODÉRÉ : SUPÉRIEUR À 21°C -> 1000W'
-      conditions:
-      - condition: numeric_state
-        entity_id: sensor.th_salle_de_bain_temperature
-        above: 20.9
-      sequence:
-      - action: remote.send_command
         target:
           entity_id: remote.radiateur_sdb_rm4_mini
-        data:
-          command: 1000w
-          device: radiateur_sdb
-  - alias: 'IR : ACTIVATION DU SWING'
-    action: remote.send_command
-    target:
-      entity_id: remote.radiateur_sdb_rm4_mini
+    default:
+    - action: remote.send_command
+      data:
+        command: 1000w
+        device: radiateur_sdb
+      target:
+        entity_id: remote.radiateur_sdb_rm4_mini
+  - action: remote.send_command
     data:
       command: swing
       device: radiateur_sdb
-  - alias: 'ETAT : SYNCHRONISATION DU THERMOSTAT VIRTUEL'
-    action: climate.set_hvac_mode
-    data:
-      hvac_mode: heat
     target:
-      entity_id: climate.soufflant_salle_de_bain
+      entity_id: remote.radiateur_sdb_rm4_mini
+  mode: single
 - id: '1766776271080'
-  alias: B - RÉGULATION DYNAMIQUE PUISSANCE SDB
-  description: Ajuste la résistance (1000W/2000W) en cours de fonctionnement pour
-    maintenir le confort.
+  alias: B - RÉGULATION PUISSANCE SDB
   triggers:
-  - alias: 'SEUIL HAUT : TEMPÉRATURE > 22.9°C'
-    trigger: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     above: 22.9
     for: 00:01:00
-    id: vers_1000w
-  - alias: 'SEUIL BAS : TEMPÉRATURE < 20.9°C'
-    trigger: numeric_state
+    id: low
+  - trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 20.9
     for: 00:01:00
-    id: vers_2000w
+    id: high
   conditions:
-  - alias: 'VÉRIFICATION : RADIATEUR ACTIF ET PRISE ALLUMÉE'
-    condition: state
+  - condition: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
     state: 'on'
-  - alias: 'SÉCURITÉ : PRISE PHYSIQUE DOIT ÊTRE ON'
-    condition: state
-    entity_id: switch.prise_soufflant_salle_de_bain_nous
-    state:
-    - 'on'
   actions:
-  - alias: 'ACTION : AJUSTEMENT DE LA RÉSISTANCE'
-    choose:
-    - alias: PASSAGE À 1000W (ÉCONOMIE)
-      conditions:
+  - choose:
+    - conditions:
       - condition: trigger
-        id: vers_1000w
+        id: low
       sequence:
       - action: remote.send_command
-        target:
-          entity_id: remote.radiateur_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
-    - alias: PASSAGE À 2000W (BOOST) + RELANCE SWING
-      conditions:
-      - condition: trigger
-        id: vers_2000w
-      sequence:
-      - action: remote.send_command
         target:
           entity_id: remote.radiateur_sdb_rm4_mini
+    - conditions:
+      - condition: trigger
+        id: high
+      sequence:
+      - action: remote.send_command
         data:
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-      - delay: 00:00:01
-      - action: remote.send_command
         target:
           entity_id: remote.radiateur_sdb_rm4_mini
-        data:
-          command: swing
-          device: radiateur_sdb
-  mode: single
-- id: '1766776340583'
-  alias: C - ARRÊT SÉCURISÉ RADIATEUR SDB
-  description: 'Procédure d''extinction : IR d''abord, refroidissement, puis coupure
-    prise.'
+  mode: restart
+- id: sdb_power_mod
+  alias: B - RÉGULATION PUISSANCE SDB
   triggers:
-  - alias: 'DÉCLENCHEMENT : PASSAGE À OFF DU BOOLEAN'
-    trigger: state
-    entity_id: input_boolean.inter_radiateur_salle_de_bain
-    to: 'off'
-  conditions:
-  - alias: 'SÉCURITÉ : VÉRIFIER SI LA PRISE EST ENCORE ALIMENTÉE'
-    condition: state
-    entity_id: switch.prise_soufflant_salle_de_bain_nous
-    state:
-    - 'on'
-  actions:
-  - alias: 'ETAT : THERMOSTAT VIRTUEL SUR OFF'
-    action: climate.set_hvac_mode
-    target:
-      entity_id: climate.soufflant_salle_de_bain
-    data:
-      hvac_mode: 'off'
-  - alias: 'IR : ENVOI COMMANDE POWER OFF'
-    action: remote.send_command
-    target:
-      entity_id: remote.radiateur_sdb_rm4_mini
-    data:
-      command: on_off
-      device: radiateur_sdb
-  - alias: 'SÉCURITÉ : DÉLAI DE REFROIDISSEMENT RÉSISTANCE'
-    delay: 00:01:00
-  - alias: 'MATÉRIEL : COUPURE PHYSIQUE DE LA PRISE'
-    action: switch.turn_off
-    data: {}
-    target:
-      entity_id: switch.prise_soufflant_salle_de_bain_nous
-  mode: single
-- id: '1766776405670'
-  alias: D - WATCHDOG SÉCURITÉ RADIATEUR SDB
-  description: Coupe automatiquement le chauffage si la température dépasse 25°C pour
-    éviter la surchauffe.
-  triggers:
-  - alias: 'SURVEILLANCE : TEMPÉRATURE > 25°C'
+  - entity_id: sensor.th_salle_de_bain_temperature
+    above: 22.9
+    for: 00:01:00
+    id: low
     trigger: numeric_state
-    entity_id: sensor.th_salle_de_bain_temperature
-    above: 25
-  actions:
-  - alias: 'VÉRIFICATION : LE RADIATEUR EST-IL ACTIF ?'
-    condition: state
+  - entity_id: sensor.th_salle_de_bain_temperature
+    below: 20.9
+    for: 00:01:00
+    id: high
+    trigger: numeric_state
+  conditions:
+  - condition: state
     entity_id: input_boolean.inter_radiateur_salle_de_bain
     state: 'on'
-  - alias: 'ACTION : PASSAGE DU BOOLEAN SUR OFF'
-    action: input_boolean.turn_off
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: low
+      sequence:
+      - action: remote.send_command
+        data:
+          command: 1000w
+          device: radiateur_sdb
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+    - conditions:
+      - condition: trigger
+        id: high
+      sequence:
+      - action: remote.send_command
+        data:
+          command: 1000w
+          device: radiateur_sdb
+          num_repeats: 2
+        target:
+          entity_id: remote.radiateur_sdb_rm4_mini
+  mode: restart
+- id: '1766776405670'
+  alias: D - WATCHDOG SÉCURITÉ RADIATEUR SDB
+  triggers:
+  - trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    above: 25
+  conditions:
+  - condition: state
+    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    state: 'on'
+  actions:
+  - action: input_boolean.turn_off
     target:
       entity_id: input_boolean.inter_radiateur_salle_de_bain
-  - alias: 'NOTIF : ALERTE SÉCURITÉ POCO'
-    action: notify.mobile_app_poco_x7_pro_eric
+  - action: notify.mobile_app_poco_x7_pro_eric
     data:
-      title: ⚠️ SÉCURITÉ RADIATEUR SDB
-      message: Température de 25°C atteinte. Extinction automatique de sécurité lancée.
+      title: ⚠️ Sécurité SdB
+      message: Température > 25°C. Arrêt automatique lancé.
+  mode: single
 - id: '1766776477442'
   alias: '[Backup] Git au démarrage HA'
   description: Push Git immédiatement au boot de Home Assistant
