@@ -2745,8 +2745,11 @@
   description: Allumage sécurisé avec gestion puissance, swing et vérification température
   triggers:
   - trigger: state
-    entity_id: input_boolean.inter_radiateur_salle_de_bain
-    to: 'on'
+    entity_id:
+    - input_boolean.inter_radiateur_salle_de_bain
+    from:
+    - 'off'
+    - 'on'
   conditions:
   - condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
@@ -2756,8 +2759,7 @@
     action: switch.turn_on
     target:
       entity_id: switch.prise_soufflant_salle_de_bain_nous
-  - alias: Attente boot radiateur
-    delay: 00:00:02
+    data: {}
   - alias: Vérification que la prise est bien alimentée
     condition: state
     entity_id: switch.prise_soufflant_salle_de_bain_nous
@@ -2876,6 +2878,7 @@
     - input_boolean.inter_radiateur_salle_de_bain
     from:
     - 'on'
+    to:
     - 'off'
   conditions:
   - condition: state
