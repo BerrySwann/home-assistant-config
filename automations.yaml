@@ -2744,22 +2744,23 @@
   alias: A - Démarrage Radiateur Salle de Bain (Version Optimisée)
   description: Allumage sécurisé avec gestion puissance, swing et vérification température
   triggers:
-  - trigger: state
-    entity_id:
-    - input_boolean.inter_radiateur_salle_de_bain
-    from:
-    - 'off'
-    - 'on'
+  - triggers:
+    - trigger: mqtt
+      topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
   conditions:
   - condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 25
   actions:
-  - alias: 'Sécurité : Allumage de la prise physique'
-    action: switch.turn_on
-    target:
-      entity_id: switch.prise_soufflant_salle_de_bain_nous
-    data: {}
+  - choose:
+    - alias: Bouton ON
+      conditions:
+      - condition: template
+        value_template: '{{ trigger.payload_json.action == ''on'' }}'
+      sequence:
+        action: switch.turn_on
+        target:
+          entity_id: switch.prise_soufflant_salle_de_bain_nous
   - alias: Vérification que la prise est bien alimentée
     condition: state
     entity_id: switch.prise_soufflant_salle_de_bain_nous
