@@ -2741,41 +2741,43 @@
           entity_id: switch.prise_ecran_bureau
   mode: restart
 - id: '1768415943951'
-  alias: A - Démarrage Radiateur Salle de Bain (Version Optimisée)
-  description: Allumage sécurisé avec gestion puissance, swing et vérification température
+  alias: A - Démarrage Radiateur Salle de Bain (Sécurité État)
+  description: Utilise le mode du thermostat pour éviter le double envoi IR
   triggers:
-  - triggers:
-    - trigger: mqtt
-      topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
+  - trigger: mqtt
+    topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
   conditions:
+  - condition: template
+    value_template: '{{ trigger.payload_json.action == ''on'' }}'
   - condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 25
   actions:
-  - choose:
-    - alias: Bouton ON
-      conditions:
-      - condition: template
-        value_template: '{{ trigger.payload_json.action == ''on'' }}'
-      sequence:
-        action: switch.turn_on
-        target:
-          entity_id: switch.prise_soufflant_salle_de_bain_nous
-  - alias: Vérification que la prise est bien alimentée
-    condition: state
-    entity_id: switch.prise_soufflant_salle_de_bain_nous
-    state: 'on'
-  - alias: 'Commande IR : Power ON'
-    action: remote.send_command
+  - action: switch.turn_on
     target:
-      entity_id: remote.radiateur_sdb_rm4_mini
+      entity_id: switch.prise_soufflant_salle_de_bain_nous
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: climate.soufflant_salle_de_bain
+        state:
+        - heat
+    then:
+    - action: remote.send_command
+      target:
+        entity_id: remote.radiateur_sdb_rm4_mini
+      data:
+        command: on_off
+        device: radiateur_sdb
+        num_repeats: 1
+  - action: climate.set_hvac_mode
     data:
-      command: on_off
-      device: radiateur_sdb
-      num_repeats: 1
-  - delay: '00:00:00.8'
-  - alias: Logique de puissance selon température
-    choose:
+      hvac_mode: heat
+    target:
+      entity_id: climate.soufflant_salle_de_bain
+  - delay: 00:00:01
+  - choose:
     - conditions:
       - condition: numeric_state
         entity_id: sensor.th_salle_de_bain_temperature
@@ -2787,7 +2789,6 @@
         data:
           command: 1000w
           device: radiateur_sdb
-          num_repeats: 1
     - conditions:
       - condition: numeric_state
         entity_id: sensor.th_salle_de_bain_temperature
@@ -2800,23 +2801,14 @@
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-  - delay: '00:00:00.8'
-  - alias: 'Commande IR : Swing'
-    action: remote.send_command
+  - delay: 00:00:01
+  - action: remote.send_command
     target:
       entity_id: remote.radiateur_sdb_rm4_mini
     data:
       command: swing
       device: radiateur_sdb
-      num_repeats: 1
-  - delay: '00:00:00.8'
-  - alias: Mise à jour de l'état du thermostat virtuel
-    action: climate.set_hvac_mode
-    data:
-      hvac_mode: heat
-    target:
-      entity_id: climate.soufflant_salle_de_bain
-  mode: single
+  mode: restart
 - id: '1768415963940'
   alias: B - Gestion Résistances Radiateur SDB
   description: Baisse à 1000W au-delà de 22.9°C et repasse à 2000W sous 20.9°C
@@ -2870,44 +2862,46 @@
           num_repeats: 2
   mode: single
 - id: '1768415982605'
-  alias: C - Arrêt Radiateur Salle de Bain
-  description: Extinction du radiateur, mise à jour du climate et coupure prise après
-    1 min
+  alias: C - Arrêt Radiateur Salle de Bain (Mode Restart)
+  description: Extinction sécurisée avec protection contre le toggle IR
   triggers:
-  - trigger: state
-    entity_id:
-    - input_boolean.inter_radiateur_salle_de_bain
-    from:
-    - 'on'
-    to:
-    - 'off'
+  - trigger: mqtt
+    topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
   conditions:
+  - condition: template
+    value_template: '{{ trigger.payload_json.action == ''off'' }}'
   - condition: state
     entity_id: switch.prise_soufflant_salle_de_bain_nous
     state: 'on'
   actions:
-  - alias: 'Commande IR : Power OFF'
-    action: remote.send_command
-    target:
-      entity_id: remote.radiateur_sdb_rm4_mini
-    data:
-      command: on_off
-      device: radiateur_sdb
-      num_repeats: 1
-  - alias: Délai de sécurité pour le refroidissement
-    delay: 00:01:00
-  - alias: Coupure physique de la prise
-    action: switch.turn_off
-    target:
-      entity_id: switch.prise_soufflant_salle_de_bain_nous
-    data: {}
-  - alias: Mise à jour du thermostat virtuel
-    action: climate.set_hvac_mode
+  - action: climate.set_hvac_mode
     target:
       entity_id: climate.soufflant_salle_de_bain
     data:
       hvac_mode: 'off'
-  mode: single
+  - if:
+    - condition: numeric_state
+      entity_id: sensor.prise_soufflant_salle_de_bain_nous_power
+      above: 50
+    then:
+    - action: remote.send_command
+      target:
+        entity_id: remote.radiateur_sdb_rm4_mini
+      data:
+        command: on_off
+        device: radiateur_sdb
+        num_repeats: 1
+  - wait_for_trigger:
+    - trigger: numeric_state
+      entity_id: sensor.prise_soufflant_salle_de_bain_nous_power
+      below: 50
+    timeout: 00:00:15
+    continue_on_timeout: true
+  - delay: 00:01:00
+  - action: switch.turn_off
+    target:
+      entity_id: switch.prise_soufflant_salle_de_bain_nous
+  mode: restart
 - id: '1768416002120'
   alias: D - Watchdog Sécurité Radiateur SDB
   description: Reset physique si T > 25°C, uniquement si la prise est alimentée
