@@ -2838,7 +2838,7 @@
   - condition: and
     conditions:
     - condition: state
-      entity_id: input_boolean.inter_radiateur_salle_de_bain
+      entity_id: input_boolean.inter_soufflant_salle_de_bain
       state: 'on'
     - condition: state
       entity_id: switch.prise_soufflant_salle_de_bain_nous
@@ -2852,7 +2852,7 @@
       sequence:
       - action: remote.send_command
         target:
-          entity_id: remote.radiateur_sdb_rm4_mini
+          entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
@@ -2864,7 +2864,7 @@
       sequence:
       - action: remote.send_command
         target:
-          entity_id: remote.radiateur_sdb_rm4_mini
+          entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
