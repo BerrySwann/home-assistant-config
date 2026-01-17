@@ -2819,7 +2819,7 @@
       hvac_mode: heat
       temperature: 23
 - id: '1768415963940'
-  alias: B - Gestion Résistances Radiateur SDB
+  alias: B - Gestion Résistances Soufflant SDB
   description: Baisse à 1000W au-delà de 22.9°C et repasse à 2000W sous 20.9°C
   triggers:
   - trigger: numeric_state
