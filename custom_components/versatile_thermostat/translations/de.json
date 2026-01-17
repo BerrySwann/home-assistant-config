@@ -31,6 +31,7 @@
           "auto_start_stop": "Auto Start und Stop",
           "valve_regulation": "Konfiguration Ventilsteuerung",
           "sync_device_internal_temp": "Synchronisierung der Gerätetemperatur",
+          "heating_failure_detection": "Heating failure detection",
           "lock": "Sperrenverwaltung",
           "finalize": "Alles erledigt",
           "configuration_not_complete": "Konfiguration unvollständig"
@@ -85,7 +86,8 @@
           "use_power_feature": "Powermanagement",
           "use_presence_feature": "Anwesenheitserkennung",
           "use_central_boiler_feature": "Zentralheizung hinzufügen. Aktivieren Sie diese Option, um eine Steuerung für eine Zentralheizung hinzuzufügen. Anschließend müssen die VTerms konfiguriert werden, die die Zentralheizung steuern. Sonst ist diese Option unwirksam. Sobald mindestens einer der VTherms heizen muss, wird die Zentralheizung aktiviert. Sollte keiner der VTherms heizen müssen, wird sie ausgeschaltet. Die Befehle zum Ein- und Ausschalten der Zentralheizung befinden sich auf der folgenden Konfigurationsseite",
-          "use_auto_start_stop_feature": "Mit automatische Start- und Stoppfunktion"
+          "use_auto_start_stop_feature": "Mit automatische Start- und Stoppfunktion",
+          "use_heating_failure_detection_feature": "Use heating failure detection"
         }
       },
       "type": {
@@ -261,14 +263,20 @@
           "opening_degree_entity_ids": "Öffnungswinkel Entity-IDs",
           "closing_degree_entity_ids": "Schließwinkel Entity-IDs",
           "proportional_function": "Algorithmus",
-          "min_opening_degrees": "Minimaler Öffnungsgrad"
+          "opening_threshold_degree": "Öffnungsschwellenwert",
+          "min_opening_degrees": "Minimaler Öffnungsgrad",
+          "max_opening_degrees": "Maximaler Öffnungsgrad",
+          "max_closing_degree": "Maximaler Schließungsgrad"
         },
         "data_description": {
           "offset_calibration_entity_ids": "Liste der 'Offset-Kalibrierungs'-Entities (offset calibration). Für eine bessere Regelung konfigurieren, wenn das TRV diese Entity besitzt. Es sollte eine pro Klima-Entity geben",
           "opening_degree_entity_ids": "Liste der 'Ventil öffnen'-Entities. Es muss eine pro Klima-Entity geben",
           "closing_degree_entity_ids": "Liste der 'Ventil schließen'-Entities. Für eine bessere Regelung konfigurieren, wenn das TRV über dies Funktion verfügt. Es muss eine pro Klima-Entity geben",
           "proportional_function": "Zu verwendender Algorithmus (TPI ist derzeit der einzige)",
-          "min_opening_degrees": "Eine kommaseparierte Liste der Mindestöffnung. Standardwert ist 0. Beispiel: 20, 25, 30"
+          "opening_threshold_degree": "Ventilöffnungswert unter dem das Ventil als geschlossen angesehen wird (und dann wird 'max_closing_degree' angewendet)",
+          "min_opening_degrees": "Eine kommaseparierte Liste der Mindestöffnung. Standardwert ist 0. Beispiel: 20, 25, 30",
+          "max_opening_degrees": "Maximaler Öffnungsgrad für jedes zugrunde liegende Gerät, durch Kommas getrennt. Standard ist 100. Das Ventil wird nie mehr als dieser Wert geöffnet. Beispiel: 80, 85, 90",
+          "max_closing_degree": "Maximaler Schließungsgrad. Das Ventil wird niemals mehr als dieser Wert geschlossen. Setzen Sie auf 100, um das Ventil vollständig zu schließen"
         }
       },
       "sync_device_internal_temp": {
@@ -282,6 +290,28 @@
           "sync_with_calibration": "Check to apply the offset calibration when synchronizing the internal temperature. Uncheck to directly copy the temperature from the selected entities",
           "sync_entity_ids": "The list of the entities used to synchronize the internal temperature of the underlying devices. There should be one per underlying device. Should be a calibration entity if checkbox is selected or a temperature entity otherwise. Both are `number` entities."
         }
+      },
+      "heating_failure_detection": {
+        "title": "Heating failure detection",
+        "description": "Configure the heating failure detection feature. This detects anomalies when heating is expected but temperature doesn't increase, or when heating is off but temperature keeps rising.",
+        "data": {
+          "use_heating_failure_detection_feature": "Enable heating failure detection",
+          "use_heating_failure_detection_central_config": "Use central heating failure detection configuration",
+          "heating_failure_threshold": "Heating failure threshold",
+          "cooling_failure_threshold": "Cooling failure threshold",
+          "heating_failure_detection_delay": "Detection delay (minutes)",
+          "temperature_change_tolerance": "Temperature change tolerance (°C)",
+          "failure_detection_enable_template": "Detection enable template"
+        },
+        "data_description": {
+          "use_heating_failure_detection_feature": "Enable the detection of heating anomalies for VTherms with TPI",
+          "use_heating_failure_detection_central_config": "Check to use the central heating failure detection configuration. Uncheck to use specific parameters for this VTherm",
+          "heating_failure_threshold": "On percent threshold above which heating should cause temperature increase (0.9 = 90%)",
+          "cooling_failure_threshold": "On percent threshold below which temperature should not increase (0.0 = 0%)",
+          "heating_failure_detection_delay": "Time in minutes to wait before checking if temperature has changed as expected",
+          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)",
+          "failure_detection_enable_template": "An optional Jinja2 template that must return True to enable detection. Useful to temporarily disable detection when an external heat source is active (e.g., is_state('binary_sensor.wood_stove', 'off') in double curly braces). If empty, detection is always enabled."
+        }
       }
     },
     "error": {
@@ -293,6 +323,8 @@
       "valve_regulation_nb_entities_incorrect": "Die Anzahl der Entities für die Ventilregelung muss gleich der Anzahl der zugeordneten Entities sein",
       "sync_device_internal_temp_nb_entities_incorrect": "Die Anzahl der Entities zur Synchronisierung der internen Gerätetemperatur muss der Anzahl der zugrunde liegenden Geräte entsprechen",
       "min_opening_degrees_format": "Es wird eine Liste positiver Ganzzahlen erwartet, die durch Komma getrennte sind. Beispiel: 20, 25, 30",
+      "max_opening_degrees_format": "Eine durch Kommas getrennte Liste positiver Ganzzahlen zwischen 0 und 100 wird erwartet. Beispiel: 80, 85, 90",
+      "min_max_opening_degrees_inconsistent": "Für jedes zugrunde liegende Gerät muss max_opening_degrees strikt größer als min_opening_degrees sein. Bitte überprüfen Sie Ihre Konfiguration.",
       "vswitch_configuration_incorrect": "Die Konfiguration der Befehlsanpassung ist falsch. Sie ist für nicht umschaltbare Basiswerte erforderlich und muss das Format 'service_name[/attribut:wert]' haben. Weitere Informationen finden Sie in der README-Datei."
     },
     "abort": {
@@ -330,6 +362,7 @@
           "auto_start_stop": "Auto Start und Stopp",
           "valve_regulation": "Konfiguration der Ventilsteuerung",
           "sync_device_internal_temp": "Synchronisierung der Gerätetemperatur",
+          "heating_failure_detection": "Heating failure detection",
           "lock": "Sperrenverwaltung",
           "finalize": "Alles erledigt",
           "configuration_not_complete": "Konfiguration unvollständig"
@@ -386,7 +419,8 @@
           "use_power_feature": "Mit Powermanagement",
           "use_presence_feature": "Mit Anwesenheitserkennung",
           "use_central_boiler_feature": "Benutze Zentralheizung. Aktivieren, um eine Steuerung für eine Zentralheizung hinzuzufügen. Anschließend muss VTerm für die Steuerung der Zentralheizung konfiguriert werden, um wirksam zu werden. Wenn mindestens einer der VTerms heizen muss, wird der Heizkessel angeschalten. Wenn kein VTherm heizen muss, wird sie abgeschalten. Die Befehle zum Ein- und Ausschalten der Zentralheizung finden sie auf der folgenden Konfigurationsseite.",
-          "use_auto_start_stop_feature": "Mit automatische Start- und Stopfunktion."
+          "use_auto_start_stop_feature": "Mit automatische Start- und Stopfunktion.",
+          "use_heating_failure_detection_feature": "Use heating failure detection"
         }
       },
       "type": {
@@ -559,21 +593,27 @@
         }
       },
       "valve_regulation": {
-        "title": "Selbstregulierung durch Ventil - {name}",
-        "description": "Konfiguration für Selbstregulierung durch direkte Ventilsteuerung&nbsp;[![?](https://img.icons8.com/color/18/help.png)](https://github.com/jmcollin78/versatile_thermostat/blob/main/documentation/de/self-regulation.md#auto-régulation-par-contrôle-direct-de-la-vanne)",
+        "title": "Selbstregulierung durch Ventil",
+        "description": "Konfiguration der Selbstregelung durch direkte Ventilsteuerung&nbsp;[![?](https://img.icons8.com/color/18/help.png)](https://github.com/jmcollin78/versatile_thermostat/blob/main/documentation/de/self-regulation.md#auto-régulation-par-contrôle-direct-de-la-vanne)",
         "data": {
-          "offset_calibration_entity_ids": "Entities zur 'Offset-Kalibrierung'",
-          "opening_degree_entity_ids": "Entities 'Ventilöffnung'",
-          "closing_degree_entity_ids": "Entities 'Ventil schliessen'",
+          "offset_calibration_entity_ids": "Offset Kalibrierung Entity-IDs",
+          "opening_degree_entity_ids": "Öffnungswinkel Entity-IDs",
+          "closing_degree_entity_ids": "Schließwinkel Entity-IDs",
           "proportional_function": "Algorithmus",
-          "min_opening_degrees": "Mindestöffnung"
+          "opening_threshold_degree": "Öffnungsschwellenwert",
+          "min_opening_degrees": "Minimaler Öffnungsgrad",
+          "max_opening_degrees": "Maximaler Öffnungsgrad",
+          "max_closing_degree": "Maximaler Schließungsgrad"
         },
         "data_description": {
-          "offset_calibration_entity_ids": "Liste der 'Offset-Kalibrierung'-Entities. Wenn das TRV über diese Funktion verfügen, bitte dieses für eine bessere Regelung konfigurieren. Es muss eine pro zugeordneter Klima-Entity vorhanden sein",
-          "opening_degree_entity_ids": "Liste der 'Ventilöffnung'-Entities. Es muss eine pro zugeordneter Klima-Entity geben",
-          "closing_degree_entity_ids": "Liste der 'Ventil schliessen'-Entities. Wenn das TRV über diese Funktion verfügen, bitte dieses für eine bessere Regelung konfigurieren. Es muss eine pro zugeordneter Klima-Entity vorhanden sein",
-          "proportional_function": "Zu verwendender Algorithmus (derzeit ist nur TPI verfügbar)",
-          "min_opening_degrees": "Eine kommaseparierte Liste der Mindestöffnung. Standardwert ist 0. Beispiel: 20, 25, 30"
+          "offset_calibration_entity_ids": "Liste der 'Offset-Kalibrierungs'-Entities (offset calibration). Für eine bessere Regelung konfigurieren, wenn das TRV diese Entity besitzt. Es sollte eine pro Klima-Entity geben",
+          "opening_degree_entity_ids": "Liste der 'Ventil öffnen'-Entities. Es muss eine pro Klima-Entity geben",
+          "closing_degree_entity_ids": "Liste der 'Ventil schließen'-Entities. Für eine bessere Regelung konfigurieren, wenn das TRV über dies Funktion verfügt. Es muss eine pro Klima-Entity geben",
+          "proportional_function": "Zu verwendender Algorithmus (TPI ist derzeit der einzige)",
+          "opening_threshold_degree": "Ventilöffnungswert unter dem das Ventil als geschlossen angesehen wird (und dann wird 'max_closing_degree' angewendet)",
+          "min_opening_degrees": "Eine kommaseparierte Liste der Mindestöffnung. Standardwert ist 0. Beispiel: 20, 25, 30",
+          "max_opening_degrees": "Maximaler Öffnungsgrad für jedes zugrunde liegende Gerät, durch Kommas getrennt. Standard ist 100. Das Ventil wird nie mehr als dieser Wert geöffnet. Beispiel: 80, 85, 90",
+          "max_closing_degree": "Maximaler Schließungsgrad. Das Ventil wird niemals mehr als dieser Wert geschlossen. Setzen Sie auf 100, um das Ventil vollständig zu schließen"
         }
       },
       "sync_device_internal_temp": {
@@ -587,6 +627,28 @@
           "sync_with_calibration": "Check to apply the offset calibration when synchronizing the internal temperature. Uncheck to directly copy the temperature from the selected entities",
           "sync_entity_ids": "The list of the entities used to synchronize the internal temperature of the underlying devices. There should be one per underlying device. Should be a calibration entity if checkbox is selected or a temperature entity otherwise. Both are `number` entities."
         }
+      },
+      "heating_failure_detection": {
+        "title": "Heating failure detection",
+        "description": "Configure the heating failure detection feature. This detects anomalies when heating is expected but temperature doesn't increase, or when heating is off but temperature keeps rising.",
+        "data": {
+          "use_heating_failure_detection_feature": "Enable heating failure detection",
+          "use_heating_failure_detection_central_config": "Use central heating failure detection configuration",
+          "heating_failure_threshold": "Heating failure threshold",
+          "cooling_failure_threshold": "Cooling failure threshold",
+          "heating_failure_detection_delay": "Detection delay (minutes)",
+          "temperature_change_tolerance": "Temperature change tolerance (°C)",
+          "failure_detection_enable_template": "Detection enable template"
+        },
+        "data_description": {
+          "use_heating_failure_detection_feature": "Enable the detection of heating anomalies for VTherms with TPI",
+          "use_heating_failure_detection_central_config": "Check to use the central heating failure detection configuration. Uncheck to use specific parameters for this VTherm",
+          "heating_failure_threshold": "On percent threshold above which heating should cause temperature increase (0.9 = 90%)",
+          "cooling_failure_threshold": "On percent threshold below which temperature should not increase (0.0 = 0%)",
+          "heating_failure_detection_delay": "Time in minutes to wait before checking if temperature has changed as expected",
+          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)",
+          "failure_detection_enable_template": "An optional Jinja2 template that must return True to enable detection. Useful to temporarily disable detection when an external heat source is active (e.g., is_state('binary_sensor.wood_stove', 'off') in double curly braces). If empty, detection is always enabled."
+        }
       }
     },
     "error": {
@@ -598,6 +660,8 @@
       "valve_regulation_nb_entities_incorrect": "Die Anzahl der Entities für die Ventilregelung muss gleich der Anzahl der zugeordneten Entities sein",
       "sync_device_internal_temp_nb_entities_incorrect": "Die Anzahl der Entities zur Synchronisierung der internen Gerätetemperatur muss der Anzahl der zugrunde liegenden Geräte entsprechen",
       "min_opening_degrees_format": "Es wird eine Liste positiver Ganzzahlen erwartet, die durch Komma getrennte sind. Beispiel: 20, 25, 30",
+      "max_opening_degrees_format": "Eine durch Kommas getrennte Liste positiver Ganzzahlen zwischen 0 und 100 wird erwartet. Beispiel: 80, 85, 90",
+      "min_max_opening_degrees_inconsistent": "Für jedes zugrunde liegende Gerät muss max_opening_degrees strikt größer als min_opening_degrees sein. Bitte überprüfen Sie Ihre Konfiguration.",
       "vswitch_configuration_incorrect": "Die Konfiguration der Befehlsanpassung ist falsch. Sie ist für nicht umschaltbare Basiswerte erforderlich und muss das Format 'service_name[/attribut:wert]' haben. Weitere Informationen finden Sie in der README-Datei."
     },
     "abort": {

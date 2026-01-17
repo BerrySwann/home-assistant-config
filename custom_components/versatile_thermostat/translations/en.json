@@ -32,10 +32,10 @@
           "valve_regulation": "Valve regulation configuration",
           "sync_device_internal_temp": "Synchronize device temperature",
           "lock": "Lock",
-          "auto_tpi_1": "Auto TPI - General",
-          "auto_tpi_2": "Auto TPI - Method",
-          "auto_tpi_3_avg": "Auto TPI - Average",
-          "auto_tpi_3_ema": "Auto TPI - EMA",
+          "heating_failure_detection": "Heating failure detection",
+          "auto_tpi_configuration": "Auto TPI - Configuration",
+          "auto_tpi_avg_settings": "Auto TPI - Weighted Average",
+          "auto_tpi_ema_settings": "Auto TPI - EWMA",
           "finalize": "All done",
           "configuration_not_complete": "Configuration not complete"
         }
@@ -150,7 +150,7 @@
           "use_tpi_central_config": "Check to use the central TPI configuration. Uncheck to use a specific TPI configuration for this VTherm",
           "minimal_activation_delay": "Delay in seconds under which the equipment will not be activated",
           "minimal_deactivation_delay": "Delay in seconds under which the equipment will be kept active",
-          "auto_tpi_mode": "Check to enable automatic learning of TPI coefficients"
+          "auto_tpi_mode": "TPI learning session are started manually, read the doc first."
         }
       },
       "presets": {
@@ -271,6 +271,7 @@
           "proportional_function": "Algorithm",
           "opening_threshold_degree": "Opening threshold degree",
           "min_opening_degrees": "Min opening degrees",
+          "max_opening_degrees": "Max opening degrees",
           "max_closing_degree": "Max closing degree"
         },
         "data_description": {
@@ -280,48 +281,33 @@
           "proportional_function": "Algorithm to use (TPI is the only one for now)",
           "opening_threshold_degree": "Valve opening value under which the valve should be considered as closed (and then 'max_closing_degree' will apply)",
           "min_opening_degrees": "Opening degree minimum value for each underlying device when previous threshold is exceeded, comma separated. Default to 0. Example: 20, 25, 30",
+          "max_opening_degrees": "Opening degree maximum value. The valve will never open more than this value",
           "max_closing_degree": "Closing degree maximum value. The valve will never be closed above this value. Set it to 100 to fully close the valve"
         }
       },
-      "auto_tpi_1": {
-        "title": "Auto TPI - General",
-        "description": "General parameters for Auto TPI learning.",
+      "auto_tpi_configuration": {
+        "title": "Auto TPI - Configuration",
+        "description": "General settings for Auto TPI learning.",
         "data": {
-          "auto_tpi_enable_update_config": "Update configuration",
-          "auto_tpi_enable_notification": "Notifications",
-          "auto_tpi_keep_ext_learning": "Keep external coefficient learning",
-          "auto_tpi_continuous_learning": "Continuous learning",
-          "heater_heating_time": "Heater warm-up time (min)",
-          "heater_cooling_time": "Heater cool-down time (min)",
-          "auto_tpi_max_coef_int": "Max Internal Coefficient",
-          "auto_tpi_heating_rate": "Heating rate ({unit}/h)",
-          "auto_tpi_aggressiveness": "Aggressiveness"
+          "auto_tpi_learning_type": "Learning Type",
+          "heater_heating_time": "Heating time (min)",
+          "heater_cooling_time": "Cooling time (min)",
+          "auto_tpi_heating_rate": "Heating Rate ({unit}/h)",
+          "auto_tpi_aggressiveness": "Aggressiveness",
+          "auto_tpi_enable_advanced_settings": "Enable Advanced Parameters"
         },
         "data_description": {
-          "auto_tpi_enable_update_config": "Automatically update the configuration with learned coefficients",
-          "auto_tpi_enable_notification": "Send a notification when learning is complete",
-          "auto_tpi_keep_ext_learning": "If set, the external coefficient will continue learning even after reaching 50 cycles, as long as the internal coefficient has not reached stability.",
-          "auto_tpi_continuous_learning": "If set, the system will continue calculating and applying new coefficients silently after learning is finished (EMA method recommended).",
+          "auto_tpi_learning_type": "Choose 'Discovery' for initial startup (Weighted Average, weight 1) or 'Fine Tuning' for continuous adjustments (EWMA, Alpha 0.08).",
           "heater_heating_time": "Time to reach full power (minutes)",
-          "heater_cooling_time": "Time to cool down after stop (minutes)\n\n| Type | Heating time | Cooling time |\n| :--- | :--- | :--- |\n| Electric radiator | 5min | 7min |\n| Water radiator | 15min | 20min |\n| Floor heating | 30min | 45min |",
-          "auto_tpi_max_coef_int": "Maximum allowed value for the internal coefficient (Coeff Int)",
-          "auto_tpi_heating_rate": "Heating ramp-up capacity of the radiator ({unit} per hour). Can be estimated using the “Calibrate capacity” action service.",
-          "auto_tpi_aggressiveness": "Reduction factor for learned coefficients (50-100%). Lower values give more conservative coefficients and reduce overshoot risk."
+          "heater_cooling_time": "Time to cool down after stop (minutes)\n\n| Type | Heating time | Cooling time |\n| :--- | :--- | :--- |\n| Electric radiator | 5mn | 7mn |\n| Water radiator | 15mn | 20mn |\n| Underfloor heating | 30mn | 45mn |",
+          "auto_tpi_heating_rate": "Radiator temperature rise capacity ({unit} per hour). Leave at 0 for automatic learning (bootstrap).",
+          "auto_tpi_aggressiveness": "Reduction factor for learned coefficients (50-100%). Lower values result in more conservative coefficients and reduce overshoot risk.",
+          "auto_tpi_enable_advanced_settings": "Check to access parameter fine-tuning (Alpha, Decay, Weight)."
         }
       },
-      "auto_tpi_2": {
-        "title": "Auto TPI - Method",
-        "description": "Choose the calculation method for learning.",
-        "data": {
-          "auto_tpi_calculation_method": "Calculation Method"
-        },
-        "data_description": {
-          "auto_tpi_calculation_method": "Average: simple averaging. EMA: Exponential Moving Average (favors recent values)"
-        }
-      },
-      "auto_tpi_3_avg": {
-        "title": "Auto TPI - Average",
-        "description": "Parameters for the Average method.",
+      "auto_tpi_avg_settings": {
+        "title": "Auto TPI - Weighted Average",
+        "description": "Parameters for Weighted Average method.",
         "data": {
           "auto_tpi_avg_initial_weight": "Initial Weight"
         },
@@ -329,9 +315,9 @@
           "auto_tpi_avg_initial_weight": "Weight of the initial/previous value in the average calculation"
         }
       },
-      "auto_tpi_3_ema": {
-        "title": "Auto TPI - EMA",
-        "description": "Parameters for the EMA method.\n\nRecommendations:\n| Situation | Alpha (ema_alpha) | Decay Rate (ema_decay_rate) |\n| :--- | :--- | :--- |\n| Initial learning | 0.15 | 0.08 |\n| Fine learning | 0.08 | 0.12 |\n| Continuous learning | 0.05 | 0.02 |",
+      "auto_tpi_ema_settings": {
+        "title": "Auto TPI - EWMA",
+        "description": "Parameters for EWMA method.\n\nRecommendations:\n| Situation | Alpha (ema_alpha) | Decay Rate (ema_decay_rate) |\n| :--- | :--- | :--- |\n| Initial Learning | 0.15 | 0.08 |\n| Fine Learning | 0.08 | 0.12 |\n| Continuous Learning | 0.05 | 0.02 |",
         "data": {
           "auto_tpi_ema_alpha": "Alpha",
           "auto_tpi_ema_decay_rate": "Decay Rate"
@@ -362,7 +348,8 @@
           "heating_failure_threshold": "Heating failure threshold",
           "cooling_failure_threshold": "Cooling failure threshold",
           "heating_failure_detection_delay": "Detection delay (minutes)",
-          "temperature_change_tolerance": "Temperature change tolerance (°C)"
+          "temperature_change_tolerance": "Temperature change tolerance (°C)",
+          "failure_detection_enable_template": "Detection enable template"
         },
         "data_description": {
           "use_heating_failure_detection_feature": "Enable the detection of heating anomalies for VTherms with TPI",
@@ -370,7 +357,8 @@
           "heating_failure_threshold": "On percent threshold above which heating should cause temperature increase (0.9 = 90%)",
           "cooling_failure_threshold": "On percent threshold below which temperature should not increase (0.0 = 0%)",
           "heating_failure_detection_delay": "Time in minutes to wait before checking if temperature has changed as expected",
-          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)"
+          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)",
+          "failure_detection_enable_template": "An optional Jinja2 template that must return True to enable detection. Useful to temporarily disable detection when an external heat source is active (e.g., `is_state('binary_sensor.wood_stove', 'off')` in double curly braces). If empty, detection is always enabled."
         }
       }
     },
@@ -383,6 +371,8 @@
       "valve_regulation_nb_entities_incorrect": "The number of valve entities for valve regulation should be equal to the number of underlyings",
       "sync_device_internal_temp_nb_entities_incorrect": "The number of entities for synchronize device internal temperature should be equal to the number of underlyings",
       "min_opening_degrees_format": "A comma separated list of positive integer is expected. Example: 20, 25, 30",
+      "max_opening_degrees_format": "A comma separated list of positive integer between 0 and 100 is expected. Example: 80, 85, 90",
+      "min_max_opening_degrees_inconsistent": "For each underlying device, max_opening_degrees must be strictly greater than min_opening_degrees. Please check your configuration.",
       "vswitch_configuration_incorrect": "The command customization configuration is incorrect. It is required for underlying entities that are not switches, and the format must be service_name[/attribute:value]. More information is available in the README"
     },
     "abort": {
@@ -422,10 +412,6 @@
           "sync_device_internal_temp": "Synchronize device temperature",
           "lock": "Lock",
           "heating_failure_detection": "Heating failure detection",
-          "auto_tpi_1": "Auto TPI - General",
-          "auto_tpi_2": "Auto TPI - Method",
-          "auto_tpi_3_avg": "Auto TPI - Average",
-          "auto_tpi_3_ema": "Auto TPI - EMA",
           "finalize": "All done",
           "configuration_not_complete": "Configuration not complete"
         }
@@ -539,7 +525,8 @@
           "tpi_threshold_high": "Threshold in ° above which the TPI algorithm will be off. 0 means no threshold",
           "use_tpi_central_config": "Check to use the central TPI configuration. Uncheck to use a specific TPI configuration for this VTherm",
           "minimal_activation_delay": "Delay in seconds under which the equipment will not be activated",
-          "minimal_deactivation_delay": "Delay in seconds under which the equipment will be kept active"
+          "minimal_deactivation_delay": "Delay in seconds under which the equipment will be kept active",
+          "auto_tpi_mode": "TPI learning session are started manually, read the doc first."
         }
       },
       "presets": {
@@ -664,6 +651,7 @@
           "proportional_function": "Algorithm",
           "opening_threshold_degree": "Opening threshold degree",
           "min_opening_degrees": "Min opening degrees",
+          "max_opening_degrees": "Max opening degrees",
           "max_closing_degree": "Max closing degree"
         },
         "data_description": {
@@ -673,6 +661,7 @@
           "proportional_function": "Algorithm to use (TPI is the only one for now)",
           "opening_threshold_degree": "Valve opening value under which the valve should be considered as closed (and then 'max_closing_degree' will apply)",
           "min_opening_degrees": "Opening degree minimum value for each underlying device when previous threshold is exceeded, comma separated. Default to 0. Example: 20, 25, 30",
+          "max_opening_degrees": "Opening degree maximum value. The valve will never open more than this value",
           "max_closing_degree": "Closing degree maximum value. The valve will never be closed above this value. Set it to 100 to fully close the valve"
         }
       },
@@ -688,55 +677,39 @@
           "sync_entity_ids": "The list of the entities used to synchronize the internal temperature of the underlying devices. There should be one per underlying device. Should be a calibration entity if checkbox is selected or a temperature entity otherwise. Both are `number` entities."
         }
       },
-      "auto_tpi_1": {
-        "title": "Auto TPI - General - {name}",
-        "description": "General parameters for Auto TPI learning.",
+      "auto_tpi_configuration": {
+        "title": "Auto TPI - Configuration - {name}",
+        "description": "General settings for Auto TPI learning.",
         "data": {
-          "auto_tpi_enable_update_config": "Update configuration",
-          "auto_tpi_enable_notification": "Notifications",
-          "auto_tpi_keep_ext_learning": "Keep external coefficient learning",
-          "auto_tpi_continuous_learning": "Continuous learning",
-          "heater_heating_time": "Heater warm-up time (min)",
-          "heater_cooling_time": "Heater cool-down time (min)",
-          "auto_tpi_max_coef_int": "Max Internal Coefficient",
-          "auto_tpi_heating_rate": "Heating rate ({unit}/h)",
-          "auto_tpi_aggressiveness": "Aggressiveness"
+          "auto_tpi_learning_type": "Learning Type",
+          "auto_tpi_heating_rate": "Heating Rate ({unit}/h)",
+          "heater_heating_time": "Heating time (min)",
+          "heater_cooling_time": "Cooling time (min)",
+          "auto_tpi_aggressiveness": "Aggressiveness",
+          "auto_tpi_enable_advanced_settings": "Enable Advanced Parameters"
         },
         "data_description": {
-          "auto_tpi_enable_update_config": "Automatically update the configuration with learned coefficients",
-          "auto_tpi_enable_notification": "Send a notification when learning is complete",
-          "auto_tpi_keep_ext_learning": "If set, the external coefficient will continue learning even after reaching 50 cycles, as long as the internal coefficient has not reached stability.",
-          "auto_tpi_continuous_learning": "If set, the system will continue calculating and applying new coefficients silently after learning is finished (EMA method recommended).",
+          "auto_tpi_learning_type": "Choose 'Discovery' for initial startup (Weighted Average, weight 1) or 'Fine Tuning' for continuous adjustments (EWMA, Alpha 0.08).",
+          "auto_tpi_heating_rate": "Radiator temperature rise capacity ({unit} per hour). Leave at 0 for automatic learning (bootstrap).",
           "heater_heating_time": "Time to reach full power (minutes)",
-          "heater_cooling_time": "Time to cool down after stop (minutes)\n\n| Type | Heating time | Cooling time |\n| :--- | :--- | :--- |\n| Electric radiator | 5min | 7min |\n| Water radiator | 15min | 20min |\n| Floor heating | 30min | 45min |",
-          "auto_tpi_max_coef_int": "Maximum allowed value for the internal coefficient (Coeff Int)",
-          "auto_tpi_heating_rate": "Heating ramp-up capacity of the radiator ({unit} per hour). Can be estimated using the “Calibrate capacity” action service.",
-          "auto_tpi_aggressiveness": "Reduction factor for learned coefficients (50-100%). Lower values give more conservative coefficients and reduce overshoot risk."
+          "heater_cooling_time": "Time to cool down after stop (minutes)\n\n| Type | Heating time | Cooling time |\n| :--- | :--- | :--- |\n| Electric radiator | 5mn | 7mn |\n| Water radiator | 15mn | 20mn |\n| Underfloor heating | 30mn | 45mn |",
+          "auto_tpi_aggressiveness": "Reduction factor for learned coefficients (50-100%). Lower values result in more conservative coefficients and reduce overshoot risk.",
+          "auto_tpi_enable_advanced_settings": "Check to modify the parameters of the chosen algorithm."
         }
       },
-      "auto_tpi_2": {
-        "title": "Auto TPI - Method - {name}",
-        "description": "Choose the calculation method for learning.",
-        "data": {
-          "auto_tpi_calculation_method": "Calculation Method"
-        },
-        "data_description": {
-          "auto_tpi_calculation_method": "Average: simple averaging. EMA: Exponential Moving Average (favors recent values)"
-        }
-      },
-      "auto_tpi_3_avg": {
-        "title": "Auto TPI - Average - {name}",
-        "description": "Parameters for the Average method.",
+      "auto_tpi_avg_settings": {
+        "title": "Auto TPI - Weighted Average - {name}",
+        "description": "Parameters for Weighted Average method.",
         "data": {
           "auto_tpi_avg_initial_weight": "Initial Weight"
         },
         "data_description": {
-          "auto_tpi_avg_initial_weight": "Weight of the initial/previous value in the average calculation"
+          "auto_tpi_avg_initial_weight": "Initial weight of existing coefficients in the average calculation (1-50 is typical). Higher weight means slower and more stable learning."
         }
       },
-      "auto_tpi_3_ema": {
-        "title": "Auto TPI - EMA - {name}",
-        "description": "Parameters for the EMA method.\n\nRecommendations:\n| Situation | Alpha (ema_alpha) | Decay Rate (ema_decay_rate) |\n| :--- | :--- | :--- |\n| Initial learning | 0.15 | 0.08 |\n| Fine learning | 0.08 | 0.12 |\n| Continuous learning | 0.05 | 0.02 |",
+      "auto_tpi_ema_settings": {
+        "title": "Auto TPI - EWMA - {name}",
+        "description": "Parameters for EWMA method.\n\nRecommendations:\n| Situation | Alpha (ema_alpha) | Decay Rate (ema_decay_rate) |\n| :--- | :--- | :--- |\n| Strong adjustments | 0.15 | 0.08 |\n| Fine tuning | 0.08 | 0.12 |",
         "data": {
           "auto_tpi_ema_alpha": "Alpha",
           "auto_tpi_ema_decay_rate": "Decay Rate"
@@ -755,7 +728,8 @@
           "heating_failure_threshold": "Heating failure threshold",
           "cooling_failure_threshold": "Cooling failure threshold",
           "heating_failure_detection_delay": "Detection delay (minutes)",
-          "temperature_change_tolerance": "Temperature change tolerance (°C)"
+          "temperature_change_tolerance": "Temperature change tolerance (°C)",
+          "failure_detection_enable_template": "Detection enable template"
         },
         "data_description": {
           "use_heating_failure_detection_feature": "Enable the detection of heating anomalies for VTherms with TPI",
@@ -763,7 +737,8 @@
           "heating_failure_threshold": "On percent threshold above which heating should cause temperature increase (0.9 = 90%)",
           "cooling_failure_threshold": "On percent threshold below which temperature should not increase (0.0 = 0%)",
           "heating_failure_detection_delay": "Time in minutes to wait before checking if temperature has changed as expected",
-          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)"
+          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)",
+          "failure_detection_enable_template": "An optional Jinja2 template that must return True to enable detection. Useful to temporarily disable detection when an external heat source is active (e.g., `is_state('binary_sensor.wood_stove', 'off')` in double curly braces). If empty, detection is always enabled."
         }
       }
     },
@@ -776,6 +751,8 @@
       "valve_regulation_nb_entities_incorrect": "The number of valve entities for valve regulation should be equal to the number of underlyings",
       "sync_device_internal_temp_nb_entities_incorrect": "The number of entities for synchronize device internal temperature should be equal to the number of underlyings",
       "min_opening_degrees_format": "A comma separated list of positive integer is expected. Example: 20, 25, 30",
+      "max_opening_degrees_format": "A comma separated list of positive integer between 0 and 100 is expected. Example: 80, 85, 90",
+      "min_max_opening_degrees_inconsistent": "For each underlying device, max_opening_degrees must be strictly greater than min_opening_degrees. Please check your configuration.",
       "vswitch_configuration_incorrect": "The command customization configuration is incorrect. It is required for underlying entities that are not switches, and the format must be service_name[/attribute:value]. More information is available in the README"
     },
     "abort": {
@@ -840,6 +817,12 @@
       "options": {
         "average": "Average",
         "ema": "Exponential Moving Average (EMA)"
+      }
+    },
+    "auto_tpi_learning_type": {
+      "options": {
+        "discovery": "Discovery",
+        "fine_tuning": "Fine Tuning"
       }
     }
   },

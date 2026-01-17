@@ -31,6 +31,7 @@
           "auto_start_stop": "Automatické spuštění a zastavení",
           "valve_regulation": "Konfigurace regulace ventilu",
           "sync_device_internal_temp": "Synchronizace teploty zařízení",
+          "heating_failure_detection": "Heating failure detection",
           "lock": "Správa zámku",
           "finalize": "Vše hotovo",
           "configuration_not_complete": "Konfigurace není kompletní"
@@ -87,7 +88,8 @@
           "use_power_feature": "Použít správu výkonu",
           "use_presence_feature": "Použít detekci přítomnosti",
           "use_central_boiler_feature": "Použít centrální kotel. Zaškrtněte pro přidání ovládání centrálního kotle. Po zaškrtnutí budete muset nakonfigurovat VTherm, který bude mít kontrolu nad centrálním kotlem. Pokud jeden VTherm vyžaduje vytápění, kotel se zapne. Pokud žádný VTherm nevyžaduje vytápění, kotel se vypne. Příkazy pro zapnutí/vypnutí centrálního kotle jsou uvedeny na související konfigurační stránce",
-          "use_auto_start_stop_feature": "Použít funkci automatického spuštění a zastavení"
+          "use_auto_start_stop_feature": "Použít funkci automatického spuštění a zastavení",
+          "use_heating_failure_detection_feature": "Use heating failure detection"
         }
       },
       "type": {
@@ -259,14 +261,20 @@
           "opening_degree_entity_ids": "Entity stupně otevření",
           "closing_degree_entity_ids": "Entity stupně zavření",
           "proportional_function": "Algoritmus",
-          "min_opening_degrees": "Minimální stupně otevření"
+          "opening_threshold_degree": "Prahová hodnota otevření",
+          "min_opening_degrees": "Minimální stupně otevření",
+          "max_opening_degrees": "Maximální stupeň otevření",
+          "max_closing_degree": "Maximální stupeň zavření"
         },
         "data_description": {
           "offset_calibration_entity_ids": "Seznam entit 'kalibrace offsetu'. Nastavte, pokud má váš TRV entitu pro lepší regulaci. Měla by být jedna na každou podřízenou klimatizační entitu",
           "opening_degree_entity_ids": "Seznam entit 'stupně otevření'. Měla by být jedna na každou podřízenou klimatizační entitu",
           "closing_degree_entity_ids": "Seznam entit 'stupně zavření'. Nastavte, pokud má váš TRV entitu pro lepší regulaci. Měla by být jedna na každou podřízenou klimatizační entitu",
           "proportional_function": "Algoritmus k použití (TPI je momentálně jediný)",
-          "min_opening_degrees": "Minimální hodnota stupně otevření pro každé podřízené zařízení, oddělené čárkami. Výchozí je 0. Příklad: 20, 25, 30"
+          "opening_threshold_degree": "Hodnota otevření ventilu, pod kterou by měl být ventil považován za zavřený (a pak bude aplikován 'max_closing_degree')",
+          "min_opening_degrees": "Minimální hodnota stupně otevření pro každé podřízené zařízení, oddělené čárkami. Výchozí je 0. Příklad: 20, 25, 30",
+          "max_opening_degrees": "Maximální hodnota stupně otevření pro každé základní zařízení, oddělené čárkami. Výchozí hodnota je 100. Ventil se nikdy neotevře více než tato hodnota. Příklad: 80, 85, 90",
+          "max_closing_degree": "Maximální hodnota stupně zavření. Ventil nebude nikdy uzavřen více než tato hodnota. Nastavte na 100 pro úplné zavření ventilu"
         }
       },
       "sync_device_internal_temp": {
@@ -280,6 +288,28 @@
           "sync_with_calibration": "Check to apply the offset calibration when synchronizing the internal temperature. Uncheck to directly copy the temperature from the selected entities",
           "sync_entity_ids": "The list of the entities used to synchronize the internal temperature of the underlying devices. There should be one per underlying device. Should be a calibration entity if checkbox is selected or a temperature entity otherwise. Both are `number` entities."
         }
+      },
+      "heating_failure_detection": {
+        "title": "Heating failure detection",
+        "description": "Configure the heating failure detection feature. This detects anomalies when heating is expected but temperature doesn't increase, or when heating is off but temperature keeps rising.",
+        "data": {
+          "use_heating_failure_detection_feature": "Enable heating failure detection",
+          "use_heating_failure_detection_central_config": "Use central heating failure detection configuration",
+          "heating_failure_threshold": "Heating failure threshold",
+          "cooling_failure_threshold": "Cooling failure threshold",
+          "heating_failure_detection_delay": "Detection delay (minutes)",
+          "temperature_change_tolerance": "Temperature change tolerance (°C)",
+          "failure_detection_enable_template": "Detection enable template"
+        },
+        "data_description": {
+          "use_heating_failure_detection_feature": "Enable the detection of heating anomalies for VTherms with TPI",
+          "use_heating_failure_detection_central_config": "Check to use the central heating failure detection configuration. Uncheck to use specific parameters for this VTherm",
+          "heating_failure_threshold": "On percent threshold above which heating should cause temperature increase (0.9 = 90%)",
+          "cooling_failure_threshold": "On percent threshold below which temperature should not increase (0.0 = 0%)",
+          "heating_failure_detection_delay": "Time in minutes to wait before checking if temperature has changed as expected",
+          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)",
+          "failure_detection_enable_template": "An optional Jinja2 template that must return True to enable detection. Useful to temporarily disable detection when an external heat source is active (e.g., is_state('binary_sensor.wood_stove', 'off') in double curly braces). If empty, detection is always enabled."
+        }
       }
     },
     "error": {
@@ -287,6 +317,8 @@
       "unknown_entity": "Neznámé ID entity",
       "window_open_detection_method": "Měla by se používat pouze jedna metoda detekce otevřeného okna. Použijte buď senzor okna, nebo automatickou detekci pomocí teplotního prahu, ale ne oboje",
       "no_central_config": "Nemůžete zaškrtnout 'použít centrální konfiguraci', protože nebyla nalezena žádná centrální konfigurace. Pro její použití musíte vytvořit Versatile Thermostat typu 'Centrální konfigurace'.",
+      "max_opening_degrees_format": "Seznam celých kladných čísel mezi 0 a 100 oddělených čárkou je očekáván. Příklad: 80, 85, 90",
+      "min_max_opening_degrees_inconsistent": "Pro každé základní zařízení musí být max_opening_degrees striktně větší než min_opening_degrees. Zkontrolujte prosím svou konfiguraci.",
       "vswitch_configuration_incorrect": "Konfigurace virtuálního spínače je nesprávná. Jedna nebo více podřízených entit není správně nakonfigurována.",
       "service_configuration_format": "Formát konfigurace služby je nesprávný",
       "valve_regulation_nb_entities_incorrect": "Počet entit ventilů pro regulaci ventilů by měl být roven počtu podřízených zařízení",
@@ -327,6 +359,7 @@
           "auto_start_stop": "Automatické spuštění a zastavení",
           "valve_regulation": "Konfigurace regulace ventilu",
           "sync_device_internal_temp": "Synchronizace teploty zařízení",
+          "heating_failure_detection": "Heating failure detection",
           "lock": "Zámek",
           "finalize": "Vše hotovo",
           "configuration_not_complete": "Konfigurace není kompletní"
@@ -382,7 +415,8 @@
           "use_power_feature": "Použít správu výkonu",
           "use_presence_feature": "Použít detekci přítomnosti",
           "use_central_boiler_feature": "Použít centrální kotel. Zaškrtněte pro přidání ovládání centrálního kotle. Po zaškrtnutí budete muset nakonfigurovat VTherm, který bude mít kontrolu nad centrálním kotlem. Pokud jeden VTherm vyžaduje vytápění, kotel se zapne. Pokud žádný VTherm nevyžaduje vytápění, kotel se vypne. Příkazy pro zapnutí/vypnutí centrálního kotle jsou uvedeny na související konfigurační stránce",
-          "use_auto_start_stop_feature": "Použít funkci automatického spuštění a zastavení"
+          "use_auto_start_stop_feature": "Použít funkci automatického spuštění a zastavení",
+          "use_heating_failure_detection_feature": "Use heating failure detection"
         }
       },
       "type": {
@@ -553,14 +587,20 @@
           "opening_degree_entity_ids": "Entity stupně otevření",
           "closing_degree_entity_ids": "Entity stupně zavření",
           "proportional_function": "Algoritmus",
-          "min_opening_degrees": "Minimální stupně otevření"
+          "opening_threshold_degree": "Prahová hodnota otevření",
+          "min_opening_degrees": "Minimální stupně otevření",
+          "max_opening_degrees": "Maximální stupeň otevření",
+          "max_closing_degree": "Maximální stupeň zavření"
         },
         "data_description": {
           "offset_calibration_entity_ids": "Seznam entit 'kalibrace offsetu'. Nastavte, pokud má váš TRV entitu pro lepší regulaci. Měla by být jedna na každou podřízenou klimatizační entitu",
           "opening_degree_entity_ids": "Seznam entit 'stupně otevření'. Měla by být jedna na každou podřízenou klimatizační entitu",
           "closing_degree_entity_ids": "Seznam entit 'stupně zavření'. Nastavte, pokud má váš TRV entitu pro lepší regulaci. Měla by být jedna na každou podřízenou klimatizační entitu",
           "proportional_function": "Algoritmus k použití (TPI je momentálně jediný)",
-          "min_opening_degrees": "Minimální hodnota stupně otevření pro každé podřízené zařízení, oddělené čárkami. Výchozí je 0. Příklad: 20, 25, 30"
+          "opening_threshold_degree": "Hodnota otevření ventilu, pod kterou by měl být ventil považován za zavřený (a pak bude aplikován 'max_closing_degree')",
+          "min_opening_degrees": "Minimální hodnota stupně otevření pro každé podřízené zařízení, oddělené čárkami. Výchozí je 0. Příklad: 20, 25, 30",
+          "max_opening_degrees": "Maximální hodnota stupně otevření pro každé základní zařízení, oddělené čárkami. Výchozí hodnota je 100. Ventil se nikdy neotevře více než tato hodnota. Příklad: 80, 85, 90",
+          "max_closing_degree": "Maximální hodnota stupně zavření. Ventil nebude nikdy uzavřen více než tato hodnota. Nastavte na 100 pro úplné zavření ventilu"
         }
       },
       "sync_device_internal_temp": {
@@ -574,6 +614,28 @@
           "sync_with_calibration": "Check to apply the offset calibration when synchronizing the internal temperature. Uncheck to directly copy the temperature from the selected entities",
           "sync_entity_ids": "The list of the entities used to synchronize the internal temperature of the underlying devices. There should be one per underlying device. Should be a calibration entity if checkbox is selected or a temperature entity otherwise. Both are `number` entities."
         }
+      },
+      "heating_failure_detection": {
+        "title": "Heating failure detection",
+        "description": "Configure the heating failure detection feature. This detects anomalies when heating is expected but temperature doesn't increase, or when heating is off but temperature keeps rising.",
+        "data": {
+          "use_heating_failure_detection_feature": "Enable heating failure detection",
+          "use_heating_failure_detection_central_config": "Use central heating failure detection configuration",
+          "heating_failure_threshold": "Heating failure threshold",
+          "cooling_failure_threshold": "Cooling failure threshold",
+          "heating_failure_detection_delay": "Detection delay (minutes)",
+          "temperature_change_tolerance": "Temperature change tolerance (°C)",
+          "failure_detection_enable_template": "Detection enable template"
+        },
+        "data_description": {
+          "use_heating_failure_detection_feature": "Enable the detection of heating anomalies for VTherms with TPI",
+          "use_heating_failure_detection_central_config": "Check to use the central heating failure detection configuration. Uncheck to use specific parameters for this VTherm",
+          "heating_failure_threshold": "On percent threshold above which heating should cause temperature increase (0.9 = 90%)",
+          "cooling_failure_threshold": "On percent threshold below which temperature should not increase (0.0 = 0%)",
+          "heating_failure_detection_delay": "Time in minutes to wait before checking if temperature has changed as expected",
+          "temperature_change_tolerance": "Minimum temperature change in degrees to consider significant. Smaller changes are ignored to filter sensor noise (default: 0.5°C)",
+          "failure_detection_enable_template": "An optional Jinja2 template that must return True to enable detection. Useful to temporarily disable detection when an external heat source is active (e.g., is_state('binary_sensor.wood_stove', 'off') in double curly braces). If empty, detection is always enabled."
+        }
       }
     },
     "error": {
@@ -581,6 +643,8 @@
       "unknown_entity": "Neznámé ID entity",
       "window_open_detection_method": "Měla by se používat pouze jedna metoda detekce otevřeného okna. Použijte buď senzor okna, nebo automatickou detekci pomocí teplotního prahu, ale ne oboje",
       "no_central_config": "Nemůžete zaškrtnout 'použít centrální konfiguraci', protože nebyla nalezena žádná centrální konfigurace. Pro její použití musíte vytvořit Versatile Thermostat typu 'Centrální konfigurace'.",
+      "max_opening_degrees_format": "Seznam celých kladných čísel mezi 0 a 100 oddělených čárkou je očekáván. Příklad: 80, 85, 90",
+      "min_max_opening_degrees_inconsistent": "Pro každé základní zařízení musí být max_opening_degrees striktně větší než min_opening_degrees. Zkontrolujte prosím svou konfiguraci.",
       "vswitch_configuration_incorrect": "Konfigurace virtuálního spínače je nesprávná. Jedna nebo více podřízených entit není správně nakonfigurována.",
       "service_configuration_format": "Formát konfigurace služby je nesprávný",
       "valve_regulation_nb_entities_incorrect": "Počet entit ventilů pro regulaci ventilů by měl být roven počtu podřízených zařízení",

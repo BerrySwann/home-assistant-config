@@ -1409,7 +1409,8 @@
   description: Pilotage du chauffage SDB via le bouton RODRET (MQTT)
   triggers:
   - trigger: mqtt
-    topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
+    options:
+      topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
   actions:
   - choose:
     - alias: Bouton ON
@@ -1419,7 +1420,8 @@
       sequence:
       - action: input_boolean.turn_on
         target:
-          entity_id: input_boolean.inter_radiateur_salle_de_bain
+          entity_id: input_boolean.inter_soufflant_salle_de_bain
+        data: {}
     - alias: Bouton OFF
       conditions:
       - condition: template
@@ -1427,7 +1429,8 @@
       sequence:
       - action: input_boolean.turn_off
         target:
-          entity_id: input_boolean.inter_radiateur_salle_de_bain
+          entity_id: input_boolean.inter_soufflant_salle_de_bain
+        data: {}
   mode: restart
 - id: '1766777250756'
   alias: Bouton IKEA RODRET - TV Chambre (JSON)
@@ -2741,74 +2744,80 @@
           entity_id: switch.prise_ecran_bureau
   mode: restart
 - id: '1768415943951'
-  alias: A - Démarrage Radiateur Salle de Bain (Sécurité État)
-  description: Utilise le mode du thermostat pour éviter le double envoi IR
+  alias: A - DÉMARRAGE ET INITIALISATION RADIATEUR SDB
+  description: Gère l'allumage physique, l'amorçage IR et le réglage initial de puissance.
   triggers:
-  - trigger: mqtt
-    topic: zigbee2mqtt/Inter Radiateur Salle de Bain (IKEA RODRET)
+  - alias: 'DÉCLENCHEMENT : PASSAGE À ON DU BOOLEAN SDB'
+    trigger: state
+    entity_id: input_boolean.inter_soufflant_salle_de_bain
+    to: 'on'
   conditions:
-  - condition: template
-    value_template: '{{ trigger.payload_json.action == ''on'' }}'
-  - condition: numeric_state
+  - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 25°C'
+    condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 25
   actions:
-  - action: switch.turn_on
+  - alias: 'MATÉRIEL : ALLUMAGE DE LA PRISE PHYSIQUE'
+    action: switch.turn_on
     target:
       entity_id: switch.prise_soufflant_salle_de_bain_nous
-  - if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: climate.soufflant_salle_de_bain
-        state:
-        - heat
-    then:
-    - action: remote.send_command
-      target:
-        entity_id: remote.radiateur_sdb_rm4_mini
-      data:
-        command: on_off
-        device: radiateur_sdb
-        num_repeats: 1
-  - action: climate.set_hvac_mode
-    data:
-      hvac_mode: heat
+  - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
+    delay: '00:00:00.25'
+  - alias: 'SÉCURITÉ : VÉRIFICATION ALIMENTATION PRISE'
+    condition: state
+    entity_id: switch.prise_soufflant_salle_de_bain_nous
+    state: 'on'
+  - delay: '00:00:00.25'
+  - alias: 'IR : ENVOI COMMANDE POWER ON'
+    action: remote.send_command
     target:
-      entity_id: climate.soufflant_salle_de_bain
-  - delay: 00:00:01
-  - choose:
-    - conditions:
+      entity_id: remote.soufflant_sdb_rm4_mini
+    data:
+      command: on_off
+      device: radiateur_sdb
+  - delay: '00:00:00.8'
+  - alias: 'PUISSANCE INITIALE : CHOIX SELON TEMPÉRATURE ACTUELLE'
+    choose:
+    - alias: 'CAS FROID : INFÉRIEUR À 21°C -> 2000W'
+      conditions:
       - condition: numeric_state
         entity_id: sensor.th_salle_de_bain_temperature
-        above: 21.9
+        below: 21
       sequence:
       - action: remote.send_command
         target:
-          entity_id: remote.radiateur_sdb_rm4_mini
-        data:
-          command: 1000w
-          device: radiateur_sdb
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.th_salle_de_bain_temperature
-        below: 22
-      sequence:
-      - action: remote.send_command
-        target:
-          entity_id: remote.radiateur_sdb_rm4_mini
+          entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-  - delay: 00:00:01
-  - action: remote.send_command
+    - alias: 'CAS MODÉRÉ : SUPÉRIEUR À 21°C -> 1000W'
+      conditions:
+      - condition: numeric_state
+        entity_id: sensor.th_salle_de_bain_temperature
+        above: 20.9
+      sequence:
+      - action: remote.send_command
+        target:
+          entity_id: remote.soufflant_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+  - delay: '00:00:00.8'
+  - alias: 'IR : ACTIVATION DU SWING'
+    action: remote.send_command
     target:
-      entity_id: remote.radiateur_sdb_rm4_mini
+      entity_id: remote.soufflant_sdb_rm4_mini
     data:
       command: swing
       device: radiateur_sdb
-  mode: restart
+  - alias: 'ETAT : SYNCHRONISATION DU THERMOSTAT VIRTUEL'
+    action: climate.set_temperature
+    target:
+      entity_id: climate.soufflant_salle_de_bain
+    data:
+      hvac_mode: heat
+      temperature: 23
 - id: '1768415963940'
   alias: B - Gestion Résistances Radiateur SDB
   description: Baisse à 1000W au-delà de 22.9°C et repasse à 2000W sous 20.9°C
