@@ -369,7 +369,7 @@
         {% set d_ch = states('sensor.dut_clim_chambre') | float(0) %}
         
         {# On divise par 7 pour inclure les zones non chauffées (Dégagement/Dressing) #}
-        {% set dut_moyen = (d_salon + d_kui + d_bur + d_sdb1 + d_sdb2 + d_ch) / 7 %}
+        {% set dut_moyen = (d_salon + d_kui + d_bur + d_sdb1 + d_sdb2 + d_ch) / 6 %}
 
         {# 3. VARIABLES DE CALCUL #}
         {% set surf_total = 75.0 %}
