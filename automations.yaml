@@ -2762,13 +2762,13 @@
     target:
       entity_id: switch.prise_soufflant_salle_de_bain_nous
   - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
-    delay: '00:00:00.25'
+    delay: '00:00:00.5'
   - alias: 'SÉCURITÉ : VÉRIFICATION ALIMENTATION PRISE'
     condition: state
     entity_id: switch.prise_soufflant_salle_de_bain_nous
     state: 'on'
   - alias: 'PAUSE : STABILISATION AVANT IR'
-    delay: '00:00:00.25'
+    delay: '00:00:00.5'
   - alias: 'IR : ENVOI COMMANDE POWER ON'
     action: remote.send_command
     target:
@@ -2825,6 +2825,7 @@
     data:
       hvac_mode: heat
       temperature: 23
+  mode: single
 - id: '1768415963940'
   alias: B - SALLE DE BAIN - GESTION RÉSISTANCES DU SOUFFLANT
   description: Baisse à 1000W au-delà de 22.9°C et repasse à 2000W sous 20.9°C
@@ -2936,7 +2937,7 @@
     state: 'on'
   - alias: 'CONDITION : VÉRIFICATION ÉTAT INTERNE'
     condition: state
-    entity_id: input_boolean.inter_radiateur_salle_de_bain
+    entity_id: input_boolean.inter_soufflant_salle_de_bain
     state: 'on'
   - alias: 'CONDITION : TEMPÉRATURE > 25°C'
     condition: numeric_state
@@ -2961,12 +2962,12 @@
       command: on_off
       device: radiateur_sdb
       num_repeats: 1
+  - alias: 'ETAT : PASSAGE DU BOOLEAN SUR OFF (SÉCURITÉ)'
+    action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.inter_soufflant_salle_de_bain
   - alias: 'ACTION : ATTENTE AVANT COUPURE (1 MIN) SÉCURITÉ'
-    delay:
-      hours: 0
-      minutes: 1
-      seconds: 0
-      milliseconds: 0
+    delay: 00:01:00
   - alias: 'MATÉRIEL : COUPURE PHYSIQUE DE LA PRISE'
     action: switch.turn_off
     target:
