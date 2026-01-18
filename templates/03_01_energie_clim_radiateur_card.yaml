@@ -392,22 +392,20 @@
     - name: "Performance Thermique Totale Stable"
       unique_id: performance_thermique_totale_stable
       unit_of_measurement: "pts"
+      icon: mdi:chart-line
       state: >
-        {% set surf_s = 25.88 %}
-        {% set surf_kui = 10.59 %}
-        {% set surf_b = 9.38 %}
-        {% set surf_sdb = 3.96 %}
-        {% set surf_c = 13.06 %}
-        {% set surf_total = 75.0 %}
+        {# 1. Utilisation des moyennes de lissage 24h #}
+        {% set w_moy = states('sensor.conso_clim_rad_moyenne_24h') | float(0) %}
+        {% set delta_moy = states('sensor.temperature_delta_moyenne_24h') | float(0) | abs %}
+        {% set dut = states('sensor.dut_brut_total') | float(0) %}
+        {% set surface = 75.0 %}
 
-        {% set s = states('sensor.performance_salon_moyenne_jour') | float(0) %}
-        {% set kui = states('sensor.perf_cuisine_moy_jour') | float(0) %}
-        {% set b = states('sensor.perf_bureau_moy_jour') | float(0) %}
-        {% set sdb = states('sensor.perf_sdb_moy_jour') | float(0) %}
-        {% set c = states('sensor.performance_chambre_moyenne_jour') | float(0) %}
-        
-        {% set total_pts = (s * surf_s) + (kui * surf_kui) + (b * surf_b) + (sdb * surf_sdb) + (c * surf_c) %}
-        {{ (total_pts / surf_total) | round(1) }}
+        {# 2. Calcul (on utilise | abs par sécurité pour le delta) #}
+        {% if delta_moy > 0.1 and w_moy > 2 and dut > 0 %}
+          {{ ((w_moy * dut) / (surface * delta_moy)) | round(1) }}
+        {% else %}
+          0
+        {% endif %}
 
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
