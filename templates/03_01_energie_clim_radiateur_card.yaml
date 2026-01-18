@@ -362,10 +362,6 @@
         {# 2. Addition brute de toutes les valeurs #}
         {{ (d1 + d2 + d3 + d4 + d5 + d6) | round(2) }}
 
-    
-    # ┌───────────────────────────────────┐
-    # │ 10. TOTAL HABITAT (75m²)          │
-    # └───────────────────────────────────┘
     # ┌───────────────────────────────────┐
     # │ 10. TOTAL HABITAT (75m²)          │
     # └───────────────────────────────────┘
@@ -375,14 +371,8 @@
       unit_of_measurement: "pts"
       icon: mdi:home-thermometer
       state: >
-        {# 1. SOMME DES PUISSANCES (Vérifiez bien ces noms d'entités) #}
-        {% set w1 = states('sensor.clim_salon_nous_power') | float(0) %}
-        {% set w2 = states('sensor.radiateur_cuisine_power') | float(0) %}
-        {% set w3 = states('sensor.clim_bureau_power') | float(0) %}
-        {% set w4 = states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) %}
-        {% set w5 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
-        {% set w6 = states('sensor.clim_chambre_nous_power') | float(0) %}
-        {% set total_watts = w1 + w2 + w3 + w4 + w5 + w6 %}
+        {# 1. RÉCUPÉRATION DES PUISSANCES (Vérifiez bien ces noms d'entités) #}
+        {% set total_watts = states('sensor.conso_clim_rad_total') | float(0) %}
 
         {# 2. RÉCUPÉRATION DU DUT ET DU DELTA #}
         {% set dut = states('sensor.dut_brut_total') | float(0) %}
@@ -396,10 +386,7 @@
           0
         {% endif %}
       availability: >
-        {{ states('sensor.temperature_delta_value') | is_number }}
-        
-        
-        
+        {{ states('sensor.temperature_delta_valeur') | is_number }}
 
     #--- performance_thermique_totale_stable ---
     - name: "Performance Thermique Totale Stable"
