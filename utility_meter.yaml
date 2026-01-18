@@ -74,20 +74,20 @@ radiateur_elec_cuisine_quotidien_um:
 # ┌────────────────────────────────────┐
 # │ PIÈCE 7. BUREAU                    │
 # └────────────────────────────────────┘
-clim_du_bureau_annuel_um:
-  source: sensor.clim_du_bureau_nous_energy
+clim_bureau_annuel_um:
+  source: sensor.clim_bureau_nous_energy
   cycle: yearly
 
-clim_du_bureau_mensuel_um:
-  source: sensor.clim_du_bureau_nous_energy
+clim_bureau_mensuel_um:
+  source: sensor.clim_bureau_nous_energy
   cycle: monthly
 
-clim_du_bureau_hebdomadaire_um:
-  source: sensor.clim_du_bureau_nous_energy
+clim_bureau_hebdomadaire_um:
+  source: sensor.clim_bureau_nous_energy
   cycle: weekly
 
-clim_du_bureau_quotidien_um:
-  source: sensor.clim_du_bureau_nous_energy
+clim_bureau_quotidien_um:
+  source: sensor.clim_bureau_nous_energy
   cycle: daily
 
 # ┌────────────────────────────────────┐

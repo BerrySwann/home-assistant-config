@@ -2139,14 +2139,14 @@ views:
                   - sensor.chambre_power_status
                   - sensor.clim_salon_quotidien
                   - sensor.radiateur_elec_cuisine_quotidien
-                  - sensor.clim_du_bureau_quotidien
+                  - sensor.clim_bureau_quotidien
                   - sensor.radiateur_sdb_quotidien
                   - sensor.seche_serv_sdb_quotidien
                   - sensor.clim_chambre_quotidien
                   - sensor.conso_clim_rad_total_quotidien
                   - sensor.clim_salon_mensuel
                   - sensor.radiateur_elec_cuisine_mensuel
-                  - sensor.clim_du_bureau_mensuel
+                  - sensor.clim_bureau_mensuel
                   - sensor.radiateur_sdb_mensuel
                   - sensor.seche_serv_sdb_mensuel
                   - sensor.clim_chambre_mensuel
@@ -2165,14 +2165,14 @@ views:
                   - sensor.chambre_power_status
                   - sensor.clim_salon_quotidien
                   - sensor.radiateur_elec_cuisine_quotidien
-                  - sensor.clim_du_bureau_quotidien
+                  - sensor.clim_bureau_quotidien
                   - sensor.radiateur_sdb_quotidien
                   - sensor.seche_serv_sdb_quotidien
                   - sensor.clim_chambre_quotidien
                   - sensor.conso_clim_rad_total_quotidien
                   - sensor.clim_salon_mensuel
                   - sensor.radiateur_elec_cuisine_mensuel
-                  - sensor.clim_du_bureau_mensuel
+                  - sensor.clim_bureau_mensuel
                   - sensor.radiateur_sdb_mensuel
                   - sensor.seche_serv_sdb_mensuel
                   - sensor.clim_chambre_mensuel
@@ -2260,7 +2260,7 @@ views:
                       const list = [
                         'sensor.clim_salon_quotidien',
                         'sensor.radiateur_elec_cuisine_quotidien',
-                        'sensor.clim_du_bureau_quotidien',
+                        'sensor.clim_bureau_quotidien',
                         'sensor.radiateur_sdb_quotidien',
                         'sensor.seche_serv_sdb_quotidien',
                         'sensor.clim_chambre_quotidien',
@@ -2280,7 +2280,7 @@ views:
                       const list = [
                         'sensor.clim_salon_mensuel',
                         'sensor.radiateur_elec_cuisine_mensuel',
-                        'sensor.clim_du_bureau_mensuel',
+                        'sensor.clim_bureau_mensuel',
                         'sensor.radiateur_sdb_mensuel',
                         'sensor.seche_serv_sdb_mensuel',
                         'sensor.clim_chambre_mensuel',
@@ -9171,7 +9171,7 @@ views:
                 show_arrow: true
                 show_background: true
                 show_attribute: false
-              - entity: climate.clim_du_bureau
+              - entity: climate.clim_bureau
                 select_attribute: fan_modes
                 show_background: true
                 state_background: false
@@ -10493,21 +10493,21 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: switch.schedule_clim_du_bureau_week
+                entity: switch.schedule_clim_bureau_week
                 name: Sem.
                 color: state
                 state_content: name
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: switch.schedule_clim_du_bureau_week_end
+                entity: switch.schedule_clim_bureau_week_end
                 name: Week-End
                 color: state
                 state_content: name
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.clim_du_bureau_nous_power
+                entity: sensor.clim_bureau_nous_power
                 color: amber
               - type: entity
                 show_state: false
@@ -10616,7 +10616,7 @@ views:
                 filter:
                   include:
                     - options: {}
-                      entity_id: sensor.clim_du_bureau_nous_power
+                      entity_id: sensor.clim_bureau_nous_power
                 sort:
                   numeric: true
                   reverse: true
@@ -10627,7 +10627,7 @@ views:
                   entity_row: true
             visibility:
               - condition: numeric_state
-                entity: sensor.clim_du_bureau_nous_power
+                entity: sensor.clim_bureau_nous_power
                 above: 0.1
           - card_mod:
               style: |
@@ -11843,7 +11843,7 @@ views:
                   # Clim du Bureau Semaine
 
                   **Jours de la semaine :** {{
-                  state_attr('switch.schedule_clim_du_bureau_week', 'weekdays')
+                  state_attr('switch.schedule_clim_bureau_week', 'weekdays')
                   | join(', ') }}
                 card_mod:
                   style: |
@@ -11856,7 +11856,7 @@ views:
                     }
               - type: entities
                 entities:
-                  - entity: switch.schedule_clim_du_bureau_week
+                  - entity: switch.schedule_clim_bureau_week
                     name: Programmation Climatisation Bureau Semaine
                 show_header_toggle: false
                 state_color: true
@@ -11871,7 +11871,7 @@ views:
                     }    
               - type: markdown
                 content: >
-                  {% set entity_id = 'switch.schedule_clim_du_bureau_week' %} {%
+                  {% set entity_id = 'switch.schedule_clim_bureau_week' %} {%
                   set timeslots = state_attr(entity_id, 'timeslots') %} {% set
                   actions = state_attr(entity_id, 'actions') %}
 
@@ -11890,7 +11890,7 @@ views:
                     }
               - type: markdown
                 content: >
-                  {% set entity_id = 'switch.schedule_clim_du_bureau_week' %} {%
+                  {% set entity_id = 'switch.schedule_clim_bureau_week' %} {%
                   set current_slot = state_attr(entity_id, 'current_slot') %} {%
                   set next_slot = state_attr(entity_id, 'next_slot') %} {% set
                   next_trigger = state_attr(entity_id, 'next_trigger') %} {% set
@@ -11928,7 +11928,7 @@ views:
                   # Clim du Bureau Week-End
 
                   **Jours de la semaine :** {{
-                  state_attr('switch.schedule_clim_du_bureau_week_end',
+                  state_attr('switch.schedule_clim_bureau_week_end',
                   'weekdays') | join(', ') }}
                 card_mod:
                   style: |
@@ -11939,7 +11939,7 @@ views:
                     }
               - type: entities
                 entities:
-                  - entity: switch.schedule_clim_du_bureau_week_end
+                  - entity: switch.schedule_clim_bureau_week_end
                     name: Programmation Climatisation Bureau Week-end
                 state_color: true
                 show_header_toggle: false
@@ -11954,7 +11954,7 @@ views:
                     }    
               - type: markdown
                 content: >
-                  {% set entity_id = 'switch.schedule_clim_du_bureau_week_end'
+                  {% set entity_id = 'switch.schedule_clim_bureau_week_end'
                   %} {% set timeslots = state_attr(entity_id, 'timeslots') %} {%
                   set actions = state_attr(entity_id, 'actions') %}
 
@@ -11972,7 +11972,7 @@ views:
                     }
               - type: markdown
                 content: >
-                  {% set entity_id = 'switch.schedule_clim_du_bureau_week_end'
+                  {% set entity_id = 'switch.schedule_clim_bureau_week_end'
                   %} {% set current_slot = state_attr(entity_id, 'current_slot')
                   %} {% set next_slot = state_attr(entity_id, 'next_slot') %} {%
                   set next_trigger = state_attr(entity_id, 'next_trigger') %} {%
@@ -16598,13 +16598,13 @@ views:
             template: conso_temps_reel_clim_rad
             variables:
               card_title: Conso. Temps Réel Clim. Bureau
-              energy_entity: sensor.clim_du_bureau_nous_power
+              energy_entity: sensor.clim_bureau_nous_power
               energy_color: orange
               current_entity: sensor.clim_bureau_current
               current_color: rgb(255, 41, 41)
               avg_daily_entity: sensor.clim_bureau_avg_watts_daily
               conso_daily_kwh_entity: sensor.clim_bureau_daily
-              power_entity: sensor.clim_du_bureau_nous_power
+              power_entity: sensor.clim_bureau_nous_power
               power_color: orange
               span_offset: +3m
               group_duration: 1s
@@ -16619,12 +16619,12 @@ views:
                 state_content:
                   - name
                   - state
-                entity: sensor.clim_du_bureau_quotidien
+                entity: sensor.clim_bureau_quotidien
                 name: Q
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.clim_du_bureau_hebdomadaire
+                entity: sensor.clim_bureau_hebdomadaire
                 name: H
                 color: orange
                 state_content:
@@ -16633,7 +16633,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.clim_du_bureau_mensuel
+                entity: sensor.clim_bureau_mensuel
                 name: M
                 color: deep-orange
                 state_content:
@@ -16642,7 +16642,7 @@ views:
               - type: entity
                 show_state: true
                 show_icon: true
-                entity: sensor.clim_du_bureau_annuel
+                entity: sensor.clim_bureau_annuel
                 name: A
                 color: red
                 state_content:
@@ -16655,7 +16655,7 @@ views:
             template: conso_mensuelle_clim
             variables:
               title: Conso. mensuel Clim Bureau
-              energy_entity: sensor.clim_du_bureau_nous_energy
+              energy_entity: sensor.clim_bureau_nous_energy
               energy_name: Conso. jours en cours
               energy_color: orange
               avg_monthly_entity: sensor.clim_bureau_avg_watts_monthly

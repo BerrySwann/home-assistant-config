@@ -79,37 +79,37 @@
 # │ SENSOR : CLIM BUREAU (ANNUEL / MENSUEL / HEBDO / QUOTIDIEN)              │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
-# --- clim_du_bureau_annuel ---
-    - name: "Clim Du Bureau Annuel"
-      unique_id: clim_du_bureau_annuel
+# --- clim_bureau_annuel ---
+    - name: "Clim Bureau Annuel"
+      unique_id: clim_bureau_annuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.clim_du_bureau_annuel_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.clim_bureau_annuel_um') | float(0) | round(2) }}"
 
-# --- clim_du_bureau_mensuel ---
-    - name: "Clim Du Bureau Mensuel"
-      unique_id: clim_du_bureau_mensuel
+# --- clim_bureau_mensuel ---
+    - name: "Clim Bureau Mensuel"
+      unique_id: clim_bureau_mensuel
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.clim_du_bureau_mensuel_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.clim_bureau_mensuel_um') | float(0) | round(2) }}"
 
-# --- clim_du_bureau_hebdomadaire ---
-    - name: "Clim Du Bureau Hebdomadaire"
-      unique_id: clim_du_bureau_hebdomadaire
+# --- clim_bureau_hebdomadaire ---
+    - name: "Clim Bureau Hebdomadaire"
+      unique_id: clim_bureau_hebdomadaire
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.clim_du_bureau_hebdomadaire_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.clim_bureau_hebdomadaire_um') | float(0) | round(2) }}"
 
-# --- clim_du_bureau_quotidien ---
-    - name: "Clim Du Bureau Quotidien"
-      unique_id: clim_du_bureau_quotidien
+# --- clim_bureau_quotidien ---
+    - name: "Clim Bureau Quotidien"
+      unique_id: clim_bureau_quotidien
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.clim_du_bureau_quotidien_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.clim_bureau_quotidien_um') | float(0) | round(2) }}"
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ SENSOR : SOUFFLANT SDB (ANNUEL / MENSUEL / HEBDO / QUOTIDIEN)            │

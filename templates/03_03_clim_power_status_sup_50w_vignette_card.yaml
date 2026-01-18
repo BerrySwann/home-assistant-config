@@ -65,7 +65,7 @@
     - name: "Bureau Power Status"
       unique_id: bureau_power_status
       state: >
-        {% if states('sensor.clim_du_bureau_nous_power') | float(0) > 50 %}
+        {% if states('sensor.clim_bureau_nous_power') | float(0) > 50 %}
           on
         {% else %}
           off
@@ -75,7 +75,7 @@
     - name: "Bureau Power Lock"
       unique_id: bureau_power_locks
       state: >
-        {% if states('sensor.clim_du_bureau_nous_power') | float(0) >= 9 %}
+        {% if states('sensor.clim_bureau_nous_power') | float(0) >= 9 %}
           on
         {% else %}
           off
@@ -85,7 +85,7 @@
     - name: "Bureau Power Status Affichage"
       unique_id: bureau_power_status_affichage
       state: >
-        {% if states('sensor.clim_du_bureau_nous_power') | float(0) > 1 %}
+        {% if states('sensor.clim_bureau_nous_power') | float(0) > 1 %}
           on
         {% else %}
           off

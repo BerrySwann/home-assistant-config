@@ -28,7 +28,7 @@
           {%- set temp_eco = states('sensor.temperature_eco_hiver_corrige') | float(17) %}
           {%- set mode = states('sensor.mode_ete_hiver') %}
           {%- set prise_salon = is_state('switch.clim_salon_nous', 'on') %}
-          {%- set prise_bureau = is_state('switch.clim_du_bureau_nous', 'on') %}
+          {%- set prise_bureau = is_state('switch.clim_bureau_nous', 'on') %}
           {%- set prise_chambre = is_state('switch.clim_chambre_nous', 'on') %}
           {%- set clims_alimentees = prise_salon or prise_bureau or prise_chambre %}
           {%- set groupe = states('sensor.groupe_clim') %}
