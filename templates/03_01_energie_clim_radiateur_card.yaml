@@ -334,8 +334,8 @@
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
 
-    # ┌───────────────────────────────────┐
-    # │ 10. TOTAL HABITAT                 │
+# ┌───────────────────────────────────┐
+    # │ 10. TOTAL HABITAT (75m²)          │
     # └───────────────────────────────────┘
     # --- performance_thermique_total ---
     - name: "Performance Thermique Totale"
@@ -343,22 +343,26 @@
       unit_of_measurement: "pts"
       icon: mdi:home-thermometer
       state: >
-        {# On récupère les valeurs en forçant le 0 si l'état n'est pas numérique #}
+        {# On définit les surfaces de chaque pôle selon votre base de contexte #}
+        {% set surf_s = 25.88 %}
+        {% set surf_kui = 10.59 %}
+        {% set surf_b = 9.38 %}
+        {% set surf_sdb = 3.96 %}
+        {% set surf_c = 13.06 %}
+        {% set surf_total = 75.0 %}
+
+        {# On récupère les performances individuelles #}
         {% set s = states('sensor.performance_thermique_salon') | float(0) %}
         {% set kui = states('sensor.performance_thermique_cuisine') | float(0) %}
         {% set b = states('sensor.performance_thermique_bureau') | float(0) %}
         {% set sdb = states('sensor.performance_thermique_sdb') | float(0) %}
         {% set c = states('sensor.performance_thermique_chambre') | float(0) %}
         
-        {% set pieces = [s, kui, b, sdb, c] | select('gt', 0) | list %}
+        {# CALCUL PONDÉRÉ : (Perf * Surface) / Surface Totale #}
+        {% set total_pts = (s * surf_s) + (kui * surf_kui) + (b * surf_b) + (sdb * surf_sdb) + (c * surf_c) %}
         
-        {% if pieces | length > 0 %}
-          {{ (pieces | sum / pieces | length) | round(1) }}
-        {% else %}
-          0
-        {% endif %}
+        {{ (total_pts / surf_total) | round(1) }}
       availability: >
-        {# Le capteur est disponible même si personne ne chauffe #}
         {{ true }}
 
     #--- performance_thermique_totale_stable ---
@@ -366,14 +370,21 @@
       unique_id: performance_thermique_totale_stable
       unit_of_measurement: "pts"
       state: >
+        {% set surf_s = 25.88 %}
+        {% set surf_kui = 10.59 %}
+        {% set surf_b = 9.38 %}
+        {% set surf_sdb = 3.96 %}
+        {% set surf_c = 13.06 %}
+        {% set surf_total = 75.0 %}
+
         {% set s = states('sensor.performance_salon_moyenne_jour') | float(0) %}
         {% set kui = states('sensor.perf_cuisine_moy_jour') | float(0) %}
         {% set b = states('sensor.perf_bureau_moy_jour') | float(0) %}
         {% set sdb = states('sensor.perf_sdb_moy_jour') | float(0) %}
         {% set c = states('sensor.performance_chambre_moyenne_jour') | float(0) %}
         
-        {% set pieces = [s, kui, b, sdb, c] | select('gt', 0) | list %}
-        {{ (pieces | sum / pieces | length) | round(1) if pieces | length > 0 else 0 }}
+        {% set total_pts = (s * surf_s) + (kui * surf_kui) + (b * surf_b) + (sdb * surf_sdb) + (c * surf_c) %}
+        {{ (total_pts / surf_total) | round(1) }}
 
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
