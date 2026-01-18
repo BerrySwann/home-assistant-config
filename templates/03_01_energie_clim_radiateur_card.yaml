@@ -346,6 +346,23 @@
     # │ 10. TOTAL HABITAT (75m²)          │
     # └───────────────────────────────────┘
     # --- performance_thermique_total ---
+    - name: "DUT Moyen Totale"
+      unique_id: dut_moyen_totale
+      unit_of_measurement: "pts"
+      icon: mdi:home-thermometer
+      state: >
+        {# 2. CALCUL DU DUT MOYEN (Somme / 6 zones) #}
+        {% set d_salon = states('sensor.dut_clim_salon') | float(0) %}
+        {% set d_kui = states('sensor.dut_radiateur_cuisine') | float(0) %}
+        {% set d_bur = states('sensor.dut_clim_bureau') | float(0) %}
+        {% set d_sdb1 = states('sensor.dut_soufflant_sdb') | float(0) %}
+        {% set d_sdb2 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
+        {% set d_ch = states('sensor.dut_clim_chambre') | float(0) %}
+        
+        {# On divise par 7 pour inclure les zones non chauffées (Dégagement/Dressing) #}
+        {% set dut_moyen = (d_salon + d_kui + d_bur + d_sdb1 + d_sdb2 + d_ch) / 6 %}
+    
+    # --- performance_thermique_total ---
     - name: "Performance Thermique Totale"
       unique_id: performance_thermique_totale
       unit_of_measurement: "pts"
@@ -360,7 +377,7 @@
         {% set w_ch = states('sensor.clim_chambre_nous_power') | float(0) %}
         {% set watts_total = w_salon + w_kui + w_bur + w_sdb1 + w_sdb2 + w_ch %}
 
-        {# 2. CALCUL DU DUT MOYEN (Somme / 7 zones) #}
+        {# 2. CALCUL DU DUT MOYEN (Somme / 6 zones) #}
         {% set d_salon = states('sensor.dut_clim_salon') | float(0) %}
         {% set d_kui = states('sensor.dut_radiateur_cuisine') | float(0) %}
         {% set d_bur = states('sensor.dut_clim_bureau') | float(0) %}
