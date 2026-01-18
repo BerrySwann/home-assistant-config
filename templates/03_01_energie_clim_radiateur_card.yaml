@@ -284,7 +284,7 @@
       unique_id: performance_thermique_bureau
       unit_of_measurement: "pts"
       state: >
-        {% set watts = states('sensor.clim_bureau_power') | float(0) %}
+        {% set watts = states('sensor.clim_bureau_nous_power') | float(0) %}
         {% set dut = states('sensor.dut_clim_bureau') | float(0) %}
         {% set surface = 10.55 %}
         {% set t_int = states('sensor.th_bureau_temperature') | float(0) %}
