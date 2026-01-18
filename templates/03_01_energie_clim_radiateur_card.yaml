@@ -345,64 +345,58 @@
     # ┌───────────────────────────────────┐
     # │ 10. TOTAL HABITAT (75m²)          │
     # └───────────────────────────────────┘
-    # --- performance_thermique_total ---
-    - name: "DUT Moyen Totale"
-      unique_id: dut_moyen_totale
+    # --- dut_brut_total ---
+    - name: "DUT Brut Total"
+      unique_id: dut_brut_total
       unit_of_measurement: "pts"
-      icon: mdi:home-thermometer
+      icon: mdi:sigma
       state: >
-        {# 2. CALCUL DU DUT MOYEN (Somme / 6 zones) #}
-        {% set d_salon = states('sensor.dut_clim_salon') | float(0) %}
-        {% set d_kui = states('sensor.dut_radiateur_cuisine') | float(0) %}
-        {% set d_bur = states('sensor.dut_clim_bureau') | float(0) %}
-        {% set d_sdb1 = states('sensor.dut_soufflant_sdb') | float(0) %}
-        {% set d_sdb2 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
-        {% set d_ch = states('sensor.dut_clim_chambre') | float(0) %}
+        {# 1. Récupération et conversion numérique de chaque DUT #}
+        {% set d1 = states('sensor.dut_clim_salon') | float(0) %}
+        {% set d2 = states('sensor.dut_radiateur_cuisine') | float(0) %}
+        {% set d3 = states('sensor.dut_clim_bureau') | float(0) %}
+        {% set d4 = states('sensor.dut_soufflant_sdb') | float(0) %}
+        {% set d5 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
+        {% set d6 = states('sensor.dut_clim_chambre') | float(0) %}
         
-        {# On divise par 7 pour inclure les zones non chauffées (Dégagement/Dressing) #}
-        {% set dut_moyen = (d_salon + d_kui + d_bur + d_sdb1 + d_sdb2 + d_ch) / 6 %}
+        {# 2. Addition brute de toutes les valeurs #}
+        {{ (d1 + d2 + d3 + d4 + d5 + d6) | round(2) }}
+
     
-    # --- performance_thermique_total ---
+    # ┌───────────────────────────────────┐
+    # │ 10. TOTAL HABITAT (75m²)          │
+    # └───────────────────────────────────┘
+    # ┌───────────────────────────────────┐
+    # │ 10. TOTAL HABITAT (75m²)          │
+    # └───────────────────────────────────┘
+    #--- performance_thermique_totale ---
     - name: "Performance Thermique Totale"
       unique_id: performance_thermique_totale
       unit_of_measurement: "pts"
       icon: mdi:home-thermometer
       state: >
-        {# 1. CALCUL DES WATTS TOTAUX (Addition numérique) #}
-        {% set w_salon = states('sensor.clim_salon_nous_power') | float(0) %}
-        {% set w_kui = states('sensor.radiateur_cuisine_power') | float(0) %}
-        {% set w_bur = states('sensor.clim_bureau_power') | float(0) %}
-        {% set w_sdb1 = states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) %}
-        {% set w_sdb2 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
-        {% set w_ch = states('sensor.clim_chambre_nous_power') | float(0) %}
-        {% set watts_total = w_salon + w_kui + w_bur + w_sdb1 + w_sdb2 + w_ch %}
+        {# 1. SOMME DES PUISSANCES (Vérifiez bien ces noms d'entités) #}
+        {% set w1 = states('sensor.clim_salon_nous_power') | float(0) %}
+        {% set w2 = states('sensor.radiateur_cuisine_power') | float(0) %}
+        {% set w3 = states('sensor.clim_bureau_power') | float(0) %}
+        {% set w4 = states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) %}
+        {% set w5 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
+        {% set w6 = states('sensor.clim_chambre_nous_power') | float(0) %}
+        {% set total_watts = w1 + w2 + w3 + w4 + w5 + w6 %}
 
-        {# 2. CALCUL DU DUT MOYEN (Somme / 6 zones) #}
-        {% set d_salon = states('sensor.dut_clim_salon') | float(0) %}
-        {% set d_kui = states('sensor.dut_radiateur_cuisine') | float(0) %}
-        {% set d_bur = states('sensor.dut_clim_bureau') | float(0) %}
-        {% set d_sdb1 = states('sensor.dut_soufflant_sdb') | float(0) %}
-        {% set d_sdb2 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
-        {% set d_ch = states('sensor.dut_clim_chambre') | float(0) %}
-        
-        {# On divise par 7 pour inclure les zones non chauffées (Dégagement/Dressing) #}
-        {% set dut_moyen = (d_salon + d_kui + d_bur + d_sdb1 + d_sdb2 + d_ch) / 6 %}
+        {# 2. RÉCUPÉRATION DU DUT ET DU DELTA #}
+        {% set dut = states('sensor.dut_brut_total') | float(0) %}
+        {% set delta = states('sensor.temperature_delta_valeur') | float(0) %}
+        {% set surface = 75.0 %}
 
-        {# 3. VARIABLES DE CALCUL #}
-        {% set surf_total = 75.0 %}
-        {% set t_int = states('sensor.temperature_delta_valeur') | float(0) %}
-        {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
-        {% set delta_t = t_int - t_ext %}
-
-        {# 4. FORMULE FINALE (Correction : variable surf_total) #}
-        {% if delta_t > 0.5 and watts_total > 5 %}
-          {{ ((watts_total * dut_moyen) / (surf_total * delta_t)) | round(1) }}
-        {% else %} 
-          0 
+        {# 3. CALCUL AVEC SÉCURITÉ (On tolère un delta faible pour le test) #}
+        {% if delta > 0.1 and total_watts > 2 and dut > 0 %}
+          {{ ((total_watts * dut) / (surface * delta)) | round(1) }}
+        {% else %}
+          0
         {% endif %}
       availability: >
-        {{ states('sensor.th_balcon_nord_temperature') | is_number }}
-
+        {{ states('sensor.temperature_delta_value') | is_number }}
         
         
         

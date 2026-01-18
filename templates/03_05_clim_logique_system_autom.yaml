@@ -212,28 +212,31 @@
       unit_of_measurement: "°C"
       icon: "mdi:home-thermometer"
       state: >
-        {{ ((states('sensor.th_salon_temperature') | float(0) +
-            states('sensor.th_cellier_temperature') | float(0) +
-            states('sensor.th_cuisine_temperature') | float(0) +
-            states('sensor.th_bureau_temperature') | float(0) +
-            states('sensor.th_salle_de_bain_temperature') | float(0) +
-            states('sensor.th_chambre_temperature') | float(0)) / 6) | round(1) }}
+        {% set s = states('sensor.th_salon_temperature') | float(0) %}
+        {% set ce = states('sensor.th_cellier_temperature') | float(0) %}
+        {% set ku = states('sensor.th_cuisine_temperature') | float(0) %}
+        {% set bu = states('sensor.th_bureau_temperature') | float(0) %}
+        {% set sdb = states('sensor.th_salle_de_bain_temperature') | float(0) %}
+        {% set ch = states('sensor.th_chambre_temperature') | float(0) %}
+        {{ ((s + ce + ku + bu + sdb + ch) / 6) | round(1) }}
 
 # --- temperature_delta_value ---
     - name: "Temperature Delta (valeur)"
       unique_id: temperature_delta_value
       unit_of_measurement: "°C"
       state: >
-        {{ (states('sensor.th_balcon_nord_temperature') | float(0) -
-            states('sensor.temperature_moyenne_interieure') | float(0)) | round(1) }}
+        {# CALCUL : INTERIEUR - EXTERIEUR pour avoir une valeur positive #}
+        {% set t_int = states('sensor.temperature_moyenne_interieure') | float(0) %}
+        {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
+        {{ (t_int - t_ext) | round(1) }}
 
-# --- temperature_delta ---
-    - name: "Température Delta"
-      unique_id: temperature_delta
+# --- temperature_delta (AFFICHAGE) ---
+    - name: "Température Delta (Affichage)"
+      unique_id: temperature_delta_affichage
       state: >
-        Te {{ states('sensor.th_balcon_nord_temperature') | float(0) | round(1) }}°C 
         T̄i {{ states('sensor.temperature_moyenne_interieure') | float(0) | round(1) }}°C 
-        ΔT = {{ (states('sensor.th_balcon_nord_temperature') | float(0) - states('sensor.temperature_moyenne_interieure') | float(0)) | round(1) }}°C
+        Te {{ states('sensor.th_balcon_nord_temperature') | float(0) | round(1) }}°C 
+        ΔT = {{ (states('sensor.temperature_moyenne_interieure') | float(0) - states('sensor.th_balcon_nord_temperature') | float(0)) | round(1) }}°C
 
 # --- delta_ademe_recommande ---
     - name: "Delta ADEME Recommandé"
