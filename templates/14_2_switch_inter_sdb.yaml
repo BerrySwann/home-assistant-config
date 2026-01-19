@@ -6,7 +6,7 @@
     # ┌───────────────────────────────────┐
     # │ 1. CONTRÔLE                       │
     # └───────────────────────────────────┘
-    # --- switch_radiateur_sdb_inter ---
+    # --- switch_inter_sdb_inter ---
     - name: "Interrupteur Radiateur Salle de Bain"
       unique_id: switch_radiateur_sdb_inter
       icon: >

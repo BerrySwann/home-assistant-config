@@ -2905,12 +2905,6 @@
     entity_id: switch.prise_soufflant_salle_de_bain_nous
     state: 'on'
   actions:
-  - alias: 'ETAT : THERMOSTAT VIRTUEL SUR OFF'
-    action: climate.set_hvac_mode
-    target:
-      entity_id: climate.soufflant_salle_de_bain
-    data:
-      hvac_mode: 'off'
   - alias: 'IR : ENVOI COMMANDE POWER OFF'
     action: remote.send_command
     target:
@@ -2920,6 +2914,12 @@
       device: radiateur_sdb
   - alias: 'SÉCURITÉ : DÉLAI DE REFROIDISSEMENT RÉSISTANCE'
     delay: 00:01:00
+  - alias: 'ETAT : THERMOSTAT VIRTUEL SUR OFF'
+    action: climate.set_hvac_mode
+    target:
+      entity_id: climate.soufflant_salle_de_bain
+    data:
+      hvac_mode: 'off'
   - alias: 'MATÉRIEL : COUPURE PHYSIQUE DE LA PRISE'
     action: switch.turn_off
     target:
