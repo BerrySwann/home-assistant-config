@@ -129,7 +129,7 @@
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
-      state: "{{ states('sensor.soufflant_sdb__mensuel_um') | float(0) | round(2) }}"
+      state: "{{ states('sensor.soufflant_sdb_mensuel_um') | float(0) | round(2) }}"
 
 # --- soufflant_sdb_hebdomadaire ---
     - name: "Soufflant Sdb Hebdomadaire"
