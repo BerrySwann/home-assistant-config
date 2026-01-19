@@ -2751,7 +2751,7 @@
   triggers:
   - alias: 'DÉCLENCHEMENT : PASSAGE À ON DU BOOLEAN SDB'
     trigger: state
-    entity_id: input_boolean.inter_soufflant_salle_de_bain
+    entity_id: switch.inter_soufflant_salle_de_bain
     to: 'on'
   conditions:
   - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 25°C'
@@ -2821,12 +2821,12 @@
       command: swing
       device: radiateur_sdb
   - alias: 'ETAT : SYNCHRONISATION DU THERMOSTAT VIRTUEL'
-    action: climate.set_temperature
+    action: climate.set_hvac_mode
     target:
-      entity_id: climate.soufflant_salle_de_bain
+      entity_id:
+      - climate.soufflant_salle_de_bain
     data:
       hvac_mode: heat
-      temperature: 23
   mode: single
 - id: '1768415963940'
   alias: B - SALLE DE BAIN - GESTION RÉSISTANCES DU SOUFFLANT
@@ -2897,7 +2897,7 @@
   triggers:
   - alias: 'DÉCLENCHEMENT : PASSAGE À OFF DU BOOLEAN'
     trigger: state
-    entity_id: input_boolean.inter_soufflant_salle_de_bain
+    entity_id: switch.inter_soufflant_salle_de_bain
     to: 'off'
   conditions:
   - alias: 'SÉCURITÉ : VÉRIFIER SI LA PRISE EST ENCORE ALIMENTÉE'

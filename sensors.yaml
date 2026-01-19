@@ -340,6 +340,15 @@
     max_age:
       hours: 24
 
+  # 2. Moyenne du DUT sur 24h
+  - platform: statistics
+    name: "DUT Moyenne 24h"
+    unique_id: dut_moyenne_24h
+    entity_id: sensor.dut_brut_total
+    state_characteristic: mean
+    max_age:
+      hours: 24
+
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ SENSOR : INTÉGRATION KWH (PÔLE 2. PRISES)                                │
 # ╰──────────────────────────────────────────────────────────────────────────╯

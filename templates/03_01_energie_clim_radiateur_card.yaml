@@ -394,18 +394,23 @@
       unit_of_measurement: "pts"
       icon: mdi:chart-line
       state: >
-        {# 1. Utilisation des moyennes de lissage 24h #}
+        {# 1. Récupération et conversion des données #}
         {% set w_moy = states('sensor.conso_clim_rad_moyenne_24h') | float(0) %}
         {% set delta_moy = states('sensor.temperature_delta_moyenne_24h') | float(0) | abs %}
-        {% set dut = states('sensor.dut_brut_total') | float(0) %}
+        {% set dut_moy = states('sensor.dut_moyenne_24h') | float(0) %}
         {% set surface = 75.0 %}
 
-        {# 2. Calcul (on utilise | abs par sécurité pour le delta) #}
-        {% if delta_moy > 0.1 and w_moy > 2 and dut > 0 %}
-          {{ ((w_moy * dut) / (surface * delta_moy)) | round(1) }}
+        {# 2. Calcul avec vérification des seuils (Correction de dut -> dut_moy) #}
+        {% if delta_moy > 0.1 and w_moy > 2 and dut_moy > 0 and surface > 0 %}
+          {{ ((w_moy * dut_moy) / (surface * delta_moy)) | round(1) }}
         {% else %}
-          0
+          {{ states('sensor.performance_thermique_totale_stable') | float(0) }}
         {% endif %}
+      availability: >
+        {# Vérifie que les capteurs sources sont numériques pour éviter les erreurs de calcul #}
+        {{ is_number(states('sensor.conso_clim_rad_moyenne_24h')) and 
+          is_number(states('sensor.temperature_delta_moyenne_24h')) and
+          is_number(states('sensor.dut_moyenne_24h')) }}
 
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
