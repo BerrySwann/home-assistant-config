@@ -860,9 +860,9 @@
         {% set s = states('sensor.eclairage_chambre_4_quotidien_um') %}
         {{ s | float(0) | round(3) if is_number(s) else 0.00 }}
 
-    # ┌───────────────────────────────────┐
+    # ┌─────────────────────────────────────┐
     # │ 10. ZONES APPARTEMENT (LOGIQUE HOME)│
-    # └───────────────────────────────────┘
+    # └─────────────────────────────────────┘
     # --- eclairage_appart_3 ---
     - name: "Eclairage Appart. (3) ANNUEL"
       unique_id: eclairage_appart_3_annuel

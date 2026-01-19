@@ -1984,8 +1984,8 @@
       entity_id: notify.file
     data:
       message: '{% set p1 = states(''sensor.diag_poste_1_hygiene_quotidien'') | float(0)
-        | round(2) %} {% set p2 = states(''sensor.diag_poste_2_cuisson_quotidien'')
-        | float(0) | round(2) %} {% set p3 = states(''sensor.diag_poste_3_froid_quotidien'')
+        | round(2) %}  {% set p2 = states(''sensor.diag_poste_2_cuisson_quotidien'')
+        | float(0) | round(2) %}  {% set p3 = states(''sensor.diag_poste_3_froid_quotidien'')
         | float(0) | round(2) %} {% set p4 = states(''sensor.diag_poste_4_chauffage_quotidien'')
         | float(0) | round(2) %} {% set agv_clim = states(''sensor.clim_rad_total_avg_watts_daily'')
         | float(0) | round(2) %} {% set p5 = states(''sensor.diag_poste_5_multimedia_quotidien'')
@@ -1996,8 +1996,8 @@
         | round(1) %} {% set dut_r = states(''sensor.dut_radiateur_cuisine'') | float(0)
         | round(1) %} {% set dut_b = states(''sensor.dut_clim_bureau'') | float(0)
         | round(1) %} {% set dut_c = states(''sensor.dut_clim_chambre'') | float(0)
-        | round(1) %} {% set t = now().strftime(''%d/%m %H:%M'') %} {{t}} | Hyg:{{p1}}
-        | Cuis:{{p2}} | Froid:{{p3}} | Chauff:{{p4}} | Avg P4:{{agv_clim}} | Multi:{{p5}}
+        | round(1) %}  {% set t = now().strftime(''%d/%m %H:%M'') %} {{t}} | Hyg:{{p1}}
+        | Cuis:{{p2}} | Froid:{{p3}} | Chauff:{{p4}} | Avg 4:{{agv_clim}} | Multi:{{p5}}
         | Lum:{{p6}} | T̄i:{{int}}°C | Ext:{{ext}}°C | DUT S/R/B/C:{{dut_s}}/{{dut_r}}/{{dut_b}}/{{dut_c}}h
 
         '

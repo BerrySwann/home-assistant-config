@@ -105,7 +105,7 @@
       state_class: total_increasing
       icon: mdi:lightbulb
       state: >
-        {{ states('sensor.conso_eclairage_total_mensuel') | float(0) | round(3) }}
+        {{ states('sensor.conso_total_eclairage_appart_mensuel') | float(0) | round(3) }}
 
 # annotations_log:
 # - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
