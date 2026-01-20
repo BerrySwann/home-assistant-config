@@ -211,7 +211,7 @@
   - platform: history_stats
     name: "DUT SdB Soufflant" 
     unique_id: dut_sdb_soufflant
-    entity_id: sensor.sdb_soufflant_power_etat
+    entity_id: sensor.sdb_soufflant_etat
     state: "Heat"
     type: time
     start: "{{ now().replace(hour=0, minute=0, second=0) }}"
@@ -221,7 +221,7 @@
   - platform: history_stats
     name: "DUT SdB Seche Serviettes" 
     unique_id: dut_sdb_seche_serviettes
-    entity_id: sensor.sdb_seche_serviettes_etat
+    entity_id: sensor.sdb_seche_serviette_etat
     state: "Heat"
     type: time
     start: "{{ now().replace(hour=0, minute=0, second=0) }}"

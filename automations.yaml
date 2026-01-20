@@ -2823,7 +2823,7 @@
   mode: single
 - id: '1768415963940'
   alias: B - SALLE DE BAIN - GESTION RÉSISTANCES DU SOUFFLANT
-  description: Utilise la mémoire pour envoyer le bon nombre d'impulsions
+  description: Ajuste ou coupe les résistances selon la température et l'état actuel
   triggers:
   - trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
@@ -2844,39 +2844,56 @@
     - conditions:
       - condition: trigger
         id: temp_23
-      - condition: state
-        entity_id: input_select.etat_resistance_soufflant_sdb
-        state: 2000W
       sequence:
-      - action: remote.send_command
-        target:
-          entity_id: remote.soufflant_sdb_rm4_mini
-        data:
-          command: 1000w
-          device: radiateur_sdb
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.etat_resistance_soufflant_sdb
+            state: 1000W
+          sequence:
+          - action: remote.send_command
+            target:
+              entity_id: remote.soufflant_sdb_rm4_mini
+            data:
+              command: on_off
+              device: radiateur_sdb
+              num_repeats: 2
+        - conditions:
+          - condition: state
+            entity_id: input_select.etat_resistance_soufflant_sdb
+            state: 2000W
+          sequence:
+          - action: remote.send_command
+            target:
+              entity_id: remote.soufflant_sdb_rm4_mini
+            data:
+              command: on_off
+              device: radiateur_sdb
+              num_repeats: 1
       - action: input_select.select_option
         target:
           entity_id: input_select.etat_resistance_soufflant_sdb
         data:
-          option: 1000W
+          option: 0W
     - conditions:
       - condition: trigger
         id: temp_21
       - condition: state
         entity_id: input_select.etat_resistance_soufflant_sdb
-        state: 1000W
+        state: 0W
       sequence:
       - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
-          command: 1000w
+          command: on_off
           device: radiateur_sdb
+          num_repeats: 1
       - action: input_select.select_option
         target:
           entity_id: input_select.etat_resistance_soufflant_sdb
         data:
-          option: 2000W
+          option: 1000W
   mode: single
 - id: '1768415982605'
   alias: C - SALLE DE BAIN - GESTION ARRÊT SÉCURISÉ DU SOUFFLANT
