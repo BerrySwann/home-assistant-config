@@ -2747,70 +2747,63 @@
   mode: restart
 - id: '1768415943951'
   alias: A - SALLE DE BAIN - DÉMARRAGE ET INITIALISATION DU SOUFFLANT
-  description: Gère l'allumage physique, l'amorçage IR et le réglage initial de puissance.
+  description: Allume et initialise la mémoire de puissance
   triggers:
-  - alias: 'DÉCLENCHEMENT : PASSAGE À ON DU BOOLEAN SDB'
-    trigger: state
+  - trigger: state
     entity_id: switch.inter_soufflant_salle_de_bain
     to: 'on'
   conditions:
-  - alias: 'SÉCURITÉ : TEMPÉRATURE INFÉRIEURE À 25°C'
-    condition: numeric_state
+  - condition: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 25
   actions:
-  - alias: 'MATÉRIEL : ALLUMAGE DE LA PRISE PHYSIQUE'
-    action: switch.turn_on
+  - action: switch.turn_on
     target:
       entity_id: switch.prise_soufflant_salle_de_bain_nous
-  - alias: 'PAUSE : ATTENTE INITIALISATION ÉLECTRIQUE'
-    delay: '00:00:00.5'
-  - alias: 'SÉCURITÉ : VÉRIFICATION ALIMENTATION PRISE'
-    condition: state
-    entity_id: switch.prise_soufflant_salle_de_bain_nous
-    state: 'on'
-  - alias: 'PAUSE : STABILISATION AVANT IR'
-    delay: '00:00:00.5'
-  - alias: 'IR : ENVOI COMMANDE POWER ON'
-    action: remote.send_command
+  - delay: 00:00:01
+  - action: remote.send_command
     target:
       entity_id: remote.soufflant_sdb_rm4_mini
     data:
       command: on_off
       device: radiateur_sdb
-  - alias: 'PAUSE : ATTENTE RÉCEPTION IR'
-    delay: '00:00:00.8'
-  - alias: 'PUISSANCE INITIALE : CHOIX SELON TEMPÉRATURE ACTUELLE'
-    choose:
-    - alias: 'CAS FROID : INFÉRIEUR À 21°C -> 2000W'
+  - delay: 00:00:01
+  - choose:
+    - alias: 'CAS FROID : < 21°C -> 2000W'
       conditions:
-      - alias: 'CONDITION : TEMP < 21°C'
-        condition: numeric_state
+      - condition: numeric_state
         entity_id: sensor.th_salle_de_bain_temperature
         below: 21
       sequence:
-      - alias: 'IR : RÉGLAGE PUISSANCE MAX'
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
           num_repeats: 2
-    - alias: 'CAS MODÉRÉ : SUPÉRIEUR À 21°C -> 1000W'
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.etat_resistance_soufflant_sdb
+        data:
+          option: 2000W
+    - alias: 'CAS MODÉRÉ : > 21°C -> 1000W'
       conditions:
-      - alias: 'CONDITION : TEMP > 20.9°C'
-        condition: numeric_state
+      - condition: numeric_state
         entity_id: sensor.th_salle_de_bain_temperature
         above: 20.9
       sequence:
-      - alias: 'IR : RÉGLAGE PUISSANCE ECO'
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.etat_resistance_soufflant_sdb
+        data:
+          option: 1000W
   - alias: 'PAUSE : FINALISATION COMMANDES'
     delay: '00:00:00.8'
   - alias: 'IR : ACTIVATION DU SWING'
@@ -2830,65 +2823,60 @@
   mode: single
 - id: '1768415963940'
   alias: B - SALLE DE BAIN - GESTION RÉSISTANCES DU SOUFFLANT
-  description: Baisse à 1000W au-delà de 22.9°C et repasse à 2000W sous 20.9°C
+  description: Utilise la mémoire pour envoyer le bon nombre d'impulsions
   triggers:
-  - alias: 'DÉCLENCHEMENT : SEUIL HAUT > 22.9°C'
-    trigger: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     above: 22.9
-    for:
-      minutes: 1
+    for: 00:01:00
     id: temp_23
-  - alias: 'DÉCLENCHEMENT : SEUIL BAS < 20.9°C'
-    trigger: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
     below: 20.9
-    for:
-      minutes: 1
+    for: 00:01:00
     id: temp_21
   conditions:
-  - alias: 'CONDITION : VÉRIFICATION ÉTAT SYSTÈME (INTER + PRISE)'
-    condition: and
-    conditions:
-    - alias: 'SÉCURITÉ : BOOLEAN SDB EST ON'
-      condition: state
-      entity_id: input_boolean.inter_soufflant_salle_de_bain
-      state: 'on'
-    - alias: 'SÉCURITÉ : PRISE PHYSIQUE EST ON'
-      condition: state
-      entity_id: switch.prise_soufflant_salle_de_bain_nous
-      state: 'on'
+  - condition: state
+    entity_id: switch.inter_soufflant_salle_de_bain
+    state: 'on'
   actions:
-  - alias: 'ACTION : CHOIX DE LA PUISSANCE SELON LE TRIGGER'
-    choose:
-    - alias: MODE 1000W (PLUS CHAUD QUE 23°C)
-      conditions:
-      - alias: 'CONDITION : TRIGGER TEMP_23'
-        condition: trigger
+  - choose:
+    - conditions:
+      - condition: trigger
         id: temp_23
+      - condition: state
+        entity_id: input_select.etat_resistance_soufflant_sdb
+        state: 2000W
       sequence:
-      - alias: 'IR : PASSAGE EN PUISSANCE ÉCO'
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
-          num_repeats: 1
-    - alias: MODE 2000W + SWING (PLUS FROID QUE 21°C)
-      conditions:
-      - alias: 'CONDITION : TRIGGER TEMP_21'
-        condition: trigger
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.etat_resistance_soufflant_sdb
+        data:
+          option: 1000W
+    - conditions:
+      - condition: trigger
         id: temp_21
+      - condition: state
+        entity_id: input_select.etat_resistance_soufflant_sdb
+        state: 1000W
       sequence:
-      - alias: 'IR : PASSAGE EN PUISSANCE MAX'
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: 1000w
           device: radiateur_sdb
-          num_repeats: 2
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.etat_resistance_soufflant_sdb
+        data:
+          option: 2000W
   mode: single
 - id: '1768415982605'
   alias: C - SALLE DE BAIN - GESTION ARRÊT SÉCURISÉ DU SOUFFLANT

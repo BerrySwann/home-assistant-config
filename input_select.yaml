@@ -1,0 +1,7 @@
+etat_resistance_soufflant_sdb:
+  name: "Etat Resistance Soufflant SdB"
+  icon: mdi:heating-coil
+  options:
+    - "0W"
+    - "1000W"
+    - "2000W"
