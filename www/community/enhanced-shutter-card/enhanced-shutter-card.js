@@ -1,5 +1,5 @@
 
-const VERSION = 'v1.4.2';
+const VERSION = 'v1.4.3';
 const DEBUG = false;
 // // local copy of RELEASE 3.0.1 of
 // https://www.jsdelivr.com/package/gh/lit/dist
@@ -913,8 +913,12 @@ class EnhancedShutterCardNew extends LitElement{
     //const parent = this.parentElement;
 
     const gridContainer = this.defGridContainer();
-    if (!gridContainer) return;
-
+    if (!gridContainer) {
+      if (!this.isShutterConfigLoaded) {
+        this.#defAllShutterConfig();
+      }
+      this.getGridOptionsInternal();
+    }
     let lastCols = '';
     //console.log('Card connectedCallback: observing parent:',gridContainer);
     // Check grid layout changes
