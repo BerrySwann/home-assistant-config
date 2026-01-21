@@ -4,41 +4,7 @@
 
 - sensor:
     # ┌───────────────────────────────────┐
-    # │ 1. DYNAMIQUE                      │
-    # └───────────────────────────────────┘
-    # --- max_conso_quotidien_dynamique ---
-    - name: "Max Conso Quotidien Dynamique"
-      unique_id: max_conso_Quotidien_dynamique
-      unit_of_measurement: "kWh"
-      state: >
-        {% set p1 = states('sensor.diag_poste_1_hygiene_quotidien') | float(0) %}
-        {% set p2 = states('sensor.diag_poste_2_cuisson_quotidien') | float(0) %}
-        {% set p3 = states('sensor.diag_poste_3_froid_quotidien') | float(0) %}
-        {% set p4 = states('sensor.diag_poste_4_chauffage_quotidien') | float(0) %}
-        {% set p5 = states('sensor.diag_poste_5_multimedia_quotidien') | float(0) %}
-        {% set p6 = states('sensor.diag_poste_6_lumiere_quotidien') | float(0) %}
-        {% set p7 = states('sensor.diag_poste_7_autres_quotidien') | float(0) %}
-        {{ ([p1, p2, p3, p4, p5, p6, p7] | max + 0.5) | round(0) }}
-
-    # ┌───────────────────────────────────┐
-    # │ 3. SYNTHÈSE                       │
-    # └───────────────────────────────────┘
-    # --- diag_conso_totale_identifiee_quotidienne ---
-    - name: "Diag Conso Totale Identifiee Quotidienne"
-      unique_id: diag_conso_totale_identifiee_quotidienne
-      unit_of_measurement: "kWh"
-      device_class: energy
-      state: >
-        {{ (states('sensor.diag_poste_1_hygiene_quotidien') | float(0) + 
-            states('sensor.diag_poste_2_cuisson_quotidien') | float(0) + 
-            states('sensor.diag_poste_3_froid_quotidien') | float(0) + 
-            states('sensor.diag_poste_4_chauffage_quotidien') | float(0) + 
-            states('sensor.diag_poste_5_multimedia_quotidien') | float(0) + 
-            states('sensor.diag_poste_7_autres_quotidien') | float(0)) +
-            states('sensor.diag_poste_6_lumiere_quotidien') | float(0)) | round(2) }}
-
-    # ┌───────────────────────────────────┐
-    # │ 2. POSTES DÉTAILLÉS               │
+    # │ 1. POSTES DÉTAILLÉS               │
     # └───────────────────────────────────┘
     # --- diag_poste_1_hygiene_quotidien ---
     - name: "Diag Poste 1 Hygiene Quotidien"
@@ -109,21 +75,45 @@
       state: >
         {{ states('sensor.conso_total_eclairage_appart_quotidien') | float(0) | round(3) }}
 
-    # --- diag_poste_7_autres_mensuel ---
+    # --- diag_poste_7_autres_quotidien ---
     - name: "Diag Poste 7 autres Quotidien"
       unique_id: diag_poste_7_autres_quotidien
       unit_of_measurement: "kWh"
       device_class: energy
       state_class: total_increasing
-      icon: mdi:monitor-dashboard
+      icon: mdi:plus-circle-outline
       state: >
         {{ (states('sensor.all_standby_daily') | float(0) + 
             states('sensor.prise_tete_de_lit_chambre_daily') | float(0) + 
             states('sensor.prise_salon_chargeur_nous_daily') | float(0) +
             states('sensor.prise_horloge_ikea_daily') | float(0)) | round(3) }}
 
-# annotations_log:
-# - [L1-3] Mise en forme du titre principal (Boîte ASCII arrondie 74 car).
-# - [L6-8] Ajout du titre secondaire (Boîte ASCII carrée 37 car).
-# - [L9,23,36,48,59,69,82,95] Ajout des titres tertiaires (slugs).
-# - [Global] Standardisation de l'indentation et regroupement logique.
+    # ┌───────────────────────────────────┐
+    # │ 2. SYNTHÈSE (CALCULS GLOBAUX)     │
+    # └───────────────────────────────────┘
+    - name: "Diag Conso Totale Identifiee Quotidienne"
+      unique_id: diag_conso_totale_identifiee_quotidienne
+      unit_of_measurement: "kWh"
+      device_class: energy
+      state: >
+        {% set p1 = states('sensor.diag_poste_1_hygiene_quotidien') | float(0) %}
+        {% set p2 = states('sensor.diag_poste_2_cuisson_quotidien') | float(0) %}
+        {% set p3 = states('sensor.diag_poste_3_froid_quotidien') | float(0) %}
+        {% set p4 = states('sensor.diag_poste_4_chauffage_quotidien') | float(0) %}
+        {% set p5 = states('sensor.diag_poste_5_multimedia_quotidien') | float(0) %}
+        {% set p6 = states('sensor.diag_poste_6_lumiere_quotidien') | float(0) %}
+        {% set p7 = states('sensor.diag_poste_7_autres_quotidien') | float(0) %}
+        {{ (p1 + p2 + p3 + p4 + p5 + p6 + p7) | round(2) }}
+
+    - name: "Max Conso Quotidien Dynamique"
+      unique_id: max_conso_Quotidien_dynamique
+      unit_of_measurement: "kWh"
+      state: >
+        {% set p1 = states('sensor.diag_poste_1_hygiene_quotidien') | float(0) %}
+        {% set p2 = states('sensor.diag_poste_2_cuisson_quotidien') | float(0) %}
+        {% set p3 = states('sensor.diag_poste_3_froid_quotidien') | float(0) %}
+        {% set p4 = states('sensor.diag_poste_4_chauffage_quotidien') | float(0) %}
+        {% set p5 = states('sensor.diag_poste_5_multimedia_quotidien') | float(0) %}
+        {% set p6 = states('sensor.diag_poste_6_lumiere_quotidien') | float(0) %}
+        {% set p7 = states('sensor.diag_poste_7_autres_quotidien') | float(0) %}
+        {{ ([p1, p2, p3, p4, p5, p6, p7] | max + 0.5) | round(0) }}
