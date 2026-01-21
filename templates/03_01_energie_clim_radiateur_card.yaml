@@ -306,7 +306,7 @@
         {% set p2 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
         {% set watts = p1 + p2 %}
 
-        {% set d1 = states('sensor.dut_soufflant_sdb') | float(0) %}
+        {% set d1 = states('sensor.dut_sdb_soufflant') | float(0) %}
         {% set d2 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
         {% set dut = d1 + d2 %}
 
