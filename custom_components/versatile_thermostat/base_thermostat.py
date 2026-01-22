@@ -360,7 +360,7 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
 
         # Read the parameter from configuration.yaml if it exists
         short_ema_params = DEFAULT_SHORT_EMA_PARAMS
-        if api is not None and api.short_ema_params:
+        if api and api.short_ema_params:
             short_ema_params = api.short_ema_params
 
         self._ema_algo = ExponentialMovingAverage(
@@ -2003,6 +2003,16 @@ class BaseThermostat(ClimateEntity, RestoreEntity, Generic[T]):
         write_event_log(_LOGGER, self, "Calling SERVICE_CANCEL_TIMED_PRESET")
 
         await self._timed_preset_manager.cancel_timed_preset()
+
+    async def service_recalibrate_valves(self, delay_seconds: int):
+        """Stub method for recalibrate_valves service on unsupported thermostat types.
+
+        Raises:
+            ServiceValidationError: Always raised to indicate the service is not available
+        """
+        raise ServiceValidationError(
+            f"{self} - The recalibrate_valves service is only available for ThermostatClimateValve thermostats."
+        )
 
     ##
     ## For testing purpose

@@ -29,8 +29,8 @@ SELF_REGULATION_PARAM_SCHEMA = {
     vol.Required("ki"): vol.Coerce(float),
     vol.Required("k_ext"): vol.Coerce(float),
     vol.Required("offset_max"): vol.Coerce(float),
-    vol.Required("stabilization_threshold"): vol.Coerce(float),
     vol.Required("accumulated_error_threshold"): vol.Coerce(float),
+    "overheat_protection": vol.Coerce(bool),
 }
 
 EMA_PARAM_SCHEMA = {
@@ -119,7 +119,7 @@ async def reload_all_vtherm(hass):
     await asyncio.gather(*reload_tasks)
     api: VersatileThermostatAPI = VersatileThermostatAPI.get_vtherm_api(hass)
     if api:
-        await api.reload_central_boiler_entities_list()
+        await api.central_boiler_manager.reload_central_boiler_entities_list()
         await api.init_vtherm_links()
 
 
@@ -161,7 +161,7 @@ async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
         await hass.config_entries.async_reload(entry.entry_id)
         # Reload the central boiler list of entities
         api: VersatileThermostatAPI = VersatileThermostatAPI.get_vtherm_api(hass)
-        if api is not None:
+        if api:
             await api.central_boiler_manager.reload_central_boiler_entities_list()
             await api.init_vtherm_links(entry.entry_id)
 
@@ -173,7 +173,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         if api:
             api.remove_entry(entry)
-            await api.reload_central_boiler_entities_list()
+            await api.central_boiler_manager.reload_central_boiler_entities_list()
 
     return unload_ok
 
