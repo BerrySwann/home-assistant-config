@@ -1,0 +1,51 @@
+substitutions:
+  name: esp-pression-balcon-n
+  friendly_name: "Capteur Pression Balcon"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-h2-devkitm-1
+  variant: esp32h2
+  framework:
+    type: esp-idf
+
+# Activation du Zigbee
+zb_device:
+  networks:
+    - network_key: [] # Laisser vide pour l'appairage automatique
+  # Décommenter la ligne suivante uniquement si l'appairage échoue au premier essai :
+  # reset_startup: true 
+
+# Configuration du bus I2C pour tes soudures (SDA:0, SCL:1)
+i2c:
+  sda: 0
+  scl: 1
+  scan: true
+
+sensor:
+  # Capteur BME280 (Température, Humidité, Pression)
+  - platform: bme280_i2c
+    temperature:
+      name: "Température Balcon"
+    pressure:
+      name: "Pression Balcon"
+    humidity:
+      name: "Humidité Balcon"
+    address: 0x76 # Adresse standard du BME280
+
+  # Surveillance de la batterie (via le convertisseur interne)
+  - platform: internal_temperature
+    name: "Température Interne ESP32"
+
+# Configuration des logs pour voir ce qu'il se passe en USB
+logger:
+  level: INFO
+
+# Optionnel : Sommeil profond pour économiser la batterie 1200mAh
+# N'ACTIVE CECI QU'UNE FOIS QUE L'APPAIRAGE ZIGBEE EST RÉUSSI !
+# deep_sleep:
+#   run_duration: 60s
+#   sleep_duration: 30min
