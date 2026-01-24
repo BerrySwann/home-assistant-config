@@ -7,9 +7,6 @@ esp32:
   framework:
     type: esp-idf
 
-# Le composant Zigbee qui ne devrait plus réclamer de nrf52 ici
-zigbee:
-
 i2c:
   sda: 0
   scl: 1
@@ -24,4 +21,4 @@ sensor:
       name: "Pression Balcon"
 
 logger:
-  level: INFO
+  level: VERY_VERBOSE
