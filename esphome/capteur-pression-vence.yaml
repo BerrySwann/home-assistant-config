@@ -8,29 +8,32 @@ esp32:
   framework:
     type: esp-idf
 
+network:
+  enable_ipv6: true
+
 openthread:
-  network_key: "#F72B"
+  tlv: "0e080000000000010000000300000f4a0300000b35060004001fffe00208bfdddcb70e9f16fe0708fd1e0194dc47d47e0510f2cd981c6046516c443cdb0e2156d392030e68612d7468726561642d626538640102be8d04101558a672a1109f167194144263e0e5a30c0402a0f7f8"
 
 api:
-  
+
 ota:
   platform: esphome
+
+logger:
+  level: DEBUG
+  baud_rate: 115200
 
 i2c:
   sda: GPIO0
   scl: GPIO1
   scan: true
+  frequency: 100kHz
 
 sensor:
-  - platform: bme280_i2c
+  - platform: bmp280_i2c
     address: 0x76
     temperature:
       name: "Température Balcon"
     pressure:
       name: "Pression Balcon"
-    humidity:
-      name: "Humidité Balcon"
     update_interval: 60s
-
-logger:
-  level: INFO
