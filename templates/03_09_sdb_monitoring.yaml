@@ -1,0 +1,42 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : MONITORING SOUFFLANT SDB (STATUT INTELLIGENT)                  │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌─────────────────────────────────────┐
+# │ 8. SDB - STATUT SOUFFLANT           │
+# └─────────────────────────────────────┘
+
+# --- soufflant_sdb_statut ---
+- sensor:
+    - name: "Statut Soufflant SDB"
+      unique_id: statut_soufflant_sdb
+      state: >
+        {% set inter = states('switch.inter_soufflant_salle_de_bain') %}
+        {% set prise = states('switch.prise_soufflant_salle_de_bain_nous') %}
+        {% set power = states('input_select.etat_resistance_soufflant_sdb') %}
+        {% if inter == 'on' and prise == 'on' %}
+          Actif {{ power }}
+        {% elif inter == 'off' and prise == 'on' %}
+          Refroidissement
+        {% else %}
+          Éteint
+        {% endif %}
+      icon: >
+        {% if states('switch.inter_soufflant_salle_de_bain') == 'on' %}
+          mdi:radiator
+        {% else %}
+          mdi:radiator-off
+        {% endif %}
+      attributes:
+        temperature_actuelle: "{{ states('sensor.th_salle_de_bain_temperature') | float(0) | round(1) }}"
+        consigne_climate: "{{ state_attr('climate.soufflant_salle_de_bain', 'temperature') | float(0) | round(1) }}"
+        delta_temperature: >
+          {% set current = states('sensor.th_salle_de_bain_temperature') | float(0) %}
+          {% set target = state_attr('climate.soufflant_salle_de_bain', 'temperature') | float(23) %}
+          {{ (current - target) | round(1) }}
+        temps_fonctionnement_actuel: >
+          {% if states('switch.inter_soufflant_salle_de_bain') == 'on' %}
+            {{ relative_time(states.switch.inter_soufflant_salle_de_bain.last_changed) }}
+          {% else %}
+            Arrêté
+          {% endif %}
