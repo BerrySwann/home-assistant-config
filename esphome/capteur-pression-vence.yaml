@@ -1,0 +1,33 @@
+esphome:
+  name: capteur-pression-vence
+
+esp32:
+  board: esp32-h2-devkitm-1
+  variant: esp32h2
+  framework:
+    type: esp-idf
+
+# Bluetooth pour envoyer les données sans bug nrf52
+bthome:
+
+i2c:
+  sda: 0
+  scl: 1
+  scan: true
+
+sensor:
+  - platform: bme280_i2c
+    address: 0x76
+    temperature:
+      name: "Température Balcon"
+      on_value:
+        then:
+          - bthome.report_temperature: !lambda "return x;"
+    pressure:
+      name: "Pression Balcon"
+      on_value:
+        then:
+          - bthome.report_pressure: !lambda "return x;"
+
+logger:
+  level: INFO
