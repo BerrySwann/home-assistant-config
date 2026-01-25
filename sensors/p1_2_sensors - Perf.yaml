@@ -74,7 +74,7 @@
   - platform: statistics
     name: "Performance Globale (moy jour)"
     unique_id: performance_globale_moy_jour
-    entity_id: sensor.performance_thermique_globale
+    entity_id: sensor.performance_thermique_totale
     state_characteristic: mean
     max_age:
       hours: 24
