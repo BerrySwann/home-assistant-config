@@ -91,13 +91,6 @@ alexa_media:
       password: !secret amazon_password
       url: amazon.fr
 
-# Telegram
-telegram_bot:
-  - platform: polling
-    api_key: !secret telegram_token
-    allowed_chat_ids: 
-    - !secret id_telegram_HA-Bot
-
 # ==========================================================================
 # Zone NOTIFY
 # ==========================================================================
@@ -106,11 +99,6 @@ notify:
   - platform: file
     name: diag_log_file
     filename: diag_conso_elec.txt
-
-# Telegram
-  - platform: telegram
-    name: Telegram
-    chat_id: !secret id_telegram_HA-Bot
 
 # ==========================================================================
 # BASE DE DONNEE MariaDB
