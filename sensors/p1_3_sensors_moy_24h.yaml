@@ -1,0 +1,29 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : STATISTIQUES & MOYENNES (LISSAGE 24H)                           │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+  # 1. Moyenne de la puissance sur 24h
+  - platform: statistics
+    name: "Conso Clim Rad Moyenne 24h"
+    unique_id: conso_clim_rad_moyenne_24h
+    entity_id: sensor.conso_clim_rad_total
+    state_characteristic: mean
+    max_age:
+      hours: 24
+
+  # 2. Moyenne du Delta T sur 24h
+  - platform: statistics
+    name: "Temperature Delta Moyenne 24h"
+    unique_id: temperature_delta_moyenne_24h
+    entity_id: sensor.temperature_delta_valeur
+    state_characteristic: mean
+    max_age:
+      hours: 24
+
+  # 3. Moyenne du DUT sur 24h
+  - platform: statistics
+    name: "DUT Moyenne 24h"
+    unique_id: dut_moyenne_24h
+    entity_id: sensor.dut_brut_total
+    state_characteristic: mean
+    max_age:
+      hours: 24

@@ -1,0 +1,191 @@
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PÔLE 2. ÉNERGIE: [kWh] PRISES                                       │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ 1. ENTRÉE                         │
+# └───────────────────────────────────┘
+# --- prise_box_internet_ikea_kwh ---
+  - platform: integration
+    source: sensor.box_internet_entree_power
+    name: "Prise Box Internet IKEA kWh"
+    unique_id: prise_box_internet_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_horloge_ikea_kwh ---
+  - platform: integration
+    source: sensor.horloge_entree_power
+    name: "Prise Horloge IKEA kWh"
+    unique_id: prise_horloge_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- prise_pc_s_gege_ikea_kwh ---
+  - platform: integration
+    source: sensor.pc_s_gege_salon_power
+    name: "Prise PC S-Gege IKEA kWh"
+    unique_id: prise_pc_s_gege_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_salon_chargeur_nous_kwh ---
+  - platform: integration
+    source: sensor.salon_chargeur_salon_power
+    name: "Prise Salon Chargeur NOUS kWh"
+    unique_id: prise_salon_chargeur_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 5. CUISINE                        │
+# └───────────────────────────────────┘
+# --- prise_four_micro_ondes_nous_kwh ---
+  - platform: integration
+    source: sensor.micro_ondes_cuisine_power
+    name: "Prise Four Micro-ondes NOUS kWh"
+    unique_id: prise_four_micro_ondes_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_petit_dejeune_nous_kwh ---
+  - platform: integration
+    source: sensor.petit_dejeuner_cuisine_power
+    name: "Prise Petit Dejeuné NOUS kWh"
+    unique_id: prise_petit_dejeune_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_lave_linge_nous_kwh ---
+  - platform: integration
+    source: sensor.lave_linge_cuisine_power
+    name: "Prise Lave-Linge NOUS kWh"
+    unique_id: prise_lave_linge_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_lave_vaisselle_nous_kwh ---
+  - platform: integration
+    source: sensor.lave_vaisselle_cuisine_power
+    name: "Prise Lave-Vaisselle NOUS kWh"
+    unique_id: prise_lave_vaisselle_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_airfryer_ninja_nous_kwh ---
+  - platform: integration
+    source: sensor.airfryer_cuisine_power
+    name: "Prise AirFryer Ninja NOUS kWh"
+    unique_id: prise_airfryer_ninja_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- four_et_plaque_de_cuisson_kwh ---
+  - platform: integration
+    source: sensor.four_plaque_cuisine_power
+    name: "Four et Plaque de Cuisson kWh"
+    unique_id: four_et_plaque_de_cuisson_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_frigo_cuisine_nous_kwh ---
+  - platform: integration
+    source: sensor.frigo_cuisine_power
+    name: "Prise Frigo Cuisine NOUS kWh"
+    unique_id: prise_frigo_cuisine_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_congelateur_cuisine_nous_kwh ---
+  - platform: integration
+    source: sensor.congel_cuisine_power
+    name: "Prise Congelateur Cuisine NOUS kWh"
+    unique_id: prise_congelateur_cuisine_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- prise_bureau_pc_ikea_kwh ---
+  - platform: integration
+    source: sensor.bureau_pc_power
+    name: "Prise Bureau PC IKEA kWh"
+    unique_id: prise_bureau_pc_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_bureau_fer_a_repasser_nous_kwh ---
+  - platform: integration
+    source: sensor.fer_a_repasser_bureau_power
+    name: "Prise Bureau Fer à Repasser NOUS kWh"
+    unique_id: prise_bureau_fer_a_repasser_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- prise_tete_de_lit_chambre_kwh ---
+  - platform: integration
+    source: sensor.tete_de_lit_chambre_power
+    name: "Prise Tete de Lit Chambre kWh"
+    unique_id: prise_tete_de_lit_chambre_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- prise_tv_chambre_nous_kwh ---
+  - platform: integration
+    source: sensor.tv_chambre_power
+    name: "Prise TV Chambre NOUS kWh"
+    unique_id: prise_tv_chambre_nous_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 10. AUTRE                         │
+# └───────────────────────────────────┘
+# --- all_standby_kwh ---
+  - platform: integration
+    source: sensor.all_standby_power
+    name: "All Standby kWh"
+    unique_id: all_standby_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3

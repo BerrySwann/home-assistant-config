@@ -1,0 +1,26 @@
+# ╭──────────────────────────────────────────────────────────────────╮
+# │ SENSOR : STATISTIQUES & INTÉGRATION (PÔLE 10. MINI-PC)           │
+# ╰──────────────────────────────────────────────────────────────────╯
+
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : SANTÉ SYSTÈME (MINI-PC) │
+# └─────────────────────────────────────┘
+
+# --- mini_pc_charge_moyenne_24h_w ---
+  - platform: statistics
+    name: "Mini PC Charge Moyenne 24h (W)"
+    unique_id: mini_pc_charge_moyenne_24h_w
+    entity_id: sensor.prise_mini_pc_ikea_power
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# --- prise_mini_pc_ikea_kwh ---
+  - platform: integration
+    source: sensor.prise_mini_pc_ikea_power
+    name: "Prise Mini PC IKEA kWh"
+    unique_id: prise_mini_pc_ikea_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3

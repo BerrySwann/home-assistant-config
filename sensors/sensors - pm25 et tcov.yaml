@@ -1,0 +1,66 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)                         │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- pm25_salon_mean_24h ---
+  - platform: statistics
+    name: "PM2.5 Salon (moy 24h)"
+    unique_id: pm25_salon_mean_24h
+    entity_id: sensor.qualite_air_salon_ikea_pm25
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# --- tcov_salon_mean_24h ---
+  - platform: statistics
+    name: "tCOV Salon (moy 24h)"
+    unique_id: tcov_salon_mean_24h
+    entity_id: sensor.qualite_air_salon_ikea_voc_index
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- pm25_bureau_mean_24h ---
+  - platform: statistics
+    name: "PM2.5 Bureau (moy 24h)"
+    unique_id: pm25_bureau_mean_24h
+    entity_id: sensor.qualite_air_bureau_ikea_pm25
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# --- tcov_bureau_mean_24h ---
+  - platform: statistics
+    name: "tCOV Bureau (moy 24h)"
+    unique_id: tcov_bureau_mean_24h
+    entity_id: sensor.qualite_air_bureau_ikea_voc_index
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- pm25_chambre_mean_24h ---
+  - platform: statistics
+    name: "PM2.5 Chambre (moy 24h)"
+    unique_id: pm25_chambre_mean_24h
+    entity_id: sensor.qualite_air_chambre_ikea_pm25
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1
+
+# --- tcov_chambre_mean_24h ---
+  - platform: statistics
+    name: "tCOV Chambre (moy 24h)"
+    unique_id: tcov_chambre_mean_24h
+    entity_id: sensor.qualite_air_chambre_ikea_voc_index
+    state_characteristic: mean
+    max_age: { hours: 24 }
+    precision: 1

@@ -1,0 +1,26 @@
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : RÉSEAU & SERVICES       │
+# └─────────────────────────────────────┘
+
+# --- ping_https_vscode ---
+  - platform: rest
+    name: "Ping HTTPS VSCode"
+    unique_id: ping_https_vscode
+    resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
+    method: GET
+    timeout: 15
+    value_template: "{{ value_json is defined or value is defined }}"
+    scan_interval: 60
+# ┌─────────────────────────────────────┐
+# │ 10. AUTRE : RÉSEAU & SERVICES       │
+# └─────────────────────────────────────┘
+
+# --- ping_https_vscode ---
+  - platform: rest
+    name: "Ping HTTPS VSCode"
+    unique_id: ping_https_vscode
+    resource: "https://erodi-ha.com/a0d7b954_vscode/ingress"
+    method: GET
+    timeout: 15
+    value_template: "{{ value_json is defined or value is defined }}"
+    scan_interval: 60

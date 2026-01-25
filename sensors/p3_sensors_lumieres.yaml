@@ -1,0 +1,195 @@
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITEE                            │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 1. ENTRÉE                    │
+# └────────────────────────────────────┘
+# --- hue_white_lamp_entree_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_entree_power
+    name: "Hue White Lamp Entree Wh"
+    unique_id: hue_white_lamp_entree_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 4. SALON                     │
+# └────────────────────────────────────┘
+# --- hue_white_lamp_table_salon_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_table_salon_power
+    name: "Hue White Lamp Table Salon Wh"
+    unique_id: hue_white_lamp_table_salon_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_ambiance_lamp_salon_1_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_1_power
+    name: "Hue Ambiance Lamp Salon 1 Wh"
+    unique_id: hue_ambiance_lamp_salon_1_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_ambiance_lamp_salon_2_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_2_power
+    name: "Hue Ambiance Lamp Salon 2 Wh"
+    unique_id: hue_ambiance_lamp_salon_2_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_ambiance_lamp_salon_3_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_3_power
+    name: "Hue Ambiance Lamp Salon 3 Wh"
+    unique_id: hue_ambiance_lamp_salon_3_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_color_candle_salon_1_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_salon_1_power
+    name: "Hue Color Candle Salon 1 Wh"
+    unique_id: hue_color_candle_salon_1_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 5. CUISINE                   │
+# └────────────────────────────────────┘
+# --- hue_white_lamp_cuisine_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_cuisine_power
+    name: "Hue White Lamp Cuisine Wh"
+    unique_id: hue_white_lamp_cuisine_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 6. COULOIR                   │
+# └────────────────────────────────────┘
+# --- hue_white_lamp_couloir_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_couloir_power
+    name: "Hue White Lamp Couloir Wh"
+    unique_id: hue_white_lamp_couloir_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 7. BUREAU                    │
+# └────────────────────────────────────┘
+# --- hue_play_1_pc_bureau_wh ---
+  - platform: integration
+    source: sensor.hue_play_1_pc_bureau_power
+    name: "Hue Play 1 Pc Bureau Wh"
+    unique_id: hue_play_1_pc_bureau_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_play_2_pc_bureau_wh ---
+  - platform: integration
+    source: sensor.hue_play_2_pc_bureau_power
+    name: "Hue Play 2 Pc Bureau Wh"
+    unique_id: hue_play_2_pc_bureau_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_play_3_pc_bureau_wh ---
+  - platform: integration
+    source: sensor.hue_play_3_pc_bureau_power
+    name: "Hue Play 3 Pc Bureau Wh"
+    unique_id: hue_play_3_pc_bureau_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- lampe_bureau_1_hue_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_1_hue_power
+    name: "Lampe Bureau 1 Hue Wh"
+    unique_id: lampe_bureau_1_hue_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- lampe_bureau_2_hue_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_2_hue_power
+    name: "Lampe Bureau 2 Hue Wh"
+    unique_id: lampe_bureau_2_hue_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 8. SDB                       │
+# └────────────────────────────────────┘
+# --- relais_lumiere_sdb_sonoff_wh ---
+  - platform: integration
+    source: sensor.relais_lumiere_sdb_sonoff_power
+    name: "Relais Lumiere Sdb Sonoff Wh"
+    unique_id: relais_lumiere_sdb_sonoff_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- lampe_salle_de_bain_hue_wh ---
+  - platform: integration
+    source: sensor.lampe_salle_de_bain_hue_power
+    name: "Lampe Salle De Bain Hue Wh"
+    unique_id: lampe_salle_de_bain_hue_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 9. CHAMBRE                   │
+# └────────────────────────────────────┘
+# --- hue_white_lamp_chambre_1_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_1_power
+    name: "Hue White Lamp Chambre 1 Wh"
+    unique_id: hue_white_lamp_chambre_1_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_white_lamp_chambre_2_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_2_power
+    name: "Hue White Lamp Chambre 2 Wh"
+    unique_id: hue_white_lamp_chambre_2_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_color_candle_chambre_gege_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_gege_power
+    name: "Hue Color Candle Chambre Gege Wh"
+    unique_id: hue_color_candle_chambre_gege_wh
+    method: left
+    unit_time: h
+    round: 2
+
+# --- hue_color_candle_chambre_eric_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_eric_power
+    name: "Hue Color Candle Chambre Eric Wh"
+    unique_id: hue_color_candle_chambre_eric_wh
+    method: left
+    unit_time: h
+    round: 2

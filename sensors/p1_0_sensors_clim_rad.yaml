@@ -1,0 +1,83 @@
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : PÔLE 1. CHAUFFAGE & CLIMATISATION                                   │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+
+# ┌────────────────────────────────────────────┐
+# │ PÔLE 1. ÉNERGIE: [kWh] CLIM / CHAUFFAGE    │
+# └────────────────────────────────────────────┘
+
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- clim_salon_kwh ---
+  - platform: integration
+    source: sensor.clim_salon_entree_power
+    name: "Clim Salon kWh"
+    unique_id: clim_salon_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 5. CUISINE                        │
+# └───────────────────────────────────┘
+# --- radiateur_cuisine_kwh ---
+  - platform: integration
+    source: sensor.radiateur_cuisine_power
+    name: "Radiateur Cuisine kWh"
+    unique_id: radiateur_cuisine_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- clim_bureau_kwh ---
+  - platform: integration
+    source: sensor.clim_bureau_power
+    name: "Clim Bureau kWh"
+    unique_id: clim_bureau_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 8. SDB                            │
+# └───────────────────────────────────┘
+# --- soufflant_sdb_kwh ---
+  - platform: integration
+    source: sensor.soufflant_sdb_power
+    name: "Soufflant SdB kWh"
+    unique_id: soufflant_sdb_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- seche_serv_sdb_kwh ---
+  - platform: integration
+    source: sensor.seche_serv_sdb_power
+    name: "Seche-serv SdB kWh"
+    unique_id: seche_serv_sdb_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- clim_chambre_kwh ---
+  - platform: integration
+    source: sensor.clim_chambre_power
+    name: "Clim Chambre kWh"
+    unique_id: clim_chambre_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+

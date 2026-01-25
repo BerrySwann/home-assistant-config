@@ -42,8 +42,14 @@ automation: !include automations.yaml
 #renvoi au fichier répertoire automations/
 #automation: !include_dir_merge_list automations/
 
-#renvoi au fichier répertoire template/
+#renvoi au fichier répertoire sensors/
+template: !include_dir_merge_list sensors/
+
+#renvoi au fichier répertoire templates/
 template: !include_dir_merge_list templates/
+
+# renvoi au fichier sensors.yaml
+#sensor: !include sensors.yaml
 
 # renvoi au fichier commad_line.yaml
 command_line: !include command_line.yaml
@@ -63,7 +69,7 @@ input_number: !include input_number.yaml
 #revoin au fuchier input_boolean.yaml
 input_boolean: !include input_boolean.yaml
 
-sensor: !include sensors.yaml
+
 
 #renvoi au fichier shell_command.yaml
 # Services shell_command (NOUVEAU)

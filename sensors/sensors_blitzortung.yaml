@@ -1,0 +1,16 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : NOTIFICATIONS ET SYSTÈME                                        │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# --- blitzortung_lightning_localisation ---
+  - platform: rest
+    name: "Blitzortung Lightning Localisation"
+    unique_id: blitzortung_lightning_localisation
+    scan_interval: 3600
+    resource_template: >-
+      {%- set lat = state_attr('sensor.blitzortung_lightning_distance', 'lat') -%}
+      {%- set lon = state_attr('sensor.blitzortung_lightning_distance', 'lon') -%}
+      https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat={{lat}}&lon={{lon}}
+    value_template: '{{ value_json.features | length }}'
+    json_attributes:
+      - features

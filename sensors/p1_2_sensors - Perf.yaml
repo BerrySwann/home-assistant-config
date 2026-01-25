@@ -1,0 +1,125 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : STATISTIQUES DE PERFORMANCE THERMIQUE (MOYENNE 24H)             │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ 4. SALON                          │
+# └───────────────────────────────────┘
+# --- perf_salon_moy_jour ---
+  - platform: statistics
+    name: "Performance Salon (moy jour)"
+    unique_id: perf_salon_moy_jour
+    entity_id: sensor.performance_thermique_salon
+    state_characteristic: mean
+    max_age:
+      hours: 24
+    precision: 2
+
+# ┌───────────────────────────────────┐
+# │ 5. CUISINE                        │
+# └───────────────────────────────────┘
+# --- perf_cuisine_moy_jour ---
+  - platform: statistics
+    name: "Performance Cuisine (moy jour)"
+    unique_id: perf_cuisine_moy_jour
+    entity_id: sensor.performance_thermique_cuisine
+    state_characteristic: mean
+    max_age:
+      hours: 24
+    precision: 2
+
+# ┌───────────────────────────────────┐
+# │ 7. BUREAU                         │
+# └───────────────────────────────────┘
+# --- perf_bureau_moy_jour ---
+  - platform: statistics
+    name: "Performance Bureau (moy jour)"
+    unique_id: perf_bureau_moy_jour
+    entity_id: sensor.performance_thermique_bureau
+    state_characteristic: mean
+    max_age:
+      hours: 24
+    precision: 2
+
+# ┌───────────────────────────────────┐
+# │ 8. SDB                            │
+# └───────────────────────────────────┘
+# --- perf_sdb_moy_jour ---
+  - platform: statistics
+    name: "Performance SdB (moy jour)"
+    unique_id: perf_sdb_moy_jour
+    entity_id: sensor.performance_thermique_sdb
+    state_characteristic: mean
+    max_age:
+      hours: 24
+    precision: 2
+
+# ┌───────────────────────────────────┐
+# │ 9. CHAMBRE                        │
+# └───────────────────────────────────┘
+# --- perf_chambre_moy_jour ---
+  - platform: statistics
+    name: "Performance Chambre (moy jour)"
+    unique_id: perf_chambre_moy_jour
+    entity_id: sensor.performance_thermique_chambre
+    state_characteristic: mean
+    max_age:
+      hours: 24
+    precision: 2
+
+# ┌───────────────────────────────────┐
+# │ GLOBAL                            │
+# └───────────────────────────────────┘
+# --- performance_globale_moy_jour ---
+  - platform: statistics
+    name: "Performance Globale (moy jour)"
+    unique_id: performance_globale_moy_jour
+    entity_id: sensor.performance_thermique_globale
+    state_characteristic: mean
+    max_age:
+      hours: 24
+    precision: 2
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ SENSOR : MOYENNES DE PERFORMANCE THERMIQUE (MOIS)                        │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# --- Perf Salon (Monthly) ---
+  - platform: statistics
+    name: "Performance Salon Moyenne Mois"
+    unique_id: perf_salon_moy_mois
+    entity_id: sensor.performance_thermique_salon
+    state_characteristic: mean
+    max_age: { days: 30 }
+
+# --- Perf Cuisine (Monthly) ---
+  - platform: statistics
+    name: "Performance Cuisine Moyenne Mois"
+    unique_id: perf_cuisine_moy_mois
+    entity_id: sensor.performance_thermique_cuisine
+    state_characteristic: mean
+    max_age: { days: 30 }
+
+# --- Perf Bureau (Monthly) ---
+  - platform: statistics
+    name: "Performance Bureau Moyenne Mois"
+    unique_id: perf_bureau_moy_mois
+    entity_id: sensor.performance_thermique_bureau
+    state_characteristic: mean
+    max_age: { days: 30 }
+
+# --- Perf SdB (Monthly) ---
+  - platform: statistics
+    name: "Performance SdB Moyenne Mois"
+    unique_id: perf_sdb_moy_mois
+    entity_id: sensor.performance_thermique_sdb
+    state_characteristic: mean
+    max_age: { days: 30 }
+
+# --- Perf Chambre (Monthly) ---
+  - platform: statistics
+    name: "Performance Chambre Moyenne Mois"
+    unique_id: perf_chambre_moy_mois
+    entity_id: sensor.performance_thermique_chambre
+    state_characteristic: mean
+    max_age: { days: 30 }
