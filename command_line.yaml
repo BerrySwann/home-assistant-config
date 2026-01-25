@@ -97,8 +97,8 @@
     unique_id: backup_github_status
     command: >-
       bash -lc 'LOG=/config/.logs/ha_git_backup.log;
-      if [ -s "$LOG" ] && grep -F "Backup GitHub OK:" "$LOG" >/dev/null 2>&1; then
-        TS=$(grep -F "Backup GitHub OK:" "$LOG" | tail -n1 | sed -E "s/^.*OK: (.*)$/\1/");
+      if [ -s "$LOG" ] && grep -E "Push réussi|État déjà à jour" "$LOG" >/dev/null 2>&1; then
+        TS=$(grep -E "Push réussi|État déjà à jour" "$LOG" | tail -n1 | awk "{print \$1, \$2}");
         printf "{\"ok\":true,\"ts\":\"%s\"}\n" "$TS";
       else
         echo "{\"ok\":false,\"ts\":\"\"}";
