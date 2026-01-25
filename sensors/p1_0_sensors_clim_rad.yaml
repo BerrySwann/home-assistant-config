@@ -24,7 +24,7 @@
 # └───────────────────────────────────┘
 # --- radiateur_cuisine_kwh ---
   - platform: integration
-    source: sensor.radiateur_cuisine_power
+    source: sensor.radiateur_elec_cuisine_power
     name: "Radiateur Cuisine kWh"
     unique_id: radiateur_cuisine_kwh
     method: left
