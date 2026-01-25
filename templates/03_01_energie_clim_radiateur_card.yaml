@@ -360,7 +360,7 @@
         {% set d6 = states('sensor.dut_clim_chambre') | float(0) %}
         
         {# 2. Addition brute de toutes les valeurs #}
-        {{ (d1 + d2 + d3 + d4 + d5 + d6) | round(2) }}
+        {{ ((d1 + d2 + d3 + d4 + d5 + d6)/6) | round(2) }}
 
     # ┌───────────────────────────────────┐
     # │ 10. TOTAL HABITAT (75m²)          │

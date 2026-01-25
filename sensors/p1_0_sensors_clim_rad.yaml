@@ -11,7 +11,7 @@
 # └───────────────────────────────────┘
 # --- clim_salon_kwh ---
   - platform: integration
-    source: sensor.clim_salon_entree_power
+    source: sensor.clim_salon_nous_power
     name: "Clim Salon kWh"
     unique_id: clim_salon_kwh
     method: left
@@ -37,7 +37,7 @@
 # └───────────────────────────────────┘
 # --- clim_bureau_kwh ---
   - platform: integration
-    source: sensor.clim_bureau_power
+    source: sensor.clim_bureau_nous_power
     name: "Clim Bureau kWh"
     unique_id: clim_bureau_kwh
     method: left
@@ -73,7 +73,7 @@
 # └───────────────────────────────────┘
 # --- clim_chambre_kwh ---
   - platform: integration
-    source: sensor.clim_chambre_power
+    source: sensor.clim_chambre_nous_power
     name: "Clim Chambre kWh"
     unique_id: clim_chambre_kwh
     method: left
