@@ -50,7 +50,7 @@
 # └───────────────────────────────────┘
 # --- soufflant_sdb_kwh ---
   - platform: integration
-    source: sensor.soufflant_sdb_power
+    source: sensor.prise_soufflant_salle_de_bain_nous_power
     name: "Soufflant SdB kWh"
     unique_id: soufflant_sdb_kwh
     method: left
@@ -60,7 +60,7 @@
 
 # --- seche_serv_sdb_kwh ---
   - platform: integration
-    source: sensor.seche_serv_sdb_power
+    source: sensor.prise_seche_serviette_salle_de_bain_nous_power
     name: "Seche-serv SdB kWh"
     unique_id: seche_serv_sdb_kwh
     method: left
