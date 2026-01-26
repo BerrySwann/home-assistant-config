@@ -110,3 +110,9 @@
       unique_id: chambre_light_status
       state: "{{ 'Allumée' if is_state('light.chambre', 'on') else 'Éteint' }}"
       icon: "{{ 'hue:flourish-alt' if is_state('light.chambre', 'on') else 'hue:flourish' }}"
+
+    # --- Tête de Lit ---
+    - name: "Tête de Lit Light Status"
+      unique_id: tete_de_lit_light_status
+      state: "{{ 'Allumée' if is_state('light.lit', 'on') else 'Éteint' }}"
+      icon: "{{ 'mdi:bed' if is_state('light.lit', 'on') else 'mdi:bed-outline' }}"
