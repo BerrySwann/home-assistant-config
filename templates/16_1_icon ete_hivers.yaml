@@ -61,7 +61,7 @@
     # --- Table ---
     - name: "Table Light Status"
       unique_id: table_light_status
-      state: "{{ 'Allumée' if is_state('light.table', 'on') else 'Éteinte' }}"
+      state: "{{ 'Allumée' if is_state('light.table', 'on') else 'Éteint' }}"
       icon: "{{ 'mdi:table-chair' if is_state('light.table', 'on') else 'mdi:table-furniture' }}"
 
     # --- Cuisine ---
@@ -70,6 +70,12 @@
       state: "{{ 'En service' if is_state('light.cuisine', 'on') else 'Éteint' }}"
       icon: "{{ 'mdi:ceiling-light' if is_state('light.cuisine', 'on') else 'mdi:ceiling-light-outline' }}"
 
+    # --- Entrée ---
+    - name: "Couloir Light Status"
+      unique_id: couloir_light_status
+      state: "{{ 'Allumée' if is_state('light.couloir', 'on') else 'Éteint' }}"
+      icon: "{{ 'mdi:ceiling-light' if is_state('light.couloir', 'on') else 'mdi:ceiling-light-outline' }}"
+    
     # --- Bureau ---
     - name: "Bureau Light Status"
       unique_id: bureau_light_status
@@ -96,5 +102,11 @@
     # --- Salle de Bain ---
     - name: "SdB Light Status"
       unique_id: sdb_light_status
-      state: "{{ 'En service' if is_state('light.lampe_salle_de_bain_hue', 'on') else 'Éteinte' }}"
+      state: "{{ 'Allumée' if is_state('light.lampe_salle_de_bain_hue', 'on') else 'Éteint' }}"
       icon: "{{ 'mdi:ceiling-light' if is_state('light.lampe_salle_de_bain_hue', 'on') else 'mdi:ceiling-light-outline' }}"
+
+    # --- Chambre ---
+    - name: "Chambre Light Status"
+      unique_id: chambre_light_status
+      state: "{{ 'Allumée' if is_state('light.chambre', 'on') else 'Éteint' }}"
+      icon: "{{ 'hue:flourish-alt' if is_state('light.chambre', 'on') else 'hue:flourish' }}"
