@@ -61,13 +61,13 @@
     # --- Table ---
     - name: "Table Light Status"
       unique_id: table_light_status
-      state: "{{ 'Allumée' if is_state('light.salon', 'on') else 'Éteint' }}"
-      icon: "{{ 'mdi:stable-chair' if is_state('light.salon', 'on') else 'mditable-chaire' }}"
+      state: "{{ 'Allumée' if is_state('light.table', 'on') else 'Éteinte' }}"
+      icon: "{{ 'mdi:table-chair' if is_state('light.table', 'on') else 'mdi:table-furniture' }}"
 
     # --- Cuisine ---
     - name: "Cuisine Light Status"
       unique_id: cuisine_light_status
-      state: "{{ 'En service' if is_state('light.cuisine', 'on') else 'Éteinte' }}"
+      state: "{{ 'En service' if is_state('light.cuisine', 'on') else 'Éteint' }}"
       icon: "{{ 'mdi:ceiling-light' if is_state('light.cuisine', 'on') else 'mdi:ceiling-light-outline' }}"
 
     # --- Bureau ---
