@@ -43,60 +43,58 @@
         {% endif %}
 
 # ╭────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : SÉRIE 17. ÉCLAIRAGE — PACK ICÔNES & INFOS (CORRIGÉ)           │
+# │ SENSOR : SÉRIE 16. ÉCLAIRAGE — PACK ICÔNES & INFOS (CORRIGÉ)           │
 # ╰────────────────────────────────────────────────────────────────────────╯
-
 - sensor:
     # --- Entrée ---
     - name: "Entrée Light Status"
       unique_id: entree_light_status
-      state: "{{ states('light.entree') }}"
+      state: "{{ 'Allumée' if is_state('light.entree', 'on') else 'Éteint' }}"
       icon: "{{ 'mdi:ceiling-light' if is_state('light.entree', 'on') else 'mdi:ceiling-light-outline' }}"
-      attributes:
-        secondary_info: >
-          {% if is_state('light.entree', 'on') %} Allumée {% else %} Éteinte {% endif %}
 
     # --- Salon ---
     - name: "Salon Light Status"
       unique_id: salon_light_status
-      state: "{{ states('light.salon') }}"
+      state: "{{ 'Allumée' if is_state('light.salon', 'on') else 'Éteint' }}"
       icon: "{{ 'mdi:sofa' if is_state('light.salon', 'on') else 'mdi:sofa-outline' }}"
-      attributes:
-        secondary_info: >
-          {% if is_state('light.salon', 'on') %} Ambiance Salon {% else %} Éteint {% endif %}
+
+    # --- Table ---
+    - name: "Table Light Status"
+      unique_id: table_light_status
+      state: "{{ 'Allumée' if is_state('light.salon', 'on') else 'Éteint' }}"
+      icon: "{{ 'mdi:stable-chair' if is_state('light.salon', 'on') else 'mditable-chaire' }}"
+
+    # --- Cuisine ---
+    - name: "Cuisine Light Status"
+      unique_id: cuisine_light_status
+      state: "{{ 'En service' if is_state('light.cuisine', 'on') else 'Éteinte' }}"
+      icon: "{{ 'mdi:ceiling-light' if is_state('light.cuisine', 'on') else 'mdi:ceiling-light-outline' }}"
 
     # --- Bureau ---
     - name: "Bureau Light Status"
       unique_id: bureau_light_status
-      state: "{{ states('sensor.lumiere_bureau_etat') }}"
+      state: >
+        {% set etat = states('sensor.lumiere_bureau_etat') %}
+        {{ etat if etat not in ['unavailable', 'unknown'] else 'Éteint' }}
       icon: >
         {% if states('sensor.lumiere_bureau_etat') in ['Allumé', 'Bureau', 'Allumé & Synchro'] %}
           hue:flourish-alt
         {% else %}
           hue:flourish
         {% endif %}
-      attributes:
-        secondary_info: >
-          {% set etat = states('sensor.lumiere_bureau_etat') %}
-          {% if etat == 'unavailable' or etat == 'unknown' %} Éteint {% else %} {{ etat }} {% endif %}
 
     # --- Écran PC ---
     - name: "Ecran Light Status"
       unique_id: ecran_light_status
-      state: "{{ states('sensor.lumiere_ecran_etat') }}"
+      state: >
+        {% set etat = states('sensor.lumiere_ecran_etat') %}
+        {{ etat if etat not in ['unavailable', 'unknown'] else 'Éteint' }}
       icon: >
         {% set etat = states('sensor.lumiere_ecran_etat') %}
         {{ 'mdi:monitor-dashboard' if etat in ['Écran', 'Allumé', 'Synchro'] else 'mdi:monitor' }}
-      attributes:
-        secondary_info: >
-          {% set etat = states('sensor.lumiere_ecran_etat') %}
-          {% if etat == 'unavailable' or etat == 'unknown' %} Éteint {% else %} {{ etat }} {% endif %}
 
     # --- Salle de Bain ---
     - name: "SdB Light Status"
       unique_id: sdb_light_status
-      state: "{{ states('light.lampe_salle_de_bain_hue') }}"
+      state: "{{ 'En service' if is_state('light.lampe_salle_de_bain_hue', 'on') else 'Éteinte' }}"
       icon: "{{ 'mdi:ceiling-light' if is_state('light.lampe_salle_de_bain_hue', 'on') else 'mdi:ceiling-light-outline' }}"
-      attributes:
-        secondary_info: >
-          {% if is_state('light.lampe_salle_de_bain_hue', 'on') %} En service {% else %} Éteinte {% endif %}
