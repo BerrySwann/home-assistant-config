@@ -1,0 +1,202 @@
+# ╭────────────────────────────────────────────────────────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 04_03. LUMIÈRES — ÉTATS (TEXTE ET ICÔNES)                            │
+# ╰────────────────────────────────────────────────────────────────────────────────────────╯
+
+- sensor:
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 1. ENTRÉE & 6. COULOIR (INDIVIDUELS ET GLOBAL)                    │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- 01 Entrée ---
+    - name: "Entrée Light Status"
+      unique_id: entree_light_status
+      state: "{{ 'Allumée' if is_state('light.entree', 'on') else 'Éteint' }}"
+      icon: >
+        {% set s = is_state('input_select.saison', 'Hiver') %}
+        {% if is_state('light.entree', 'on') %}
+          {{ 'mdi:home-lightbulb' if s else 'mdi:lightbulb-on' }}
+        {% else %}
+          mdi:home-outline
+        {% endif %}
+
+# --- 06 Couloir ---
+    - name: "Couloir Light Status"
+      unique_id: couloir_light_status
+      state: "{{ 'Allumé' if is_state('light.couloir', 'on') else 'Éteint' }}"
+      icon: >
+        {% if is_state('light.couloir', 'on') %}
+          mdi:transition-masked
+        {% else %}
+          mdi:transition
+        {% endif %}
+
+# --- lumiere_appartement_etat ---
+    - name: "Lumière Appartement État"
+      unique_id: lumiere_appartement_etat
+      state: >
+        {% if is_state('light.entree', 'on') and is_state('light.couloir', 'on') %}
+          Allumé
+        {% elif is_state('light.entree', 'off') and is_state('light.couloir', 'off') %}
+          Éteint
+        {% elif is_state('light.entree', 'on') and is_state('light.couloir', 'off')%}
+          Entrée
+        {% elif is_state('light.couloir', 'on') and is_state('light.entree', 'off')%}
+          Couloir
+        {% else %}
+          erreur
+        {% endif %}
+      icon: >
+        {% set s = is_state('input_select.saison', 'Hiver') %}
+        {% if not is_state('sensor.lumiere_appartement_etat', 'Éteint') %}
+          {{ 'mdi:home-floor-g' if s else 'mdi:home-check' }}
+        {% else %}
+          {{ 'mdi:home-outline' if s else 'mdi:home-variant-outline' }}
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 4. SALON                                                          │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- lumiere_salon_etat ---
+    - name: "Lumière Salon État"
+      unique_id: lumiere_salon_etat
+      state: >
+        {% if is_state('light.salon', 'on') %}
+          Allumé
+        {% else %}
+          Éteint
+        {% endif %}
+      icon: >
+        {% set s = is_state('input_select.saison', 'Hiver') %}
+        {% if is_state('light.salon', 'on') %}
+          {{ 'mdi:fireplace' if s else 'mdi:sofa' }}
+        {% else %}
+          mdi:sofa-outline
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 5. CUISINE                                                        │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- lumiere_cuisine_etat ---
+    - name: "Lumière Cuisine État"
+      unique_id: lumiere_cuisine_etat
+      state: >
+        {% if is_state('light.cuisine', 'on') %}
+          Allumé
+        {% else %}
+          Éteint
+        {% endif %}
+      icon: >
+        {% set s = is_state('input_select.saison', 'Hiver') %}
+        {% if is_state('light.cuisine', 'on') %}
+          {{ 'mdi:coffee' if s else 'mdi:silverware-fork-knife' }}
+        {% else %}
+          mdi:countertop-outline
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 7. BUREAU                                                         │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- lumiere_bureau_etat ---
+    - name: "Lumière Bureau État"
+      unique_id: lumiere_bureau_etat
+      state: >
+        {% if is_state('light.bureau', 'on') and is_state('binary_sensor.pc_eric_is_active', 'on') %}
+          Bureau
+        {% elif is_state('light.bureau', 'off') and is_state('binary_sensor.pc_eric_is_active', 'on') %}
+          PC
+        {% elif is_state('light.bureau', 'on') and is_state('binary_sensor.pc_eric_is_active', 'off') %}
+          Allumé
+        {% else %}
+          Éteint
+        {% endif %}
+      icon: >
+        {% set etat = states('sensor.lumiere_bureau_etat') %}
+        {% if etat == 'Bureau' %} mdi:desk-lamp
+        {% elif etat == 'PC' %} mdi:monitor-dashboard
+        {% elif etat == 'Allumé' %} mdi:lightbulb-on
+        {% else %} mdi:desk-lamp-off
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 8. SALLE DE BAIN                                                  │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- lumiere_sdb_etat ---
+    - name: "Lumière SdB État"
+      unique_id: lumiere_sdb_etat
+      state: >
+        {% if is_state('light.sdb', 'on') %}
+          Allumé
+        {% else %}
+          Éteint
+        {% endif %}
+      icon: >
+        {% if is_state('light.sdb', 'on') %}
+          mdi:shower
+        {% else %}
+          mdi:shower-head
+        {% endif %}
+
+# ┌───────────────────────────────────────────────────────────────────┐
+# │ 9. CHAMBRE                                                        │
+# └───────────────────────────────────────────────────────────────────┘
+
+# --- lumiere_chambre_etat ---
+    - name: "Lumière Chambre État"
+      unique_id: lumiere_chambre_etat
+      state: >
+        {% if is_state('switch.prise_tete_de_lit_chambre', 'off') %}
+          {% if is_state('light.chambre', 'on') %}
+            Chambre
+          {% else %}
+            Éco.
+          {% endif %}
+        {% else %}
+          {% set ch = is_state('light.chambre', 'on') %}
+          {% set gg = is_state('light.hue_color_candle_chambre_gege', 'on') %}
+          {% set er = is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          {% if ch and gg and er %} Allumé
+          {% elif ch and gg %} Ch.+zG
+          {% elif ch and er %} Ch.+zÉ
+          {% elif ch %} Chambre
+          {% elif not ch and not gg and not er %} Éteint
+          {% elif gg and not er %} Zone G.
+          {% elif er and not gg %} Zone É.
+          {% elif gg and er %} Tête Lit
+          {% endif %}
+        {% endif %}
+      icon: >
+        {% set etat = states('sensor.lumiere_chambre_etat') %}
+        {% if etat == 'Allumé' %} mdi:lightbulb-group
+        {% elif etat == 'Chambre' %} mdi:bed-double
+        {% elif etat == 'Zone G.' %} mdi:bed-left
+        {% elif etat == 'Zone É.' %} mdi:bed-right
+        {% elif etat == 'Tête Lit' %} mdi:bed-empty
+        {% elif etat in ['Ch.+zG', 'Ch.+zÉ'] %} mdi:lightbulb-multiple
+        {% elif etat == 'Éco.' %} mdi:leaf
+        {% else %} mdi:bed-outline
+        {% endif %}
+
+# --- tete_de_lit_light_status ---
+    - name: "Tête de Lit Light Status"
+      unique_id: tete_de_lit_light_status
+      state: >
+        {% if is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          Allumée
+        {% elif is_state('light.hue_color_candle_chambre_gege', 'on') %}
+          Zone GG
+        {% elif is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          Zone Eric
+        {% else %}
+          Éteint
+        {% endif %}
+      icon: >
+        {% set etat = states('sensor.tete_de_lit_light_status') %}
+        {% if etat == 'Zone GG' %} mdi:bed-left
+        {% elif etat == 'Zone Eric' %} mdi:bed-right
+        {% elif etat == 'Allumée' %} mdi:bed-double
+        {% else %} mdi:bed-outline
+        {% endif %}
