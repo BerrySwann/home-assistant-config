@@ -207,9 +207,9 @@
 # │ 9. CHAMBRE                                                        │
 # └───────────────────────────────────────────────────────────────────┘
 
-# --- lumiere_chambre_etat ---
-    - name: "Lumière Chambre État"
-      unique_id: lumiere_chambre_etat
+# --- chambre_etat ---
+    - name: "Chambre État"
+      unique_id: chambre_etat
       state: >
         {% if is_state('switch.prise_tete_de_lit_chambre', 'off') %}
           {% if is_state('light.chambre', 'on') %}
@@ -236,6 +236,11 @@
             Tête Lit
           {% endif %}
         {% endif %}
+
+# --- lumiere_chambre_etat ---
+    - name: "Lumière Chambre État"
+      unique_id: lumiere_chambre_etat
+      state: "{{ 'Allumé' if is_state('light.chambre', 'on') else 'Éteint' }}"
       icon: "{{ 'hue:flourish-alt' if is_state('light.chambre', 'on') else 'hue:flourish' }}"
 
 # --- lumiere_tete_de_lit_etat ---
@@ -243,28 +248,26 @@
       unique_id: lumiere_tete_de_lit_etat
       state: >
         {% if is_state('switch.prise_tete_de_lit_chambre', 'off') %}
-          {% if is_state('light.chambre', 'on') %}
-            Chambre
-          {% else %}
             Éco.
-          {% endif %}
         {% else %}
-          {% if is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
-            Allumé
-          {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
-            Ch.+zG
-          {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
-            Ch.+zÉ
-          {% elif is_state('light.chambre', 'on') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
-            Chambre
-          {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
+          {% set gg = is_state('light.hue_color_candle_chambre_gege', 'on') %}
+          {% set er = is_state('light.hue_color_candle_chambre_eric', 'on') %}
+          
+          {% if gg and er %}
+            Tête Lit, allumée
+          {% elif gg %}
+            Zone Géraldine
+          {% elif er %}
+            Zone Éric
+          {% else %}
             Éteint
-          {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'off') %}
-            Zone G.
-          {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'off') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
-            Zone É.
-          {% elif is_state('light.chambre', 'off') and is_state('light.hue_color_candle_chambre_gege', 'on') and is_state('light.hue_color_candle_chambre_eric', 'on') %}
-            Tête Lit
           {% endif %}
         {% endif %}
-      icon: "{{ 'mdi:bed' if is_state('light.lit', 'on') else 'mdi:bed-outline' }}"
+      icon: >
+        {# L'icône change selon le texte généré au-dessus #}
+        {% set etat = states('sensor.lumiere_tete_de_lit_etat') %}
+        {% if etat in ['Éteint', 'Éco.', 'unavailable', 'unknown'] %}
+          mdi:bed-outline
+        {% else %}
+          mdi:bed
+        {% endif %}
