@@ -116,7 +116,7 @@
         {% else %}
           {# Correction : suppression de l'accolade en trop et nom de variable cohérent #}
           {% set resultat = temp_conf_e - delta_2 %}
-          {{ [ resultat | float(18), 19.0 ] | min | round(1) }}
+          {{ [ resultat | float(17), 18.0 ] | min | round(1) }}
         {% endif %}
 
 # --- temperature_corrige_chambre_hivers ---
@@ -147,8 +147,8 @@
         {% set delta_3 = states('sensor.delta_3') | int (0) %}
         {% set delta_5 = states('sensor.delta_5') | int (0) %}
         {% set delta_7 = states('sensor.delta_7') | int (0) %}
-        {% if temp_ext < 8 %} {{ consigne_de_base + delta_3 }}
-        {% elif temp_ext < 10 %} {{ consigne_de_base + delta_2 }}
+        {% if temp_ext < 8 %} {{ consigne_de_base + delta_1 }}
+        {% elif temp_ext < 10 %} {{ consigne_de_base + delta_1 }}
         {% elif temp_ext < 12 %} {{ consigne_de_base + delta_1 }}
         {% elif temp_ext > 40 %} {{ temp_ext - delta_7 }}
         {% elif temp_ext > 32 %} {{ temp_ext - delta_5 }}
@@ -199,11 +199,11 @@
         {% set delta_2 = states('sensor.delta_2') | float(0) %}
         {% set delta_3 = states('sensor.delta_3') | float(0) %}
         {% if temp_ext < 8 %}
-          {{ (temp_eco + delta_3) | float(1) }}
+          {{ (temp_eco + delta_2) | float(19) }}
         {% elif temp_ext < 10 %}
-          {{ (temp_eco + delta_2) | float(1) }}
+          {{ (temp_eco + delta_1) | float(18) }}
         {% elif temp_ext < 12 %}
-          {{ (temp_eco + delta_1) | float(1) }}
+          {{ (temp_eco + delta_1) | float(18) }}
         {% else %}
           {{ temp_eco | float(0) }}
         {% endif %}
