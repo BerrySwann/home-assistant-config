@@ -1,36 +1,22 @@
-external_components:
-  # Le module Zigbee pour H2
-  - source: github://luar123/zigbee_esphome
-    components: [zigbee]
-  # On pointe directement sur le miroir officiel d'ESPHome pour le driver BME280
-  - source: 
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: master
-    components: [ bme280, i2c ]
+esphome:
+  name: test-h2-vence
+  friendly_name: Capteur H2 Zigbee
 
 esp32:
   board: esp32-h2-devkitm-1
+  variant: esp32h2
   framework:
-    type: esp-idf
+    type: esp-idf # Obligatoire pour la radio Zigbee
 
-i2c:
-  sda: GPIO6
-  scl: GPIO7
-  scan: true
+# On remplace le bloc "zigbee:" qui plante par l'intégration IEEE 802.15.4
+# C'est ce qui permet au H2 de "parler" physiquement aux autres
+esp32_ble: # On l'active souvent car la radio est partagée
+  
+# Configuration de la couche Zigbee via ESP-IDF
+# Note : ESPHome utilise actuellement des composants externes pour ça
+external_components:
+  - source: github://oxan/esphome-components@zigbee
+    components: [ zigbee ]
 
-sensor:
-  - platform: bme280
-    address: 0x76
-    temperature:
-      name: "Température"
-      id: "temp_val"
-    humidity:
-      name: "Humidité"
-      id: "hum_val"
-    pressure:
-      name: "Pression Absolue"
-      id: "pres_val"
-    update_interval: 60s
-
-# Le reste du code (Zigbee, etc.) reste identique
+zigbee:
+  # Cette fois ça passera car on a importé le composant externe
