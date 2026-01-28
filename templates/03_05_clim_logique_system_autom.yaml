@@ -144,9 +144,11 @@
         {% set consigne_de_base = states('sensor.consigne_de_base') | int (0) %}
         {% set delta_1 = states('sensor.delta_1') | int (0) %}
         {% set delta_2 = states('sensor.delta_2') | int (0) %}
+        {% set delta_3 = states('sensor.delta_3') | int (0) %}
         {% set delta_5 = states('sensor.delta_5') | int (0) %}
         {% set delta_7 = states('sensor.delta_7') | int (0) %}
-        {% if temp_ext < 10 %} {{ consigne_de_base + delta_2 }}
+        {% if temp_ext < 8 %} {{ consigne_de_base + delta_3 }}
+        {% elif temp_ext < 10 %} {{ consigne_de_base + delta_2 }}
         {% elif temp_ext < 12 %} {{ consigne_de_base + delta_1 }}
         {% elif temp_ext > 40 %} {{ temp_ext - delta_7 }}
         {% elif temp_ext > 32 %} {{ temp_ext - delta_5 }}
@@ -177,7 +179,8 @@
         {% set delta_3 = states('sensor.delta_3') | int (0) %}
         {% set delta_5 = states('sensor.delta_5') | int (0) %}
         {% set delta_7 = states('sensor.delta_7') | int (0) %}
-        {% if temp_ext < 10 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_3) | int (0) }}
+        {% if temp_ext < 8 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
+        {% elif temp_ext < 10 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_3) | int (0) }}
         {% elif temp_ext < 12 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
         {% elif temp_ext < 19 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int (0) }}
         {% elif temp_ext > 40 %} {{ temp_ext - delta_7 | int (0) }}
@@ -194,9 +197,12 @@
         {% set temp_eco = states('sensor.temperature_eco_hiver') | float(0) %}
         {% set delta_1 = states('sensor.delta_1') | float(0) %}
         {% set delta_2 = states('sensor.delta_2') | float(0) %}
-        {% if temp_ext < 5 %}
-          {{ (temp_eco + delta_2) | float(1) }}
+        {% set delta_3 = states('sensor.delta_3') | float(0) %}
+        {% if temp_ext < 8 %}
+          {{ (temp_eco + delta_3) | float(1) }}
         {% elif temp_ext < 10 %}
+          {{ (temp_eco + delta_2) | float(1) }}
+        {% elif temp_ext < 12 %}
           {{ (temp_eco + delta_1) | float(1) }}
         {% else %}
           {{ temp_eco | float(0) }}

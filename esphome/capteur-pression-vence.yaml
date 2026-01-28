@@ -1,83 +1,77 @@
 esphome:
-    name: barometre-zigbee-vence
-      friendly_name: Baromètre Zigbee
-        
-          # Importation du composant Zigbee (vu sur HACF / GitHub luar123)
-            external_components:
-                - source: github://luar123/zigbee_esphome
-                      components: [zigbee]
+  name: capteur-pression-vence
+  friendly_name: Baromètre Zigbee Vence
 
-                      esp32:
-                        board: esp32-h2-devkitm-1
-                          framework:
-                              type: esp-idf
+external_components:
+  # Le module Zigbee pour H2
+  - source: github://luar123/zigbee_esphome
+    components: [zigbee]
+  # ON FORCE l'importation du composant BME280 depuis le dépôt officiel
+  - source: github://esphome/esphome@master
+    components: [ bme280, i2c ]
 
-                              # Activation du bus I2C pour le BME280 (Pins par défaut de l'H2)
-                              i2c:
-                                sda: GPIO6
-                                  scl: GPIO7
-                                    scan: true
+esp32:
+  board: esp32-h2-devkitm-1
+  framework:
+    type: esp-idf
 
-                                    sensor:
-                                      # Le capteur BME280
-                                        - platform: bme280
-                                            address: 0x76
-                                                temperature:
-                                                      name: "Température"
-                                                            id: temp_val
-                                                                humidity:
-                                                                      name: "Humidité"
-                                                                            id: hum_val
-                                                                                pressure:
-                                                                                      name: "Pression Absolue"
-                                                                                            id: pres_val
-                                                                                                update_interval: 60s
+i2c:
+  sda: GPIO6
+  scl: GPIO7
+  scan: true
 
-                                                                                                  # Optionnel : Mesure de la tension batterie (via diviseur de tension sur GPIO1)
-                                                                                                    - platform: adc
-                                                                                                        pin: GPIO1
-                                                                                                            name: "Voltage Batterie"
-                                                                                                                id: battery_voltage
-                                                                                                                    update_interval: 15min
+sensor:
+  - platform: bme280
+    address: 0x76
+    temperature:
+      name: "Température"
+      id: "temp_val"
+    humidity:
+      name: "Humidité"
+      id: "hum_val"
+    pressure:
+      name: "Pression Absolue"
+      id: "pres_val"
+    update_interval: 60s
 
-                                                                                                                    # Configuration du protocole Zigbee
-                                                                                                                    zigbee:
-                                                                                                                      id: zb_device
-                                                                                                                        endpoints:
-                                                                                                                            - device_type: TEMPERATURE_SENSOR
-                                                                                                                                  num: 1
-                                                                                                                                        clusters:
-                                                                                                                                                # Cluster Température
-                                                                                                                                                        - id: TEMP_MEASUREMENT
-                                                                                                                                                                  attributes:
-                                                                                                                                                                              - attribute_id: 0x0
-                                                                                                                                                                                            type: S16
-                                                                                                                                                                                                          value: 100
-                                                                                                                                                                                                                        device: temp_val
-                                                                                                                                                                                                                                      scale: 100
-                                                                                                                                                                                                                                              # Cluster Humidité
-                                                                                                                                                                                                                                                      - id: RELATIVE_HUMIDITY_MEASUREMENT
-                                                                                                                                                                                                                                                                attributes:
-                                                                                                                                                                                                                                                                            - attribute_id: 0x0
-                                                                                                                                                                                                                                                                                          type: U16
-                                                                                                                                                                                                                                                                                                        value: 100
-                                                                                                                                                                                                                                                                                                                      device: hum_val
-                                                                                                                                                                                                                                                                                                                                    scale: 100
-                                                                                                                                                                                                                                                                                                                                            # Cluster Pression (Baromètre)
-                                                                                                                                                                                                                                                                                                                                                    - id: PRESSURE_MEASUREMENT
-                                                                                                                                                                                                                                                                                                                                                              attributes:
-                                                                                                                                                                                                                                                                                                                                                                          - attribute_id: 0x0
-                                                                                                                                                                                                                                                                                                                                                                                        type: S16
-                                                                                                                                                                                                                                                                                                                                                                                                      value: 100
-                                                                                                                                                                                                                                                                                                                                                                                                                    device: pres_val
+  - platform: adc
+    pin: GPIO1
+    name: "Voltage Batterie"
+    id: "battery_voltage"
+    update_interval: 15min
 
-                                                                                                                                                                                                                                                                                                                                                                                                                    # Gestion du sommeil profond (Deep Sleep) pour ta batterie 1200mAh
-                                                                                                                                                                                                                                                                                                                                                                                                                    # L'ESP se réveille, envoie les données en Zigbee, puis dort 15 min.
-                                                                                                                                                                                                                                                                                                                                                                                                                    deep_sleep:
-                                                                                                                                                                                                                                                                                                                                                                                                                      run_duration: 15s
-                                                                                                                                                                                                                                                                                                                                                                                                                        sleep_duration: 15min
+zigbee:
+  id: zb_device
+  endpoints:
+    - device_type: TEMPERATURE_SENSOR
+      num: 1
+      clusters:
+        - id: TEMP_MEASUREMENT
+          attributes:
+            - attribute_id: 0x0
+              type: S16
+              value: 100
+              device: temp_val
+              scale: 100
+        - id: RELATIVE_HUMIDITY_MEASUREMENT
+          attributes:
+            - attribute_id: 0x0
+              type: U16
+              value: 100
+              device: hum_val
+              scale: 100
+        - id: PRESSURE_MEASUREMENT
+          attributes:
+            - attribute_id: 0x0
+              type: S16
+              value: 100
+              device: pres_val
 
-                                                                                                                                                                                                                                                                                                                                                                                                                        # Console pour le débuggage (utile samedi lors du premier test)
-                                                                                                                                                                                                                                                                                                                                                                                                                        logger:
-                                                                                                                                                                                                                                                                                                                                                                                                                          hardware_uart: UART0
-                                                                                                                                                                                                                                                                                                                                                                                                                          
+# Pour tes tests de samedi, j'ai commenté le Deep Sleep
+# Enlève les '#' quand tu seras prêt à le mettre sur batterie
+# deep_sleep:
+#   run_duration: 20s
+#   sleep_duration: 15min
+
+logger:
+  level: DEBUG
