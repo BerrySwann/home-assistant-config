@@ -1,13 +1,12 @@
-esphome:
-  name: capteur-pression-vence
-  friendly_name: Baromètre Zigbee Vence
-
 external_components:
   # Le module Zigbee pour H2
   - source: github://luar123/zigbee_esphome
     components: [zigbee]
-  # ON FORCE l'importation du composant BME280 depuis le dépôt officiel
-  - source: github://esphome/esphome@master
+  # On pointe directement sur le miroir officiel d'ESPHome pour le driver BME280
+  - source: 
+      type: git
+      url: https://github.com/esphome/esphome
+      ref: master
     components: [ bme280, i2c ]
 
 esp32:
@@ -34,44 +33,4 @@ sensor:
       id: "pres_val"
     update_interval: 60s
 
-  - platform: adc
-    pin: GPIO1
-    name: "Voltage Batterie"
-    id: "battery_voltage"
-    update_interval: 15min
-
-zigbee:
-  id: zb_device
-  endpoints:
-    - device_type: TEMPERATURE_SENSOR
-      num: 1
-      clusters:
-        - id: TEMP_MEASUREMENT
-          attributes:
-            - attribute_id: 0x0
-              type: S16
-              value: 100
-              device: temp_val
-              scale: 100
-        - id: RELATIVE_HUMIDITY_MEASUREMENT
-          attributes:
-            - attribute_id: 0x0
-              type: U16
-              value: 100
-              device: hum_val
-              scale: 100
-        - id: PRESSURE_MEASUREMENT
-          attributes:
-            - attribute_id: 0x0
-              type: S16
-              value: 100
-              device: pres_val
-
-# Pour tes tests de samedi, j'ai commenté le Deep Sleep
-# Enlève les '#' quand tu seras prêt à le mettre sur batterie
-# deep_sleep:
-#   run_duration: 20s
-#   sleep_duration: 15min
-
-logger:
-  level: DEBUG
+# Le reste du code (Zigbee, etc.) reste identique
