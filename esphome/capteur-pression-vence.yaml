@@ -1,39 +1,83 @@
 esphome:
-  name: capteur-pression-vence
-  friendly_name: Capteur Pression Vence
+    name: barometre-zigbee-vence
+      friendly_name: Baromètre Zigbee
+        
+          # Importation du composant Zigbee (vu sur HACF / GitHub luar123)
+            external_components:
+                - source: github://luar123/zigbee_esphome
+                      components: [zigbee]
 
-esp32:
-  board: esp32-h2-devkitm-1
-  variant: esp32h2
-  framework:
-    type: esp-idf
+                      esp32:
+                        board: esp32-h2-devkitm-1
+                          framework:
+                              type: esp-idf
 
-network:
-  enable_ipv6: true
+                              # Activation du bus I2C pour le BME280 (Pins par défaut de l'H2)
+                              i2c:
+                                sda: GPIO6
+                                  scl: GPIO7
+                                    scan: true
 
-openthread:
-  tlv: "0e080000000000010000000300000f4a0300000b35060004001fffe00208bfdddcb70e9f16fe0708fd1e0194dc47d47e0510f2cd981c6046516c443cdb0e2156d392030e68612d7468726561642d626538640102be8d04101558a672a1109f167194144263e0e5a30c0402a0f7f8"
+                                    sensor:
+                                      # Le capteur BME280
+                                        - platform: bme280
+                                            address: 0x76
+                                                temperature:
+                                                      name: "Température"
+                                                            id: temp_val
+                                                                humidity:
+                                                                      name: "Humidité"
+                                                                            id: hum_val
+                                                                                pressure:
+                                                                                      name: "Pression Absolue"
+                                                                                            id: pres_val
+                                                                                                update_interval: 60s
 
-api:
+                                                                                                  # Optionnel : Mesure de la tension batterie (via diviseur de tension sur GPIO1)
+                                                                                                    - platform: adc
+                                                                                                        pin: GPIO1
+                                                                                                            name: "Voltage Batterie"
+                                                                                                                id: battery_voltage
+                                                                                                                    update_interval: 15min
 
-ota:
-  platform: esphome
+                                                                                                                    # Configuration du protocole Zigbee
+                                                                                                                    zigbee:
+                                                                                                                      id: zb_device
+                                                                                                                        endpoints:
+                                                                                                                            - device_type: TEMPERATURE_SENSOR
+                                                                                                                                  num: 1
+                                                                                                                                        clusters:
+                                                                                                                                                # Cluster Température
+                                                                                                                                                        - id: TEMP_MEASUREMENT
+                                                                                                                                                                  attributes:
+                                                                                                                                                                              - attribute_id: 0x0
+                                                                                                                                                                                            type: S16
+                                                                                                                                                                                                          value: 100
+                                                                                                                                                                                                                        device: temp_val
+                                                                                                                                                                                                                                      scale: 100
+                                                                                                                                                                                                                                              # Cluster Humidité
+                                                                                                                                                                                                                                                      - id: RELATIVE_HUMIDITY_MEASUREMENT
+                                                                                                                                                                                                                                                                attributes:
+                                                                                                                                                                                                                                                                            - attribute_id: 0x0
+                                                                                                                                                                                                                                                                                          type: U16
+                                                                                                                                                                                                                                                                                                        value: 100
+                                                                                                                                                                                                                                                                                                                      device: hum_val
+                                                                                                                                                                                                                                                                                                                                    scale: 100
+                                                                                                                                                                                                                                                                                                                                            # Cluster Pression (Baromètre)
+                                                                                                                                                                                                                                                                                                                                                    - id: PRESSURE_MEASUREMENT
+                                                                                                                                                                                                                                                                                                                                                              attributes:
+                                                                                                                                                                                                                                                                                                                                                                          - attribute_id: 0x0
+                                                                                                                                                                                                                                                                                                                                                                                        type: S16
+                                                                                                                                                                                                                                                                                                                                                                                                      value: 100
+                                                                                                                                                                                                                                                                                                                                                                                                                    device: pres_val
 
-logger:
-  level: DEBUG
-  baud_rate: 115200
+                                                                                                                                                                                                                                                                                                                                                                                                                    # Gestion du sommeil profond (Deep Sleep) pour ta batterie 1200mAh
+                                                                                                                                                                                                                                                                                                                                                                                                                    # L'ESP se réveille, envoie les données en Zigbee, puis dort 15 min.
+                                                                                                                                                                                                                                                                                                                                                                                                                    deep_sleep:
+                                                                                                                                                                                                                                                                                                                                                                                                                      run_duration: 15s
+                                                                                                                                                                                                                                                                                                                                                                                                                        sleep_duration: 15min
 
-i2c:
-  sda: GPIO0
-  scl: GPIO1
-  scan: true
-  frequency: 100kHz
-
-sensor:
-  - platform: bmp280_i2c
-    address: 0x76
-    temperature:
-      name: "Température Balcon"
-    pressure:
-      name: "Pression Balcon"
-    update_interval: 60s
+                                                                                                                                                                                                                                                                                                                                                                                                                        # Console pour le débuggage (utile samedi lors du premier test)
+                                                                                                                                                                                                                                                                                                                                                                                                                        logger:
+                                                                                                                                                                                                                                                                                                                                                                                                                          hardware_uart: UART0
+                                                                                                                                                                                                                                                                                                                                                                                                                          
