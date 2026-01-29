@@ -144,9 +144,9 @@
           Éco.
         {% else %}
           {% if bureau_on and play_on and pc_running%}
-            Allumé & Synchro
+            Allumé & Sync.
           {% elif not bureau_on and play_on and pc_running%}
-            Synchro
+            Synchro.
           {% elif bureau_on and play_on %}
             Allumé
           {% elif not bureau_on and play_on %}
@@ -156,7 +156,7 @@
           {% endif %}
         {% endif %}
       icon: >
-        {% if states('sensor.lumiere_ecran_etat') in ['Écran', 'Allumé', 'Synchro', 'Allumé & Synchro'] %}
+        {% if states('sensor.lumiere_ecran_etat') in ['Écran', 'Allumé', 'Synchro.', 'Allumé & Sync.'] %}
           mdi:monitor-dashboard
         {% else %}
           mdi:monitor
