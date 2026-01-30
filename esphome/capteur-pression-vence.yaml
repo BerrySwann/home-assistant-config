@@ -1,22 +1,54 @@
 esphome:
-  name: test-h2-vence
-  friendly_name: Capteur H2 Zigbee
+  name: capteur-pression-vence
+  friendly_name: Barometre Vence
 
 esp32:
-  board: esp32-h2-devkitm-1
-  variant: esp32h2
+  board: esp32dev
   framework:
-    type: esp-idf # Obligatoire pour la radio Zigbee
+    type: arduino
 
-# On remplace le bloc "zigbee:" qui plante par l'intégration IEEE 802.15.4
-# C'est ce qui permet au H2 de "parler" physiquement aux autres
-esp32_ble: # On l'active souvent car la radio est partagée
-  
-# Configuration de la couche Zigbee via ESP-IDF
-# Note : ESPHome utilise actuellement des composants externes pour ça
-external_components:
-  - source: github://oxan/esphome-components@zigbee
-    components: [ zigbee ]
+# Configuration WiFi (Canal 1 pour éviter ton Z2M sur le 25 !)
+wifi:
+  ssid: "TON_NOM_WIFI"
+  password: "TON_MOT_DE_PASSE"
 
-zigbee:
-  # Cette fois ça passera car on a importé le composant externe
+# Activation des services de base
+api:
+ota:
+  platform: esphome
+
+logger:
+  level: INFO
+
+# Configuration du bus I2C (Bornier à vis)
+i2c:
+  sda: 21
+  scl: 22
+  scan: true
+
+sensor:
+  # On teste d'abord avec le driver BME280
+  - platform: bme280
+    address: 0x76
+    temperature:
+      name: "Température Vence"
+      id: temp_vence
+    humidity:
+      name: "Humidité Vence"
+      id: hum_vence
+    pressure:
+      name: "Pression Absolue Vence"
+      id: pres_abs
+    update_interval: 60s
+
+  # Calcul de la pression au niveau de la mer (Météo)
+  # Formule basée sur l'altitude de Vence (~325m)
+  - platform: template
+    name: "Pression Niveau Mer (Météo)"
+    unit_of_measurement: "hPa"
+    device_class: "pressure"
+    state_class: "measurement"
+    lambda: |-
+      const float altitude = 325.0; // Altitude moyenne de Vence
+      return id(pres_abs).state * powf(1 - 0.0065 * altitude / (id(temp_vence).state + 0.0065 * altitude + 273.15), -5.257);
+    update_interval: 60s
