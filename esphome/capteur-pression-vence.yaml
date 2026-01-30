@@ -7,48 +7,43 @@ esp32:
   framework:
     type: arduino
 
-# Configuration WiFi (Canal 1 pour éviter ton Z2M sur le 25 !)
 wifi:
-  ssid: "TON_NOM_WIFI"
-  password: "TON_MOT_DE_PASSE"
+  ssid: "Freebox_GG"
+  password: "130419701975"
 
-# Activation des services de base
 api:
+
 ota:
-  platform: esphome
+  - platform: esphome
 
 logger:
-  level: INFO
 
-# Configuration du bus I2C (Bornier à vis)
 i2c:
   sda: 21
   scl: 22
   scan: true
 
 sensor:
-  # On teste d'abord avec le driver BME280
-  - platform: bme280
+  - platform: bmp280_i2c
     address: 0x76
     temperature:
       name: "Température Vence"
       id: temp_vence
-    humidity:
-      name: "Humidité Vence"
-      id: hum_vence
     pressure:
       name: "Pression Absolue Vence"
       id: pres_abs
     update_interval: 60s
 
-  # Calcul de la pression au niveau de la mer (Météo)
-  # Formule basée sur l'altitude de Vence (~325m)
   - platform: template
     name: "Pression Niveau Mer (Météo)"
     unit_of_measurement: "hPa"
     device_class: "pressure"
     state_class: "measurement"
     lambda: |-
-      const float altitude = 325.0; // Altitude moyenne de Vence
-      return id(pres_abs).state * powf(1 - 0.0065 * altitude / (id(temp_vence).state + 0.0065 * altitude + 273.15), -5.257);
+      if (id(pres_abs).has_state()) {
+        const float altitude = 325.0; 
+        return id(pres_abs).state * powf(1 - 0.0065 * altitude / (id(temp_vence).state + 0.0065 * altitude + 273.15), -5.257);
+      } else {
+        return NAN;
+      }
     update_interval: 60s
