@@ -19,9 +19,11 @@ ota:
 logger:
 
 i2c:
+  id: bus_a
   sda: 21
   scl: 22
   scan: true
+  frequency: 10kHz  # On baisse la vitesse pour être plus robuste
 
 sensor:
   - platform: bmp280_i2c
@@ -32,7 +34,7 @@ sensor:
     pressure:
       name: "Pression Absolue Vence"
       id: pres_abs
-    update_interval: 60s
+    update_interval: 30s
 
   - platform: template
     name: "Pression Niveau Mer (Météo)"
@@ -46,4 +48,4 @@ sensor:
       } else {
         return NAN;
       }
-    update_interval: 60s
+    update_interval: 10s
