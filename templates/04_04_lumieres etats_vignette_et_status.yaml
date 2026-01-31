@@ -131,7 +131,7 @@
 # │ 7. BUREAU --- Écran ---                                           │
 # └───────────────────────────────────────────────────────────────────┘
 
-## --- lumiere_Écran_etat ---
+# --- lumiere_Écran_etat ---
     - name: "Lumière Écran État"
       unique_id: lumiere_ecran_etat
       state: >
@@ -175,9 +175,9 @@
         
         {% if bureau == 'Allumé' and ecran == 'Allumé' %}
           Allumé
-        {% elif bureau == 'Allumé' and ecran == 'Allumé & Synchro' %}
+        {% elif bureau == 'Allumé' and ecran == 'Allumé & Sync.' %}
           AlluSync
-        {% elif bureau == 'Éteint' and ecran == 'Synchro' %}
+        {% elif bureau == 'Éteint' and ecran == 'Synchro.' %}
           Synchro
         {% elif bureau == 'Bureau' and ecran == 'Éteint' %}
           Bureau
