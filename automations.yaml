@@ -2252,12 +2252,12 @@
         or 'groupe_4' in groupe_presence %}\n      {{ temp_conf_m }}\n    {% else
         %}\n  {{ temp_cible }}\n{% endif %}"
       t_bureau_target: "{% if 'groupe_1' in groupe_presence %} \n  {{ temp_eco_c if
-        mode_saison =='heat' else temp_cible }}\n    {% elif 'groupe_3' in groupe_presence
-        or 'groupe_4' in groupe_presence %}\n      {{ temp_conf_e }}\n    {% else
-        %}\n  {{ temp_cible }}\n{% endif %}"
-      t_chambre_target: '{% if ''groupe_1'' in groupe_presence %} {{ temp_eco_c if
-        mode_saison == ''heat'' else temp_cible }} {% else %} {{ temp_conf_c }} {%
-        endif %}'
+        mode_saison =='heat' else temp_cible }}\n    {% elif 'groupe_2' in groupe_presence
+        or 'groupe_3' in groupe_presence or 'groupe_4' in groupe_presence %}\n      {{
+        temp_conf_e }}\n    {% else %}\n  {{ temp_cible }}\n{% endif %}"
+      t_chambre_target: "{% if 'groupe_1' in groupe_presence %}\n  {{ temp_eco_c if
+        mode_saison == 'heat' else temp_cible }}\n{% else %}\n  {{ temp_conf_c }}\n{%
+        endif %}"
   - alias: 'LOGIQUE : SÉCURITÉ FENÊTRES VS GESTION STANDARD'
     choose:
     - alias: 'CAS URGENCE : FENÊTRE OUVERTE DÉTECTÉE'
