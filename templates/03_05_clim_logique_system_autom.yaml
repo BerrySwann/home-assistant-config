@@ -179,8 +179,8 @@
         {% set delta_3 = states('sensor.delta_3') | int (0) %}
         {% set delta_5 = states('sensor.delta_5') | int (0) %}
         {% set delta_7 = states('sensor.delta_7') | int (0) %}
-        {% if temp_ext < 8 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
-        {% elif temp_ext < 10 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_3) | int (0) }}
+        {% if   temp_ext < 8  %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int (0) }}
+        {% elif temp_ext < 10 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
         {% elif temp_ext < 12 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_2) | int (0) }}
         {% elif temp_ext < 19 %} {{ ((temp_diff + (temp_cible - consigne_de_base)) - delta_1) | int (0) }}
         {% elif temp_ext > 40 %} {{ temp_ext - delta_7 | int (0) }}
