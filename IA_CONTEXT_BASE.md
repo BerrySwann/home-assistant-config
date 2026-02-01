@@ -233,7 +233,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure (Balcon Nord).
 - **Mode Absence :** Si T° Ext < 10°C, tous les climats passent à 17°C (Éric) ou 18°C (Mamour).
 - **Logique "Cœur du Système" (Météo -> Cible -> Confort) :**
-    ### 📂 Cœur du Sy<img width="2613" height="1530" alt="mermaid-diagram-2026-02-01-093832" src="https://github.com/user-attachments/assets/6cd01244-69aa-483c-a9aa-949df2693dcf" />
+   <img width="4264" height="5602" alt="Confort Cible Calcul Flow-2026-02-01-102732" src="https://github.com/user-attachments/assets/f18e24a2-1441-482b-af70-537a7b208e15" />
 
 
 ## 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
