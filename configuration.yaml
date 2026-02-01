@@ -51,7 +51,7 @@ sensor: !include_dir_merge_list sensors/
 template: !include_dir_merge_list templates/
 
 #renvoi au fichier répertoire utility_meter/
-utility_meter: !include_dir_merge_list utility_meter/
+utility_meter: !include_dir_merge_named utility_meter/
 #renvoi au fichier utility_meter.yaml
 #utility_meter: !include utility_meter.yaml
 

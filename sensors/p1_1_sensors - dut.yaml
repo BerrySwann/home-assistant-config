@@ -6,6 +6,7 @@
 # │ 4. SALON                          │
 # └───────────────────────────────────┘
 # --- dut_clim_salon ---
+  
   - platform: history_stats
     name: "DUT Clim Salon"
     unique_id: dut_clim_salon

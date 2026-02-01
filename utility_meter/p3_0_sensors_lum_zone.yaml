@@ -1,137 +1,138 @@
 # ╭──────────────────────────────────────────────────────────────────────────────╮
 # │ PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITEE                         │
-# │ TOTO Eclairage [salon] / [entree-cuisine-couloir] / [bureau] / [Chambre]     |
-# │ TOTO Eclairage [salon] / [cuisine] / [entree-couloir] / [bureau] / [Chambre] |
+# │ TOTO Eclairage [salon] / [entree-cuisine-couloir] / [bureau] / [Chambre]     │
+# │ TOTO Eclairage [salon] / [cuisine] / [entree-couloir] / [bureau] / [Chambre] │
 # ╰──────────────────────────────────────────────────────────────────────────────╯
+
 # ┌────────────────────────────────────┐
 # │ ZONE 4. (5x) SALON                 │
 # └────────────────────────────────────┘
-eclairage_salon_5_annuel_um:
-  source: sensor.eclairage_salon_5_energie
-  cycle: yearly
+- eclairage_salon_5_annuel_um:
+    source: sensor.eclairage_salon_5_energie
+    cycle: yearly
 
-eclairage_salon_5_mensuel_um:
-  source: sensor.eclairage_salon_5_energie
-  cycle: monthly
+- eclairage_salon_5_mensuel_um:
+    source: sensor.eclairage_salon_5_energie
+    cycle: monthly
 
-eclairage_salon_5_hebdomadaire_um:
-  source: sensor.eclairage_salon_5_energie
-  cycle: weekly
+- eclairage_salon_5_hebdomadaire_um:
+    source: sensor.eclairage_salon_5_energie
+    cycle: weekly
 
-eclairage_salon_5_quotidien_um:
-  source: sensor.eclairage_salon_5_energie
-  cycle: daily
+- eclairage_salon_5_quotidien_um:
+    source: sensor.eclairage_salon_5_energie
+    cycle: daily
 
 # ╭───────────────────────────────────────────────────────────────╮
-# │ ZONE. ((3x) Entrée, cuisine & couloir) (HOME)                 |
+# │ ZONE. ((3x) Entrée, cuisine & couloir) (HOME)                 │
 # ╰───────────────────────────────────────────────────────────────╯
-eclairage_appart_3_annuel_um:
-  source: sensor.eclairage_appart_3_energie
-  cycle: yearly
+- eclairage_appart_3_annuel_um:
+    source: sensor.eclairage_appart_3_energie
+    cycle: yearly
 
-eclairage_appart_3_mensuel_um:
-  source: sensor.eclairage_appart_3_energie
-  cycle: monthly
+- eclairage_appart_3_mensuel_um:
+    source: sensor.eclairage_appart_3_energie
+    cycle: monthly
 
-eclairage_appart_3_hebdomadaire_um:
-  source: sensor.eclairage_appart_3_energie
-  cycle: weekly
+- eclairage_appart_3_hebdomadaire_um:
+    source: sensor.eclairage_appart_3_energie
+    cycle: weekly
 
-eclairage_appart_3_quotidien_um:
-  source: sensor.eclairage_appart_3_energie
-  cycle: daily
+- eclairage_appart_3_quotidien_um:
+    source: sensor.eclairage_appart_3_energie
+    cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ ZONE 5. (1x) CUISINE               │
 # └────────────────────────────────────┘
-eclairage_cuisine_1_annuel_um:
-  source: sensor.eclairage_cuisine_1_energie
-  cycle: yearly
+- eclairage_cuisine_1_annuel_um:
+    source: sensor.eclairage_cuisine_1_energie
+    cycle: yearly
 
-eclairage_cuisine_1_mensuel_um:
-  source: sensor.eclairage_cuisine_1_energie
-  cycle: monthly
+- eclairage_cuisine_1_mensuel_um:
+    source: sensor.eclairage_cuisine_1_energie
+    cycle: monthly
 
-eclairage_cuisine_1_hebdomadaire_um:
-  source: sensor.eclairage_cuisine_1_energie
-  cycle: weekly
+- eclairage_cuisine_1_hebdomadaire_um:
+    source: sensor.eclairage_cuisine_1_energie
+    cycle: weekly
 
-eclairage_cuisine_1_quotidien_um:
-  source: sensor.eclairage_cuisine_1_energie
-  cycle: daily
+- eclairage_cuisine_1_quotidien_um:
+    source: sensor.eclairage_cuisine_1_energie
+    cycle: daily
 
 # ╭──────────────────────────────────────────────────────╮
-# │ ZONE. ((2x) Entrée & couloir) (HOME)                 |
+# │ ZONE. ((2x) Entrée & couloir) (HOME)                 │
 # ╰──────────────────────────────────────────────────────╯
-eclairage_appart_2_annuel_um:
-  source: sensor.eclairage_appart_2_energie
-  cycle: yearly
+- eclairage_appart_2_annuel_um:
+    source: sensor.eclairage_appart_2_energie
+    cycle: yearly
 
-eclairage_appart_2_mensuel_um:
-  source: sensor.eclairage_appart_2_energie
-  cycle: monthly
+- eclairage_appart_2_mensuel_um:
+    source: sensor.eclairage_appart_2_energie
+    cycle: monthly
 
-eclairage_appart_2_hebdomadaire_um:
-  source: sensor.eclairage_appart_2_energie
-  cycle: weekly
+- eclairage_appart_2_hebdomadaire_um:
+    source: sensor.eclairage_appart_2_energie
+    cycle: weekly
 
-eclairage_appart_2_quotidien_um:
-  source: sensor.eclairage_appart_2_energie
-  cycle: daily
+- eclairage_appart_2_quotidien_um:
+    source: sensor.eclairage_appart_2_energie
+    cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ ZONE 7. (5) BUREAU                 │
 # └────────────────────────────────────┘
-eclairage_bureau_5_annuel_um:
-  source: sensor.eclairage_bureau_5_energie
-  cycle: yearly
+- eclairage_bureau_5_annuel_um:
+    source: sensor.eclairage_bureau_5_energie
+    cycle: yearly
 
-eclairage_bureau_5_mensuel_um:
-  source: sensor.eclairage_bureau_5_energie
-  cycle: monthly
+- eclairage_bureau_5_mensuel_um:
+    source: sensor.eclairage_bureau_5_energie
+    cycle: monthly
 
-eclairage_bureau_5_hebdomadaire_um:
-  source: sensor.eclairage_bureau_5_energie
-  cycle: weekly
+- eclairage_bureau_5_hebdomadaire_um:
+    source: sensor.eclairage_bureau_5_energie
+    cycle: weekly
 
-eclairage_bureau_5_quotidien_um:
-  source: sensor.eclairage_bureau_5_energie
-  cycle: daily
+- eclairage_bureau_5_quotidien_um:
+    source: sensor.eclairage_bureau_5_energie
+    cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ ZONE 8. (2x) SDB                   │
 # └────────────────────────────────────┘
-eclairage_sdb_2_annuel_um:
-  source: sensor.eclairage_sdb_2_energie
-  cycle: yearly
+- eclairage_sdb_2_annuel_um:
+    source: sensor.eclairage_sdb_2_energie
+    cycle: yearly
 
-eclairage_sdb_2_mensuel_um:
-  source: sensor.eclairage_sdb_2_energie
-  cycle: monthly
+- eclairage_sdb_2_mensuel_um:
+    source: sensor.eclairage_sdb_2_energie
+    cycle: monthly
 
-eclairage_sdb_2_hebdomadaire_um:
-  source: sensor.eclairage_sdb_2_energie
-  cycle: weekly
+- eclairage_sdb_2_hebdomadaire_um:
+    source: sensor.eclairage_sdb_2_energie
+    cycle: weekly
 
-eclairage_sdb_2_quotidien_um:
-  source: sensor.eclairage_sdb_2_energie
-  cycle: daily
+- eclairage_sdb_2_quotidien_um:
+    source: sensor.eclairage_sdb_2_energie
+    cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ ZONE 9. (4x) CHAMBRE               │
 # └────────────────────────────────────┘
-eclairage_chambre_4_annuel_um:
-  source: sensor.eclairage_chambre_4_energie
-  cycle: yearly
+- eclairage_chambre_4_annuel_um:
+    source: sensor.eclairage_chambre_4_energie
+    cycle: yearly
 
-eclairage_chambre_4_mensuel_um:
-  source: sensor.eclairage_chambre_4_energie
-  cycle: monthly
+- eclairage_chambre_4_mensuel_um:
+    source: sensor.eclairage_chambre_4_energie
+    cycle: monthly
 
-eclairage_chambre_4_hebdomadaire_um:
-  source: sensor.eclairage_chambre_4_energie
-  cycle: weekly
+- eclairage_chambre_4_hebdomadaire_um:
+    source: sensor.eclairage_chambre_4_energie
+    cycle: weekly
 
-eclairage_chambre_4_quotidien_um:
-  source: sensor.eclairage_chambre_4_energie
-  cycle: daily
+- eclairage_chambre_4_quotidien_um:
+    source: sensor.eclairage_chambre_4_energie
+    cycle: daily

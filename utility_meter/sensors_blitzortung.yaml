@@ -2,22 +2,22 @@
 # │ BLITZORTUNG : SUIVI DES IMPACTS DE FOUDRE                                │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
-eclair_yearly:
-  source: sensor.blitzortung_lightning_counter
-  cycle: yearly
+- eclair_yearly:
+    source: sensor.blitzortung_lightning_counter
+    cycle: yearly
 
-eclair_monthly:
-  source: sensor.blitzortung_lightning_counter
-  cycle: monthly
+- eclair_monthly:
+    source: sensor.blitzortung_lightning_counter
+    cycle: monthly
 
-eclair_weekly:
-  source: sensor.blitzortung_lightning_counter
-  cycle: weekly
+- eclair_weekly:
+    source: sensor.blitzortung_lightning_counter
+    cycle: weekly
 
-eclair_daily:
-  source: sensor.blitzortung_lightning_counter
-  cycle: daily
+- eclair_daily:
+    source: sensor.blitzortung_lightning_counter
+    cycle: daily
 
-eclair_hourly:
-  source: sensor.blitzortung_lightning_counter
-  cycle: hourly
+- eclair_hourly:
+    source: sensor.blitzortung_lightning_counter
+    cycle: hourly
