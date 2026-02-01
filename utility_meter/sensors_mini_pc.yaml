@@ -1,0 +1,10 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ PIÈCE 10. MINI-PC                                                        │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# --- mini_pc ---
+mini_pc_daily:
+  source: sensor.prise_mini_pc_ikea_kwh  
+  cycle: daily
+mini_pc_monthly:
+  source: sensor.prise_mini_pc_ikea_kwh  
+  cycle: monthly

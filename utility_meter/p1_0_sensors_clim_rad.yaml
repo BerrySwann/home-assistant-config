@@ -1,0 +1,65 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIMATISATION                         │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# ┌────────────────────────────────────┐
+# │ PIÈCE 4. SALON                     │
+# └────────────────────────────────────┘
+# --- clim_salon ---
+clim_salon_daily:
+  source: sensor.clim_salon_kwh
+  cycle: daily
+clim_salon_monthly:
+  source: sensor.clim_salon_kwh
+  cycle: monthly
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 5. CUISINE                   │
+# └────────────────────────────────────┘
+# --- radiateur_cuisine ---
+radiateur_cuisine_daily:
+  source: sensor.radiateur_cuisine_kwh
+  cycle: daily
+radiateur_cuisine_monthly:
+  source: sensor.radiateur_cuisine_kwh
+  cycle: monthly
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 7. BUREAU                    │
+# └────────────────────────────────────┘
+# --- clim_bureau ---
+clim_bureau_daily:
+  source: sensor.clim_bureau_kwh
+  cycle: daily
+clim_bureau_monthly:
+  source: sensor.clim_bureau_kwh
+  cycle: monthly
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 8. SDB                       │
+# └────────────────────────────────────┘
+# --- soufflant_sdb ---
+soufflant_sdb_daily:
+  source: sensor.soufflant_sdb_kwh
+  cycle: daily
+soufflant_sdb_monthly:
+  source: sensor.soufflant_sdb_kwh
+  cycle: monthly
+
+# --- Seche_serv ---
+seche_serv_sdb_daily:
+  source: sensor.seche_serv_sdb_kwh
+  cycle: daily
+seche_serv_sdb_monthly:
+  source: sensor.seche_serv_sdb_kwh
+  cycle: monthly
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 9. CHAMBRE                   │
+# └────────────────────────────────────┘
+# --- clim_chambre ---
+clim_chambre_daily:
+  source: sensor.clim_chambre_kwh
+  cycle: daily
+clim_chambre_monthly:
+  source: sensor.clim_chambre_kwh
+  cycle: monthly

@@ -1,0 +1,121 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ PÔLE 1. ÉNERGIE: [_um] CHAUFFAGE / CLIM                                  │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ TOTO Clim et radiateur salon / cuisine / bureau / 2x SdB / Chambre       │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# ┌────────────────────────────────────┐
+# │ PIÈCE 4. SALON                     │
+# └────────────────────────────────────┘
+# --- clim_salon ---
+clim_salon_annuel_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: yearly
+
+clim_salon_mensuel_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: monthly
+
+clim_salon_hebdomadaire_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: weekly
+
+clim_salon_quotidien_um:
+  source: sensor.clim_salon_nous_energy
+  cycle: daily
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 5. CUISINE                   │
+# └────────────────────────────────────┘
+# --- radiateur_cuisine ---
+radiateur_elec_cuisine_annuel_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: yearly
+
+radiateur_elec_cuisine_mensuel_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: monthly
+
+radiateur_elec_cuisine_hebdomadaire_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: weekly
+
+radiateur_elec_cuisine_quotidien_um:
+  source: sensor.radiateur_elec_cuisine_energy
+  cycle: daily
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 7. BUREAU                    │
+# └────────────────────────────────────┘
+clim_bureau_annuel_um:
+  source: sensor.clim_bureau_nous_energy
+  cycle: yearly
+
+clim_bureau_mensuel_um:
+  source: sensor.clim_bureau_nous_energy
+  cycle: monthly
+
+clim_bureau_hebdomadaire_um:
+  source: sensor.clim_bureau_nous_energy
+  cycle: weekly
+
+clim_bureau_quotidien_um:
+  source: sensor.clim_bureau_nous_energy
+  cycle: daily
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 8. SDB                       │
+# └────────────────────────────────────┘
+# --- soufflant_sdb ---
+soufflant_sdb_annuel_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
+  cycle: yearly
+
+soufflant_sdb_mensuel_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
+  cycle: monthly
+
+soufflant_sdb_hebdomadaire_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
+  cycle: weekly
+
+soufflant_sdb_quotidien_um:
+  source: sensor.prise_soufflant_salle_de_bain_nous_energy
+  cycle: daily
+
+# --- Seche_serv ---
+seche_serviette_sdb_annuel_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
+  cycle: yearly
+
+seche_serviette_sdb_mensuel_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
+  cycle: monthly
+
+seche_serviette_sdb_hebdomadaire_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
+  cycle: weekly
+
+seche_serviette_sdb_quotidien_um:
+  source: sensor.prise_seche_serviette_salle_de_bain_nous_energy
+  cycle: daily
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 9. CHAMBRE                   │
+# └────────────────────────────────────┘
+# --- clim_chambre ---
+clim_chambre_annuel_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: yearly
+
+clim_chambre_mensuel_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: monthly
+
+clim_chambre_hebdomadaire_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: weekly
+
+clim_chambre_quotidien_um:
+  source: sensor.clim_chambre_nous_energy
+  cycle: daily

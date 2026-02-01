@@ -44,21 +44,22 @@ automation: !include automations.yaml
 
 #renvoi au fichier répertoire sensors/
 sensor: !include_dir_merge_list sensors/
+# renvoi au fichier sensors.yaml
+#sensor: !include sensors.yaml
 
 #renvoi au fichier répertoire templates/
 template: !include_dir_merge_list templates/
 
-# renvoi au fichier sensors.yaml
-#sensor: !include sensors.yaml
+#renvoi au fichier répertoire utility_meter/
+utility_meter: !include_dir_merge_list utility_meter/
+#renvoi au fichier utility_meter.yaml
+#utility_meter: !include utility_meter.yaml
 
 # renvoi au fichier commad_line.yaml
 command_line: !include command_line.yaml
 
 #renvoi au fichier camera.yaml -> carte meteo france alerte
 camera: !include camera.yaml
-
-#renvoi au fichier utility_meter.yaml
-utility_meter: !include utility_meter.yaml
 
 #renvoi au fichier groupe
 group: !include group.yaml
@@ -68,8 +69,6 @@ input_number: !include input_number.yaml
 
 #revoin au fuchier input_boolean.yaml
 input_boolean: !include input_boolean.yaml
-
-
 
 #renvoi au fichier shell_command.yaml
 # Services shell_command (NOUVEAU)

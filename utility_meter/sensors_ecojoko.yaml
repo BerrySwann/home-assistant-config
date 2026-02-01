@@ -1,0 +1,11 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │   ECOJOKO                                                                │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+# --- ecojoko ---
+ecojoko_energy_daily:
+  source: sensor.ecojoko_consommation_reseau
+  cycle: daily
+
+ecojoko_energy_monthly:
+  source: sensor.ecojoko_consommation_reseau
+  cycle: monthly
