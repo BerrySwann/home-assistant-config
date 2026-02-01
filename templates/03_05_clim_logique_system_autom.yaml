@@ -4,7 +4,7 @@
 
 - sensor:
 # ┌───────────────────────────────────────────────────────────────────┐
-# │ 10. AUTRE : DÉTECTION DU MODE GÉNÉRAL ET CONSIGNES DYNAMIQUES     │
+# │ DÉTECTION DU MODE GÉNÉRAL ET CONSIGNES DYNAMIQUES                 │
 # └───────────────────────────────────────────────────────────────────┘
 
 # --- mode_ete_hiver ---
@@ -18,7 +18,7 @@
           ERREUR
         {% elif temp_ext < temp_no_chauf %}
           heat
-        {% elif temp_no_chauf <= temp_ext < 25 %}
+        {% elif temp_no_chauf <= temp_ext < 28 %}
           fan_only
         {% else %}
           cool
@@ -43,7 +43,7 @@
         {% if states('sensor.mode_ete_hiver') == 'cool' %} 27 {% else %} 19 {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐
-# │ 10. AUTRE : PARAMÈTRES FIXES ET DELTAS DE CALCUL                  │
+# │ PARAMÈTRES FIXES ET DELTAS DE CALCUL                              │
 # └───────────────────────────────────────────────────────────────────┘
 
 # --- temperature_eco_hiver ---
@@ -85,9 +85,12 @@
       unit_of_measurement: "°C"
 
 # ┌───────────────────────────────────────────────────────────────────┐
-# │ 10. AUTRE : CORRECTIONS SPÉCIFIQUES (HIVERNALES)                  │
+# │ CORRECTIONS SPÉCIFIQUES (HIVERNALES)                              │
 # └───────────────────────────────────────────────────────────────────┘
 
+# ┌─────────────────────────────────────┐
+# │ 04. SALON                           │
+# └─────────────────────────────────────┘
 # --- temperature_corrige_mamour_hivers ---
     - name: "Temperature Corrigé Mamour Hivers"
       unique_id: "temperature_corrige_mamour_hivers"
@@ -103,6 +106,9 @@
           {{ [ resultat | float(20), 21.0 ] | min | round(1) }}
         {% endif %}
 
+# ┌─────────────────────────────────────┐
+# │ 07. BUREAU                          │
+# └─────────────────────────────────────┘
 # --- temperature_corrige_eric_hivers ---
     - name: "Temperature Corrigé Eric Hivers"
       unique_id: "temperature_corrige_eric_hivers"
@@ -114,11 +120,13 @@
         {% if states('sensor.mode_ete_hiver') == 'cool' %}
           {{ temp_conf_e }}
         {% else %}
-          {# Correction : suppression de l'accolade en trop et nom de variable cohérent #}
           {% set resultat = temp_conf_e - delta_2 %}
           {{ [ resultat | float(17), 18.0 ] | min | round(1) }}
         {% endif %}
 
+# ┌─────────────────────────────────────┐
+# │ 09. CHAMBRE                         │
+# └─────────────────────────────────────┘
 # --- temperature_corrige_chambre_hivers ---
     - name: "Temperature Corrigé Chambre Hivers"
       unique_id: temperature_corrige_chambre_hivers
@@ -132,7 +140,7 @@
         {{ temp_conf_c }}
 
 # ┌───────────────────────────────────────────────────────────────────┐
-# │ 10. AUTRE : MOTEURS DE CALCUL DYNAMIQUES (CIBLE / CONFORT)        │
+# │ MOTEURS DE CALCUL DYNAMIQUES (CIBLE / CONFORT)                    │
 # └───────────────────────────────────────────────────────────────────┘
 
 # --- temperature_cible ---
@@ -209,7 +217,7 @@
         {% endif %}
 
 # ┌───────────────────────────────────────────────────────────────────┐
-# │ 10. AUTRE : MOYENNES, DELTAS INTERNES ET RECOMMANDATIONS ADEME    │
+# │ MOYENNES, DELTAS INTERNES ET RECOMMANDATIONS ADEME                │
 # └───────────────────────────────────────────────────────────────────┘
 
 # --- temperature_moyenne_interieure ---
