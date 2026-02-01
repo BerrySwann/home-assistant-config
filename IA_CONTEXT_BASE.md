@@ -78,9 +78,9 @@ Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de 
    - Ne jamais passer à la ligne à l'intérieur d'une boîte pour compenser la largeur.
 
 3. **EXEMPLE DE TITRE ÉLARGI (Si > 74 car)** :
-# ╭───────────────────────────────────────────────╮
-# │ TEMPLATES : SÉRIE 01_2. MÉTÉO — LABEL / AZIMUT)│
-# ╰───────────────────────────────────────────────╯
+# ╭─────────────────────────────────────╮
+# │ TEMPLATES : SÉRIE 01_2. MÉTÉO — LABEL│
+# ╰─────────────────────────── ─────────╯
 ---
 
 ## 🛠️ RÈGLES DE CODAGE STRICTES
