@@ -261,7 +261,6 @@ Chaque équipement doit être classé selon sa nature technique pour éviter les
     - input_boolean: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/input_boolean.yaml
     - input_number: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/input_number.yaml 
     - Scripts : https://raw.githubusercontent.com/BerrySwann/home-assistant-config/main/scripts.yaml
-    - sensors: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors.yaml
     - shell_command: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/shell_command.yaml
     - utility_meter: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/utility_meter.yaml  
   ### 📂 Séries Templates (01 à 18)
@@ -319,3 +318,19 @@ Chaque équipement doit être classé selon sa nature technique pour éviter les
     - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/17_2_diag_conso_mois_en_cours.yaml
     ### 📂 Puissance de Croisière en Watts (Série 18) 
     - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/18_1_Moyenne_daily_monthly.yaml
+### 📂 Séries Sensors (Découpage fonctionnel)
+    ### 📂 Pôle 1 - Chauffage & Clim
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_0_sensors_clim_rad.yaml
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_1_sensors%20-%20dut.yaml
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_2_sensors%20-%20Perf.yaml
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_3_sensors_moy_24h.yaml
+    ### 📂 Pôle 2 - Prises & Énergie
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p2_sensors_%20prises.yaml
+    ### 📂 Pôle 3 - Éclairage
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p3_sensors_lumieres.yaml
+    ### 📂 Qualité d'Air & Météo
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors%20-%20pm25%20et%20tcov.yaml
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors_blitzortung.yaml
+    ### 📂 Système & Divers
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors_erodi_ha.yaml
+    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors_mini_pc.yaml

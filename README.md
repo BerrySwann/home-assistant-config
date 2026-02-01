@@ -43,11 +43,11 @@ Cette configuration est maintenue en collaboration avec une **IA (Gemini)** pour
 
 ## 🎨 Dashboards Lovelace (HACS)
 Utilisation du mode **YAML + Storage** avec une optimisation pour tablette et mobile.
-* **Custom Cards** : `apexcharts-card`, `bubble-card`, `mushroom`, `bar-card`, `ring-tile-card`, `streamline-card`, `layout-card`.
 * **Fonctionnalités** :
-    * Suivi énergie : Journalier & Mensuel (730h), moyennes glissantes (24h/730h).
-    * Suivi Clim/Radiateurs : Calcul automatique des cibles (Été/Hiver) et **DUT** (Durée d'Utilisation Totale).
-    * Qualité d'air : Monitoring détaillé PM2.5 et tCOV par pièce.
+* **Suivi énergie** : Journalier & Mensuel (730h), moyennes glissantes (24h/730h).
+* **Suivi Clim/Radiateurs** : Calcul automatique des cibles (Été/Hiver) et **DUT** (Durée d'Utilisation Totale).
+* **Analyse Thermique (DEP)** : Diagnostic d'Efficacité et Performance (Ratio isolation/conso en temps réel).
+* **Qualité d'air** : Monitoring détaillé PM2.5 et tCOV par pièce.
 
 ---
 
@@ -61,6 +61,7 @@ Utilisation du mode **YAML + Storage** avec une optimisation pour tablette et mo
 ## 📂 Structure du projet
 * `configuration.yaml` : Cœur du système avec inclusions modulaires.
 * `templates/` : Capteurs virtuels Jinja2 (Séries 01 à 18).
+* `sensors/` : Capteurs virtuels Jinja2 (découpés par pôles et usages)
 * `automations.yaml` : Règles métier sans ID globaux pour la stabilité.
 * `dashboard*.yaml` : Dashboards Lovelace versionnés.
 
