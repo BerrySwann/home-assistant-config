@@ -206,29 +206,6 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ---
 
-## 📊 LOGIQUE DE TRI PAR UNITÉ (SENSORS.YAML)
-Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.
-
-### CAPTEURS SYSTÈMES & SERVICES
-*(Titre Principal 74 car. pour chaque section)*
-- **SENSOR : NOTIFICATION FOUDRES BLITZORTUNG** (`platform: rest`)
-- **SENSOR : STATISTIQUES MINI-PC (SANTÉ SYSTÈME)** (`platform: statistics` & `integration`)
-- **SENSOR : PING HTTPS VSCODE (ERODI-HA.COM)** (`platform: rest`)
-- **SENSOR : MOYENNES 24H QUALITÉ AIR (PM2.5 & TCOV)** (`platform: statistics`)
-
-### 1. PÔLE 1 : CHAUFFAGE & CLIM
-- **Titre Principal (74 car.)** : `SENSOR : PÔLE 1. CHAUFFAGE & CLIMATISATION`
-- **SOUS-SECTION [kWh]** : Consommation réelle (`platform: integration`).
-    - *Titre Secondaire (37 car.)* : `PÔLE 1. ÉNERGIE: [kWh] CHAUFFAGE & CLIM`
-- **SOUS-SECTION [DUT]** : Durée de fonctionnement (`platform: history_stats`).
-    - *Titre Secondaire (37 car.)* : `PÔLE 1. DURÉE D'UTILISATION [DUT]`
-
-### 2. PÔLE 2 : PRISES
-- **SOUS-SECTION [kWh]** : Consommation réelle (`platform: integration`).
-    - **Titre Principal (74 car.)** : `SENSOR : PÔLE 2. ÉNERGIE: [kWh] PRISES`
-
----
-
 ## 📊 LOGIQUE DE TRI PAR UNITÉ (UTILITY_METER.YAML)
 **Chaque équipement doit être classé selon sa nature technique pour éviter les conflits d'historique.**
 
@@ -249,6 +226,96 @@ Chaque équipement doit être classé selon sa nature technique pour éviter les
   * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITÉ`
 - **SOUS-SECTION UNITAIRE** : Compteurs individuels pour chaque ampoule Hue/Sonoff.
   * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITÉ`
+
+# 🌡️ STRATÉGIE THERMIQUE & MONITORING
+(uniquement pour l'analyse des consommations électrique)
+
+- **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure (Balcon Nord).
+- **Mode Absence :** Si T° Ext < 10°C, tous les climats passent à 17°C (Éric) ou 18°C (Mamour).
+- **Logique "Cœur du Système" (Météo -> Cible -> Confort) :**
+
+```mermaid
+flowchart TD
+    %% --- STYLE ---
+    classDef blue fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:black
+    classDef yellow fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,color:black
+    classDef red fill:#ffccbc,stroke:#bf360c,stroke-width:2px,color:black
+    classDef pink fill:#f8bbd0,stroke:#880e4f,stroke-width:2px,color:black
+    classDef green fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:black
+
+    %% --- DONNÉES ---
+    TEXT["Sonde Extérieure"]:::blue --> MODE
+    TEXT --> CIBLE
+    
+    MODE{"Mode Été/Hiver"}:::yellow -->|"Hiver"| BASE_18["Base: 18°C"]
+    MODE -->|"Été"| BASE_28["Base: 28°C"]
+
+    BASE_18 --> CIBLE{"Calcul Cible"}
+    BASE_28 --> CIBLE
+    
+    %% --- SÉPARATION ---
+    CIBLE -->|"> 32°C (Été)"| CIBLE_ETE["T° Cible (Référence Été)"]:::green
+    CIBLE -->|"< 8°C (Boost)"| CONFORT_HIV["Confort JOUR (Hiver)"]:::yellow
+    CIBLE -->|"Normal"| CONFORT_HIV
+    
+    %% --- DISTRIBUTION ---
+    CIBLE_ETE --> ERIC["Muser2 (Eric)<br/>(Pas de décalage Été)"]:::red
+    CONFORT_HIV --> ERIC_HIV["Muser2 (Eric)<br/>(- Delta 2)"]:::red
+    
+    CIBLE_ETE --> MAMOUR["Euser1 (Mamour)<br/>(Pas de décalage Été)"]:::pink
+    CONFORT_HIV --> MAMOUR_HIV["Euser1 (Mamour)<br/>(+ Delta 1)"]:::pink
+    
+    %% --- NUIT ---
+    CIBLE_ETE --> NUIT{"Calcul NUIT"}
+    CONFORT_HIV --> NUIT
+    TEXT -.-> NUIT
+    NUIT -->|"< 8°C"| NUIT_FROID["Confort - Delta 1"]
+    NUIT -->|"> 8°C"| NUIT_DOUX["Confort - Delta 2"]
+
+# 🌡️ STRATÉGIE THERMIQUE & MONITORING
+(uniquement pour l'analyse des consommations électrique)
+
+- **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure (Balcon Nord).
+- **Mode Absence :** Si T° Ext < 10°C, tous les climats passent à 17°C (Éric) ou 18°C (Mamour).
+- **Logique "Cœur du Système" (Météo -> Cible -> Confort) :**
+
+```mermaid
+flowchart TD
+    %% --- STYLE ---
+    classDef blue fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:black
+    classDef yellow fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,color:black
+    classDef red fill:#ffccbc,stroke:#bf360c,stroke-width:2px,color:black
+    classDef pink fill:#f8bbd0,stroke:#880e4f,stroke-width:2px,color:black
+    classDef green fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:black
+
+    %% --- DONNÉES ---
+    TEXT["Sonde Extérieure"]:::blue --> MODE
+    TEXT --> CIBLE
+    
+    MODE{"Mode Été/Hiver"}:::yellow -->|"Hiver"| BASE_18["Base: 18°C"]
+    MODE -->|"Été"| BASE_28["Base: 28°C"]
+
+    BASE_18 --> CIBLE{"Calcul Cible"}
+    BASE_28 --> CIBLE
+    
+    %% --- SÉPARATION ---
+    CIBLE -->|"> 32°C (Été)"| CIBLE_ETE["T° Cible (Référence Été)"]:::green
+    CIBLE -->|"< 8°C (Boost)"| CONFORT_HIV["Confort JOUR (Hiver)"]:::yellow
+    CIBLE -->|"Normal"| CONFORT_HIV
+    
+    %% --- DISTRIBUTION ---
+    CIBLE_ETE --> ERIC["Muser2 (Eric)<br/>(Pas de décalage Été)"]:::red
+    CONFORT_HIV --> ERIC_HIV["Muser2 (Eric)<br/>(- Delta 2)"]:::red
+    
+    CIBLE_ETE --> MAMOUR["Euser1 (Mamour)<br/>(Pas de décalage Été)"]:::pink
+    CONFORT_HIV --> MAMOUR_HIV["Euser1 (Mamour)<br/>(+ Delta 1)"]:::pink
+    
+    %% --- NUIT ---
+    CIBLE_ETE --> NUIT{"Calcul NUIT"}
+    CONFORT_HIV --> NUIT
+    TEXT -.-> NUIT
+    NUIT -->|"< 8°C"| NUIT_FROID["Confort - Delta 1"]
+    NUIT -->|"> 8°C"| NUIT_DOUX["Confort - Delta 2"]
 
 ## 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
   ### 📂 Configuration & Scripts
