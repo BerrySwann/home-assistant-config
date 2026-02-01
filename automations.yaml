@@ -2988,10 +2988,9 @@
   mode: single
 - id: '1769236695251'
   alias: A - SALLE DE BAIN - GESTION INTELLIGENTE SOUFFLANT
-  description: Gestion complète du cycle de vie du soufflant (démarrage, régulation,
-    arrêt)
+  description: 'Cycle complet : Démarrage (T°), Régulation 23°C/22°C, Swing et 0W'
   triggers:
-  - alias: CHANGEMENT ÉTAT INTER
+  - alias: CHANGEMENT ÉTAT INTERRUPTEUR
     trigger: state
     entity_id: switch.inter_soufflant_salle_de_bain
     id: inter_change
@@ -3001,15 +3000,13 @@
     above: 22.9
     for: 00:01:00
     id: temp_high
-  - alias: TEMPÉRATURE < 21°C
+  - alias: TEMPÉRATURE < 22°C
     trigger: numeric_state
     entity_id: sensor.th_salle_de_bain_temperature
-    below: 20.9
-    for: 00:01:00
+    below: 21.9
     id: temp_low
-  conditions: []
   actions:
-  - alias: ROUTAGE SELON TRIGGER
+  - alias: ROUTAGE DES ACTIONS PAR TRIGGER
     choose:
     - alias: CAS ALLUMAGE INTER
       conditions:
@@ -3034,10 +3031,11 @@
         data:
           command: on_off
           device: radiateur_sdb
-      - delay: 00:00:01
-      - alias: SÉLECTION PUISSANCE INITIALE
+      - delay: '00:00:00.8'
+      - alias: SÉLECTION PUISSANCE INITIALE SELON TEMPÉRATURE
         choose:
-        - conditions:
+        - alias: DÉMARRAGE 2000W (< 21°C)
+          conditions:
           - condition: numeric_state
             entity_id: sensor.th_salle_de_bain_temperature
             below: 21
@@ -3049,6 +3047,7 @@
               command: 1000w
               device: radiateur_sdb
               num_repeats: 2
+              delay_secs: 0.8
           - action: input_select.select_option
             target:
               entity_id: input_select.etat_resistance_soufflant_sdb
@@ -3067,7 +3066,8 @@
           data:
             option: 1000W
       - delay: '00:00:00.8'
-      - action: remote.send_command
+      - alias: ACTIVATION SWING IR
+        action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
@@ -3078,37 +3078,6 @@
           entity_id: climate.soufflant_salle_de_bain
         data:
           hvac_mode: heat
-    - alias: CAS EXTINCTION INTER
-      conditions:
-      - condition: trigger
-        id: inter_change
-      - condition: state
-        entity_id: switch.inter_soufflant_salle_de_bain
-        state: 'off'
-      - condition: state
-        entity_id: switch.prise_soufflant_salle_de_bain_nous
-        state: 'on'
-      sequence:
-      - action: remote.send_command
-        target:
-          entity_id: remote.soufflant_sdb_rm4_mini
-        data:
-          command: on_off
-          device: radiateur_sdb
-      - delay: 00:01:00
-      - action: climate.set_hvac_mode
-        target:
-          entity_id: climate.soufflant_salle_de_bain
-        data:
-          hvac_mode: 'off'
-      - action: switch.turn_off
-        target:
-          entity_id: switch.prise_soufflant_salle_de_bain_nous
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.etat_resistance_soufflant_sdb
-        data:
-          option: 0W
     - alias: CAS TEMPÉRATURE > 23°C (RÉDUCTION)
       conditions:
       - condition: trigger
@@ -3122,24 +3091,26 @@
           entity_id: input_select.etat_resistance_soufflant_sdb
           state: 0W
       sequence:
-      - alias: CALCUL NOMBRE DE PRESSIONS IR
+      - alias: CALCUL NOMBRE DE PRESSIONS IR VERS 0W
         variables:
           current_power: '{{ states(''input_select.etat_resistance_soufflant_sdb'')
             }}'
           ir_repeats: '{{ 2 if current_power == ''1000W'' else 1 }}'
-      - action: remote.send_command
+      - alias: ENVOI IR VERS 0W
+        action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
-          command: on_off
+          command: 1000w
           device: radiateur_sdb
           num_repeats: '{{ ir_repeats }}'
+          delay_secs: 0.8
       - action: input_select.select_option
         target:
           entity_id: input_select.etat_resistance_soufflant_sdb
         data:
           option: 0W
-    - alias: CAS TEMPÉRATURE < 21°C (RÉACTIVATION)
+    - alias: CAS TEMPÉRATURE < 22°C (RÉACTIVATION)
       conditions:
       - condition: trigger
         id: temp_low
@@ -3150,150 +3121,7 @@
         entity_id: input_select.etat_resistance_soufflant_sdb
         state: 0W
       sequence:
-      - action: remote.send_command
-        target:
-          entity_id: remote.soufflant_sdb_rm4_mini
-        data:
-          command: on_off
-          device: radiateur_sdb
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.etat_resistance_soufflant_sdb
-        data:
-          option: 1000W
-  mode: queued
-  max: 3
-- id: '1769947740553'
-  alias: A - 2026/02/01 - SALLE DE BAIN - GESTION INTELLIGENTE SOUFFLANT
-  description: 'Gestion complète : Séquence démarrage (T°), Régulation 23°C/22°C et
-    Swing'
-  triggers:
-  - alias: CHANGEMENT ÉTAT INTERRUPTEUR
-    trigger: state
-    entity_id: switch.inter_soufflant_salle_de_bain
-    id: inter_change
-  - alias: TEMPÉRATURE > 23°C
-    trigger: numeric_state
-    entity_id: sensor.th_salle_de_bain_temperature
-    above: 22.9
-    for: 00:00:30
-    id: temp_high
-  - alias: TEMPÉRATURE < 22°C
-    trigger: numeric_state
-    entity_id: sensor.th_salle_de_bain_temperature
-    below: 21.9
-    for: 00:01:00
-    id: temp_low
-  actions:
-  - alias: ROUTAGE DES ACTIONS PAR TRIGGER
-    choose:
-    - alias: CAS ALLUMAGE INTER
-      conditions:
-      - condition: trigger
-        id: inter_change
-      - condition: state
-        entity_id: switch.inter_soufflant_salle_de_bain
-        state: 'on'
-      sequence:
-      - alias: PROTECTION ALIMENTATION
-        action: switch.turn_on
-        target:
-          entity_id: switch.prise_soufflant_salle_de_bain_nous
-      - delay: 00:00:01
-      - alias: COMMANDE IR POWER ON
-        action: remote.send_command
-        target:
-          entity_id: remote.soufflant_sdb_rm4_mini
-        data:
-          command: on_off
-          device: radiateur_sdb
-      - delay: 00:00:01
-      - alias: SÉLECTION PUISSANCE SELON TEMPÉRATURE
-        choose:
-        - conditions:
-          - condition: numeric_state
-            entity_id: sensor.th_salle_de_bain_temperature
-            below: 21
-          sequence:
-          - action: remote.send_command
-            target:
-              entity_id: remote.soufflant_sdb_rm4_mini
-            data:
-              command: 2000w
-              device: radiateur_sdb
-          - action: input_select.select_option
-            target:
-              entity_id: input_select.etat_resistance_soufflant_sdb
-            data:
-              option: 2000W
-        - conditions:
-          - condition: numeric_state
-            entity_id: sensor.th_salle_de_bain_temperature
-            above: 20.9
-          sequence:
-          - action: remote.send_command
-            target:
-              entity_id: remote.soufflant_sdb_rm4_mini
-            data:
-              command: 1000w
-              device: radiateur_sdb
-          - action: input_select.select_option
-            target:
-              entity_id: input_select.etat_resistance_soufflant_sdb
-            data:
-              option: 1000W
-      - delay: 00:00:01
-      - alias: ACTIVATION SWING
-        action: remote.send_command
-        target:
-          entity_id: remote.soufflant_sdb_rm4_mini
-        data:
-          command: swing
-          device: radiateur_sdb
-    - alias: CAS TEMPÉRATURE > 23°C (STOP RÉSISTANCES)
-      conditions:
-      - condition: trigger
-        id: temp_high
-      - condition: state
-        entity_id: switch.inter_soufflant_salle_de_bain
-        state: 'on'
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: input_select.etat_resistance_soufflant_sdb
-          state: 0W
-      sequence:
-      - alias: CALCUL REPEAT SELON WATTS
-        variables:
-          current_watts: '{{ states(''input_select.etat_resistance_soufflant_sdb'')
-            }}'
-          repeats: '{{ 2 if current_watts == ''2000W'' else 1 }}'
-      - alias: COMMANDE IR STOP RÉSISTANCES
-        action: remote.send_command
-        target:
-          entity_id: remote.soufflant_sdb_rm4_mini
-        data:
-          command: on_off
-          device: radiateur_sdb
-          num_repeats: '{{ repeats }}'
-          delay_secs: 0.7
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.etat_resistance_soufflant_sdb
-        data:
-          option: 0W
-    - alias: CAS TEMPÉRATURE < 22°C (RELANCE CHAUFFE)
-      conditions:
-      - condition: trigger
-        id: temp_low
-      - condition: state
-        entity_id: switch.inter_soufflant_salle_de_bain
-        state: 'on'
-      - condition: state
-        entity_id: input_select.etat_resistance_soufflant_sdb
-        state: 0W
-      sequence:
-      - alias: COMMANDE IR RELANCE 1000W
+      - alias: RELANCE CHAUFFE 1000W
         action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
@@ -3313,13 +3141,197 @@
         entity_id: switch.inter_soufflant_salle_de_bain
         state: 'off'
       sequence:
-      - action: remote.send_command
+      - alias: ENVOI IR POWER OFF
+        action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: on_off
           device: radiateur_sdb
-      - delay: 00:00:30
+      - delay: 00:01:00
+      - action: climate.set_hvac_mode
+        target:
+          entity_id: climate.soufflant_salle_de_bain
+        data:
+          hvac_mode: 'off'
+      - action: switch.turn_off
+        target:
+          entity_id: switch.prise_soufflant_salle_de_bain_nous
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.etat_resistance_soufflant_sdb
+        data:
+          option: 0W
+  mode: queued
+  max: 3
+- id: '1769947740553'
+  alias: A - 2026/02/01 - SALLE DE BAIN - GESTION INTELLIGENTE SOUFFLANT
+  description: 'Cycle complet : Démarrage (T°), Régulation 23°C/22°C, Swing et 0W'
+  triggers:
+  - alias: CHANGEMENT ÉTAT INTERRUPTEUR
+    trigger: state
+    entity_id: switch.inter_soufflant_salle_de_bain
+    id: inter_change
+  - alias: TEMPÉRATURE > 23°C
+    trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    above: 22.9
+    for: 00:01:00
+    id: temp_high
+  - alias: TEMPÉRATURE < 22°C
+    trigger: numeric_state
+    entity_id: sensor.th_salle_de_bain_temperature
+    below: 21.9
+    id: temp_low
+  actions:
+  - alias: ROUTAGE DES ACTIONS PAR TRIGGER
+    choose:
+    - alias: CAS ALLUMAGE INTER
+      conditions:
+      - condition: trigger
+        id: inter_change
+      - condition: state
+        entity_id: switch.inter_soufflant_salle_de_bain
+        state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.th_salle_de_bain_temperature
+        below: 25
+      sequence:
+      - alias: ACTIVATION PRISE PHYSIQUE
+        action: switch.turn_on
+        target:
+          entity_id: switch.prise_soufflant_salle_de_bain_nous
+      - delay: 00:00:01
+      - alias: ENVOI IR POWER ON
+        action: remote.send_command
+        target:
+          entity_id: remote.soufflant_sdb_rm4_mini
+        data:
+          command: on_off
+          device: radiateur_sdb
+      - delay: '00:00:00.8'
+      - alias: SÉLECTION PUISSANCE INITIALE SELON TEMPÉRATURE
+        choose:
+        - alias: DÉMARRAGE 2000W (< 21°C)
+          conditions:
+          - condition: numeric_state
+            entity_id: sensor.th_salle_de_bain_temperature
+            below: 21
+          sequence:
+          - action: remote.send_command
+            target:
+              entity_id: remote.soufflant_sdb_rm4_mini
+            data:
+              command: 1000w
+              device: radiateur_sdb
+              num_repeats: 2
+              delay_secs: 0.8
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.etat_resistance_soufflant_sdb
+            data:
+              option: 2000W
+        default:
+        - action: remote.send_command
+          target:
+            entity_id: remote.soufflant_sdb_rm4_mini
+          data:
+            command: 1000w
+            device: radiateur_sdb
+        - action: input_select.select_option
+          target:
+            entity_id: input_select.etat_resistance_soufflant_sdb
+          data:
+            option: 1000W
+      - delay: '00:00:00.8'
+      - alias: ACTIVATION SWING IR
+        action: remote.send_command
+        target:
+          entity_id: remote.soufflant_sdb_rm4_mini
+        data:
+          command: swing
+          device: radiateur_sdb
+      - action: climate.set_hvac_mode
+        target:
+          entity_id: climate.soufflant_salle_de_bain
+        data:
+          hvac_mode: heat
+    - alias: CAS TEMPÉRATURE > 23°C (RÉDUCTION)
+      conditions:
+      - condition: trigger
+        id: temp_high
+      - condition: state
+        entity_id: switch.inter_soufflant_salle_de_bain
+        state: 'on'
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: input_select.etat_resistance_soufflant_sdb
+          state: 0W
+      sequence:
+      - alias: CALCUL NOMBRE DE PRESSIONS IR VERS 0W
+        variables:
+          current_power: '{{ states(''input_select.etat_resistance_soufflant_sdb'')
+            }}'
+          ir_repeats: '{{ 2 if current_power == ''1000W'' else 1 }}'
+      - alias: ENVOI IR VERS 0W
+        action: remote.send_command
+        target:
+          entity_id: remote.soufflant_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+          num_repeats: '{{ ir_repeats }}'
+          delay_secs: 0.8
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.etat_resistance_soufflant_sdb
+        data:
+          option: 0W
+    - alias: CAS TEMPÉRATURE < 22°C (RÉACTIVATION)
+      conditions:
+      - condition: trigger
+        id: temp_low
+      - condition: state
+        entity_id: switch.inter_soufflant_salle_de_bain
+        state: 'on'
+      - condition: state
+        entity_id: input_select.etat_resistance_soufflant_sdb
+        state: 0W
+      sequence:
+      - alias: RELANCE CHAUFFE 1000W
+        action: remote.send_command
+        target:
+          entity_id: remote.soufflant_sdb_rm4_mini
+        data:
+          command: 1000w
+          device: radiateur_sdb
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.etat_resistance_soufflant_sdb
+        data:
+          option: 1000W
+    - alias: CAS EXTINCTION INTER
+      conditions:
+      - condition: trigger
+        id: inter_change
+      - condition: state
+        entity_id: switch.inter_soufflant_salle_de_bain
+        state: 'off'
+      sequence:
+      - alias: ENVOI IR POWER OFF
+        action: remote.send_command
+        target:
+          entity_id: remote.soufflant_sdb_rm4_mini
+        data:
+          command: on_off
+          device: radiateur_sdb
+      - delay: 00:01:00
+      - action: climate.set_hvac_mode
+        target:
+          entity_id: climate.soufflant_salle_de_bain
+        data:
+          hvac_mode: 'off'
       - action: switch.turn_off
         target:
           entity_id: switch.prise_soufflant_salle_de_bain_nous
