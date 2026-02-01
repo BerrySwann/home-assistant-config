@@ -79,8 +79,8 @@ Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de 
 
 3. **EXEMPLE DE TITRE ÉLARGI (Si > 74 car)** :
 # ╭───────────────────────────╮
-# │ TEMPLATES : SÉRIE 01_2. MÉTÉO — LABEL│
-# ╰─────────────────────────────────╯
+# │ TEMPLATES : SÉRIE 01_2. MÉTÉO — LABEL │
+# ╰───────────────────────────╯
 
 ---
 
