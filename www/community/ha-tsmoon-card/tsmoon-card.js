@@ -180,7 +180,6 @@ var TSMoonCard = (function (exports) {
 
     var img = "data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e%3c!-- Uploaded to: SVG Repo%2c www.svgrepo.com%2c Generator: SVG Repo Mixer Tools --%3e%3csvg width='800px' height='800px' viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' aria-hidden='true' role='img' class='iconify iconify--fxemoji' preserveAspectRatio='xMidYMid meet'%3e%3cpath fill='%23FDE364' d='M6.002 256c0-138.068 111.931-249.999 249.999-249.999S506 117.931 506 256c0 138.068-111.931 249.999-249.999 249.999S6.002 394.068 6.002 256'%3e%3c/path%3e%3cpath fill='%23FFC63A' d='M184.949 385.542c0-23.302 18.894-42.196 42.196-42.196c23.31 0 42.204 18.894 42.204 42.196s-18.894 42.196-42.204 42.196c-23.302 0-42.196-18.894-42.196-42.196m12.885-159.76c0 32.032 31.893 57.991 71.238 57.991s71.238-25.959 71.238-57.991s-31.893-57.991-71.238-57.991s-71.238 25.959-71.238 57.991m235.088 206.843c-14.483-10.978-35.228-17.861-58.278-17.861c-43.768 0-79.256 24.797-79.256 55.381c0 11.205 4.778 21.625 12.966 30.342c48.095-10.249 91.075-34.314 124.568-67.862zm73.05-178.75c-.469-56.359-19.585-108.266-51.487-149.864c-32.308 10.007-55.781 40.123-55.781 75.718c0 43.769 35.487 79.256 79.256 79.256c9.864 0 19.3-1.817 28.012-5.11zM303.445 10.519A251.23 251.23 0 0 0 256 6.003c-37.879 0-73.781 8.44-105.953 23.516c13.773 26.355 41.35 44.353 73.147 44.353c38.97 0 71.612-27.026 80.251-63.353zM113.3 133.471c-23.302 0-42.196 15.385-42.196 34.356c0 18.972 18.894 34.357 42.196 34.357c23.31 0 42.204-15.385 42.204-34.357c0-18.971-18.894-34.356-42.204-34.356z'%3e%3c/path%3e%3cpath fill='%23496170' d='M109.084 256c0-120.398 85.128-220.856 198.453-244.623c-16.64-3.486-33.861-5.376-51.538-5.376C117.931 6.001 6 117.932 6 256c0 138.069 111.931 250 249.999 250c17.678 0 34.899-1.89 51.538-5.376C194.212 476.857 109.084 376.391 109.084 256'%3e%3c/path%3e%3c/svg%3e";
 
-    // Forms in moon
     const svg = {
         forms: {
             first_quarter: img$v,
@@ -224,26 +223,27 @@ var TSMoonCard = (function (exports) {
         }
     };
 
-    var common$e = {
+    var common$f = {
     	version: "Versió",
     	title: "Sol i Lluna Mínim",
     	title_card: "Targeta Sol amb Lluna",
     	description: "Targeta per mostrar l'estat del sol i la lluna.",
     	invalid_configuration: "Configuració no vàlida"
     };
-    var editor$e = {
+    var editor$g = {
     	moon_entity: "Entitat de la Lluna (Opcional)"
     };
-    var errors$e = {
+    var errors$f = {
     	missing_moon_entity: "Falta moon_entity a la configuració",
     	invalid_icon_type: "Els colors següents de la configuració no són vàlids:"
     };
-    var card$e = {
+    var card$f = {
     	moon_phase: "Fase de Lluna",
     	moon_rise: "Sortida de Lluna",
-    	moon_set: "Posta de Lluna"
+    	moon_set: "Posta de Lluna",
+    	loading: "Carregant..."
     };
-    var moon$e = {
+    var moon$f = {
     	new_moon: "Lluna Nova",
     	waxing_crescent: "Lluna Nova Visible",
     	first_quarter: "Quart Creixent",
@@ -254,43 +254,44 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Lluna Minvant"
     };
     var ca = {
-    	common: common$e,
-    	editor: editor$e,
-    	errors: errors$e,
-    	card: card$e,
-    	moon: moon$e
+    	common: common$f,
+    	editor: editor$g,
+    	errors: errors$f,
+    	card: card$f,
+    	moon: moon$f
     };
 
     var ca$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        card: card$e,
-        common: common$e,
+        card: card$f,
+        common: common$f,
         default: ca,
-        editor: editor$e,
-        errors: errors$e,
-        moon: moon$e
+        editor: editor$g,
+        errors: errors$f,
+        moon: moon$f
     });
 
-    var common$d = {
+    var common$e = {
     	version: "Verze",
     	title: "Minimal Sun Moon",
     	title_card: "Karta Minimal Sun Moon",
     	description: "Minimální karta na vykreslení stavu slunce a měsíce.",
     	invalid_configuration: "Neplatná konfigurace"
     };
-    var editor$d = {
+    var editor$f = {
     	moon_entity: "Entita měsíce (volitelné)"
     };
-    var errors$d = {
+    var errors$e = {
     	missing_moon_entity: "moon_entity chybí v konfiguraci",
     	invalid_icon_type: "Následující barvy ve vaší konfiguraci jsou neplatné:"
     };
-    var card$d = {
+    var card$e = {
     	moon_phase: "Fáze měsíce",
     	moon_rise: "Východ měsíce",
-    	moon_set: "Západ měsíce"
+    	moon_set: "Západ měsíce",
+    	loading: "Načítání..."
     };
-    var moon$d = {
+    var moon$e = {
     	new_moon: "Nov",
     	waxing_crescent: "Dorůstající srpek",
     	first_quarter: "První čtvrt",
@@ -301,43 +302,44 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Ubývající srpek"
     };
     var cz = {
-    	common: common$d,
-    	editor: editor$d,
-    	errors: errors$d,
-    	card: card$d,
-    	moon: moon$d
+    	common: common$e,
+    	editor: editor$f,
+    	errors: errors$e,
+    	card: card$e,
+    	moon: moon$e
     };
 
     var cz$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        card: card$d,
-        common: common$d,
+        card: card$e,
+        common: common$e,
         default: cz,
-        editor: editor$d,
-        errors: errors$d,
-        moon: moon$d
+        editor: editor$f,
+        errors: errors$e,
+        moon: moon$e
     });
 
-    var common$c = {
+    var common$d = {
     	version: "Version",
     	title: "Sonne | Mond Karte",
     	title_card: "Minimal Sonne | Mond Karte",
     	description: "Eine minimalistische Karte, um den Stand der Sonne und des Mondes darzustellen.",
     	invalid_configuration: "Ungültige Konfiguration"
     };
-    var editor$c = {
+    var editor$e = {
     	moon_entity: "Mondentität (Optional)"
     };
-    var errors$c = {
+    var errors$d = {
     	missing_moon_entity: "Die Mondentität (moon_entity) fehlt in der Konfiguration!",
     	invalid_icon_type: "Die folgenden Farben in der Konfiguration sind ungültig:"
     };
-    var card$c = {
+    var card$d = {
     	moon_phase: "Mondphase",
     	moon_rise: "Mondaufgang",
-    	moon_set: "Monduntergang"
+    	moon_set: "Monduntergang",
+    	loading: "Lädt..."
     };
-    var moon$c = {
+    var moon$d = {
     	new_moon: "Neumond",
     	waxing_crescent: "Zunehmende Mondsichel",
     	first_quarter: "Erstes Viertel",
@@ -348,43 +350,44 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Abnehmende Mondsichel"
     };
     var de = {
-    	common: common$c,
-    	editor: editor$c,
-    	errors: errors$c,
-    	card: card$c,
-    	moon: moon$c
+    	common: common$d,
+    	editor: editor$e,
+    	errors: errors$d,
+    	card: card$d,
+    	moon: moon$d
     };
 
     var de$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        card: card$c,
-        common: common$c,
+        card: card$d,
+        common: common$d,
         default: de,
-        editor: editor$c,
-        errors: errors$c,
-        moon: moon$c
+        editor: editor$e,
+        errors: errors$d,
+        moon: moon$d
     });
 
-    var common$b = {
+    var common$c = {
     	version: "Version",
     	title: "Minimal Sun Moon",
     	title_card: "Minimal Sun Moon Card",
     	description: "A minimal card to render the state of the sun and moon.",
     	invalid_configuration: "Invalid configuration"
     };
-    var editor$b = {
+    var editor$d = {
     	moon_entity: "Moon entity (Optional)"
     };
-    var errors$b = {
+    var errors$c = {
     	missing_moon_entity: "moon_entity is missing in configuration",
     	invalid_icon_type: "The following colors in your configuration are invalid:"
     };
-    var card$b = {
+    var card$c = {
     	moon_phase: "Moon Phase",
     	moon_rise: "Moon Rise",
-    	moon_set: "Moon Set"
+    	moon_set: "Moon Set",
+    	loading: "Loading..."
     };
-    var moon$b = {
+    var moon$c = {
     	new_moon: "New Moon",
     	waxing_crescent: "Waxing Crescent",
     	first_quarter: "First Quarter",
@@ -395,43 +398,44 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Waning Crescent"
     };
     var en = {
-    	common: common$b,
-    	editor: editor$b,
-    	errors: errors$b,
-    	card: card$b,
-    	moon: moon$b
+    	common: common$c,
+    	editor: editor$d,
+    	errors: errors$c,
+    	card: card$c,
+    	moon: moon$c
     };
 
     var en$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        card: card$b,
-        common: common$b,
+        card: card$c,
+        common: common$c,
         default: en,
-        editor: editor$b,
-        errors: errors$b,
-        moon: moon$b
+        editor: editor$d,
+        errors: errors$c,
+        moon: moon$c
     });
 
-    var common$a = {
+    var common$b = {
     	version: "Versión",
     	title: "Sol y Luna Mínimo",
     	title_card: "Tarjeta Sol con Luna",
     	description: "Tarjeta para mostrar el estado del sol y la luna.",
     	invalid_configuration: "Configuración inválida"
     };
-    var editor$a = {
+    var editor$c = {
     	moon_entity: "Entidad de la Luna (Opcional)"
     };
-    var errors$a = {
+    var errors$b = {
     	missing_moon_entity: "Falta moon_entity en la configuración",
     	invalid_icon_type: "Configuración no válida:"
     };
-    var card$a = {
+    var card$b = {
     	moon_phase: "Fase Lunar",
     	moon_rise: "Salida de la Luna",
-    	moon_set: "Puesta de la Luna"
+    	moon_set: "Puesta de la Luna",
+    	loading: "Cargando..."
     };
-    var moon$a = {
+    var moon$b = {
     	new_moon: "Luna Nueva",
     	waxing_crescent: "Cuarto Creciente",
     	first_quarter: "Cuarto Creciente",
@@ -442,43 +446,44 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Cuarto Menguante"
     };
     var es = {
-    	common: common$a,
-    	editor: editor$a,
-    	errors: errors$a,
-    	card: card$a,
-    	moon: moon$a
+    	common: common$b,
+    	editor: editor$c,
+    	errors: errors$b,
+    	card: card$b,
+    	moon: moon$b
     };
 
     var es$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        card: card$a,
-        common: common$a,
+        card: card$b,
+        common: common$b,
         default: es,
-        editor: editor$a,
-        errors: errors$a,
-        moon: moon$a
+        editor: editor$c,
+        errors: errors$b,
+        moon: moon$b
     });
 
-    var common$9 = {
+    var common$a = {
     	version: "Version",
     	title: "Phases de la lune",
     	title_card: "Simple carte des phases de la lune",
     	description: "Une simple carte pour afficher la phase de la lune",
     	invalid_configuration: "Invalid configuration"
     };
-    var editor$9 = {
+    var editor$b = {
     	moon_entity: "Entité de la lune"
     };
-    var errors$9 = {
+    var errors$a = {
     	missing_moon_entity: "Sensor de la lune manquant",
     	invalid_icon_type: "Type d'icone incorect"
     };
-    var card$9 = {
+    var card$a = {
     	moon_phase: "Phase lunaire",
     	moon_rise: "Lever",
-    	moon_set: "Coucher"
+    	moon_set: "Coucher",
+    	loading: "Chargement..."
     };
-    var moon$9 = {
+    var moon$a = {
     	new_moon: "Nouvelle lune",
     	waxing_crescent: "Premier croissant",
     	first_quarter: "Premier quartier",
@@ -489,43 +494,44 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Dernier croissant"
     };
     var fr = {
-    	common: common$9,
-    	editor: editor$9,
-    	errors: errors$9,
-    	card: card$9,
-    	moon: moon$9
+    	common: common$a,
+    	editor: editor$b,
+    	errors: errors$a,
+    	card: card$a,
+    	moon: moon$a
     };
 
     var fr$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        card: card$9,
-        common: common$9,
+        card: card$a,
+        common: common$a,
         default: fr,
-        editor: editor$9,
-        errors: errors$9,
-        moon: moon$9
+        editor: editor$b,
+        errors: errors$a,
+        moon: moon$a
     });
 
-    var common$8 = {
+    var common$9 = {
     	version: "Verzió",
     	title: "Minimális Nap Hold",
     	title_card: "Minimális Nap Hold kártya",
     	description: "Egy minimális kártya a nap és a hold állapotának megjelenítéséhez.",
     	invalid_configuration: "Érvénytelen konfiguráció"
     };
-    var editor$8 = {
+    var editor$a = {
     	moon_entity: "Hold entitás (opcionális)"
     };
-    var errors$8 = {
+    var errors$9 = {
     	missing_moon_entity: "A moon_entity hiányzik a konfigurációból",
     	invalid_icon_type: "A konfigurációban szereplő következő színek érvénytelenek:"
     };
-    var card$8 = {
+    var card$9 = {
     	moon_phase: "Holdfázis",
     	moon_rise: "Holdkelte",
-    	moon_set: "Holdnyugta"
+    	moon_set: "Holdnyugta",
+    	loading: "Loading..."
     };
-    var moon$8 = {
+    var moon$9 = {
     	new_moon: "Újhold",
     	waxing_crescent: "Növekvő holdsarló",
     	first_quarter: "Első negyed",
@@ -536,43 +542,44 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Csökkenő holdsarló"
     };
     var hu = {
-    	common: common$8,
-    	editor: editor$8,
-    	errors: errors$8,
-    	card: card$8,
-    	moon: moon$8
+    	common: common$9,
+    	editor: editor$a,
+    	errors: errors$9,
+    	card: card$9,
+    	moon: moon$9
     };
 
     var hu$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        card: card$8,
-        common: common$8,
+        card: card$9,
+        common: common$9,
         default: hu,
-        editor: editor$8,
-        errors: errors$8,
-        moon: moon$8
+        editor: editor$a,
+        errors: errors$9,
+        moon: moon$9
     });
 
-    var common$7 = {
+    var common$8 = {
     	version: "Versione",
     	title: "Fasi Lunari",
     	title_card: "Card per Fasi Lunari",
     	description: "Semplice scheda per visualizzare le fasi lunari e del sole.",
     	invalid_configuration: "Configurazione non valida"
     };
-    var editor$7 = {
+    var editor$9 = {
     	moon_entity: "Moon entity (Optional)"
     };
-    var errors$7 = {
+    var errors$8 = {
     	missing_moon_entity: "moon_entity manca nella configurazione",
     	invalid_icon_type: "I seguenti colori nella configurazione non sono validi:"
     };
-    var card$7 = {
+    var card$8 = {
     	moon_phase: "Fase Lunare",
     	moon_rise: "Sorgere della Luna",
-    	moon_set: "Tramonto della Luna"
+    	moon_set: "Tramonto della Luna",
+    	loading: "Caricamento..."
     };
-    var moon$7 = {
+    var moon$8 = {
     	new_moon: "Luna Nuova",
     	waxing_crescent: "Mezzaluna crescente",
     	first_quarter: "Primo quarto",
@@ -583,30 +590,69 @@ var TSMoonCard = (function (exports) {
     	waning_crescent: "Mezzaluna calante"
     };
     var it = {
+    	common: common$8,
+    	editor: editor$9,
+    	errors: errors$8,
+    	card: card$8,
+    	moon: moon$8
+    };
+
+    var it$1 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        card: card$8,
+        common: common$8,
+        default: it,
+        editor: editor$9,
+        errors: errors$8,
+        moon: moon$8
+    });
+
+    var common$7 = {
+    	version: "Version",
+    	title: "Minimal Sun Moon",
+    	title_card: "Minimal Sun Moon Card",
+    	description: "A minimal card to render the state of the sun and moon.",
+    	invalid_configuration: "Invalid configuration"
+    };
+    var editor$8 = {
+    	moon_entity: "Moon entity (Optional)"
+    };
+    var errors$7 = {
+    	missing_moon_entity: "moon_entity is missing in configuration",
+    	invalid_icon_type: "The following colors in your configuration are invalid:"
+    };
+    var card$7 = {
+    	moon_phase: "Moon Phase",
+    	moon_rise: "Moon Rise",
+    	moon_set: "Moon Set",
+    	loading: "Loading..."
+    };
+    var moon$7 = {
+    	new_moon: "New Moon",
+    	waxing_crescent: "Waxing Crescent",
+    	first_quarter: "First Quarter",
+    	waxing_gibbous: "Waxing Gibbous",
+    	full_moon: "Full Moon",
+    	waning_gibbous: "Waning Gibbous",
+    	last_quarter: "Last Quarter",
+    	waning_crescent: "Waning Crescent"
+    };
+    var nb = {
     	common: common$7,
-    	editor: editor$7,
+    	editor: editor$8,
     	errors: errors$7,
     	card: card$7,
     	moon: moon$7
     };
 
-    var it$1 = /*#__PURE__*/Object.freeze({
+    var nb$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         card: card$7,
         common: common$7,
-        default: it,
-        editor: editor$7,
+        default: nb,
+        editor: editor$8,
         errors: errors$7,
         moon: moon$7
-    });
-
-    var nb = {
-    	
-    };
-
-    var nb$1 = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        default: nb
     });
 
     var common$6 = {
@@ -616,7 +662,7 @@ var TSMoonCard = (function (exports) {
     	description: "Een minimale kaart om de toestand van de zon en de maan weer te geven.",
     	invalid_configuration: "Ongeldige configuratie"
     };
-    var editor$6 = {
+    var editor$7 = {
     	moon_entity: "Maanentiteit (optioneel)"
     };
     var errors$6 = {
@@ -626,7 +672,8 @@ var TSMoonCard = (function (exports) {
     var card$6 = {
     	moon_phase: "Maanfase",
     	moon_rise: "Maanopkomst",
-    	moon_set: "Maanondergang"
+    	moon_set: "Maanondergang",
+    	loading: "Loading..."
     };
     var moon$6 = {
     	new_moon: "Nieuwemaan",
@@ -640,7 +687,7 @@ var TSMoonCard = (function (exports) {
     };
     var nl = {
     	common: common$6,
-    	editor: editor$6,
+    	editor: editor$7,
     	errors: errors$6,
     	card: card$6,
     	moon: moon$6
@@ -651,7 +698,7 @@ var TSMoonCard = (function (exports) {
         card: card$6,
         common: common$6,
         default: nl,
-        editor: editor$6,
+        editor: editor$7,
         errors: errors$6,
         moon: moon$6
     });
@@ -663,7 +710,7 @@ var TSMoonCard = (function (exports) {
     	description: "Minimalna karta do wyświetlania stanu słońca i księżyca.",
     	invalid_configuration: "Nieprawidłowa konfiguracja"
     };
-    var editor$5 = {
+    var editor$6 = {
     	moon_entity: "Encja księżyca (Opcjonalnie)"
     };
     var errors$5 = {
@@ -673,7 +720,8 @@ var TSMoonCard = (function (exports) {
     var card$5 = {
     	moon_phase: "Faza Księżyca",
     	moon_rise: "Wschód Księżyca",
-    	moon_set: "Zachód Księżyca"
+    	moon_set: "Zachód Księżyca",
+    	loading: "Ładowanie..."
     };
     var moon$5 = {
     	new_moon: "Nów",
@@ -687,7 +735,7 @@ var TSMoonCard = (function (exports) {
     };
     var pl = {
     	common: common$5,
-    	editor: editor$5,
+    	editor: editor$6,
     	errors: errors$5,
     	card: card$5,
     	moon: moon$5
@@ -698,7 +746,7 @@ var TSMoonCard = (function (exports) {
         card: card$5,
         common: common$5,
         default: pl,
-        editor: editor$5,
+        editor: editor$6,
         errors: errors$5,
         moon: moon$5
     });
@@ -710,7 +758,7 @@ var TSMoonCard = (function (exports) {
     	description: "Um cartão minimalista para exibir as fases da lua e do sol.",
     	invalid_configuration: "Configuração Inválida"
     };
-    var editor$4 = {
+    var editor$5 = {
     	moon_entity: "Entidade Lua (Opcional)"
     };
     var errors$4 = {
@@ -720,7 +768,8 @@ var TSMoonCard = (function (exports) {
     var card$4 = {
     	moon_phase: "Fase da Lua",
     	moon_rise: "Nascer da Lua",
-    	moon_set: "Pôr da Lua"
+    	moon_set: "Pôr da Lua",
+    	loading: "A carregar..."
     };
     var moon$4 = {
     	new_moon: "Lua Nova",
@@ -734,7 +783,7 @@ var TSMoonCard = (function (exports) {
     };
     var pt = {
     	common: common$4,
-    	editor: editor$4,
+    	editor: editor$5,
     	errors: errors$4,
     	card: card$4,
     	moon: moon$4
@@ -745,7 +794,7 @@ var TSMoonCard = (function (exports) {
         card: card$4,
         common: common$4,
         default: pt,
-        editor: editor$4,
+        editor: editor$5,
         errors: errors$4,
         moon: moon$4
     });
@@ -757,7 +806,7 @@ var TSMoonCard = (function (exports) {
     	description: "Um cartão minimalista para exibir as fases da lua e do sol.",
     	invalid_configuration: "Configuração Inválida"
     };
-    var editor$3 = {
+    var editor$4 = {
     	moon_entity: "Entidade Lua (Opcional)"
     };
     var errors$3 = {
@@ -767,7 +816,8 @@ var TSMoonCard = (function (exports) {
     var card$3 = {
     	moon_phase: "Fase da Lua",
     	moon_rise: "Nascer da Lua",
-    	moon_set: "Pôr da Lua"
+    	moon_set: "Pôr da Lua",
+    	loading: "Carregando..."
     };
     var moon$3 = {
     	new_moon: "Lua Nova",
@@ -781,7 +831,7 @@ var TSMoonCard = (function (exports) {
     };
     var ptBR = {
     	common: common$3,
-    	editor: editor$3,
+    	editor: editor$4,
     	errors: errors$3,
     	card: card$3,
     	moon: moon$3
@@ -792,7 +842,7 @@ var TSMoonCard = (function (exports) {
         card: card$3,
         common: common$3,
         default: ptBR,
-        editor: editor$3,
+        editor: editor$4,
         errors: errors$3,
         moon: moon$3
     });
@@ -804,7 +854,7 @@ var TSMoonCard = (function (exports) {
     	description: "Un card minimalist care afișează starea soarelui și a lunii.",
     	invalid_configuration: "Configurație invalidă"
     };
-    var editor$2 = {
+    var editor$3 = {
     	moon_entity: "Entitatea lunii (Opțional)"
     };
     var errors$2 = {
@@ -814,7 +864,8 @@ var TSMoonCard = (function (exports) {
     var card$2 = {
     	moon_phase: "Faza Lunii",
     	moon_rise: "Răsăritul Lunii",
-    	moon_set: "Apusul Lunii"
+    	moon_set: "Apusul Lunii",
+    	loading: "Se încarcă..."
     };
     var moon$2 = {
     	new_moon: "Lună Nouă",
@@ -828,7 +879,7 @@ var TSMoonCard = (function (exports) {
     };
     var ro = {
     	common: common$2,
-    	editor: editor$2,
+    	editor: editor$3,
     	errors: errors$2,
     	card: card$2,
     	moon: moon$2
@@ -839,7 +890,7 @@ var TSMoonCard = (function (exports) {
         card: card$2,
         common: common$2,
         default: ro,
-        editor: editor$2,
+        editor: editor$3,
         errors: errors$2,
         moon: moon$2
     });
@@ -851,7 +902,7 @@ var TSMoonCard = (function (exports) {
     	description: "Минималистичная карточка для отображения состояния луны.",
     	invalid_configuration: "Ошибка в конфигурации"
     };
-    var editor$1 = {
+    var editor$2 = {
     	moon_entity: "Сенсор лунных фаз (Опционально)"
     };
     var errors$1 = {
@@ -861,7 +912,8 @@ var TSMoonCard = (function (exports) {
     var card$1 = {
     	moon_phase: "Лунная фаза",
     	moon_rise: "Восход луны",
-    	moon_set: "Заход луны"
+    	moon_set: "Заход луны",
+    	loading: "Загрузка..."
     };
     var moon$1 = {
     	new_moon: "Новолуние",
@@ -875,7 +927,7 @@ var TSMoonCard = (function (exports) {
     };
     var ru = {
     	common: common$1,
-    	editor: editor$1,
+    	editor: editor$2,
     	errors: errors$1,
     	card: card$1,
     	moon: moon$1
@@ -886,7 +938,7 @@ var TSMoonCard = (function (exports) {
         card: card$1,
         common: common$1,
         default: ru,
-        editor: editor$1,
+        editor: editor$2,
         errors: errors$1,
         moon: moon$1
     });
@@ -898,7 +950,7 @@ var TSMoonCard = (function (exports) {
     	description: "Minimálna karta na vykreslenie stavu slnka a mesiaca.",
     	invalid_configuration: "Neplatná konfigurácia"
     };
-    var editor = {
+    var editor$1 = {
     	moon_entity: "Entita Mesiaca (voliteľné)"
     };
     var errors = {
@@ -908,7 +960,8 @@ var TSMoonCard = (function (exports) {
     var card = {
     	moon_phase: "Fáza Mesiaca",
     	moon_rise: "Mesiac východ",
-    	moon_set: "Mesiac západ"
+    	moon_set: "Mesiac západ",
+    	loading: "Načítava sa..."
     };
     var moon = {
     	new_moon: "Nový Mesiac",
@@ -922,7 +975,7 @@ var TSMoonCard = (function (exports) {
     };
     var sk = {
     	common: common,
-    	editor: editor,
+    	editor: editor$1,
     	errors: errors,
     	card: card,
     	moon: moon
@@ -933,12 +986,11 @@ var TSMoonCard = (function (exports) {
         card: card,
         common: common,
         default: sk,
-        editor: editor,
+        editor: editor$1,
         errors: errors,
         moon: moon
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const languages = {
         ca: ca$1,
         cz: cz$1,
@@ -957,31 +1009,6 @@ var TSMoonCard = (function (exports) {
         ru: ru$1,
         sk: sk$1,
     };
-    /*
-    // Optimisation des imports : Utilisation des imports dynamiques
-    // pour charger les langues uniquement lorsque nécessaire.
-    const languages: Record<string, () => Promise<any>> = {
-      ca: () => import('./languages/ca.json'),
-      cz: () => import('./languages/cz.json'),
-      de: () => import('./languages/de.json'),
-      en: () => import('./languages/en.json'),
-      es: () => import('./languages/es.json'),
-      fr: () => import('./languages/fr.json'),
-      hu: () => import('./languages/hu.json'),
-      it: () => import('./languages/it.json'),
-      nb: () => import('./languages/nb.json'),
-      nl: () => import('./languages/nl.json'),
-      pl: () => import('./languages/pl.json'),
-      pt: () => import('./languages/pt.json'),
-      pt_BR: () => import('./languages/pt-BR.json'),
-      r0: () => import('./languages/ro.json'),
-      ru: () => import('./languages/ru.json'),
-      sk: () => import('./languages/sk.json'),
-
-    };
-
-
-    */
     function localize(key, locale) {
         let translated;
         const lang = locale
@@ -2281,9 +2308,9 @@ var TSMoonCard = (function (exports) {
         thirdQuarterMoon: 'last_quarter',
         waningCrescentMoon: 'waning_crescent'
     };
-    /**
-     * Main card class definition
-     */
+    const DEFAULT_LATITUDE = 48.8566;
+    const DEFAULT_LONGITUDE = 2.3522;
+    const DEFAULT_ICON_TYPE = 'forms';
     class TSMoonCard extends i {
         constructor() {
             super(...arguments);
@@ -2294,8 +2321,13 @@ var TSMoonCard = (function (exports) {
             this.entity = "";
             this.time_format = "24h";
             this.hemisphere = "N";
-            this.home_latitude = 0;
-            this.home_longitude = 0;
+            this.home_latitude = DEFAULT_LATITUDE;
+            this.home_longitude = DEFAULT_LONGITUDE;
+            this.moonPhase = '';
+            this.moonIcon = '';
+            this.moonIllumination = '';
+            this.moonRise = '';
+            this.moonSet = '';
         }
         renderIcon(svg_icon_code, p_hemisphere) {
             var lv_style = '';
@@ -2311,111 +2343,115 @@ var TSMoonCard = (function (exports) {
         localize(key) {
             return localize(key, this.getLocale());
         }
-        /**
-         * credits to: tmcarr - https://github.com/tmcarr
-         * @param p_timeFormat:string Time Format
-         * @returns
-         */
-        /*private getTimeFormat(p_timeFormat: string): string {
-            // Format strings defined here: https://day.js.org/docs/en/display/format
-            if (p_timeFormat == '12h') {
-                return 'h:mm A'
-            } else {
-                return 'HH:mm'
-            }
-        }
-            */
         getTimeFormat(p_timeFormat) {
             return p_timeFormat === '12h' ? 'h:mm A' : 'HH:mm';
         }
         ;
         getLocale() {
-            var _a, _b;
-            return (_b = (_a = this.language) !== null && _a !== void 0 ? _a : this.hass.locale.language) !== null && _b !== void 0 ? _b : 'en';
+            return this.language ?? this._hass?.locale?.language ?? 'en';
         }
         toIcon(moonState, type) {
-            if ((type === 'forms') || (type === 'round') || (type === 'photo') || (type === 'clear')) {
-                return svg[type][moonState];
+            const validTypes = ['forms', 'round', 'photo', 'clear'];
+            if (!validTypes.includes(type)) {
+                console.warn(`Type d'icône invalide: "${type}". Utilisation de "${DEFAULT_ICON_TYPE}" par défaut.`);
             }
-            else {
-                // Gérer le cas où la propriété n'est pas définie
-                // throw new Error('Propriété non définie');
+            const iconType = (validTypes.includes(type) ? type : DEFAULT_ICON_TYPE);
+            const icon = svg[iconType]?.[moonState];
+            if (!icon) {
+                console.warn(`Icône non trouvée pour type: ${iconType}, état: ${moonState}`);
                 return "";
             }
+            return icon;
         }
-        // CSS for the card
-        // https://lit.dev/docs/components/styles/
         static get styles() {
             return styles;
         }
-        /**
-         * Called on every hass update
-         */
+        static async getConfigElement() {
+            await Promise.resolve().then(function () { return editor; });
+            return document.createElement('tsmoon-card-editor');
+        }
+        static getStubConfig() {
+            return {
+                type: 'custom:tsmoon-card',
+                entity: 'sensor.moon',
+                title: 'Lune',
+                icon_type: 'forms',
+                time_format: '24h',
+                hemisphere: 'N',
+                language: 'fr'
+            };
+        }
         set hass(hass) {
-            /*
-            if (!this.entity || !hass.states[this.entity]) {
-                return;
-            }
-            */
-            if (this.entity) {
+            this._hass = hass;
+            if (this.entity && hass.states[this.entity]) {
                 this.state = hass.states[this.entity].state;
             }
             else {
                 this.state = '';
             }
-            this.home_latitude = hass.states['zone.home'].attributes.latitude;
-            this.home_longitude = hass.states['zone.home'].attributes.longitude;
+            this.home_latitude = hass.states['zone.home']?.attributes.latitude ?? DEFAULT_LATITUDE;
+            this.home_longitude = hass.states['zone.home']?.attributes.longitude ?? DEFAULT_LONGITUDE;
         }
-        /**
-         * Called every time when entity config is updated
-         * @param config Card configuration (yaml converted to JSON)
-         */
         setConfig(config) {
-            var _a, _b, _c, _d, _e, _f;
-            this._config = Object.assign({}, config);
-            this.entity = (_a = config.entity) !== null && _a !== void 0 ? _a : this.entity;
-            this.cardTitle = (_b = config.title) !== null && _b !== void 0 ? _b : this.cardTitle;
-            this.icon_type = (_c = config.icon_type) !== null && _c !== void 0 ? _c : 'forms';
-            this.language = (_d = config.language) !== null && _d !== void 0 ? _d : 'fr';
-            this.time_format = (_e = config.time_format) !== null && _e !== void 0 ? _e : '24h';
-            this.hemisphere = (_f = config.hemisphere) !== null && _f !== void 0 ? _f : '24h';
+            this.entity = config.entity ?? this.entity;
+            this.cardTitle = config.title ?? this.cardTitle;
+            this.icon_type = config.icon_type ?? 'forms';
+            this.language = config.language ?? 'fr';
+            this.time_format = config.time_format ?? '24h';
+            this.hemisphere = config.hemisphere ?? 'N';
         }
-        /**
-         * Renders the card when the update is requested (when any of the properties are changed)
-         */
-        render() {
-            var lv_state = this.state;
-            const lc_date = new Date(); // Def Date
-            if ((!lv_state) || (lv_state == '')) {
-                console.info('lv_state non défini ou nul:', this.state);
-                //Calcul autonome de la phase de la lune
-                const lc_moonRawData = SunCalc.getMoonData(lc_date, this.home_latitude, this.home_longitude);
-                // suncalc ne donne pas les mêmes chaines de varible retour des phases
-                // donc il faut les traduire
-                lv_state = TSMOON_PHASES[lc_moonRawData.illumination.phase.id];
+        willUpdate(changedProperties) {
+            super.willUpdate(changedProperties);
+            if (changedProperties.has('state') ||
+                changedProperties.has('home_latitude') ||
+                changedProperties.has('home_longitude') ||
+                changedProperties.has('icon_type') ||
+                changedProperties.has('time_format')) {
+                this.updateMoonData();
             }
-            console.info('lv_state:', lv_state);
-            // A partir d'ici lv_state est OK
-            // Calcul de l'icone
-            const lc_moonIcon = this.toIcon(lv_state, this.icon_type);
-            const lc_state_localized = this.localize(`moon.${lv_state}`);
-            //---------------------------------------------------
-            // Calcul des temps du lever et du coucher de la lune
-            //---------------------------------------------------
-            const lc_times = SunCalc.getMoonTimes(lc_date, this.home_latitude, this.home_longitude);
-            // Accéder directement aux propriétés spécifiques pour obtenir les heures
-            //const l_moonrise = lc_times.rise;
-            //const l_moonset = lc_times.set;
-            // Convertir la date en utilisant Day.js
-            //const lc_moonriseFormated = dayjs(lc_times.rise).format('HH:mm');
-            //const lc_moonsetFormated = dayjs(lc_times.set).format('HH:mm');
-            const lc_moonriseFormated = dayjs(lc_times.rise).format(this.getTimeFormat(this.time_format));
-            const lc_moonsetFormated = dayjs(lc_times.set).format(this.getTimeFormat(this.time_format));
-            //---------------------------------------------------
-            // Calcul de du % d'illuminationde la lune
-            //---------------------------------------------------
-            const moon_getData = SunCalc.getMoonData(lc_date, this.home_latitude, this.home_longitude);
-            const moon_illumination_percent = Math.ceil(moon_getData.illumination.fraction * 100) + "%";
+        }
+        updateMoonData() {
+            if (!this._hass)
+                return;
+            try {
+                const currentDate = new Date();
+                let phaseState = this.state;
+                if (!phaseState || phaseState === '') {
+                    const moonRawData = SunCalc.getMoonData(currentDate, this.home_latitude, this.home_longitude);
+                    phaseState = TSMOON_PHASES[moonRawData.illumination.phase.id];
+                }
+                this.moonPhase = phaseState;
+                this.moonIcon = this.toIcon(phaseState, this.icon_type);
+                const moonData = SunCalc.getMoonData(currentDate, this.home_latitude, this.home_longitude);
+                this.moonIllumination = Math.ceil(moonData.illumination.fraction * 100) + "%";
+                const times = SunCalc.getMoonTimes(currentDate, this.home_latitude, this.home_longitude);
+                const timeFormat = this.getTimeFormat(this.time_format);
+                this.moonRise = dayjs(times.rise).format(timeFormat);
+                this.moonSet = dayjs(times.set).format(timeFormat);
+            }
+            catch (error) {
+                console.error('Erreur lors du calcul des données lunaires:', error);
+                this.moonPhase = '';
+                this.moonIcon = '';
+                this.moonIllumination = '0%';
+                this.moonRise = '--:--';
+                this.moonSet = '--:--';
+            }
+        }
+        render() {
+            if (!this.moonPhase) {
+                return b `
+                <ha-card>
+                    <div class="card-content">
+                        ${this.localize('card.loading')}
+                    </div>
+                </ha-card>
+            `;
+            }
+            const LCstate = this.localize(`moon.${this.moonPhase}`);
+            const LCmoon_phase = this.localize('card.moon_phase');
+            const LCmoon_rise = this.localize(`card.moon_rise`);
+            const LCmoon_set = this.localize(`card.moon_set`);
             return b `
         
         <ha-card>
@@ -2424,15 +2460,15 @@ var TSMoonCard = (function (exports) {
             </div>
             <div class="card-content">
                 <div class="entity-row">
-                    ${this.renderIcon(lc_moonIcon, this.hemisphere)}
+                    ${this.renderIcon(this.moonIcon, this.hemisphere)}
                     <div class="name truncate">
-                      <span class="primary">${this.localize(`card.moon_phase`)}</span><br />
-                      <span class="secondary">${lc_state_localized}</span>
-                      <span class="secondary">&nbsp;(${moon_illumination_percent})</span>
+                      <span class="primary">${LCmoon_phase}</span><br />
+                      <span class="secondary">${LCstate}</span>
+                      <span class="secondary">&nbsp;(${this.moonIllumination})</span>
                     </div>
                     <div class="state">
-                      <div><span class="primary">${this.localize(`card.moon_rise`)}: </span> ${lc_moonriseFormated}</div>
-                      <div><span class="primary">${this.localize(`card.moon_set`)}: </span> ${lc_moonsetFormated}</div>
+                      <div><span class="primary">${LCmoon_rise}: </span> ${this.moonRise}</div>
+                      <div><span class="primary">${LCmoon_set}: </span> ${this.moonSet}</div>
                     </div>
                 </div>
             </div>
@@ -2468,26 +2504,151 @@ var TSMoonCard = (function (exports) {
         n({ attribute: false })
     ], TSMoonCard.prototype, "home_longitude", void 0);
     __decorate([
+        n({ attribute: false })
+    ], TSMoonCard.prototype, "moonPhase", void 0);
+    __decorate([
+        n({ attribute: false })
+    ], TSMoonCard.prototype, "moonIcon", void 0);
+    __decorate([
+        n({ attribute: false })
+    ], TSMoonCard.prototype, "moonIllumination", void 0);
+    __decorate([
+        n({ attribute: false })
+    ], TSMoonCard.prototype, "moonRise", void 0);
+    __decorate([
+        n({ attribute: false })
+    ], TSMoonCard.prototype, "moonSet", void 0);
+
+    class TSMoonCardEditor extends i {
+        setConfig(config) {
+            this._config = config;
+        }
+        _valueChanged(ev) {
+            if (!this._config || !this.hass) {
+                return;
+            }
+            const target = ev.target;
+            const configValue = target.configValue;
+            const value = target.value;
+            if (this._config[configValue] === value) {
+                return;
+            }
+            const newConfig = {
+                ...this._config,
+                [configValue]: value,
+            };
+            const event = new CustomEvent('config-changed', {
+                detail: { config: newConfig },
+                bubbles: true,
+                composed: true,
+            });
+            this.dispatchEvent(event);
+        }
+        render() {
+            if (!this.hass || !this._config) {
+                return b ``;
+            }
+            return b `
+        <div class="card-config">
+            <!-- Titre -->
+            <ha-textfield
+                label="Titre (optionnel)"
+                .value=${this._config.title || ''}
+                .configValue=${'title'}
+                @input=${this._valueChanged}
+            ></ha-textfield>
+
+            <!-- Entité -->
+            <ha-entity-picker
+                label="Entité de la lune"
+                .hass=${this.hass}
+                .value=${this._config.entity || ''}
+                .configValue=${'entity'}
+                @value-changed=${this._valueChanged}
+                allow-custom-entity
+            ></ha-entity-picker>
+
+            <!-- Type d'icône -->
+            <ha-select
+                label="Type d'icône"
+                .value=${this._config.icon_type || 'forms'}
+                .configValue=${'icon_type'}
+                @selected=${this._valueChanged}
+                @closed=${(ev) => ev.stopPropagation()}
+            >
+                <mwc-list-item value="forms">Forms</mwc-list-item>
+                <mwc-list-item value="round">Round</mwc-list-item>
+                <mwc-list-item value="photo">Photo</mwc-list-item>
+                <mwc-list-item value="clear">Clear</mwc-list-item>
+            </ha-select>
+
+            <!-- Format heure -->
+            <ha-select
+                label="Format de l'heure"
+                .value=${this._config.time_format || '24h'}
+                .configValue=${'time_format'}
+                @selected=${this._valueChanged}
+                @closed=${(ev) => ev.stopPropagation()}
+            >
+                <mwc-list-item value="24h">24h</mwc-list-item>
+                <mwc-list-item value="12h">12h</mwc-list-item>
+            </ha-select>
+
+            <!-- Hémisphère -->
+            <ha-select
+                label="Hémisphère"
+                .value=${this._config.hemisphere || 'N'}
+                .configValue=${'hemisphere'}
+                @selected=${this._valueChanged}
+                @closed=${(ev) => ev.stopPropagation()}
+            >
+                <mwc-list-item value="N">Nord</mwc-list-item>
+                <mwc-list-item value="S">Sud</mwc-list-item>
+            </ha-select>
+
+            <!-- Langue -->
+            <ha-textfield
+                label="Langue (fr, en, de, etc.)"
+                .value=${this._config.language || 'fr'}
+                .configValue=${'language'}
+                @input=${this._valueChanged}
+            ></ha-textfield>
+        </div>
+    `;
+        }
+    }
+    __decorate([
+        n({ attribute: false })
+    ], TSMoonCardEditor.prototype, "hass", void 0);
+    __decorate([
         r()
-    ], TSMoonCard.prototype, "_config", void 0);
+    ], TSMoonCardEditor.prototype, "_config", void 0);
+    customElements.define('tsmoon-card-editor', TSMoonCardEditor);
+
+    var editor = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        TSMoonCardEditor: TSMoonCardEditor
+    });
 
     var name = "ha-tsmoon-card";
-    var version = "v0.11.4";
+    var version = "v0.13.3";
 
-    const printVersionToConsole = () => console.info(`%c  ${name.toUpperCase()}  %c  Version ${version}  `, 'color: white; font-weight: bold; background: crimson', 'color: #000; font-weight: bold; background: #ddd');
-    // This puts your card into the UI card picker dialog
+    const CARD_TYPE = 'tsmoon-card';
+    const CARD_NAME = 'Simple Moon Phase Card';
+    const CARD_DESCRIPTION = 'A card to view Moon Phases';
+    const printVersionToConsole = () => {
+        console.info(`%c  ${name.toUpperCase()}  %c  Version ${version}  `, 'color: white; font-weight: bold; background: crimson', 'color: #000; font-weight: bold; background: #ddd');
+    };
     window.customCards = window.customCards || [];
     window.customCards.push({
-        type: 'tsmoon-card',
-        name: 'Simple Moon Phase Card',
-        entity: "sensor.moon",
-        description: 'A card to view Moon Phases',
+        type: CARD_TYPE,
+        name: CARD_NAME,
+        entity: 'sensor.moon',
+        description: CARD_DESCRIPTION,
         preview: true,
     });
-    // Print Version to Console
     printVersionToConsole();
-    // Registering card
-    customElements.define("tsmoon-card", TSMoonCard);
+    customElements.define(CARD_TYPE, TSMoonCard);
 
     exports.printVersionToConsole = printVersionToConsole;
 
