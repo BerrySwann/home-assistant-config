@@ -31,7 +31,7 @@
 ---
 
 ## 📏 RÈGLES DE STRUCTURATION GENRALE ET DE TITRAGE (YAML) (sauf eception)
-**Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml).**
+**Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml). Jamais pour les automations**
 
 ### 1. HIÉRARCHIE VISUELLE (LES TITRES)
 - **TITRE PRINCIPAL (Section / Pôle)**
@@ -57,7 +57,7 @@
 ### 3. ORDRE OFFICIEL DES PIÈCES (INDEX 1 À 10)
 Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de Pôle :
 1. **ENTRÉE** | 2. **CELLIER** | 3. **TOILETTE** | 4. **SALON** | 5. **CUISINE** | 6. **COULOIR** | 7. **BUREAU** | 8. **SDB** | 9. **CHAMBRE** | 10. **AUTRE**.
-*Note : **10. AUTRE** regroupe (Standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov).*
+*Note : **10. AUTRE** regroupe (Standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov, Ping HTTPS).*
 
 ---
 
@@ -71,18 +71,14 @@ Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de 
    - La largeur standard est de 74 caractères.
    - EXCEPTION : Si le contenu technique interne force un dépassement, la boîte ASCII DOIT être élargie pour englober tout le texte (76, 80 car. ou plus si nécessaire).
    - Ne jamais passer à la ligne à l'intérieur d'une boîte pour compenser la largeur.
-
-3. **EXEMPLE DE TITRE ÉLARGI (Si > 74 car)** :
-# ╭───────────────────────────╮
-# │ TEMPLATES : SÉRIE 01_2. MÉTÉO — LABEL │
-# ╰───────────────────────────╯
-
+     
 ---
 
 ## 🛠️ RÈGLES DE CODAGE STRICTES
 
 - **AUTOMATIONS** : 
   - ⛔ **INTERDIT** : Jamais d' `id:` au niveau global.
+  - ⛔ INTERDIT : Jamais de "-" devant le 1er `alias` (Titre).
   - ✅ **OBLIGATOIRE** : `alias` en MAJUSCULES pour chaque bloc (trigger, condition, action).
   - 🆗 **AUTORISÉ** : `id:` permis UNIQUEMENT à l'intérieur des triggers ou actions.
 - **ENTITÉS** : 
