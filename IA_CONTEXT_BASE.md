@@ -27,12 +27,7 @@
 5. **CHAMBRE (Nord) :** 3.95m x 2.85m (11.26 m²).
    - *Équipement :* Split mural. Pas de volet motorisé.
    - *Note :* Forte dissipation thermique (DUT élevé).
-
-# 🌡️ STRATÉGIE THERMIQUE & MONITORING 
-(uniquement pour l'analyse des consommations électrique)
-- **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure.
-- **Mode Absence :** Si T° Ext < 10°C, tous les climats passent à 17°C ou 18°C.
-
+  
 ---
 
 ## 📏 RÈGLES DE STRUCTURATION GENRALE ET DE TITRAGE (YAML) (sauf eception)
@@ -232,7 +227,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 (uniquement pour l'analyse des consommations électrique)
 
 - **Sondes :** Thermostats SONOFF dans TOUTES les pièces + T° Extérieure (Balcon Nord).
-- **Mode Absence :** Hivers 17° Si T° Ext < 10°C 18° ou Si T° Ext < 8°C 19° / Eté T°Cible (28°).
+- **Mode Absence :** Hivers 17° - Si T° Ext < 10°C = 18° ou Si T° Ext < 8°C = 19° / Eté T°Cible (28°).
 - **Logique "Cœur du Système" (T° Extérieure -> Cible -> Confort) :**
   
    <img width="4264" height="5602" alt="Confort Cible Calcul Flow-2026-02-01-102732" src="https://github.com/user-attachments/assets/f18e24a2-1441-482b-af70-537a7b208e15" />
