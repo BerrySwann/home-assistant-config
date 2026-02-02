@@ -1,5 +1,5 @@
-# 🧠 BASE DE CONTEXTE EXPERT HOME ASSISTANT (BerrySwann)
-*Dernière mise à jour : 2026-02-01*
+# 🧠 BASE DE CONTEXTE EXPERT HOME ASSISTANT
+*Dernière mise à jour : 2026-02-02*
 
 ---
 
