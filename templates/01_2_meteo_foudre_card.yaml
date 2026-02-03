@@ -69,17 +69,19 @@
 # --- temps_depuis_le_dernier_impact_de_foudre ---
     - name: "Temps depuis le dernier impact de foudre"
       unique_id: temps_depuis_le_dernier_impact_de_foudre
-      unit_of_measurement: "seconds"
       state: >
-        {% set impact_time_state = states('sensor.blitzortung_lightning_last_impact_time') %}
-        {% set last_impact = as_timestamp(impact_time_state if impact_time_state != 'unknown' else '1970-01-01T00:00:00+00:00') | default(0) | int(0) %}
-        {% set now = as_timestamp(now()) %}
-        {% if (now - last_impact) > 7200 %} Calme depuis plus de 2h
+        {% set count = states('sensor.blitzortung_lightning_counter') | int(0) %}
+        {% set last_time = states('sensor.blitzortung_lightning_last_impact_time') %}
+        {% set last_ts = as_timestamp(last_time) if last_time not in ['unknown', 'unavailable', 'none'] else 0 %}
+        {% set now_ts = as_timestamp(now()) %}
+        {% set diff = now_ts - last_ts %}
+
+        {# CONDITION : Si le compteur est à 0 OU si le dernier impact date de plus de 2h #}
+        {% if count == 0 or diff > 7200 or last_ts == 0 %}
+          Calme depuis plus de 2h
         {% else %}
-          {% set time_diff = now - last_impact %}
-          {% set seconds = (time_diff % 60) | int (0) %}
-          {% set minutes = ((time_diff % 3600) / 60) | int (0) %}
-          {% set hours = ((time_diff % 86400) / 3600) | int (0) %}
-          {% set days = (time_diff / 86400) | int %}
-          {{ days }} jours, {{ hours }} heures, {{ minutes }} minutes, {{ seconds }} secondes
+          {% set s = (diff % 60) | int(0) %}
+          {% set m = ((diff % 3600) // 60) | int(0) %}
+          {% set h = (diff // 3600) | int(0) %}
+          Il y a {% if h > 0 %}{{ h }}h {% endif %}{{ m }}m {{ s }}s
         {% endif %}
