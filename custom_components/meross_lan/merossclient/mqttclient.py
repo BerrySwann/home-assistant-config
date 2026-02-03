@@ -19,10 +19,6 @@ if typing.TYPE_CHECKING:
     from .protocol.message import MerossMessage
 
 
-def generate_app_id():
-    return md5(uuid4().hex.encode("utf-8")).hexdigest()
-
-
 class MerossMQTTRateLimitException(Exception):
 
     pass
@@ -78,6 +74,10 @@ class _MerossMQTTClient(mqtt.Client):
     STATE_RECONNECTING = "reconnecting"
     STATE_DISCONNECTING = "disconnecting"
     STATE_DISCONNECTED = "disconnected"
+
+    @staticmethod
+    def generate_app_id():
+        return md5(uuid4().hex.encode("utf-8")).hexdigest()
 
     def __init__(
         self,
@@ -377,7 +377,7 @@ class MerossMQTTAppClient(_MerossMQTTClient):
         sslcontext: ssl.SSLContext | None = None,
     ):
         if not app_id:
-            app_id = generate_app_id()
+            app_id = _MerossMQTTClient.generate_app_id()
         self.app_id = app_id
         self.topic_command = f"/app/{userid}-{app_id}/subscribe"
         self.topic_push = f"/app/{userid}/subscribe"

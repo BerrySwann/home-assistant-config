@@ -142,7 +142,7 @@ class MLRollerShutter(MLCover):
                 if fw_version <= (2, 1, 4):
                     # trying to detect if ns_multiple is offending
                     # 2.1.4 devices (#419)
-                    manager.disable_multiple()
+                    manager.enable_multiple(False)
 
         except Exception:
             self._position_native_isgood = False

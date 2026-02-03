@@ -2,11 +2,12 @@
 A collection of typing definitions for
 
 """
+
 import enum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from message import MerossResponse
+    from message import MerossMessage
 
 
 #
@@ -34,7 +35,7 @@ class MerossKeyError(MerossProtocolError):
     reported by device
     """
 
-    def __init__(self, response: "MerossResponse"):
+    def __init__(self, response: "MerossMessage"):
         super().__init__(response, "Invalid key")
 
 
@@ -44,5 +45,5 @@ class MerossSignatureError(MerossProtocolError):
     when validating the received header
     """
 
-    def __init__(self, response: "MerossResponse"):
+    def __init__(self, response: "MerossMessage"):
         super().__init__(response, "Signature error")

@@ -74,7 +74,7 @@
         {% set impact_time_state = states('sensor.blitzortung_lightning_last_impact_time') %}
         {% set last_impact = as_timestamp(impact_time_state if impact_time_state != 'unknown' else '1970-01-01T00:00:00+00:00') | default(0) | int(0) %}
         {% set now = as_timestamp(now()) %}
-        {% if (now - last_impact) > 7200 %} 0
+        {% if (now - last_impact) > 7200 %} Calme depuis plus de 2h
         {% else %}
           {% set time_diff = now - last_impact %}
           {% set seconds = (time_diff % 60) | int (0) %}

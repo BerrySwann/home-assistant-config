@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 
 from .. import const as mlc
 from ..merossclient.protocol import const as mc, namespaces as mn
-from ..merossclient.protocol.message import check_message_strict
 
 if TYPE_CHECKING:
     from typing import Any, Callable, Coroutine
@@ -56,7 +55,7 @@ class NamespaceParser(Loggable if TYPE_CHECKING else object):
 
     async def async_shutdown(self):
         if self.namespace_handlers:
-            for handler in set(self.namespace_handlers):
+            for handler in tuple(self.namespace_handlers):
                 handler.unregister(self)
 
     def _parse(self, payload: dict, /):
@@ -64,7 +63,7 @@ class NamespaceParser(Loggable if TYPE_CHECKING else object):
         when the parser is registered to a NamespaceHandler for a given namespace
         and no 'better' _parse_xxxx has been defined. See NamespaceHandler.register.
         At this root level, coming here is likely an error but this feature
-        (default parser) is being leveraged to setup a quick parsing route for some
+        (default parser) is being leveraged to setup a default parsing route for some
         specific class of entities instead of having to define a specific _parse_xxxx.
         This is useful for generalized sensor classes which are just mapped to a single
         namespace."""
@@ -112,6 +111,7 @@ class NamespaceHandler:
         parsers: dict[object, Callable[[dict], None]]
         lastpush: dict | None
         polling_strategy: PollingStrategyFunc | None
+        polling_request: mt.MerossRequestType
         polling_request_channels: list[dict[str, Any]]
 
     __slots__ = (
@@ -195,17 +195,9 @@ class NamespaceHandler:
         """
         ns = self.ns
         _request_payload_type = request_payload_type or ns.request_payload_type
-        if _request_payload_type is mn.PayloadType.LIST_C:
-            self.polling_request = (
-                ns.name,
-                mc.METHOD_GET,
-                (
-                    {ns.key: {mc.KEY_CHANNEL: 65535}}
-                    if self.device.descriptor.is_refoss and (not request_payload_type)
-                    else {ns.key: self.polling_request_channels}
-                ),
-            )
-        elif _request_payload_type is mn.PayloadType.LIST_SX:
+        if (_request_payload_type is mn.PayloadType.LIST_C) or (
+            _request_payload_type is mn.PayloadType.LIST_SX
+        ):
             self.polling_request = (
                 ns.name,
                 mc.METHOD_GET,
@@ -312,7 +304,7 @@ class NamespaceHandler:
         ns = self.ns
         channel = getattr(parser, ns.key_channel)
         assert channel not in self.parsers, "parser already registered"
-        self.parsers[channel] = getattr(parser, f"_parse_{ns.slug}", parser._parse)
+        self.parsers[channel] = getattr(parser, f"_parse_{ns.slug_end}", parser._parse)
         if not parser.namespace_handlers:
             parser.namespace_handlers = set()
         parser.namespace_handlers.add(self)
@@ -420,10 +412,10 @@ class NamespaceHandler:
                 # we add the last split of the namespace to the extracted payload key
                 if type(_payload) is dict:
                     self._parse_undefined_dict(
-                        f"{ns.slug}_{_key}", _payload, _payload.get(ns.key_channel)
+                        f"{ns.slug_end}_{_key}", _payload, _payload.get(ns.key_channel)
                     )
                 else:
-                    _key = f"{ns.slug}_{_key}"
+                    _key = f"{ns.slug_end}_{_key}"
                     for __payload in _payload:
                         # not having a "channel" in the list payloads is unexpected so far
                         self._parse_undefined_dict(
@@ -543,6 +535,29 @@ class NamespaceHandler:
             self.parsers[channel] = self._parse_stub
 
         return self.parsers[channel]
+
+    async def async_request_get_channel(self, channel: object, /):
+        """
+        Helper to execute a straigth query to get a single channel out of a set.
+        This is rather generic and adapts the query format to the current polling grammar
+        which, in some cases, could differ from what's been set in ns definition
+        (see polling_request_configure). Also, it shouldnt be used for namespaces that
+        don't support GET.
+        """
+        ns = self.ns
+        payload_type = self.polling_request[2][ns.key]
+        if isinstance(payload_type, list):
+            return await self.device.async_request(
+                ns.name,
+                mc.METHOD_GET,
+                {ns.key: [{ns.key_channel: channel}]},
+            )
+        assert isinstance(payload_type, dict)
+        return await self.device.async_request(
+            ns.name,
+            mc.METHOD_GET,
+            {ns.key: {ns.key_channel: channel}},
+        )
 
     # Polling Strategies:
     # These are configured at initialization time by setting the 'polling_strategy' attribute
@@ -715,8 +730,7 @@ class NamespaceHandler:
                 def _check_response(_response: "MerossResponse | None"):
                     if _response:
                         try:
-                            _response = check_message_strict(_response)
-                            payload = _response["payload"][ns_key]
+                            payload = _response.check()["payload"][ns_key]
                             if type(payload) is list:
                                 return channels_count == len(payload)
                             else:  # dict
@@ -731,14 +745,21 @@ class NamespaceHandler:
                     )
                 ):
                     detected_request_payload_type = mn.PayloadType.LIST_C
-                if _check_response(
-                    await async_request_func(ns_name, mc.METHOD_GET, {ns_key: []})
+
+                # check ordered from more to less 'data heavy' payloads
+                # so that the last one working (less data) is the fallback
+                for _payload_type in (
+                    mn.PayloadType.DICT_C65535,
+                    mn.PayloadType.DICT_C,
+                    mn.PayloadType.LIST,
+                    mn.PayloadType.DICT,
                 ):
-                    detected_request_payload_type = mn.PayloadType.LIST
-                if _check_response(
-                    await async_request_func(ns_name, mc.METHOD_GET, {ns_key: {}})
-                ):
-                    detected_request_payload_type = mn.PayloadType.DICT
+                    if _check_response(
+                        await async_request_func(
+                            ns_name, mc.METHOD_GET, {ns_key: _payload_type.value}
+                        )
+                    ):
+                        detected_request_payload_type = _payload_type
 
                 if detected_request_payload_type:
                     # this will override the request_payload format from its default
@@ -965,6 +986,13 @@ POLLING_STRATEGY_CONF: dict[mn.Namespace, "NamespaceConfigType"] = {
         0,
         NamespaceHandler.async_poll_smart,
     ),
+    mn.Appliance_Config_Sensor_Association: (
+        mlc.PARAM_CONFIG_UPDATE_PERIOD,
+        mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
+        mlc.PARAM_HEADER_SIZE,
+        30,
+        NamespaceHandler.async_poll_smart,
+    ),
     mn.Appliance_Config_OverTemp: (
         mlc.PARAM_CONFIG_UPDATE_PERIOD,
         mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
@@ -976,7 +1004,7 @@ POLLING_STRATEGY_CONF: dict[mn.Namespace, "NamespaceConfigType"] = {
         mlc.PARAM_ENERGY_UPDATE_PERIOD,
         mlc.PARAM_ENERGY_UPDATE_CLOUD_PERIOD,
         320,
-        900,
+        1900,
         NamespaceHandler.async_poll_smart,
     ),
     mn.Appliance_Control_ConsumptionX: (
@@ -1057,14 +1085,14 @@ POLLING_STRATEGY_CONF: dict[mn.Namespace, "NamespaceConfigType"] = {
         NamespaceHandler.async_poll_smart,
     ),
     mn.Appliance_Control_Sensor_Latest: (
-        mlc.PARAM_SENSOR_SLOW_UPDATE_PERIOD,
+        mlc.PARAM_SENSOR_FAST_UPDATE_PERIOD,
         mlc.PARAM_SENSOR_SLOW_UPDATE_CLOUD_PERIOD,
         mlc.PARAM_HEADER_SIZE,
         80,
         NamespaceHandler.async_poll_smart,
     ),
     mn.Appliance_Control_Sensor_LatestX: (
-        mlc.PARAM_SENSOR_SLOW_UPDATE_PERIOD,
+        mlc.PARAM_SENSOR_FAST_UPDATE_PERIOD,
         mlc.PARAM_CLOUDMQTT_UPDATE_PERIOD,
         mlc.PARAM_HEADER_SIZE,
         220,

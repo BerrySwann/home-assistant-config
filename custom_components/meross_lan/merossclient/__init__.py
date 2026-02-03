@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from typing import Any, Callable, Final, Iterable, Mapping
 
     from protocol.message import MerossResponse
-    from protocol.types import MerossPayloadType, MerossRequestType
+    from protocol.types import ChannelPayload, MerossPayloadType, MerossRequestType
 
 try:
     from random import randint
@@ -89,7 +89,7 @@ def json_loads(s: str):
 #
 # General purpose utilities for payload handling
 #
-def get_element_by_key(payload: list[dict], key: str, value) -> dict:
+def get_element_by_key[_T: dict](payload: list[_T], key: str, value) -> _T:
     """
     scans the payload(list) looking for the first item matching
     the key value. Usually looking for the matching channel payload
@@ -103,18 +103,19 @@ def get_element_by_key(payload: list[dict], key: str, value) -> dict:
     )
 
 
-def get_element_by_key_safe(payload: list[dict], key: str, value) -> dict | None:
+def get_element_by_key_safe[_T: dict](payload: list[_T], key: str, value) -> _T | None:
     """
     scans the payload (expecting a list) looking for the first item matching
     the key value. Usually looking for the matching channel payload
     inside list payloads
     """
-    try:
-        for p in payload:
-            if p.get(key) == value:
+    for p in payload:
+        try:
+            if p[key] == value:
                 return p
-    except Exception:
-        return None
+        except KeyError:
+            continue
+    return None
 
 
 def delete_element_by_key(payload: list[dict], key: str, value):
@@ -131,11 +132,11 @@ def delete_element_by_key(payload: list[dict], key: str, value):
             pass
 
 
-def merge_dicts(dict1: dict, dict2: dict):
+def merge_dicts(dict1: "Mapping", dict2: "Mapping") -> "Any":
     """
     Recursively merge two dictionaries.
     """
-    result = dict1.copy()
+    result = dict(dict1)
     for key, value in dict2.items():
         if (type(value) is dict) and (key in result):
             result_value = result[key]
@@ -146,7 +147,7 @@ def merge_dicts(dict1: dict, dict2: dict):
     return result
 
 
-def update_dict_strict(dst_dict: dict, src_dict: dict):
+def update_dict_strict(dst_dict: dict, src_dict: "Mapping"):
     """Updates (merge) the dst_dict with values from src_dict checking
     their existence in dst_dict before applying. Used in emulators to update
     current state when receiving a SET payload. This is needed for testing so
@@ -157,18 +158,15 @@ def update_dict_strict(dst_dict: dict, src_dict: dict):
         if key in dst_dict:
             dst_value = dst_dict[key]
             dst_type = type(dst_value)
-            if dst_type is dict:
-                if type(value) is dict:
+            if dst_type is type(value):
+                if dst_type is dict:
                     update_dict_strict(dst_value, value)
-            elif dst_type is list:
-                if type(value) is list:
-                    dst_dict[key] = value  # lists ?!
-            else:
-                dst_dict[key] = value
+                else:
+                    dst_dict[key] = value
 
 
 def update_dict_strict_by_key[_T: "MerossPayloadType"](
-    dst_lst: "Iterable[_T]", src_dict: _T, key: str = mc.KEY_CHANNEL
+    dst_lst: "Iterable[_T]", src_dict: "Mapping", key: str = mc.KEY_CHANNEL
 ) -> _T:
     """
     Much like get_element_by_key scans the dst list looking for the first item matching
@@ -184,7 +182,7 @@ def update_dict_strict_by_key[_T: "MerossPayloadType"](
     raise KeyError(f"No match for key '{key}' on value:'{str(key_value)}' in {dst_lst}")
 
 
-def extract_dict_payloads(payload):
+def extract_dict_payloads[_T](payload: _T | list[_T]) -> "Iterable[_T]":
     """
     Helper generator to manage payloads which might carry list of payloads:
     payload = { "channel": 0, "onoff": 1}
@@ -319,6 +317,8 @@ class MerossDeviceDescriptor:
 
         DYNAMIC_ATTRS: Final[Mapping[str, Callable[["MerossDeviceDescriptor"], Any]]]
 
+        payload: Final[dict[str, Any]]
+        channels: Final[frozenset[int]]
         all: dict[str, Any]
         ability: dict[str, Any]
         digest: dict[str, Any]
@@ -342,6 +342,13 @@ class MerossDeviceDescriptor:
         productnametype: str
         productmodel: str
         is_refoss: bool
+
+    NO_CHANNEL = frozenset()
+    SINGLE_CHANNEL = frozenset({0})
+    TYPE_CHANNELS_MAP = {
+        # some lookup when digest euristic parsing doesn't work
+        "em06": frozenset({1, 2, 3, 4, 5, 6}),
+    }
 
     DYNAMIC_ATTRS = {
         # TODO: use cached_property
@@ -372,6 +379,7 @@ class MerossDeviceDescriptor:
 
     __slots__ = (
         "payload",
+        "channels",
         "all",
         "ability",
         "digest",
@@ -380,6 +388,35 @@ class MerossDeviceDescriptor:
 
     def __init__(self, payload: dict):
         self.payload = payload
+        # infer supported channels from device type
+        device_type = self.type
+        for _type, _channels in MerossDeviceDescriptor.TYPE_CHANNELS_MAP.items():
+            if device_type.startswith(_type):
+                self.channels = _channels
+                break
+        else:
+            # infer from digest payload
+            _channels = set()
+
+            def _search_channels(d: dict):
+                try:
+                    channel = d[mc.KEY_CHANNEL]
+                    if isinstance(channel, int):
+                        _channels.add(channel)
+                except Exception:
+                    for _value in d.values():
+                        _value_type = type(_value)
+                        if _value_type is dict:
+                            _search_channels(_value)
+                        elif _value_type is list:
+                            for item in _value:
+                                if type(item) is dict:
+                                    _search_channels(item)
+
+            _search_channels(self.digest)
+            self.channels = (
+                frozenset(_channels) if _channels else MerossDeviceDescriptor.NO_CHANNEL
+            )
 
     def __getattr__(self, name):
         value = MerossDeviceDescriptor.DYNAMIC_ATTRS[name](self)
@@ -390,7 +427,7 @@ class MerossDeviceDescriptor:
         """
         reset the cached pointers
         """
-        self.payload |= payload
+        self.payload.update(payload)
         for key in MerossDeviceDescriptor.DYNAMIC_ATTRS:
             # don't use hasattr() or so to inspect else the whole
             # dynamic attrs logic gets f...d

@@ -9,7 +9,6 @@ import logging
 import socket
 import sys
 from typing import TYPE_CHECKING
-from uuid import uuid4
 
 import aiohttp
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -137,25 +136,18 @@ class MerossHttpClient:
         self._host = value
         self._requesturl = URL(f"http://{value}/config")
 
-    def set_encryption(self, encryption_key: bytes | None, /):
-        if encryption_key:
-            self._encryption_cipher = Cipher(
-                algorithms.AES(encryption_key),
-                modes.CBC("0000000000000000".encode("utf8")),
-            )
-        else:
-            self._encryption_cipher = None
+    def enable_encryption(self, uuid: str, key: str, mac: str, /):
+        self._encryption_cipher = Cipher(
+            algorithms.AES(MerossResponse.compute_encryption_key(uuid, key, mac)),
+            modes.CBC("0000000000000000".encode("utf8")),
+        )
+
+    def disable_encryption(self):
+        self._encryption_cipher = None
 
     def _check_terminated(self):
         if self._terminate:
             raise TerminatedException
-
-    def terminate(self):
-        """
-        Marks the client as 'terminating' so that any pending request will abort
-        and raise TerminateException. The client need to be rebuilt after this.
-        """
-        self._terminate = True
 
     async def async_terminate(self):
         """
@@ -215,12 +207,12 @@ class MerossHttpClient:
                         ),
                     )
                     break
-                except aiohttp.ServerTimeoutError as exception:
+                except aiohttp.ServerTimeoutError:
                     self._check_terminated()
                     if _connect_timeout < _connect_timeout_max:
                         _connect_timeout = _connect_timeout * 2
                     else:
-                        raise exception
+                        raise
 
             self._check_terminated()
             response.raise_for_status()
@@ -237,8 +229,6 @@ class MerossHttpClient:
                 )
             self._check_terminated()
             return MerossResponse(response)
-        except TerminatedException as e:
-            raise e
         except Exception as e:
             self._key_header = {}  # type: ignore
             if logger:
@@ -249,7 +239,7 @@ class MerossHttpClient:
                     type(e).__name__,
                     str(e),
                 )
-            raise e
+            raise
         finally:
             self._terminate_guard -= 1
 
@@ -258,20 +248,9 @@ class MerossHttpClient:
     ) -> MerossResponse:
         key = self.key
         request = (
-            build_message_keyhack(
-                namespace,
-                method,
-                payload,
-                self._key_header,
-            )
+            build_message_keyhack(namespace, method, payload, self._key_header)
             if key is None
-            else build_message(
-                namespace,
-                method,
-                payload,
-                uuid4().hex,
-                key,
-            )
+            else build_message(namespace, method, payload, key)
         )
         response = await self.async_request_raw(JSON_ENCODER.encode(request))
         if (
@@ -296,8 +275,8 @@ class MerossHttpClient:
             req_header[mc.KEY_SIGN] = resp_header[mc.KEY_SIGN]
             try:
                 response = await self.async_request_raw(JSON_ENCODER.encode(request))
-            except TerminatedException as e:
-                raise e
+            except (TerminatedException, asyncio.CancelledError):
+                raise
             except Exception:
                 # any error here is likely consequence of key-reply hack
                 # so we'll rethrow that (see #83 lacking invalid key message when configuring)

@@ -1,6 +1,7 @@
+from bisect import insort_right
 from datetime import datetime, timedelta
 from time import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, override
 
 from homeassistant.core import callback
 from homeassistant.helpers.event import async_track_point_in_time
@@ -43,6 +44,7 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
             dict[
                 str,
                 tuple[
+                    type[MLNumericSensor],
                     bool,
                     MLNumericSensor.DeviceClass,
                     MLNumericSensor.StateClass,
@@ -56,11 +58,13 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
         native_value: int
 
         sensor_consumptionx: "ConsumptionXSensor | None"
+        sensor_power: MLNumericSensor
 
     ENTITY_KEY = "energy_estimate"
     SENSOR_DEFS = {
         # key: (not-optional, DeviceClass, StateClass, suggested_display_precision, device_scale)
         mc.KEY_CURRENT: (
+            MLNumericSensor,
             True,
             MLNumericSensor.DeviceClass.CURRENT,
             MLNumericSensor.StateClass.MEASUREMENT,
@@ -68,6 +72,7 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
             1000,
         ),
         mc.KEY_POWER: (
+            MLNumericSensor,
             True,
             MLNumericSensor.DeviceClass.POWER,
             MLNumericSensor.StateClass.MEASUREMENT,
@@ -75,6 +80,7 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
             1000,
         ),
         mc.KEY_VOLTAGE: (
+            MLNumericSensor,
             True,
             MLNumericSensor.DeviceClass.VOLTAGE,
             MLNumericSensor.StateClass.MEASUREMENT,
@@ -91,6 +97,7 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
         "_electricity_lastepoch",
         "_reset_unsub",
         "sensor_consumptionx",
+        "sensor_power",
     )
 
     def __init__(self, manager: "Device", channel: object | None, /):
@@ -109,16 +116,19 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
         )
         self._schedule_reset(dt_util.now())
         for key, entity_def in self.SENSOR_DEFS.items():
-            if entity_def[0]:
-                MLNumericSensor(
+            if entity_def[1]:
+                entity_def[0](
                     manager,
                     channel,
                     key,
-                    entity_def[1],
-                    state_class=entity_def[2],
-                    suggested_display_precision=entity_def[3],
-                    device_scale=entity_def[4],
+                    entity_def[2],
+                    state_class=entity_def[3],
+                    suggested_display_precision=entity_def[4],
+                    device_scale=entity_def[5],
                 )
+        self.sensor_power = manager.entities[
+            mc.KEY_POWER if channel is None else f"{channel}_{mc.KEY_POWER}"
+        ]  # type: ignore
 
     async def async_shutdown(self):
         if self._reset_unsub:
@@ -126,6 +136,7 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
             self._reset_unsub = None
         await super().async_shutdown()
         self.sensor_consumptionx = None
+        self.sensor_power = None  # type: ignore
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -166,16 +177,28 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
         device = self.manager
         entities = device.entities
 
-        sensor_power = self._get_sensor_from_key(entities, mc.KEY_POWER)
-        last_power = sensor_power.native_value
+        last_power = self.sensor_power.native_value
 
         for key in self.SENSOR_DEFS:
-            if key in payload:
-                self._get_sensor_from_key(entities, key).update_device_value(
-                    payload[key]
-                )
+            try:
+                entities[
+                    key if self.channel is None else f"{self.channel}_{key}"
+                ].update_device_value(payload[key])
+            except KeyError:
+                if key in payload:
+                    entity_def = self.SENSOR_DEFS[key]
+                    entity_def[0](
+                        self.manager,
+                        self.channel,
+                        key,
+                        entity_def[2],
+                        state_class=entity_def[3],
+                        suggested_display_precision=entity_def[4],
+                        device_scale=entity_def[5],
+                        device_value=payload[key],
+                    )
 
-        power = sensor_power.native_value
+        power = self.sensor_power.native_value
         if not power:
             # might be an indication of issue #367 where the problem lies in missing
             # device timezone configuration
@@ -194,24 +217,9 @@ class ElectricitySensor(me.MEAlwaysAvailableMixin, MLNumericSensor):
             self._estimate += de
             self.update_native_value(int(self._estimate))
         except TypeError:
-            assert last_power is None
+            assert (last_power is None) or (power is None)
 
         self._electricity_lastepoch = device.device_timestamp
-
-    def _get_sensor_from_key(self, entities, key: str, /) -> MLNumericSensor:
-        try:
-            return entities[key if self.channel is None else f"{self.channel}_{key}"]
-        except KeyError:
-            entity_def = self.SENSOR_DEFS[key]
-            return MLNumericSensor(
-                self.manager,
-                self.channel,
-                key,
-                entity_def[1],
-                state_class=entity_def[2],
-                suggested_display_precision=entity_def[3],
-                device_scale=entity_def[4],
-            )
 
     def _schedule_reset(self, _now: datetime, /):
         with self.exception_warning("_schedule_reset"):
@@ -251,8 +259,45 @@ def namespace_init_electricity(device: "Device", /):
 
 class ElectricityXSensor(ElectricitySensor):
 
+    class MConsumeSensor(MLNumericSensor):
+        manager: "Device"
+
+        def __init__(
+            self, manager: "Device", channel, entitykey, device_class=None, **kwargs
+        ):
+            MLNumericSensor.__init__(
+                self, manager, channel, entitykey, device_class, **kwargs
+            )
+            # TODO: in 6.x.x we should generalize this mechanism to any ns/device
+            try:
+                handler_ch: "ConsumptionHNamespaceHandler" = manager.namespace_handlers[
+                    mn.Appliance_Control_ConsumptionH.name
+                ]  # type: ignore
+                handler_ch.need_polling(channel)
+            except KeyError:
+                pass
+
+        @override
+        def update_device_value(self, device_value: int | float, /):
+            if MLNumericSensor.update_device_value(self, device_value):
+                # We'll use this event to trigger an update of the related
+                # ConsumptionHSensor. We'll so ensure  ConsumptionH sensors in em06
+                # are effectively instantiated since their list cannot be inferred
+                # by any other means for these devices.
+                try:
+                    handler_ch: (
+                        "ConsumptionHNamespaceHandler"
+                    ) = self.manager.namespace_handlers[
+                        mn.Appliance_Control_ConsumptionH.name
+                    ]  # type: ignore
+                    handler_ch.need_polling(self.channel)
+                except KeyError:
+                    pass
+                return True
+
     SENSOR_DEFS = ElectricitySensor.SENSOR_DEFS | {
         mc.KEY_VOLTAGE: (
+            MLNumericSensor,
             True,
             MLNumericSensor.DeviceClass.VOLTAGE,
             MLNumericSensor.StateClass.MEASUREMENT,
@@ -260,6 +305,7 @@ class ElectricityXSensor(ElectricitySensor):
             1000,
         ),
         mc.KEY_FACTOR: (
+            MLNumericSensor,
             False,
             MLNumericSensor.DeviceClass.POWER_FACTOR,
             MLNumericSensor.StateClass.MEASUREMENT,
@@ -267,16 +313,10 @@ class ElectricityXSensor(ElectricitySensor):
             1,
         ),
         mc.KEY_MCONSUME: (
+            MConsumeSensor,
             False,
             MLNumericSensor.DeviceClass.ENERGY,
-            MLNumericSensor.StateClass.TOTAL,
-            0,
-            1,
-        ),
-        mc.KEY_CONSUME: (
-            False,
-            MLNumericSensor.DeviceClass.ENERGY,
-            MLNumericSensor.StateClass.TOTAL,
+            MLNumericSensor.StateClass.TOTAL_INCREASING,  # quick patch for #621 (will be fixed in v6.x.x)
             0,
             1,
         ),
@@ -302,15 +342,161 @@ class ElectricityXNamespaceHandler(NamespaceHandler):
     """
 
     def __init__(self, device: "Device", /):
-        NamespaceHandler.__init__(
-            self,
-            device,
-            mn.Appliance_Control_ElectricityX,
+        NamespaceHandler.__init__(self, device, mn.Appliance_Control_ElectricityX)
+        self.register_entity_class(ElectricityXSensor, build_from_digest=False)
+        for channel in device.descriptor.channels:
+            ElectricityXSensor(device, channel)
+
+
+class ConsumptionHSensor(MLNumericSensor):
+
+    manager: "Device"
+    ns = mn.Appliance_Control_ConsumptionH
+
+    _attr_suggested_display_precision = 0
+
+    __slots__ = ()
+
+    def __init__(self, manager: "Device", channel: object | None):
+        super().__init__(
+            manager,
+            channel,
+            mc.KEY_CONSUMPTIONH,
+            self.DeviceClass.ENERGY,
+            name="Consumption",
         )
-        # Current approach is to build a sensor for any appearing channel index
-        # in digest. This in turn will not directly build the EM06 sensors
-        # but they should come when polling.
-        self.register_entity_class(ElectricityXSensor, build_from_digest=True)
+        manager.register_parser_entity(self)
+
+    @property
+    def handler_ns(self) -> "ConsumptionHNamespaceHandler":
+        return self.manager.namespace_handlers[self.ns.name]  # type: ignore
+
+    async def async_added_to_hass(self):
+        self.handler_ns.channel_polling_add(self.channel)
+        return await super().async_added_to_hass()
+
+    async def async_will_remove_from_hass(self):
+        self.handler_ns.channel_polling_remove(self.channel)
+        return await super().async_will_remove_from_hass()
+
+    def _parse_consumptionH(self, payload: dict):
+        """
+        {"channel": 1, "total": 958, "data": [{"timestamp": 1721548740, "value": 0}]}
+        """
+        handler = self.handler_ns
+        if self.update_device_value(payload[mc.KEY_TOTAL]):
+            # value is changing..reschedule polling sooner
+            polling_delay = handler.polling_period * 2
+        else:
+            # value is steady..postpone next polling
+            polling_delay = handler.polling_period * 6
+        if handler.channel_polling_remove(self.channel):
+            handler.channel_polling_add(self.channel, polling_delay)
+
+
+class ConsumptionHNamespaceHandler(NamespaceHandler):
+    """
+    This namespace carries hourly statistics (over last 24 ours?) of energy consumption
+    Appearing in: mts200 - em06 (Refoss) - mop320
+    This ns looks tricky since for mts200, the query (payload GET) needs the channel
+    index while for em06 this doesn't look necessary (empty query replies full sensor set statistics).
+    At any rate, querying the whole em06 ConsumptionH set might be cumbersome (also risking response
+    overflow - maybe leading to https://github.com/krahabb/meross_lan/issues/611)
+    so we're going to use some 'smart tricks' linked to ElectricityX sensors to
+    infer which channels are available on the device and smart-query them.
+    Also, we need to come up with a reasonable euristic on which channels are available
+    mts200: 1 (channel 0)
+    mop320: 3 (channel 0 - 1 - 2) even tho it only has 2 metering channels (0 looks toggling both)
+    em06: 6 channels (but the query works without setting any)
+    """
+
+    if TYPE_CHECKING:
+        ChannelToPollType = tuple[float, object]
+        """(last_request_epoch, channel)"""
+        _channels_to_poll: list[ChannelToPollType]
+        # TODO: reconcile this member with polling_request_channels in base cls
+
+    __slots__ = ("_channels_to_poll",)
+
+    def __init__(self, device: "Device"):
+        self._channels_to_poll = []
+        NamespaceHandler.__init__(self, device, mn.Appliance_Control_ConsumptionH)
+        self.register_entity_class(
+            ConsumptionHSensor, initially_disabled=False, build_from_digest=False
+        )
+        for channel in device.descriptor.channels:
+            ConsumptionHSensor(device, channel)
+        self.polling_strategy = ConsumptionHNamespaceHandler.async_poll_probe  # type: ignore
+
+    @override
+    def polling_request_add_channel(self, channel, /):
+        # disable polling_request_channels setup since we're overriding the default
+        # polling mechanics
+        pass
+
+    def channel_polling_add(self, channel, delay: float = 0, /):
+        # assert not already present ?
+        insort_right(
+            self._channels_to_poll,
+            (self.device._polling_epoch + delay, channel),
+            key=lambda ctp: ctp[0],
+        )
+
+    def channel_polling_remove(self, channel, /):
+        channels_to_poll = self._channels_to_poll
+        for i in range(len(channels_to_poll)):
+            if channels_to_poll[i][1] == channel:
+                del channels_to_poll[i]
+                return True
+        return False
+
+    def need_polling(self, channel, /):
+        """Raise the channel polling priority in the queue."""
+        channels_to_poll = self._channels_to_poll
+        for i in range(len(channels_to_poll)):
+            if channels_to_poll[i][1] == channel:
+                if channels_to_poll[i][0] > self.device._polling_epoch:
+                    del channels_to_poll[i]
+                    insort_right(
+                        channels_to_poll,
+                        (self.device._polling_epoch, channel),
+                        key=lambda ctp: ctp[0],
+                    )
+                return
+
+    async def async_poll_probe(self):
+        # This poller is mainly used to discover the multiple_response available buffer size
+        # since em06 looks like having a way more than our default estimated 2400 (3 * 800) bytes
+        # We're then going to try a full poll and see what happens. Also, we're expecting the device
+        # to reply with just 3 channels when queried with an empty list (em06).
+        if not self._channels_to_poll:
+            return
+        self.polling_response_size = (
+            self.polling_response_base_size + 3 * self.polling_response_item_size
+        )
+        await self.device.async_request_poll(self)
+        self.polling_request_channels.append({})
+        self.polling_response_size = (
+            self.polling_response_base_size + self.polling_response_item_size
+        )
+        self.polling_strategy = ConsumptionHNamespaceHandler.async_poll_smartchunk  # type: ignore
+
+    async def async_poll_smartchunk(self):
+        """This has a huge ns response payload so we need to optimize polling.
+        We're going to just query a single channel per polling cycle."""
+        if not self._channels_to_poll:
+            return
+        _poll_epoch, channel = self._channels_to_poll[0]
+        self.polling_request_channels[0][self.ns.key_channel] = channel
+        device = self.device
+        epoch = device._polling_epoch
+        if _poll_epoch > epoch:
+            # Insert into the lazypoll_requests ordering by least recently polled
+            insort_right(
+                device._lazypoll_requests, self, key=lambda h: h.lastrequest - epoch
+            )
+        else:
+            await device.async_request_smartpoll(self)
 
 
 class ConsumptionXSensor(EntityNamespaceMixin, MLNumericSensor):

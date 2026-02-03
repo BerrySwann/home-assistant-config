@@ -35,8 +35,6 @@ from .merossclient.httpclient import MerossHttpClient
 from .merossclient.mqttclient import MerossMQTTDeviceClient
 from .merossclient.protocol import MerossKeyError, const as mc, namespaces as mn
 from .merossclient.protocol.message import (
-    check_message_strict,
-    compute_message_encryption_key,
     get_message_uuid,
 )
 
@@ -456,23 +454,18 @@ class MerossFlowHandlerMixin(
             host, key, logger=api, log_level_dump=api.VERBOSE
         )
 
-        response_ability = check_message_strict(
+        response_ability = (
             await _httpclient.async_request(
                 *mn.Appliance_System_Ability.request_default
             )
-        )
-        response_ability = check_message_strict(
-            await _httpclient.async_request(
-                *mn.Appliance_System_Ability.request_default
-            )
-        )
+        ).check()
         ability = response_ability[mc.KEY_PAYLOAD][mc.KEY_ABILITY]
         try:
-            all = check_message_strict(
+            all = (
                 await _httpclient.async_request(
                     *mn.Appliance_System_All.request_default
                 )
-            )[mc.KEY_PAYLOAD][mc.KEY_ALL]
+            ).check()[mc.KEY_PAYLOAD][mc.KEY_ALL]
         except:
             # might it be the device needs encryption?
             if mn.Appliance_Encrypt_ECDHE.name not in ability:
@@ -480,16 +473,12 @@ class MerossFlowHandlerMixin(
             # here we'd need the uuid and mac but we have no ns_all
             # to parse so we'll try extract these info from ns_ability query
             uuid = get_message_uuid(response_ability[mc.KEY_HEADER])
-            _httpclient.set_encryption(
-                compute_message_encryption_key(
-                    uuid, key, get_macaddress_from_uuid(uuid)
-                ).encode("utf-8")
-            )
-            all = check_message_strict(
+            _httpclient.enable_encryption(uuid, key, get_macaddress_from_uuid(uuid))
+            all = (
                 await _httpclient.async_request(
                     *mn.Appliance_System_All.request_default
                 )
-            )[mc.KEY_PAYLOAD][mc.KEY_ALL]
+            ).check()[mc.KEY_PAYLOAD][mc.KEY_ALL]
 
         payload = {
             mc.KEY_ALL: all,

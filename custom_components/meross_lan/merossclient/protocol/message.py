@@ -1,9 +1,9 @@
 from hashlib import md5
+import os
 from time import time
 from typing import TYPE_CHECKING
-from uuid import uuid4
 
-from . import MerossKeyError, MerossProtocolError, const as mc, namespaces as mn
+from . import MerossKeyError, MerossProtocolError, const as mc
 from .. import JSON_DECODER, JSON_ENCODER
 
 if TYPE_CHECKING:
@@ -19,24 +19,18 @@ def compute_message_signature(messageid: str, key: str, timestamp, /):
     ).hexdigest()
 
 
-def compute_message_encryption_key(uuid: str, key: str, mac: str, /):
-    return md5(
-        "".join((uuid[3:22], key[1:9], mac, key[10:28])).encode("utf-8"),
-        usedforsecurity=False,
-    ).hexdigest()
-
-
 def build_message(
     namespace: str,
     method: str,
     payload: "MerossPayloadType",
-    messageid: str,
     key: str,
+    *,
+    messageid: str | None = None,
     from_: str = mc.HEADER_FROM_DEFAULT,
     triggerSrc: str = mc.HEADER_TRIGGERSRC_DEFAULT,
-    /,
 ) -> "MerossMessageType":
     timestamp = int(time())
+    messageid = messageid or MerossMessage.generate_id()
     return {
         mc.KEY_HEADER: {
             mc.KEY_MESSAGEID: messageid,
@@ -96,28 +90,6 @@ def get_replykey(header: "MerossHeaderType", key: "KeyType", /) -> "KeyType":
     return header
 
 
-def check_message_strict(message: "MerossResponse | None", /):
-    """
-    Does a formal check of the message structure also raising a
-    typed exception if formally correct but carrying a protocol error
-    """
-    if not message:
-        raise MerossProtocolError(message, "No response")
-    try:
-        payload = message[mc.KEY_PAYLOAD]
-        header = message[mc.KEY_HEADER]
-        header[mc.KEY_NAMESPACE]
-        if header[mc.KEY_METHOD] == mc.METHOD_ERROR:
-            p_error = payload[mc.KEY_ERROR]
-            if p_error.get(mc.KEY_CODE) == mc.ERROR_INVALIDKEY:
-                raise MerossKeyError(message)
-            else:
-                raise MerossProtocolError(message, p_error)
-        return message
-    except KeyError as error:
-        raise MerossProtocolError(message, str(error)) from error
-
-
 #
 # 'Higher level' message representations
 #
@@ -134,6 +106,36 @@ class MerossMessage(dict):
         messageid: str
         payload: MerossPayloadType
 
+    @staticmethod
+    def generate_id():
+        return "%032x" % int.from_bytes(os.urandom(16))
+
+    @staticmethod
+    def decode(json_str: str, /):
+        return MerossMessage(JSON_DECODER.decode(json_str), json_str)
+
+    @staticmethod
+    def check_(message: "MerossMessage | None", /):
+        """
+        Does a formal check of the message structure also raising a
+        typed exception if formally correct but carrying a protocol error
+        TODO: remove
+        """
+        if not message:
+            raise MerossProtocolError(message, "No response")
+        return message.check()
+
+    @staticmethod
+    def compute_encryption_key(uuid: str, key: str, mac: str, /):
+        return (
+            md5(
+                "".join((uuid[3:22], key[1:9], mac, key[10:28])).encode("utf-8"),
+                usedforsecurity=False,
+            )
+            .hexdigest()
+            .encode("utf-8")
+        )
+
     __slots__ = (
         "namespace",
         "method",
@@ -146,14 +148,35 @@ class MerossMessage(dict):
         self._json_str = json_str
         super().__init__(message)
 
-    def json(self):
+    def json(self, /):
         if not self._json_str:
             self._json_str = JSON_ENCODER.encode(self)
         return self._json_str
 
-    @staticmethod
-    def decode(json_str: str, /):
-        return MerossMessage(JSON_DECODER.decode(json_str), json_str)
+    def check(self, /):
+        """
+        Does a formal check of the message structure also raising a
+        typed exception if formally correct but carrying a protocol error
+        """
+        try:
+            payload = self[mc.KEY_PAYLOAD]
+            header = self[mc.KEY_HEADER]
+            header[mc.KEY_NAMESPACE]
+            if header[mc.KEY_METHOD] == mc.METHOD_ERROR:
+                if payload[mc.KEY_ERROR].get(mc.KEY_CODE) == mc.ERROR_INVALIDKEY:
+                    raise MerossKeyError(self)
+                else:
+                    raise MerossProtocolError(self, payload[mc.KEY_ERROR])
+            return self
+        except KeyError as error:
+            raise MerossProtocolError(self, str(error)) from error
+
+    def compute_signature(self, key: str, /):
+        return compute_message_signature(
+            self[mc.KEY_HEADER][mc.KEY_MESSAGEID],
+            key,
+            self[mc.KEY_HEADER][mc.KEY_TIMESTAMP],
+        )
 
 
 class MerossResponse(MerossMessage):
@@ -179,7 +202,7 @@ class MerossRequest(MerossMessage):
         self.namespace = namespace
         self.method = method
         self.payload = payload
-        self.messageid = uuid4().hex
+        self.messageid = MerossMessage.generate_id()
         timestamp = int(time())
         super().__init__(
             {

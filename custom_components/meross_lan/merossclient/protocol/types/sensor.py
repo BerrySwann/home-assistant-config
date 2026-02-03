@@ -3,10 +3,10 @@ A collection of typing definitions for payloads
 in Appliance.Control.Sensor.*
 """
 
-from . import Any, ChannelPayload, TypedDict, _MerossPayloadType
+from . import Any, ChannelPayload, HistoryData, _MerossPayloadType
 
 
-class SensorXRequest(ChannelPayload):
+class SensorXRequest_C(ChannelPayload):
     """
     Request format for LatestX and likely HistoryX payloads.
     channel is not enough to query this ns but we need to also add a
@@ -16,7 +16,7 @@ class SensorXRequest(ChannelPayload):
     data: list[str]
 
 
-class SensorXResponse(ChannelPayload):
+class SensorXResponse_C(ChannelPayload):
     """
     Response format for LatestX and likely HistoryX payloads.
     The 'data' dict contains sensor keys and a list of dicts.
@@ -26,17 +26,12 @@ class SensorXResponse(ChannelPayload):
     data: dict[str, list[dict[str, Any]]]
 
 
-class LatestXRequest_C(SensorXRequest):
+class LatestXRequest_C(SensorXRequest_C):
     pass
 
 
-class LatestXData(TypedDict):
-    value: int
-    timestamp: int
-
-
-class LatestXResponse_C(SensorXResponse):
-    data: dict[str, list[LatestXData]]
+class LatestXResponse_C(SensorXResponse_C):
+    data: dict[str, list[HistoryData]]
 
 
 class LatestXResponse(_MerossPayloadType):
