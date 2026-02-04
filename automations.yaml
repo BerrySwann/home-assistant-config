@@ -1764,7 +1764,7 @@
       entity_id: sensor.blitzortung_lightning_localisation
   - action: notify.mobile_app_poco_x7_pro_eric
     data:
-      title: /! Attention foudre /!/
+      title: /!\ Attention foudre /!\
       message: "{% set distance = states('sensor.blitzortung_lightning_distance')
         | float(0) %} {% set azimuth = states('sensor.blitzortung_lightning_azimuth')
         | float(0) %} {% set impactCount = states('sensor.blitzortung_lightning_counter')
@@ -3348,8 +3348,10 @@
   description: Met à jour le texte du temps écoulé depuis le dernier impact de foudre
     toutes les minutes.
   triggers:
+  - entity_id: sensor.blitzortung_lightning_counter
+    trigger: state
   - trigger: time_pattern
-    minutes: /1
+    seconds: /30
   actions:
   - target:
       entity_id: input_text.dernier_impact_de_foudre_temps_ecoule
