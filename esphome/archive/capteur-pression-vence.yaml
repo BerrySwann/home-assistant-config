@@ -1,11 +1,15 @@
+
 esphome:
-  name: capteur-pression-vence
-  friendly_name: Barometre Vence
+  name: barometre-vence-c3
+  friendly_name: Barometre Vence C3
 
 esp32:
-  board: esp32dev
-  framework:
-    type: arduino
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+
+# Activation de l'USB pour les logs sur C3
+logger:
+  hardware_uart: USB_SERIAL_JTAG
 
 wifi:
   ssid: "Freebox_GG"
@@ -16,17 +20,15 @@ api:
 ota:
   - platform: esphome
 
-logger:
-
+# Configuration I2C spécifique à la SuperMini C3
 i2c:
-  id: bus_a
-  sda: 21
-  scl: 22
+  sda: 8
+  scl: 9
   scan: true
-  frequency: 10kHz  # On baisse la vitesse pour être plus robuste
 
 sensor:
-  - platform: bmp280_i2c
+  # Capteur BME280 (I2C)
+  - platform: bme280_i2c
     address: 0x76
     temperature:
       name: "Température Vence"
@@ -34,8 +36,11 @@ sensor:
     pressure:
       name: "Pression Absolue Vence"
       id: pres_abs
-    update_interval: 30s
+    humidity:
+      name: "Humidité Vence"
+    update_interval: 60s
 
+  # Calcul de la pression au niveau de la mer pour Vence
   - platform: template
     name: "Pression Niveau Mer (Météo)"
     unit_of_measurement: "hPa"
@@ -43,9 +48,9 @@ sensor:
     state_class: "measurement"
     lambda: |-
       if (id(pres_abs).has_state()) {
-        const float altitude = 325.0; 
+        const float altitude = 325.0; // Altitude moyenne à Vence
         return id(pres_abs).state * powf(1 - 0.0065 * altitude / (id(temp_vence).state + 0.0065 * altitude + 273.15), -5.257);
       } else {
         return NAN;
       }
-    update_interval: 10s
+    update_interval: 60s
