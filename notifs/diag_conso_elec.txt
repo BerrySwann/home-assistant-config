@@ -3353,3 +3353,6 @@ Home Assistant notifications (Log started: 2025-12-20T19:43:03.751958+00:00)
 07/02 16:30 | Hyg:0.73 | Cuis:0.77 | Froid:0.6 | Chauff:7.17 | Avg 4:431.8 | Multi:3.11 | Lum:0.3 | Autres:0.31 |T̄i:20.4°C | Ext:11.5°C | DUT S/R/B/C:5.8/0.9/5.8/7.1 %}
 07/02 16:45 | Hyg:0.73 | Cuis:0.77 | Froid:0.62 | Chauff:7.29 | Avg 4:432.1 | Multi:3.2 | Lum:0.31 | Autres:0.32 |T̄i:20.4°C | Ext:11.5°C | DUT S/R/B/C:5.9/0.9/5.8/7.1 %}
 07/02 17:00 | Hyg:0.73 | Cuis:0.77 | Froid:0.64 | Chauff:7.4 | Avg 4:433.3 | Multi:3.3 | Lum:0.32 | Autres:0.32 |T̄i:20.4°C | Ext:11.3°C | DUT S/R/B/C:6.1/0.9/5.9/7.2 %}
+07/02 17:15 | Hyg:0.73 | Cuis:0.77 | Froid:0.65 | Chauff:7.54 | Avg 4:434.3 | Multi:3.4 | Lum:0.33 | Autres:0.33 |T̄i:20.4°C | Ext:11.3°C | DUT S/R/B/C:6.3/0.9/6.0/7.3 %}
+07/02 17:30 | Hyg:0.73 | Cuis:0.77 | Froid:0.65 | Chauff:7.64 | Avg 4:434.6 | Multi:3.5 | Lum:0.34 | Autres:0.33 |T̄i:20.4°C | Ext:11.3°C | DUT S/R/B/C:6.4/0.9/6.1/7.4 %}
+07/02 17:45 | Hyg:0.73 | Cuis:0.77 | Froid:0.65 | Chauff:7.75 | Avg 4:434.5 | Multi:3.59 | Lum:0.35 | Autres:0.33 |T̄i:20.4°C | Ext:11.1°C | DUT S/R/B/C:6.6/0.9/6.2/7.5 %}

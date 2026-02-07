@@ -3366,3 +3366,56 @@
         %}\n{% else %}\n  Dernier impact de foudre : Inconnu\n{% endif %}"
     action: input_text.set_value
   mode: single
+- id: '1770481930258'
+  alias: NOTIF - Gardien Énergétique (Anomalies)
+  description: Envoie une alerte sur le mobile d'Eric si une dérive est détectée.
+  triggers:
+  - entity_id: sensor.alerte_radiateur_cuisine_hors_plage
+    to: 'ON'
+    for: 00:05:00
+    id: radiateur_cuisine
+    trigger: state
+  - entity_id: sensor.duree_cycle_seche_serviettes
+    above: 90
+    id: sdb_oublie
+    trigger: numeric_state
+  - entity_id: sensor.conso_multi_nuit_2h_5h
+    above: 90
+    for: 00:15:00
+    id: multi_nuit
+    trigger: numeric_state
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: radiateur_cuisine
+      sequence:
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: "\U0001F525 ALERTE CHAUFFAGE"
+          message: Le radiateur Cuisine chauffe hors horaires depuis 5 min ! Merci
+            d'aller vérifier.
+          data:
+            push:
+              sound:
+                name: default
+                critical: 1
+              color: '#FF0000'
+    - conditions:
+      - condition: trigger
+        id: sdb_oublie
+      sequence:
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: "\U0001F6BF OUBLI SÈCHE-SERVIETTES"
+          message: Le sèche-serviettes tourne depuis 1h30. Pense à l'éteindre !
+    - conditions:
+      - condition: trigger
+        id: multi_nuit
+      sequence:
+      - action: notify.mobile_app_poco_x7_pro_eric
+        data:
+          title: "\U0001F47B CONSO FANTÔME NUIT"
+          message: Le coin Multimédia consomme {{ states('sensor.conso_multi_nuit_2h_5h')
+            }}W à 3h du matin. Une TV ou un PC est resté allumé.
+  mode: single
