@@ -172,3 +172,11 @@ climate:
     controller_data: remote.clim_salon
     temperature_sensor: sensor.th_salon_temperature
     humidity_sensor: sensor.th_salon_humidity
+
+panel_custom:
+  - name: developer-tools-sidebar
+    sidebar_title: Outils Dev
+    sidebar_icon: mdi:hammer-wrench
+    url_path: developer-tools/yaml
+    module_url: /api/hassio/app/entrypoint.js
+    embed_iframe: true
