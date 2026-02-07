@@ -2056,7 +2056,7 @@
           message: PC Bureau [OFF]
           data:
             icon: mdi:eye-outline
-            tag: notif_tv_chambre
+            tag: notif_pc_bureau
   mode: parallel
 - id: '1766948374171'
   alias: Allumage Lumière Entrée
