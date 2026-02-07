@@ -1496,7 +1496,6 @@
           - switch.prise_horloge_ikea
           - light.hue_smart_salon
           - switch.ecran_p_c_3_play_hue
-          - switch.hue_smart_eco_pc_bureau
           - switch.prise_tete_de_lit_chambre
       - action: notify.mobile_app_poco_x7_pro_eric
         data:
@@ -1542,7 +1541,6 @@
             target:
               entity_id:
               - switch.ecran_p_c_3_play_hue
-              - switch.hue_smart_eco_pc_bureau
         - alias: Logique spécifique GROUPE 4 (Mamour & Eric)
           conditions:
           - condition: template
@@ -1555,7 +1553,6 @@
             target:
               entity_id:
               - switch.ecran_p_c_3_play_hue
-              - switch.hue_smart_eco_pc_bureau
               - switch.prise_tete_de_lit_chambre
       - alias: Notification du nombre de prises actives
         action: notify.mobile_app_poco_x7_pro_eric
