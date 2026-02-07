@@ -1,0 +1,52 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ 📐 TEMPLATES MODERNES : KPIs & MONITORING ÉNERGÉTIQUE                    │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+  - sensor:
+      # ┌───────────────────────────────────────────────────────────────────┐
+      # │ KPI #1 : RADIATEUR CUISINE (Sécurité Hors Plage)                  │
+      # └───────────────────────────────────────────────────────────────────┘
+      - name: "Alerte Radiateur Cuisine (Hors Plage)"
+        unique_id: alerte_radiateur_cuisine_hors_plage
+        state: >
+          {% set est_hors_plage = (now().hour >= 8 or now().hour < 4) %}
+          {% set est_allume = is_state('switch.radiateur_cuisine', 'on') %}
+          {{ 'ON' if (est_hors_plage and est_allume) else 'OFF' }}
+        icon: >
+          {% if is_state('sensor.alerte_radiateur_cuisine_hors_plage', 'ON') %}
+            mdi:alert-octagon
+          {% else %}
+            mdi:check-circle
+          {% endif %}
+
+      # ┌───────────────────────────────────────────────────────────────────┐
+      # │ KPI #2 : CHRONOMÈTRE SÈCHE-SERVIETTES                             │
+      # └───────────────────────────────────────────────────────────────────┘
+      - name: "Durée Cycle Sèche-Serviettes"
+        unique_id: seche_serviettes_duree_run
+        unit_of_measurement: "min"
+        state: >
+          {% if is_state('switch.seche_serv_sdb', 'on') %}
+            {{ ((as_timestamp(now()) - as_timestamp(states.switch.seche_serv_sdb.last_changed)) / 60) | int }}
+          {% else %}
+            0
+          {% endif %}
+        icon: mdi:timer-sand
+
+      # ┌───────────────────────────────────────────────────────────────────┐
+      # │ KPI #3 : SURVEILLANCE TALON MULTIMÉDIA (NUIT)                     │
+      # └───────────────────────────────────────────────────────────────────┘
+      - name: "Conso Multi Nuit (2h-5h)"
+        unique_id: monitoring_multi_nuit
+        unit_of_measurement: "W"
+        state: >
+          {% if 2 <= now().hour <= 5 %}
+            {{ states('sensor.diag_poste_5_multimedia_power') | float(0) }}
+          {% else %}
+            0
+          {% endif %}
+        icon: >
+          {% if states('sensor.monitoring_multi_nuit')|float > 90 %}
+            mdi:alert
+          {% else %}
+            mdi:ghost
+          {% endif %}
