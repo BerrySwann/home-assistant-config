@@ -1,37 +1,58 @@
-  - platform: template
-    sensors:
-      # KPI #1 : Alerte Radiateur Cuisine
-      alerte_radiateur_cuisine_hors_plage:
-        friendly_name: "Alerte Radiateur Cuisine (Hors Plage)"
-        value_template: >
-          {% set est_hors_plage = (now().hour >= 8 or now().hour < 4) %}
-          {% set est_allume = is_state('switch.radiateur_cuisine', 'on') %}
-          {{ 'ON' if (est_hors_plage and est_allume) else 'OFF' }}
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ 📊 SENSORS : TABLEAU DE BORD ÉNERGÉTIQUE (KPIs & ALERTES)                │
+# ╰──────────────────────────────────────────────────────────────────────────╯
 
-      # KPI #2 : Durée Sèche-Serviettes
-      seche_serviettes_duree_run:
-        friendly_name: "Durée Cycle Sèche-Serviettes"
-        unit_of_measurement: "min"
-        value_template: >
-          {% if is_state('switch.seche_serv_sdb', 'on') %}
-            {{ ((as_timestamp(now()) - as_timestamp(states.switch.seche_serv_sdb.last_changed)) / 60) | int }}
-          {% else %}
-            0
-          {% endif %}
+- platform: template
+  sensors:
 
-      # KPI #3 : Talon Multi Nocturne
-      monitoring_multi_nuit:
-        friendly_name: "Conso Multi Nuit (2h-5h)"
-        unit_of_measurement: "W"
-        value_template: >
-          {% if 2 <= now().hour <= 5 %}
-            {{ states('sensor.diag_poste_5_multimedia_power') | float(0) }}
-          {% else %}
-            0
-          {% endif %}
-        icon_template: >
-          {% if states('sensor.monitoring_multi_nuit')|float > 90 %}
-            mdi:alert
-          {% else %}
-            mdi:ghost
-          {% endif %}
+    # ┌──────────────────────────────────────────────────────────────────────┐
+    # │ KPI #1 : SÉCURITÉ RADIATEUR CUISINE                                  │
+    # │ Rôle : Vérifie qu'il ne chauffe jamais hors des heures creuses.      │
+    # └──────────────────────────────────────────────────────────────────────┘
+    alerte_radiateur_cuisine_hors_plage:
+      friendly_name: "Alerte Radiateur Cuisine (Hors Plage)"
+      value_template: >
+        {% set est_hors_plage = (now().hour >= 8 or now().hour < 4) %}
+        {% set est_allume = is_state('switch.radiateur_cuisine', 'on') %}
+        {{ 'ON' if (est_hors_plage and est_allume) else 'OFF' }}
+      icon_template: >
+        {% if is_state('sensor.alerte_radiateur_cuisine_hors_plage', 'ON') %}
+          mdi:alert-octagon
+        {% else %}
+          mdi:check-circle
+        {% endif %}
+
+    # ┌──────────────────────────────────────────────────────────────────────┐
+    # │ KPI #2 : CHRONOMÈTRE SÈCHE-SERVIETTES                                │
+    # │ Rôle : Compte les minutes ON pour détecter les oublis (>90min).      │
+    # └──────────────────────────────────────────────────────────────────────┘
+    seche_serviettes_duree_run:
+      friendly_name: "Durée Cycle Sèche-Serviettes"
+      unit_of_measurement: "min"
+      value_template: >
+        {% if is_state('switch.seche_serv_sdb', 'on') %}
+          {{ ((as_timestamp(now()) - as_timestamp(states.switch.seche_serv_sdb.last_changed)) / 60) | int }}
+        {% else %}
+          0
+        {% endif %}
+      icon_template: mdi:timer-sand
+
+    # ┌──────────────────────────────────────────────────────────────────────┐
+    # │ KPI #3 : SURVEILLANCE TALON MULTIMÉDIA (NUIT)                        │
+    # │ Rôle : Alerte si > 90W entre 2h et 5h (Oubli PC/TV).                 │
+    # └──────────────────────────────────────────────────────────────────────┘
+    monitoring_multi_nuit:
+      friendly_name: "Conso Multi Nuit (2h-5h)"
+      unit_of_measurement: "W"
+      value_template: >
+        {% if 2 <= now().hour <= 5 %}
+          {{ states('sensor.diag_poste_5_multimedia_power') | float(0) }}
+        {% else %}
+          0
+        {% endif %}
+      icon_template: >
+        {% if states('sensor.monitoring_multi_nuit')|float > 90 %}
+          mdi:alert
+        {% else %}
+          mdi:ghost
+        {% endif %}
