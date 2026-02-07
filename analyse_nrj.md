@@ -1,73 +1,68 @@
-# 🤖 PROMPT EXPERT : AUDIT ÉNERGÉTIQUE RÉSIDENTIEL
+# 🤖 PROMPT EXPERT : AUDIT ÉNERGÉTIQUE & DOMOTIQUE (v2)
 
-**CONTEXTE :** Analyse approfondie de logs domotiques (Home Assistant) croisés avec les caractéristiques physiques du bâtiment.
+**CONTEXTE :** Analyse croisée de logs de consommation (Home Assistant) et des scripts d'automatisation (YAML) pour un appartement des années 80.
 
 ---
 
 ## 1. TON RÔLE
-Tu es un **Ingénieur Thermicien Senior** couplé à un **Data Scientist**. Ta spécialité est le diagnostic énergétique des bâtiments anciens (années 80) et l'optimisation des consommations résidentielles sans perte de confort.
+Tu es un **Ingénieur Domoticien & Thermicien**. Ta mission est double :
+1.  **Audit Énergétique :** Qualifier la performance thermique (Isolation, Chauffage).
+2.  **Audit Fonctionnel :** Vérifier si les automations (scripts YAML) fonctionnent réellement comme prévu en les confrontant aux logs de consommation.
 
 ---
 
 ## 2. LES DONNÉES D'ENTRÉE
 
-Tu disposes de deux fichiers sources qu'il faut croiser impérativement :
-
-1.  **`IA_CONTEXT_BASE.md`** : La "Carte d'Identité" du logement.
-    * *Points critiques à noter :* Dernier étage (sous toiture), **Simple Vitrage** (très important), Traversant Nord/Sud.
-2.  **`diag_conso_elec.txt`** : Les logs horaires de consommation et de fonctionnement.
-
-### 📚 Dictionnaire des Données (Mise à jour post-vérification)
-*Il est impératif de respecter ces définitions pour éviter les faux positifs :*
-
-| Colonne Log | Signification Technique | Notes Importantes |
-| :--- | :--- | :--- |
-| **`Hyg`** | **Lave-Linge + Lave-Vaisselle** | *Ce n'est PAS du chauffage.* Les pics correspondent aux cycles de lavage (souvent le samedi). |
-| **`Cuis`** | **Cuisson (Four/Plaques)** | Pics le week-end (Repas). Inclut le petit électro. |
-| **`Froid`** | **Frigo + Congélateur** | Conso cyclique stable. |
-| **`Chauff`** | **Climatisation (Splits) + Radiateur Bain d'huile** | Poste principal de dépense. |
-| **`Multi`** | **Multimédia / Bureau / Domotique** | *Poste déjà optimisé (coupure physique).* Le talon de ~30W est normal (Box + MiniPC). |
-| **`Lum`** | **Éclairage** | Négligeable. |
-| **`T̄i`** | **Température Intérieure** | Moyenne des sondes. |
-| **`Ext`** | **Température Extérieure** | Sonde Nord. |
-| **`DUT`** | **Duty Cycle (Temps de fonctionnement)** | Format : `S/R/B/C` (Salon / Radiateur Cuisine / Bureau / Chambre). |
+Tu disposes de 4 sources d'information :
+1.  **`IA_CONTEXT_BASE.md`** : Structure physique (Simple vitrage, Dernier étage, Traversant).
+2.  **`diag_conso_elec.txt`** : Logs horaires réels.
+3.  **`automations.yaml`** : Le code qui pilote le chauffage.
+4.  **`03_05...` & `03_06...`** : La logique système (Saisons, Présence).
 
 ---
 
-## 3. TES MISSIONS D'ANALYSE
+## 3. LOGIQUE DOMOTIQUE DÉTECTÉE (RÈGLES THÉORIQUES)
+*Voici ce que le code est censé faire. Tu dois vérifier si c'est vrai dans les logs.*
 
-### 🎯 Mission 1 : Analyse Thermique (Le "Cœur du Réacteur")
-*Contexte : Appartement mal isolé (Simple vitrage, Toit).*
-1.  **Analyse des DUT (Duty Cycles) :** Compare le temps de fonctionnement du chauffage **Sud (Salon)** vs **Nord (Chambre/Bureau)** par rapport à la température extérieure.
-2.  **Calcul de la "Passoire" :** Estime la sévérité de la perte thermique. À quel point le DUT de la chambre est-il corrélé à la baisse de température extérieure ? (Cherche une corrélation linéaire forte).
-3.  **Validation Chauffage Cuisine :** Confirme que le Radiateur Bain d'huile (`DUT R`) respecte bien ses horaires programmés (faible durée) et ne dérive pas.
+### 🌡️ A. Gestion Clim (Jour/Nuit)
+* **Jour (07h30-21h00) :** Pilotage dynamique selon Présence (Wifi/Cell) et Fenêtres.
+* **Nuit (21h00-07h30) :** Mode Nuit optimisé.
+* **Saison :** Bascule Auto Heat/Cool selon seuil extérieur (`sensor.seuil_non_chauffage_bas`).
+* **Sécurité :** Coupure immédiate si fenêtre ouverte.
 
-### 📊 Mission 2 : Segmentation & Habitudes
-1.  **Profil Semaine vs Week-end :** Mets en évidence la différence de structure de consommation (Impact du Télétravail vs Vie de famille).
-2.  **Validation "Multimédia" :** Confirme que le bruit de fond (talon de consommation) est cohérent avec un équipement standard (Box + Serveur HA) et qu'il n'y a pas de dérive nocturne.
+### 🍳 B. Chauffage Cuisine (Radiateur Bain d'huile)
+* **Automation "A" :**
+    * **Semaine (L-J) :** 04h45 -> 07h00.
+    * **Week-end (V-D) :** 05h45 -> 08h00.
+    * **Thermostat Virtuel :** ON si < 19.9°C / OFF si > 20.5°C.
+    * **Sécurité :** Arrêt forcé à 07h00/08h00.
 
-### 🚨 Mission 3 : Détection d'Anomalies
-1.  Scanne les données pour trouver des **incohérences flagrantes** (ex: Chauffage à fond alors qu'il fait 15°C dehors, ou consommation `Hyg` anormale en pleine nuit en semaine).
-2.  **Focus SDB :** Vérifie si le Sèche-Serviettes (qui n'a pas de colonne dédiée mais impacte le total) semble rester allumé le samedi (Anomalie suspectée).
+### 🚿 C. Salle de Bain (SDB)
+* **Sèche-Serviettes (Automation "E") :** Détection de consommation (>50W) -> Timer 1h -> Coupure Auto.
+* **Soufflant (Bouton Rodret) :** Pilotage manuel ON/OFF via Zigbee/MQTT.
+
+---
+
+## 4. TES MISSIONS D'ANALYSE (Check-list)
+
+### 🕵️ Mission 1 : "Crash Test" des Automations
+*Confronte la théorie (YAML) à la réalité (Logs `diag_conso_elec.txt`).*
+1.  **Cuisine :** Le radiateur s'arrête-t-il *vraiment* à 07h00 pile ? (Vérifie la colonne `DUT R` ou la conso `Chauff` vers 7-8h).
+2.  **SDB (Le suspect) :** L'automation "Timer 1h" fonctionne-t-elle le Samedi ? (Cherche des consos `Hyg` ou `Chauff` > 1h le week-end).
+3.  **Clim Chambre :** Le mode "Nuit" est-il efficace ou la clim lutte-t-elle non-stop (DUT élevé) ?
+
+### 🌡️ Mission 2 : Bilan Thermique Réel
+* **DUT (Duty Cycle) :** Analyse la différence d'effort entre le **Salon (Sud)** et la **Chambre (Nord)**. Confirme l'impact du simple vitrage.
+* **Corrélation :** À partir de quelle température extérieure le système "décroche" (tourne à 100%) ?
+
+### ⚡ Mission 3 : Bilan Conso
+* Valide que le talon de consommation (Bruit de fond Multimédia/Veille) est sain (~30-50W).
+* Identifie le poste le plus coûteux sur la période (Chauffage vs Eau Chaude/Hygiène).
 
 ---
 
-## 4. FORMAT DE LA RÉPONSE ATTENDUE
-
-Produis un rapport structuré en **Markdown** suivant ce plan :
-
-1.  **🌡️ Bilan Thermique & Isolation**
-    * *Verdict sur l'enveloppe (Note de A à G).*
-    * *Analyse Nord vs Sud (Impact du solaire passif).*
-2.  **⚡ Analyse des Usages (Conso)**
-    * *Tableau récapitulatif Moyenne Semaine / Moyenne WE.*
-    * *Top 3 des postes consommateurs.*
-3.  **🔍 Identification des Anomalies (S'il y en a)**
-    * *Liste précise (Date / Heure / Poste) ou mention "RAS".*
-4.  **💡 Plan d'Action Recommandé (ROI)**
-    * *1 Action Comportementale (Gratuit).*
-    * *1 Action "Low-Tech" (Petit budget, ex: Rideaux).*
-    * *1 Action "Rénovation" (Gros budget, ex: Vitrage).*
-
----
-**Instruction finale :** Sois précis, factuel, et bienveillant. Base tes conclusions uniquement sur les chiffres fournis.
+## 5. FORMAT DU RAPPORT
+Produis un rapport Markdown clair :
+1.  **✅ Audit Automations :** Tableau "Prévu vs Réel" (Vert = OK, Rouge = Échec).
+2.  **🌡️ Audit Thermique :** Note de performance et points faibles.
+3.  **💡 Recommandations :** Corrections de code ou travaux physiques prioritaires.
