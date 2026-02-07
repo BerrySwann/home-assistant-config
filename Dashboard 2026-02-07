@@ -1287,131 +1287,109 @@ views:
                     @keyframes blink {
                       50% { opacity: 0.5; }
                     }
-          - type: vertical-stack
-            cards:
-              - type: conditional
-                conditions: []
-                card:
-                  type: custom:button-card
-                  entity: sensor.blitzortung_lightning_counter
-                  name: |
+          - type: custom:button-card
+            entity: sensor.blitzortung_lightning_counter
+            triggers_update:
+              - sensor.dernier_impact_temps_reel
+              - sensor.blitzortung_lightning_distance
+            name: |
+              [[[
+                const distRaw = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance'].state) : 0;
+                const localisation = states['sensor.blitzortung_lightning_localisation'];
+                const azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth'].state) : null;
+                const impactCount = parseInt(entity.state) || 0;
+                const timePhrase = states['sensor.dernier_impact_temps_reel'] ? states['sensor.dernier_impact_temps_reel'].state : '';
+
+                let message = '';
+                
+                if (distRaw > 0) {
+                  const distance = distRaw.toFixed(1);
+                  message = `Impact à <strong>${distance} Km</strong>`;
+                  
+                  let city = null;
+                  if (localisation && localisation.attributes && localisation.attributes.features) {
+                    const features = localisation.attributes.features;
+                    if (features[0]?.properties?.geocoding?.city) {
+                      city = features[0].properties.geocoding.city;
+                      message += ` à ${city}`;
+                    }
+                  }
+
+                  if (!city && azimuth !== null) {
+                    const directions = [
+                      "au nord", "au nord-nord-est", "au nord-est", "à l'est-nord-est", 
+                      "à l'est", "à l'est-sud-est", "au sud-est", "au sud-sud-est", 
+                      "au sud", "au sud-sud-ouest", "au sud-ouest", "à l'ouest-sud-ouest", 
+                      "à l'ouest", "à l'ouest-nord-ouest", "au nord-ouest", "au nord-nord-ouest"
+                    ];
+                    const index = Math.round(azimuth / 22.5) % 16;
+                    message += ` ${directions[index]}`;
+                  }
+                } else {
+                  message = "Aucun impact récent détecté";
+                }
+
+                const impactLine = impactCount > 0 
+                  ? `<br><span style="color: #ffeb3b; font-weight: bold; font-size: 17px;">⚡ ${impactCount} impact(s) détecté(s)</span>` 
+                  : '';
+
+                return `
+                  <div style="line-height: 1.6;">
+                    <span style="font-size: 14px;">${message}</span><br>
+                    <span style="font-size: 13px; opacity: 0.9; font-weight: 500;">${timePhrase}</span>
+                    ${impactLine}
+                  </div>
+                `;
+              ]]]
+            show_state: false
+            styles:
+              card:
+                - border-radius: 12px
+                - padding: 15px
+                - border-style: solid
+                - border-width: 2px
+                - background: |
                     [[[
-                      // Récupère la distance de l'impact de foudre
-                      let distance = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance']?.state ?? 'NaN') : 0;
-
-                      // Récupère la localisation de l'impact, si disponible
-                      let localisation = states['sensor.blitzortung_lightning_localisation'] ? states['sensor.blitzortung_lightning_localisation'].state : 0;
-
-                      // Récupère l'azimut (direction) de l'impact, si disponible
-                      let azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth']?.state ?? 'NaN') : null;
-
-                      // Récupère le nombre total d'impacts détectés
-                      let impactCount = states['sensor.blitzortung_lightning_counter'] ? parseInt(states['sensor.blitzortung_lightning_counter'].state) : 0;
-
-                      // Récupère le temps écoulé depuis le dernier impact de foudre
-                      let timeSinceLastLightning = states['input_text.dernier_impact_de_foudre_temps_ecoule'] ? states['input_text.dernier_impact_de_foudre_temps_ecoule'].state : 'Inconnu';
-                      // Initialise le message à afficher
-                      let message = '';
-
-                      // Vérifie si une distance est disponible
-                      if (distance > 0) {
-                        message = `Un éclair a été détecté à ${distance} Km de la maison`;
-
-                        // Vérifie si une localisation (ville) est disponible et différente de 0
-                        let city = null;
-                        if (localisation && localisation !== 0) {
-                          let location = states['sensor.blitzortung_lightning_localisation'].attributes.features;
-                          if (location && location[0] && location[0].properties && location[0].properties.geocoding && location[0].properties.geocoding.city) {
-                            city = location[0].properties.geocoding.city;
-                            message += ` à ${city}.`;
-                          }
-                        }
-
-                        // Vérifie l'azimut pour déterminer la direction seulement si la ville n'est pas disponible
-                        if (city === null && azimuth !== null) {
-                          if (azimuth >= 348.75 || azimuth < 11.25) {
-                            message += ' au nord.';
-                          } else if (azimuth >= 11.25 && azimuth < 33.75) {
-                            message += ' au nord-nord-est.';
-                          } else if (azimuth >= 33.75 && azimuth < 56.25) {
-                            message += ' au nord-est.';
-                          } else if (azimuth >= 56.25 && azimuth < 78.75) {
-                            message += ' à l\'est-nord-est.';
-                          } else if (azimuth >= 78.75 && azimuth < 101.25) {
-                            message += ' à l\'est.';
-                          } else if (azimuth >= 101.25 && azimuth < 123.75) {
-                            message += ' à l\'est-sud-est.';
-                          } else if (azimuth >= 123.75 && azimuth < 146.25) {
-                            message += ' au sud-est.';
-                          } else if (azimuth >= 146.25 && azimuth < 168.75) {
-                            message += ' au sud-sud-est.';
-                          } else if (azimuth >= 168.75 && azimuth < 191.25) {
-                            message += ' au sud.';
-                          } else if (azimuth >= 191.25 && azimuth < 213.75) {
-                            message += ' au sud-sud-ouest.';
-                          } else if (azimuth >= 213.75 && azimuth < 236.25) {
-                            message += ' au sud-ouest.';
-                          } else if (azimuth >= 236.25 && azimuth < 258.75) {
-                            message += ' à l\'ouest-sud-ouest.';
-                          } else if (azimuth >= 258.75 && azimuth < 281.25) {
-                            message += ' à l\'ouest.';
-                          } else if (azimuth >= 281.25 && azimuth < 303.75) {
-                            message += ' à l\'ouest-nord-ouest.';
-                          } else if (azimuth >= 303.75 && azimuth < 326.25) {
-                            message += ' au nord-ouest.';
-                          } else if (azimuth >= 326.25 && azimuth < 348.75) {
-                            message += ' au nord-nord-ouest.';
-                          }
-                        }
-                      } else {
-                        message = 'Pas d\'impact de foudre détecté.';
-                      }
-                      // Ajoute le temps écoulé au message
-                      message += `<br>${timeSinceLastLightning}.`;
-
-                      // Retourne le message final avec le nombre total d'impacts, sauf si aucun impact n'est détecté
-                      if (impactCount > 0) {
-                        return `${message}<br><strong>${impactCount}</strong> impact(s) détecté(s)`;
-                      } else {
-                        return message;
-                      }
+                      const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                      if (d > 0 && d <= 5) return 'rgba(255, 0, 0, 0.2)';
+                      if (d > 5) return 'rgba(255, 123, 0, 0.1)';
+                      return 'rgba(0, 255, 0, 0.05)';
                     ]]]
-                  show_state: false
-                  color_type: card
-                  styles:
-                    card:
-                      - animation: blink 0s ease infinite
-                    name:
-                      - font-weight: bold
-                      - font-size: 13px
-                      - margin-top: 7px
-                    icon:
-                      - width: 50px
-                      - height: 50px
-                      - margin-top: '-4px'
-                  color: rgb(255, 123, 0)
-                  icon: mdi:weather-lightning
-                  hide_state: false
-                  vertical: false
-                  show_entity_picture: false
-                  tap_action:
-                    action: navigate
-                    navigation_path: meteo/#foudre
-                  icon_tap_action:
-                    action: navigate
-                    navigation_path: meteo/#foudre
-                  hold_action:
-                    action: none
-                  card_mod:
-                    style: |
-                      ha-card {
-                        box-shadow: none !important;
-                        
-                        border: none !important;
-                      }
+                - border-color: |
+                    [[[
+                      const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                      if (d > 0 && d <= 5) return 'red';
+                      if (d > 5) return 'rgba(255, 123, 0, 0.5)';
+                      return 'rgba(0, 255, 0, 0.4)';
+                    ]]]
+                - animation: |
+                    [[[
+                      const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                      return (d > 0 && d <= 5) ? 'blink-danger 1s ease infinite' : 'none';
+                    ]]]
+              name:
+                - justify-self: center
+                - text-align: center
+                - color: white
+              icon:
+                - width: 45px
+                - color: |
+                    [[[
+                      const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                      if (d > 0 && d <= 5) return 'red';
+                      if (d > 5) return 'rgb(255, 123, 0)';
+                      return 'rgb(0, 255, 0)';
+                    ]]]
+            extra_styles: |
+              @keyframes blink-danger {
+                50% { background: rgba(255, 0, 0, 0.6); border-color: white; }
+              }
+            tap_action:
+              action: navigate
+              navigation_path: meteo/#foudre
             grid_options:
               columns: 12
-              rows: 2
+              rows: 2.5
             visibility:
               - condition: numeric_state
                 entity: sensor.blitzortung_lightning_counter
@@ -2178,7 +2156,7 @@ views:
                   - sensor.clim_salon_quotidien
                   - sensor.radiateur_elec_cuisine_quotidien
                   - sensor.clim_bureau_quotidien
-                  - sensor.soufllant_sdb_quotidien
+                  - sensor.soufflant_sdb_quotidien
                   - sensor.seche_serviette_sdb_quotidien
                   - sensor.clim_chambre_quotidien
                   - sensor.conso_clim_rad_total_quotidien
@@ -4669,170 +4647,108 @@ views:
                 sub_button:
                   main: []
                   bottom: []
-              - type: vertical-stack
-                cards:
-                  - type: conditional
-                    conditions:
-                      - condition: numeric_state
-                        entity: sensor.blitzortung_lightning_counter
-                        above: 1
-                    card:
-                      type: custom:button-card
-                      entity: sensor.blitzortung_lightning_counter
-                      name: |
+                slider_fill_orientation: left
+                slider_value_position: right
+              - type: custom:button-card
+                entity: sensor.blitzortung_lightning_counter
+                triggers_update:
+                  - sensor.dernier_impact_temps_reel
+                  - sensor.blitzortung_lightning_distance
+                name: |
+                  [[[
+                    const distRaw = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance'].state) : 0;
+                    const localisation = states['sensor.blitzortung_lightning_localisation'];
+                    const azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth'].state) : null;
+                    const impactCount = parseInt(entity.state) || 0;
+                    const timePhrase = states['sensor.dernier_impact_temps_reel'] ? states['sensor.dernier_impact_temps_reel'].state : '';
+
+                    let message = '';
+                    
+                    if (distRaw > 0) {
+                      const distance = distRaw.toFixed(1);
+                      message = `Impact à <strong>${distance} Km</strong>`;
+                      
+                      let city = null;
+                      if (localisation && localisation.attributes && localisation.attributes.features) {
+                        const features = localisation.attributes.features;
+                        if (features[0]?.properties?.geocoding?.city) {
+                          city = features[0].properties.geocoding.city;
+                          message += ` à ${city}`;
+                        }
+                      }
+
+                      if (!city && azimuth !== null) {
+                        const directions = [
+                          "au nord", "au nord-nord-est", "au nord-est", "à l'est-nord-est", 
+                          "à l'est", "à l'est-sud-est", "au sud-est", "au sud-sud-est", 
+                          "au sud", "au sud-sud-ouest", "au sud-ouest", "à l'ouest-sud-ouest", 
+                          "à l'ouest", "à l'ouest-nord-ouest", "au nord-ouest", "au nord-nord-ouest"
+                        ];
+                        const index = Math.round(azimuth / 22.5) % 16;
+                        message += ` ${directions[index]}`;
+                      }
+                    } else {
+                      message = "Aucun impact récent détecté";
+                    }
+
+                    const impactLine = impactCount > 0 
+                      ? `<br><span style="color: #ffeb3b; font-weight: bold; font-size: 17px;">⚡ ${impactCount} impact(s) détecté(s)</span>` 
+                      : '';
+
+                    return `
+                      <div style="line-height: 1.6;">
+                        <span style="font-size: 14px;">${message}</span><br>
+                        <span style="font-size: 13px; opacity: 0.9; font-weight: 500;">${timePhrase}</span>
+                        ${impactLine}
+                      </div>
+                    `;
+                  ]]]
+                show_state: false
+                styles:
+                  card:
+                    - border-radius: 12px
+                    - padding: 15px
+                    - border-style: solid
+                    - border-width: 2px
+                    - background: |
                         [[[
-                          // Récupère la distance de l'impact de foudre
-                          let distance = states['sensor.blitzortung_lightning_distance'] ? parseFloat(states['sensor.blitzortung_lightning_distance']?.state ?? 'NaN') : 0;
-
-                          // Récupère la localisation de l'impact, si disponible
-                          let localisation = states['sensor.blitzortung_lightning_localisation'] ? states['sensor.blitzortung_lightning_localisation'].state : 0;
-
-                          // Récupère l'azimut (direction) de l'impact, si disponible
-                          let azimuth = states['sensor.blitzortung_lightning_azimuth'] ? parseFloat(states['sensor.blitzortung_lightning_azimuth']?.state ?? 'NaN') : null;
-
-                          // Récupère le nombre total d'impacts détectés
-                          let impactCount = states['sensor.blitzortung_lightning_counter'] ? parseInt(states['sensor.blitzortung_lightning_counter'].state) : 0;
-
-                          // Récupère le temps écoulé depuis le dernier impact de foudre
-                          let timeSinceLastLightning = states['input_text.dernier_impact_de_foudre_temps_ecoule'] ? states['input_text.dernier_impact_de_foudre_temps_ecoule'].state : 'Inconnu';
-                          // Initialise le message à afficher
-                          let message = '';
-
-                          // Vérifie si une distance est disponible
-                          if (distance > 0) {
-                            message = `Un éclair a été détecté à ${distance} Km de la maison`;
-
-                            // Vérifie si une localisation (ville) est disponible et différente de 0
-                            let city = null;
-                            if (localisation && localisation !== 0) {
-                              let location = states['sensor.blitzortung_lightning_localisation'].attributes.features;
-                              if (location && location[0] && location[0].properties && location[0].properties.geocoding && location[0].properties.geocoding.city) {
-                                city = location[0].properties.geocoding.city;
-                                message += ` à ${city}.`;
-                              }
-                            }
-
-                            // Vérifie l'azimut pour déterminer la direction seulement si la ville n'est pas disponible
-                            if (city === null && azimuth !== null) {
-                              if (azimuth >= 348.75 || azimuth < 11.25) {
-                                message += ' au nord.';
-                              } else if (azimuth >= 11.25 && azimuth < 33.75) {
-                                message += ' au nord-nord-est.';
-                              } else if (azimuth >= 33.75 && azimuth < 56.25) {
-                                message += ' au nord-est.';
-                              } else if (azimuth >= 56.25 && azimuth < 78.75) {
-                                message += ' à l\'est-nord-est.';
-                              } else if (azimuth >= 78.75 && azimuth < 101.25) {
-                                message += ' à l\'est.';
-                              } else if (azimuth >= 101.25 && azimuth < 123.75) {
-                                message += ' à l\'est-sud-est.';
-                              } else if (azimuth >= 123.75 && azimuth < 146.25) {
-                                message += ' au sud-est.';
-                              } else if (azimuth >= 146.25 && azimuth < 168.75) {
-                                message += ' au sud-sud-est.';
-                              } else if (azimuth >= 168.75 && azimuth < 191.25) {
-                                message += ' au sud.';
-                              } else if (azimuth >= 191.25 && azimuth < 213.75) {
-                                message += ' au sud-sud-ouest.';
-                              } else if (azimuth >= 213.75 && azimuth < 236.25) {
-                                message += ' au sud-ouest.';
-                              } else if (azimuth >= 236.25 && azimuth < 258.75) {
-                                message += ' à l\'ouest-sud-ouest.';
-                              } else if (azimuth >= 258.75 && azimuth < 281.25) {
-                                message += ' à l\'ouest.';
-                              } else if (azimuth >= 281.25 && azimuth < 303.75) {
-                                message += ' à l\'ouest-nord-ouest.';
-                              } else if (azimuth >= 303.75 && azimuth < 326.25) {
-                                message += ' au nord-ouest.';
-                              } else if (azimuth >= 326.25 && azimuth < 348.75) {
-                                message += ' au nord-nord-ouest.';
-                              }
-                            }
-                          } else {
-                            message = 'Pas d\'impact de foudre détecté.';
-                          }
-                          // Ajoute le temps écoulé au message
-                          message += `<br>${timeSinceLastLightning}.`;
-
-                          // Retourne le message final avec le nombre total d'impacts, sauf si aucun impact n'est détecté
-                          if (impactCount > 0) {
-                            return `${message}<br><strong>${impactCount}</strong> impact(s) détecté(s)`;
-                          } else {
-                            return message;
-                          }
+                          const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                          if (d > 0 && d <= 5) return 'rgba(255, 0, 0, 0.2)';
+                          if (d > 5) return 'rgba(255, 123, 0, 0.1)';
+                          return 'rgba(0, 255, 0, 0.05)';
                         ]]]
-                      show_state: false
-                      color_type: card
-                      styles:
-                        card:
-                          - animation: blink 0s ease infinite
-                        name:
-                          - font-weight: bold
-                          - font-size: 13px
-                          - margin-top: 9px
-                        icon:
-                          - width: 50px
-                          - height: 50px
-                      color: rgb(255, 123, 0)
-                      icon: mdi:weather-lightning
-                      hide_state: false
-                      vertical: false
-                      show_entity_picture: false
-                      tap_action:
-                        action: none
-                      icon_tap_action:
-                        action: none
-                      hold_action:
-                        action: none
-                      card_mod:
-                        style: |
-                          ha-card {
-                            box-shadow: none !important;
-                            
-                            border: none !important;
-                          }
-                  - type: conditional
-                    conditions:
-                      - condition: numeric_state
-                        entity: sensor.blitzortung_lightning_counter
-                        below: 1
-                    card:
-                      type: custom:button-card
-                      entity: sensor.blitzortung_lightning_counter
-                      name: |
+                    - border-color: |
                         [[[
-                          let timeSinceLastLightning = states['input_text.dernier_impact_de_foudre_temps_ecoule'] ? states['input_text.dernier_impact_de_foudre_temps_ecoule'].state : 'Inconnu';
-                          let message = 'Pas d\'impact de foudre détecté.';
-                          message += `<br>${timeSinceLastLightning}.`;
-                          return message;
+                          const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                          if (d > 0 && d <= 5) return 'red';
+                          if (d > 5) return 'rgba(255, 123, 0, 0.5)';
+                          return 'rgba(0, 255, 0, 0.4)';
                         ]]]
-                      show_state: false
-                      color_type: card
-                      styles:
-                        name:
-                          - font-weight: bold
-                          - font-size: 12px
-                        icon:
-                          - width: 30px
-                          - height: 30px
-                      color: rgb(0, 255, 0)
-                      icon: mdi:weather-sunny
-                      hide_state: true
-                      vertical: false
-                      show_entity_picture: false
-                      tap_action:
-                        action: none
-                      icon_tap_action:
-                        action: none
-                      hold_action:
-                        action: none
-                      card_mod:
-                        style: |
-                          ha-card {
-                            box-shadow: none !important;
-                            
-                            border: none !important;
-                          }
+                    - animation: |
+                        [[[
+                          const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                          return (d > 0 && d <= 5) ? 'blink-danger 1s ease infinite' : 'none';
+                        ]]]
+                  name:
+                    - justify-self: center
+                    - text-align: center
+                    - color: white
+                  icon:
+                    - width: 45px
+                    - color: |
+                        [[[
+                          const d = parseFloat(states['sensor.blitzortung_lightning_distance']?.state);
+                          if (d > 0 && d <= 5) return 'red';
+                          if (d > 5) return 'rgb(255, 123, 0)';
+                          return 'rgb(0, 255, 0)';
+                        ]]]
+                extra_styles: |
+                  @keyframes blink-danger {
+                    50% { background: rgba(255, 0, 0, 0.6); border-color: white; }
+                  }
+                grid_options:
+                  columns: 12
+                  rows: 2
               - card_mod:
                   style: |
                     ha-card {
@@ -5248,7 +5164,7 @@ views:
                     speed_unit: kph
                     speed_range_beaufort: false
                     speed_range_step: 10
-                    speed_range_max: 40
+                    speed_range_max: 20
                     current_speed_arrow: true
                     current_speed_arrow_size: 60
                     current_speed_arrow_location: below
@@ -9416,6 +9332,8 @@ views:
               rows: auto
           - type: custom:streamline-card
             template: nav_bar
+      - type: grid
+        cards: []
     cards: []
   - title: Temperatures
     path: temperatures
