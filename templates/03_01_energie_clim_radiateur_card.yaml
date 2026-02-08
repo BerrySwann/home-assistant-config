@@ -389,25 +389,22 @@
           0
         {% endif %}
 
-    #--- performance_thermique_totale_stable (VERSION FIABLE) ---
+    #--- performance_thermique_totale_stable (VERSION RÉELLE) ---
     - name: "Performance Thermique Totale Stable"
       unique_id: performance_thermique_totale_stable
       unit_of_measurement: "pts"
-      icon: mdi:chart-line
       state: >
-        {# 1. Énergie totale consommée hier (ou moyenne mobile 24h) #}
-        {# On utilise ici le capteur quotidien qui est le plus juste #}
-        {% set energie_wh = states('sensor.conso_clim_rad_total_quotidien') | float(0) * 1000 %}
+        {# 1. Énergie totale du jour en Wh (on prend tes kWh * 1000) #}
+        {% set energy_wh = states('sensor.conso_clim_rad_total_quotidien') | float(0) * 1000 %}
 
-        {# 2. On utilise les moyennes lissées pour le reste #}
+        {# 2. Delta T moyen sur 24h et surface réelle #}
         {% set delta_moy = states('sensor.temperature_delta_moyenne_24h') | float(0) | abs %}
         {% set surface = 75.0 %}
 
-        {# 3. Calcul : Énergie / (Surface * Delta T Moyen) #}
-        {% if delta_moy > 0.5 and energie_wh > 0 %}
-          {{ (energie_wh / (surface * delta_moy)) | round(1) }}
+        {# 3. Calcul : Wh / (m² * ΔT) #}
+        {% if delta_moy > 0.5 and energy_wh > 0 %}
+          {{ (energy_wh / (surface * delta_moy)) | round(1) }}
         {% else %}
-          {# Garde l'ancienne valeur si les conditions ne sont pas réunies #}
           {{ states('sensor.performance_thermique_totale_stable') | float(0) }}
         {% endif %}
 
