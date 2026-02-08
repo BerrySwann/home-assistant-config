@@ -1302,74 +1302,39 @@
           entity_id: cover.store_bureau
   mode: single
 - id: '1766777044867'
-  alias: Gestion Optimisée du Store Salon
-  description: 'Correction : Ouverture en G2/G4 même si froid, Fermeture en G1/G3'
+  alias: Gestion Optimisée du Store Salon (Avec Mode Anti-Reflet PC)
+  description: Gère Canicule, Froid, et surtout le confort visuel de Mamour (Anti-Glare).
   triggers:
   - id: re-evaluation
     trigger: state
     entity_id:
     - sensor.th_balcon_nord_temperature
     - sensor.groupe_clim
+    - sun.sun
   - id: fenetre
     trigger: state
     entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
-  - id: matin
+  - id: matin_soir
     trigger: sun
     event: sunrise
-  - id: soir
+  - id: matin_soir
     trigger: sun
     event: sunset
   conditions:
-  - alias: 'SÉCURITÉ : La fenêtre doit être FERMÉE pour bouger le store'
+  - alias: 'SÉCURITÉ : La fenêtre doit être FERMÉE'
     condition: state
     entity_id: binary_sensor.contact_fenetre_salon_sonoff_contact
     state: 'off'
   actions:
   - choose:
-    - alias: 'SCÉNARIO A : Ouverture (Présence G2/G4)'
-      conditions:
-      - condition: sun
-        after: sunrise
-        before: sunset
-      - condition: numeric_state
-        entity_id: sensor.th_balcon_nord_temperature
-        below: 34
-      - condition: state
-        entity_id: sensor.groupe_clim
-        state:
-        - groupe_2
-        - groupe_4
-      - condition: numeric_state
-        entity_id: cover.store_salon
-        attribute: current_position
-        below: 1
-      sequence:
-      - action: cover.open_cover
-        target:
-          entity_id: cover.store_salon
-    - alias: 'SCÉNARIO B : Canicule (> 34°C)'
+    - alias: 'SCÉNARIO 1 : Canicule (> 34°C)'
       conditions:
       - condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
         above: 34
-      - condition: sun
-        after: sunrise
-        before: sunset
       sequence:
       - choose:
-        - alias: Absents ou Eric seul (G1/G3) -> Fermeture totale
-          conditions:
-          - condition: state
-            entity_id: sensor.groupe_clim
-            state:
-            - groupe_1
-            - groupe_3
-          sequence:
-          - action: cover.close_cover
-            target:
-              entity_id: cover.store_salon
-        - alias: Mamour présente (G2/G4) -> Position 50% (Mi-ombre)
-          conditions:
+        - conditions:
           - condition: state
             entity_id: sensor.groupe_clim
             state:
@@ -1381,15 +1346,33 @@
               entity_id: cover.store_salon
             data:
               position: 50
-    - alias: 'SCÉNARIO C : Fermeture Nuit'
+        default:
+        - action: cover.close_cover
+          target:
+            entity_id: cover.store_salon
+    - alias: 'SCÉNARIO 2 : Anti-Reflet PC (Soleil dans les yeux)'
       conditions:
-      - condition: sun
-        after: sunset
+      - condition: state
+        entity_id: sensor.groupe_clim
+        state:
+        - groupe_2
+        - groupe_4
+      - condition: template
+        value_template: '{% set az = state_attr(''sun.sun'', ''azimuth'') | float(0)
+          %} {% set el = state_attr(''sun.sun'', ''elevation'') | float(0) %} {% set
+          az_ok = states(''input_number.soleil_azimut_debut'')|float <= az <= states(''input_number.soleil_azimut_fin'')|float
+          %} {% set el_ok = states(''input_number.soleil_elevation_min'')|float <=
+          el <= states(''input_number.soleil_elevation_max'')|float %} {{ az_ok and
+          el_ok }}
+
+          '
       sequence:
-      - action: cover.close_cover
+      - action: cover.set_cover_position
         target:
           entity_id: cover.store_salon
-    - alias: 'SCÉNARIO D : Froid & Pas de Mamour (G1 ou G3)'
+        data:
+          position: 30
+    - alias: 'SCÉNARIO 3 : Froid (< 17°) & Pas de Mamour'
       conditions:
       - condition: numeric_state
         entity_id: sensor.th_balcon_nord_temperature
@@ -1399,13 +1382,22 @@
         state:
         - groupe_1
         - groupe_3
-      - condition: sun
-        after: sunrise
-        before: sunset
       sequence:
       - action: cover.close_cover
         target:
           entity_id: cover.store_salon
+    - alias: 'SCÉNARIO 4 : Nuit'
+      conditions:
+      - condition: sun
+        after: sunset
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.store_salon
+    default:
+    - action: cover.open_cover
+      target:
+        entity_id: cover.store_salon
   mode: single
 - id: '1766777192080'
   alias: Bouton IKEA RODRET - Soufflant SdB Gestion ON/OFF (JSON)

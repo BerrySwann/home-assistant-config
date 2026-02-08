@@ -34,8 +34,56 @@ seuil_non_chauffage_bas:
   max: 18
   step: 1
 
-# annotations_log:
-# - [L1-5] Ajout du Titre Principal ASCII arrondi.
-# - [L7-9] Ajout du Titre Secondaire (Pièce 10) pour la section Météo.
-# - [L26-28] Ajout du Titre Secondaire pour les seuils de chauffage.
-# - [Global] Ajout des titres tertiaires # --- slug --- et des unique_id.
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ INPUTS : GESTION SOLAIRE AVANCÉE (CALIBRAGE AZIMUT & ÉLÉVATION)          │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ┌───────────────────────────────────┐
+# │ 1. RÉGLAGES HORIZONTAUX (AZIMUT)  │
+# └───────────────────────────────────┘
+# (Ajustés pour orientation Sud-Ouest 196°)
+
+# --- soleil_azimut_debut ---
+soleil_azimut_debut:
+  name: "Soleil: Début Azimut (Est)"
+  initial: 125
+  min: 90
+  max: 180
+  step: 5
+  unit_of_measurement: "°"
+  icon: mdi:axis-x-arrow
+
+# --- soleil_azimut_fin ---
+soleil_azimut_fin:
+  name: "Soleil: Fin Azimut (Ouest)"
+  initial: 265
+  min: 180
+  max: 290
+  step: 5
+  unit_of_measurement: "°"
+  icon: mdi:axis-x-arrow
+
+# ┌───────────────────────────────────┐
+# │ 2. RÉGLAGES VERTICAUX (HAUTEUR)   │
+# └───────────────────────────────────┘
+# (Ajustés pour Toiture/Balcon)
+
+# --- soleil_elevation_min ---
+soleil_elevation_min:
+  name: "Soleil: Hauteur Min (Montagne)"
+  initial: 5
+  min: 0
+  max: 20
+  step: 1
+  unit_of_measurement: "°"
+  icon: mdi:axis-y-arrow
+
+# --- soleil_elevation_max ---
+soleil_elevation_max:
+  name: "Soleil: Hauteur Max (Toiture)"
+  initial: 50
+  min: 20
+  max: 90
+  step: 1
+  unit_of_measurement: "°"
+  icon: mdi:home-roof
