@@ -76,16 +76,35 @@ Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de 
 
 ## 🛠️ RÈGLES DE CODAGE STRICTES
 
-- **AUTOMATIONS** : 
-  - ⛔ **INTERDIT** : Jamais d' `id:` au niveau global.
-  - ⛔ INTERDIT : Jamais de "-" devant le 1er `alias` (Titre).
-  - ✅ **OBLIGATOIRE** : `alias` en MAJUSCULES pour chaque bloc (trigger, condition, action).
-  - 🆗 **AUTORISÉ** : `id:` permis UNIQUEMENT à l'intérieur des triggers ou actions.
+- **AUTOMATIONS (FORMATTAGE)** : 
+  - ⛔ **INTERDIT** : Jamais de tiret "`-`" devant le premier `alias` (Titre). Le code doit être fourni comme un bloc objet, pas un élément de liste.
+  - ⛔ **INTERDIT** : Jamais d' `id:` au niveau global (laisser HA le gérer).
+  - ✅ **OBLIGATOIRE** : `alias` en MAJUSCULES pour chaque sous-bloc (trigger, condition, action).
+  - 🆗 **AUTORISÉ** : `id:` permis UNIQUEMENT à l'intérieur des triggers (pour les IDs de déclenchement).
+
 - **ENTITÉS** : 
   - `name`: "Nom Lisible" / `unique_id`: nom_lisible (Minuscules/Underscores).
+
 - **MODIFICATIONS** : 
   - Annoter chaque ligne modifiée : `# "[L...] modif"`.
   - Bloc final obligatoire : `# annotations_log:`.
+---
+
+## 🔔 STANDARDS DE NOTIFICATION (POCO X7 PRO & MONTRE)
+**Cible matérielle : Poco X7 Pro couplé à Xiaomi Watch Lite (Écran carré, rendu Emojis limité)**
+
+1. **TITRE (`title`)** :
+   - **Longueur Max** : **15 caractères** (Impératif pour lecture immédiate au poignet).
+   - **Style** : MAJUSCULES recommandées pour l'alerte.
+   
+2. **CORPS DU MESSAGE (`message`)** :
+   - **Encodage** : **TEXTE PUR (ASCII) UNIQUEMENT**.
+   - ⛔ **INTERDICTION STRICTE** : Aucun Emoji (🐛, ⚠️, 🔥) -> Remplacer par symboles ASCII (`!`, `[ ]`, `OK`, `>>`).
+   - **Structure** : L'information critique doit être dans les **20 premiers caractères**.
+
+3. **EXEMPLE VALIDE** :
+   - Titre : `SDB : ARRET` (11 car.)
+   - Message : `Timer 1h fini. Reset OK.`
 
 ---
 

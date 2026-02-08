@@ -1209,30 +1209,33 @@
       message: Backup hebdo & tag -> GitHub.
   mode: single
 - id: '1766776781417'
-  alias: E - Minuterie Sèche Serviettes Salle de Bain (1h)
-  description: Détection > 50W, décompte 1h, coupure de sécurité, puis réarmement.
+  alias: E - Minuterie Sèche Serviettes Salle de Bain (Timer Absolu 1h)
+  description: Timer de 1h après détection de chauffe. Sécurité anti-redémarrage incluse.
   triggers:
-  - alias: 'DÉCLENCHEMENT : DÉTECTION CONSOMMATION > 50W'
+  - alias: 'START : DÉTECTION PUISSANCE > 50W'
     trigger: numeric_state
     entity_id: sensor.prise_seche_serviette_salle_de_bain_nous_power
     above: 50
-    for:
-      hours: 1
-      minutes: 0
-      seconds: 0
-  conditions:
-  - alias: 'VÉRIFICATION : LA PRISE EST BIEN ACTIVE'
+  conditions: []
+  actions:
+  - alias: 'CHRONO : DÉCOMPTE DE 1 HEURE'
+    delay: 01:00:00
+  - alias: 'VERIF : EST-IL TOUJOURS ALLUMÉ ?'
     condition: state
     entity_id: switch.prise_seche_serviette_salle_de_bain_nous
     state: 'on'
-  actions:
-  - alias: 'MATÉRIEL : COUPURE DE SÉCURITÉ (ANTI-OUBLI)'
+  - alias: 'ACTION : COUPURE DE SÉCURITÉ'
     action: switch.turn_off
     target:
       entity_id: switch.prise_seche_serviette_salle_de_bain_nous
-  - alias: 'SÉCURITÉ : DÉLAI D''ATTENTE AVANT RÉARMEMENT'
+  - alias: 'NOTIF : ARRÊT AUTO'
+    action: notify.mobile_app_poco_x7_pro_eric
+    data:
+      title: Sèche-Serv. OFF
+      message: 1h écoulée. Arrêt automatique.
+  - alias: 'RESET : ATTENTE 1 MIN'
     delay: 00:01:00
-  - alias: 'MATÉRIEL : REMISE EN SERVICE DE LA PRISE'
+  - alias: 'ACTION : RÉARMEMENT (VEILLE)'
     action: switch.turn_on
     target:
       entity_id: switch.prise_seche_serviette_salle_de_bain_nous
