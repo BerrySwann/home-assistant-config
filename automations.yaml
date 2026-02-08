@@ -3159,7 +3159,7 @@
   max: 3
 - id: '1769947740553'
   alias: A - 2026/02/01 - SALLE DE BAIN - GESTION INTELLIGENTE SOUFFLANT
-  description: 'Cycle complet : Démarrage (T°), Régulation 23°C/22°C, Swing et 0W'
+  description: 'Cycle complet : Démarrage, Régulation, et Auto-off 60 min avec refroidissement'
   triggers:
   - alias: CHANGEMENT ÉTAT INTERRUPTEUR
     trigger: state
@@ -3176,6 +3176,12 @@
     entity_id: sensor.th_salle_de_bain_temperature
     below: 21.9
     id: temp_low
+  - alias: SÉCURITÉ AUTO-OFF 60 MIN
+    trigger: state
+    entity_id: switch.inter_soufflant_salle_de_bain
+    to: 'on'
+    for: 01:00:00
+    id: auto_off
   actions:
   - alias: ROUTAGE DES ACTIONS PAR TRIGGER
     choose:
@@ -3190,21 +3196,18 @@
         entity_id: sensor.th_salle_de_bain_temperature
         below: 25
       sequence:
-      - alias: ACTIVATION PRISE PHYSIQUE
-        action: switch.turn_on
+      - action: switch.turn_on
         target:
           entity_id: switch.prise_soufflant_salle_de_bain_nous
       - delay: 00:00:01
-      - alias: ENVOI IR POWER ON
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
           command: on_off
           device: radiateur_sdb
       - delay: '00:00:00.8'
-      - alias: SÉLECTION PUISSANCE INITIALE SELON TEMPÉRATURE
-        choose:
+      - choose:
         - alias: DÉMARRAGE 2000W (< 21°C)
           conditions:
           - condition: numeric_state
@@ -3237,8 +3240,7 @@
           data:
             option: 1000W
       - delay: '00:00:00.8'
-      - alias: ACTIVATION SWING IR
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
@@ -3249,7 +3251,7 @@
           entity_id: climate.soufflant_salle_de_bain
         data:
           hvac_mode: heat
-    - alias: CAS TEMPÉRATURE > 23°C (RÉDUCTION)
+    - alias: CAS TEMPÉRATURE > 23°C
       conditions:
       - condition: trigger
         id: temp_high
@@ -3262,13 +3264,11 @@
           entity_id: input_select.etat_resistance_soufflant_sdb
           state: 0W
       sequence:
-      - alias: CALCUL NOMBRE DE PRESSIONS IR VERS 0W
-        variables:
+      - variables:
           current_power: '{{ states(''input_select.etat_resistance_soufflant_sdb'')
             }}'
           ir_repeats: '{{ 2 if current_power == ''1000W'' else 1 }}'
-      - alias: ENVOI IR VERS 0W
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
@@ -3281,7 +3281,7 @@
           entity_id: input_select.etat_resistance_soufflant_sdb
         data:
           option: 0W
-    - alias: CAS TEMPÉRATURE < 22°C (RÉACTIVATION)
+    - alias: CAS TEMPÉRATURE < 22°C
       conditions:
       - condition: trigger
         id: temp_low
@@ -3292,8 +3292,7 @@
         entity_id: input_select.etat_resistance_soufflant_sdb
         state: 0W
       sequence:
-      - alias: RELANCE CHAUFFE 1000W
-        action: remote.send_command
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:
@@ -3304,16 +3303,26 @@
           entity_id: input_select.etat_resistance_soufflant_sdb
         data:
           option: 1000W
-    - alias: CAS EXTINCTION INTER
+    - alias: CAS EXTINCTION (MANUELLE OU AUTO)
       conditions:
-      - condition: trigger
-        id: inter_change
-      - condition: state
-        entity_id: switch.inter_soufflant_salle_de_bain
-        state: 'off'
+      - or:
+        - and:
+          - condition: trigger
+            id: inter_change
+          - condition: state
+            entity_id: switch.inter_soufflant_salle_de_bain
+            state: 'off'
+        - condition: trigger
+          id: auto_off
       sequence:
-      - alias: ENVOI IR POWER OFF
-        action: remote.send_command
+      - if:
+        - condition: trigger
+          id: auto_off
+        then:
+        - action: switch.turn_off
+          target:
+            entity_id: switch.inter_soufflant_salle_de_bain
+      - action: remote.send_command
         target:
           entity_id: remote.soufflant_sdb_rm4_mini
         data:

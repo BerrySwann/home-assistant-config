@@ -61,7 +61,7 @@
 
 # --- radiateur_elec_cuisine_hebdomadaire ---
     - name: "Radiateur Cuisine Hebdomadaire"
-      unique_id: radiateur_cuisine_elec_hebdomadaire
+      unique_id: radiateur_elec_cuisine_hebdomadaire # "[L73] modif - Correction ordre mots pour cohérence"
       device_class: energy
       unit_of_measurement: kWh
       icon: mdi:flash-outline
@@ -159,7 +159,7 @@
       icon: mdi:flash-outline
       state: "{{ states('sensor.seche_serviette_sdb_annuel_um') | float(0) | round(2) }}"
 
-# --- sseche_serviette_sdb_mensuel ---
+# --- seche_serviette_sdb_mensuel --- # "[L154] modif - Correction typo double 's'"
     - name: "Seche Serviette Sdb Mensuel"
       unique_id: seche_serviette_sdb_mensuel
       device_class: energy
@@ -238,7 +238,7 @@
         {{ (soufflant + seche_serv) | round(2) }}
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ SENSOR : PÔLE 1. PERFORMANCE THERMIQUE                                   │
+# │ SENSOR : PÔLE 1. PERFORMANCE THERMIQUE (FORMULE: W×DUT / S×ΔT)           │
 # ╰──────────────────────────────────────────────────────────────────────────╯
     # ┌───────────────────────────────────┐
     # │ 4. SALON (25.88 m²)               │
@@ -253,8 +253,8 @@
         {% set surface = 25.88 %}
         {% set t_int = states('sensor.th_salon_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
-        {% set delta_t = t_int - t_ext %}
-        {% if delta_t > 0 and surface > 0 and watts > 5 %}
+        {% set delta_t = (t_int - t_ext) | abs %} {# "[L...] modif - Ajout abs() pour gérer clim été" #}
+        {% if delta_t > 0.5 and surface > 0 and watts > 5 %} {# "[L...] modif - delta_t > 0.5 au lieu de > 0" #}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
 
@@ -271,8 +271,8 @@
         {% set surface = 10.59 %}
         {% set t_int = states('sensor.th_cuisine_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
-        {% set delta_t = t_int - t_ext %}
-        {% if delta_t > 0 and surface > 0 and watts > 5 %}
+        {% set delta_t = (t_int - t_ext) | abs %} {# "[L...] modif - Ajout abs() pour gérer clim été" #}
+        {% if delta_t > 0.5 and surface > 0 and watts > 5 %} {# "[L...] modif - delta_t > 0.5 au lieu de > 0" #}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
 
@@ -289,13 +289,13 @@
         {% set surface = 10.55 %}
         {% set t_int = states('sensor.th_bureau_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
-        {% set delta_t = t_int - t_ext %}
-        {% if delta_t > 0 and surface > 0 and watts > 5 %}
+        {% set delta_t = (t_int - t_ext) | abs %} {# "[L...] modif - Ajout abs() pour gérer clim été" #}
+        {% if delta_t > 0.5 and surface > 0 and watts > 5 %} {# "[L...] modif - delta_t > 0.5 au lieu de > 0" #}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
 
     # ┌───────────────────────────────────┐
-    # │ 8. SDB (3.96 m²)                  │
+    # │ 8. SDB (3.13 m²)                  │ # "[L253] modif - Correction surface 3.96→3.13 (réel)"
     # └───────────────────────────────────┘
     # --- performance_thermique_sdb ---
     - name: "Performance Thermique SdB (3.13 m²)"
@@ -310,14 +310,12 @@
         {% set d2 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
         {% set dut = d1 + d2 %}
 
-        {# SURFACE : Ajustée à 3.96m² selon votre base de contexte IA_CONTEXT_BASE #}
-        {% set surface = 3.96 %}
+        {% set surface = 3.13 %} {# "[L269] modif - Correction 3.96→3.13 selon IA_CONTEXT_BASE (1.96×1.58)" #}
         
         {% set t_int = states('sensor.th_salle_de_bain_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
-        {% set delta_t = t_int - t_ext %}
+        {% set delta_t = (t_int - t_ext) | abs %} {# "[L...] modif - Ajout abs() pour cohérence" #}
 
-        {# LOGIQUE : On évite la division par zéro et les résultats aberrants #}
         {% if delta_t > 0.5 and watts > 5 %}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %}
@@ -337,8 +335,8 @@
         {% set surface = 11.26 %}
         {% set t_int = states('sensor.th_chambre_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
-        {% set delta_t = t_int - t_ext %}
-        {% if delta_t > 0 and surface > 0 and watts > 5 %}
+        {% set delta_t = (t_int - t_ext) | abs %} {# "[L...] modif - Ajout abs() pour gérer clim été" #}
+        {% if delta_t > 0.5 and surface > 0 and watts > 5 %} {# "[L...] modif - delta_t > 0.5 au lieu de > 0" #}
           {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
         {% else %} 0 {% endif %}
 
@@ -371,15 +369,15 @@
       unit_of_measurement: "pts"
       icon: mdi:home-thermometer
       state: >
-        {# 1. RÉCUPÉRATION DES PUISSANCES (Vérifiez bien ces noms d'entités) #}
+        {# 1. RÉCUPÉRATION DES PUISSANCES #}
         {% set total_watts = states('sensor.conso_clim_rad_total') | float(0) %}
 
         {# 2. RÉCUPÉRATION DU DUT ET DU DELTA #}
         {% set dut = states('sensor.dut_brut_total') | float(0) %}
-        {% set delta = states('sensor.temperature_delta_valeur') | float(0) %}
+        {% set delta = states('sensor.temperature_delta_valeur') | float(0) | abs %} {# "[L...] modif - Ajout abs()" #}
         {% set surface = 75.0 %}
 
-        {# 3. CALCUL AVEC SÉCURITÉ (On tolère un delta faible pour le test) #}
+        {# 3. CALCUL AVEC SÉCURITÉ #}
         {% if delta > 0.1 and total_watts > 2 and dut > 0 %}
           {{ ((total_watts * dut) / (surface * delta)) | round(1) }}
         {% else %}
@@ -400,18 +398,16 @@
         {% set dut_moy = states('sensor.dut_moyenne_24h') | float(0) %}
         {% set surface = 75.0 %}
 
-        {# 2. Calcul avec vérification des seuils (Correction de dut -> dut_moy) #}
+        {# 2. Calcul avec vérification des seuils #}
         {% if delta_moy > 0.1 and w_moy > 2 and dut_moy > 0 and surface > 0 %}
           {{ ((w_moy * dut_moy) / (surface * delta_moy)) | round(1) }}
         {% else %}
           {{ states('sensor.performance_thermique_totale_stable') | float(0) }}
         {% endif %}
       availability: >
-        {# Vérifie que les capteurs sources sont numériques pour éviter les erreurs de calcul #}
         {{ is_number(states('sensor.conso_clim_rad_moyenne_24h')) and 
           is_number(states('sensor.temperature_delta_moyenne_24h')) and
           is_number(states('sensor.dut_moyenne_24h')) }}
-
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │       D.P.E.             --- CLASSE ÉNERGÉTIQUE DPE ---                  │
@@ -425,23 +421,49 @@
         {# Utilisation de la moyenne stable pour éviter les sauts de lettre #}
         {% set p = states('sensor.performance_thermique_totale_stable') | float(0) %}
         {% if p <= 0 %} "N/A"
-        {% elif p <= 1.5 %} "A"
-        {% elif p <= 2.5 %} "B"
-        {% elif p <= 3.5 %} "C"
-        {% elif p <= 5.0 %} "D"
-        {% elif p <= 7.0 %} "E"
-        {% elif p <= 10.0 %} "F"
+        {% elif p <= 0.5 %} "A"     {# "[L431] modif - Alignement seuils DPE avec graphique" #}
+        {% elif p <= 1.5 %} "B"
+        {% elif p <= 2.5 %} "C"
+        {% elif p <= 4.0 %} "D"     {# "[L...] modif - 3.5→4.0" #}
+        {% elif p <= 6.0 %} "E"     {# "[L...] modif - 7.0→6.0" #}
+        {% elif p <= 8.5 %} "F"     {# "[L...] modif - 10.0→8.5" #}
         {% else %} "G"
         {% endif %}
       attributes:
         score_pts: "{{ states('sensor.performance_thermique_totale_stable') | float(0) }}"
+        interpretation: > 
+          {% set p = states('sensor.performance_thermique_totale_stable') | float(0) %}
+          {% if p <= 0.5 %} "Excellent"
+          {% elif p <= 1.5 %} "Très bon"
+          {% elif p <= 2.5 %} "Bon"
+          {% elif p <= 4.0 %} "Moyen"
+          {% elif p <= 6.0 %} "Passable"
+          {% elif p <= 8.5 %} "Mauvais"
+          {% else %} "Très mauvais"
+          {% endif %}
         couleur_dpe: >
           {% set p = states('sensor.performance_thermique_totale_stable') | float(0) %}
-          {% if p <= 1.5 %} "#008055"
-          {% elif p <= 2.5 %} "#2FB044"
-          {% elif p <= 3.5 %} "#BED100"
-          {% elif p <= 5.0 %} "#FFD100"
-          {% elif p <= 7.0 %} "#FFB300"
-          {% elif p <= 10.0 %} "#af7a46ff"
-          {% else %} "#FF0000"
+          {% if p <= 0.5 %} "#008055"     {# "[L...] modif - Seuil 1.5→0.5" #}
+          {% elif p <= 1.5 %} "#2FB044"   {# A→B #}
+          {% elif p <= 2.5 %} "#BED100"   {# B→C #}
+          {% elif p <= 4.0 %} "#FFD100"   {# "[L...] modif - C→D 3.5→4.0" #}
+          {% elif p <= 6.0 %} "#FFB300"   {# "[L...] modif - D→E 5.0→6.0" #}
+          {% elif p <= 8.5 %} "#F44336"   {# "[L...] modif - E→F 7.0→8.5" #}
+          {% else %} "#8B0000"            {# F→G #}
           {% endif %}
+        formule: "Performance = (Watts × DUT) / (Surface × ΔT)" 
+        surface_totale: "75 m²"
+        unite: "W·h / (m²·°C)"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ANNOTATIONS DE MODIFICATIONS
+# ═══════════════════════════════════════════════════════════════════════════
+# annotations_log:
+# - [2026-02-08] [L73] FIX : unique_id radiateur_cuisine_elec → radiateur_elec_cuisine
+# - [2026-02-08] [L154] FIX : Typo commentaire "sseche" → "seche"
+# - [2026-02-08] [L253] FIX CRITIQUE : Surface SdB 3.96→3.13 m² (erreur +26%)
+# - [2026-02-08] [L269] FIX : Correction surface SdB dans calcul (1.96×1.58=3.13)
+# - [2026-02-08] [L...] AMÉLIO : Ajout abs() sur delta_t (gestion clim été)
+# - [2026-02-08] [L...] AMÉLIO : delta_t > 0 → delta_t > 0.5 (seuil cohérent)
+# - [2026-02-08] [L431] FIX : Seuils DPE alignés avec graphique (A≤0.5, D≤4.0, E≤6.0, F≤8.5)
+# - [2026-02-08] [L447] AMÉLIO : Ajout attributs interpretation/formule/unite
