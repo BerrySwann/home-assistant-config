@@ -302,25 +302,30 @@
       unique_id: performance_thermique_sdb
       unit_of_measurement: "pts"
       state: >
+        {# 1. Calcul de l'énergie totale réelle (P1*D1 + P2*D2) pour éviter l'erreur mathématique #}
         {% set p1 = states('sensor.prise_soufflant_salle_de_bain_nous_power') | float(0) %}
-        {% set p2 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
-        {% set watts = p1 + p2 %}
-
         {% set d1 = states('sensor.dut_sdb_soufflant') | float(0) %}
-        {% set d2 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
-        {% set dut = d1 + d2 %}
-
-        {% set surface = 3.13 %} {# "[L269] modif - Correction 3.96→3.13 selon IA_CONTEXT_BASE (1.96×1.58)" #}
         
+        {% set p2 = states('sensor.prise_seche_serviette_salle_de_bain_nous_power') | float(0) %}
+        {% set d2 = states('sensor.dut_sdb_seche_serviettes') | float(0) %}
+
+        {% set energie_totale_wh = (p1 * d1) + (p2 * d2) %}
+
+        {# 2. Paramètres d'environnement #}
+        {% set surface = 3.13 %}
         {% set t_int = states('sensor.th_salle_de_bain_temperature') | float(0) %}
         {% set t_ext = states('sensor.th_balcon_nord_temperature') | float(0) %}
-        {% set delta_t = (t_int - t_ext) | abs %} {# "[L...] modif - Ajout abs() pour cohérence" #}
+        {% set delta_t = (t_int - t_ext) | abs %}
 
-        {% if delta_t > 0.5 and watts > 5 %}
-          {{ ((watts * dut) / (surface * delta_t)) | round(1) }}
+        {# 3. Calcul de performance avec sécurité #}
+        {% if delta_t > 0.5 and surface > 0 and energie_totale_wh > 0 %}
+          {{ (energie_totale_wh / (surface * delta_t)) | round(1) }}
         {% else %}
           0
         {% endif %}
+      availability: >
+        {{ states('sensor.th_salle_de_bain_temperature') | is_number and 
+            states('sensor.th_balcon_nord_temperature') | is_number }}
 
     # ┌───────────────────────────────────┐
     # │ 9. CHAMBRE (11.26 m²)             │
@@ -363,51 +368,48 @@
     # ┌───────────────────────────────────┐
     # │ 10. TOTAL HABITAT (75m²)          │
     # └───────────────────────────────────┘
-    #--- performance_thermique_totale ---
+    #--- performance_thermique_totale (Version Réaliste DEP) ---
     - name: "Performance Thermique Totale"
       unique_id: performance_thermique_totale
       unit_of_measurement: "pts"
       icon: mdi:home-thermometer
       state: >
-        {# 1. RÉCUPÉRATION DES PUISSANCES #}
-        {% set total_watts = states('sensor.conso_clim_rad_total') | float(0) %}
+        {# 1. ÉNERGIE TOTALE CONSOMMÉE AUJOURD'HUI (en Wh) #}
+        {# On multiplie les kWh par 1000 pour avoir des Wh #}
+        {% set energy_wh = states('sensor.conso_clim_rad_total_quotidien') | float(0) * 1000 %}
 
-        {# 2. RÉCUPÉRATION DU DUT ET DU DELTA #}
-        {% set dut = states('sensor.dut_brut_total') | float(0) %}
-        {% set delta = states('sensor.temperature_delta_valeur') | float(0) | abs %} {# "[L...] modif - Ajout abs()" #}
+        {# 2. PARAMÈTRES (Surface totale de l'enveloppe et Delta T) #}
         {% set surface = 75.0 %}
+        {% set delta = states('sensor.temperature_delta_valeur') | float(0) | abs %}
 
-        {# 3. CALCUL AVEC SÉCURITÉ #}
-        {% if delta > 0.1 and total_watts > 2 and dut > 0 %}
-          {{ ((total_watts * dut) / (surface * delta)) | round(1) }}
+        {# 3. CALCUL #}
+        {% if delta > 0.5 and energy_wh > 0 %}
+          {{ (energy_wh / (surface * delta)) | round(2) }}
         {% else %}
           0
         {% endif %}
-      availability: >
-        {{ states('sensor.temperature_delta_valeur') | is_number }}
 
-    #--- performance_thermique_totale_stable ---
+    #--- performance_thermique_totale_stable (VERSION FIABLE) ---
     - name: "Performance Thermique Totale Stable"
       unique_id: performance_thermique_totale_stable
       unit_of_measurement: "pts"
       icon: mdi:chart-line
       state: >
-        {# 1. Récupération et conversion des données #}
-        {% set w_moy = states('sensor.conso_clim_rad_moyenne_24h') | float(0) %}
+        {# 1. Énergie totale consommée hier (ou moyenne mobile 24h) #}
+        {# On utilise ici le capteur quotidien qui est le plus juste #}
+        {% set energie_wh = states('sensor.conso_clim_rad_total_quotidien') | float(0) * 1000 %}
+
+        {# 2. On utilise les moyennes lissées pour le reste #}
         {% set delta_moy = states('sensor.temperature_delta_moyenne_24h') | float(0) | abs %}
-        {% set dut_moy = states('sensor.dut_moyenne_24h') | float(0) %}
         {% set surface = 75.0 %}
 
-        {# 2. Calcul avec vérification des seuils #}
-        {% if delta_moy > 0.1 and w_moy > 2 and dut_moy > 0 and surface > 0 %}
-          {{ ((w_moy * dut_moy) / (surface * delta_moy)) | round(1) }}
+        {# 3. Calcul : Énergie / (Surface * Delta T Moyen) #}
+        {% if delta_moy > 0.5 and energie_wh > 0 %}
+          {{ (energie_wh / (surface * delta_moy)) | round(1) }}
         {% else %}
+          {# Garde l'ancienne valeur si les conditions ne sont pas réunies #}
           {{ states('sensor.performance_thermique_totale_stable') | float(0) }}
         {% endif %}
-      availability: >
-        {{ is_number(states('sensor.conso_clim_rad_moyenne_24h')) and 
-          is_number(states('sensor.temperature_delta_moyenne_24h')) and
-          is_number(states('sensor.dut_moyenne_24h')) }}
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │       D.P.E.             --- CLASSE ÉNERGÉTIQUE DPE ---                  │
