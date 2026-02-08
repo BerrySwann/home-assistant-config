@@ -57,7 +57,7 @@ Tu disposes de 4 sources d'information critiques :
 *Confronte la théorie (YAML) à la réalité (Logs `diag_conso_elec.txt`).*
 1.  **Cuisine :** Le radiateur s'arrête-t-il *vraiment* à 07h00 pile ? (Vérifie la colonne `DUT R` ou la conso `Chauff`).
 2.  **SDB (Le suspect) :** L'automation "Timer 1h" fonctionne-t-elle le Samedi ? (Cherche des consos `Hyg` ou `Chauff` > 1h le week-end).
-3.  **Volets Salon :** Vois-tu une différence de consommation de chauffage (`DUT S`) entre les jours où "Mamour" est là (Volet ouvert = perte thermique) et les jours où "Eric" est seul (Volet fermé = isolation) ?
+3.  **Volets Salon :** Vois-tu une différence de consommation de chauffage (`DUT S`) entre les jours où "Muser" est là (Volet ouvert = perte thermique) et les jours où "Euser" est seul (Volet fermé = isolation) ?
 
 ### 🌡️ MISSION 2 : BILAN THERMIQUE RÉEL
 * **DUT (Duty Cycle) :** Analyse la différence d'effort entre le **Salon (Sud)** et la **Chambre (Nord)**.
