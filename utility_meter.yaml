@@ -154,265 +154,529 @@ clim_chambre_quotidien_um:
 # │ PIÈCE 4. SALON                     │
 # └────────────────────────────────────┘
 # --- clim_salon ---
-clim_salon_daily:
+clim_salon_yearly:
   source: sensor.clim_salon_kwh
-  cycle: daily
+  cycle: yearly
 clim_salon_monthly:
   source: sensor.clim_salon_kwh
   cycle: monthly
+clim_salon_weekly:
+  source: sensor.clim_salon_kwh
+  cycle: weekly
+clim_salon_daily:
+  source: sensor.clim_salon_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 5. CUISINE                   │
 # └────────────────────────────────────┘
 # --- radiateur_cuisine ---
-radiateur_cuisine_daily:
+radiateur_cuisine_yearly:
   source: sensor.radiateur_cuisine_kwh
-  cycle: daily
+  cycle: yearly
 radiateur_cuisine_monthly:
   source: sensor.radiateur_cuisine_kwh
   cycle: monthly
+radiateur_cuisine_weekly:
+  source: sensor.radiateur_cuisine_kwh
+  cycle: weekly
+radiateur_cuisine_daily:
+  source: sensor.radiateur_cuisine_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 7. BUREAU                    │
 # └────────────────────────────────────┘
 # --- clim_bureau ---
-clim_bureau_daily:
+clim_bureau_yearly:
   source: sensor.clim_bureau_kwh
-  cycle: daily
+  cycle: yearly
 clim_bureau_monthly:
   source: sensor.clim_bureau_kwh
   cycle: monthly
+clim_bureau_weekly:
+  source: sensor.clim_bureau_kwh
+  cycle: weekly
+clim_bureau_daily:
+  source: sensor.clim_bureau_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 8. SDB                       │
 # └────────────────────────────────────┘
 # --- soufflant_sdb ---
-soufflant_sdb_daily:
+soufflant_sdb_yearly:
   source: sensor.soufflant_sdb_kwh
-  cycle: daily
+  cycle: yearly
 soufflant_sdb_monthly:
   source: sensor.soufflant_sdb_kwh
   cycle: monthly
+soufflant_sdb_weekly:
+  source: sensor.soufflant_sdb_kwh
+  cycle: weekly
+soufflant_sdb_daily:
+  source: sensor.soufflant_sdb_kwh
+  cycle: daily
 
 # --- Seche_serv ---
-seche_serv_sdb_daily:
+seche_serv_sdb_yearly:
   source: sensor.seche_serv_sdb_kwh
-  cycle: daily
+  cycle: yearly
 seche_serv_sdb_monthly:
   source: sensor.seche_serv_sdb_kwh
   cycle: monthly
+seche_serv_sdb_weekly:
+  source: sensor.seche_serv_sdb_kwh
+  cycle: weekly
+seche_serv_sdb_daily:
+  source: sensor.seche_serv_sdb_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 9. CHAMBRE                   │
 # └────────────────────────────────────┘
 # --- clim_chambre ---
-clim_chambre_daily:
+clim_chambre_yearly:
   source: sensor.clim_chambre_kwh
-  cycle: daily
+  cycle: yearly
 clim_chambre_monthly:
   source: sensor.clim_chambre_kwh
   cycle: monthly
+clim_chambre_weekly:
+  source: sensor.clim_chambre_kwh
+  cycle: weekly
+clim_chambre_daily:
+  source: sensor.clim_chambre_kwh
+  cycle: daily
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION      │
 # │ [2026-01-03] modif : Ajout des compteurs mensuels S/R/B/C                |
+# │ [2026-02-09] modif : Déclinaison complète A/M/H/Q + SDB soufflant/sèche  |
 # ╰──────────────────────────────────────────────────────────────────────────╯
 # ┌────────────────────────────────────┐
 # │ PIÈCE 4. SALON                     │
 # └────────────────────────────────────┘
 # --- clim_salon ---
+dut_clim_salon_annuel:
+  source: sensor.dut_clim_salon
+  name: "DUT Annuel Clim Salon"
+  unique_id: dut_clim_salon_annuel
+  cycle: yearly
+
 dut_clim_salon_mensuel:
   source: sensor.dut_clim_salon
   name: "DUT Mensuel Clim Salon"
   unique_id: dut_clim_salon_mensuel
   cycle: monthly
 
+dut_clim_salon_hebdomadaire:
+  source: sensor.dut_clim_salon
+  name: "DUT Hebdomadaire Clim Salon"
+  unique_id: dut_clim_salon_hebdomadaire
+  cycle: weekly
+
+dut_clim_salon_quotidien:
+  source: sensor.dut_clim_salon
+  name: "DUT Quotidien Clim Salon"
+  unique_id: dut_clim_salon_quotidien
+  cycle: daily
+
 # ┌────────────────────────────────────┐
 # │ PIÈCE 5. CUISINE                   │
 # └────────────────────────────────────┘
 # --- radiateur_cuisine ---
+dut_radiateur_cuisine_annuel:
+  source: sensor.dut_radiateur_cuisine
+  name: "DUT Annuel Radiateur Cuisine"
+  unique_id: dut_radiateur_cuisine_annuel
+  cycle: yearly
+
 dut_radiateur_cuisine_mensuel:
   source: sensor.dut_radiateur_cuisine
   name: "DUT Mensuel Radiateur Cuisine"
   unique_id: dut_radiateur_cuisine_mensuel
   cycle: monthly
 
+dut_radiateur_cuisine_hebdomadaire:
+  source: sensor.dut_radiateur_cuisine
+  name: "DUT Hebdomadaire Radiateur Cuisine"
+  unique_id: dut_radiateur_cuisine_hebdomadaire
+  cycle: weekly
+
+dut_radiateur_cuisine_quotidien:
+  source: sensor.dut_radiateur_cuisine
+  name: "DUT Quotidien Radiateur Cuisine"
+  unique_id: dut_radiateur_cuisine_quotidien
+  cycle: daily
+
 # ┌────────────────────────────────────┐
 # │ PIÈCE 7. BUREAU                    │
 # └────────────────────────────────────┘
 # --- clim_bureau ---
+dut_clim_bureau_annuel:
+  source: sensor.dut_clim_bureau
+  name: "DUT Annuel Clim Bureau"
+  unique_id: dut_clim_bureau_annuel
+  cycle: yearly
+
 dut_clim_bureau_mensuel:
   source: sensor.dut_clim_bureau
   name: "DUT Mensuel Clim Bureau"
   unique_id: dut_clim_bureau_mensuel
   cycle: monthly
 
+dut_clim_bureau_hebdomadaire:
+  source: sensor.dut_clim_bureau
+  name: "DUT Hebdomadaire Clim Bureau"
+  unique_id: dut_clim_bureau_hebdomadaire
+  cycle: weekly
+
+dut_clim_bureau_quotidien:
+  source: sensor.dut_clim_bureau
+  name: "DUT Quotidien Clim Bureau"
+  unique_id: dut_clim_bureau_quotidien
+  cycle: daily
+
+# ┌────────────────────────────────────┐
+# │ PIÈCE 8. SDB                       │
+# └────────────────────────────────────┘
+# --- soufflant_sdb ---
+dut_sdb_soufflant_annuel:
+  source: sensor.dut_sdb_soufflant
+  name: "DUT Annuel Soufflant SDB"
+  unique_id: dut_sdb_soufflant_annuel
+  cycle: yearly
+
+dut_sdb_soufflant_mensuel:
+  source: sensor.dut_sdb_soufflant
+  name: "DUT Mensuel Soufflant SDB"
+  unique_id: dut_sdb_soufflant_mensuel
+  cycle: monthly
+
+dut_sdb_soufflant_hebdomadaire:
+  source: sensor.dut_sdb_soufflant
+  name: "DUT Hebdomadaire Soufflant SDB"
+  unique_id: dut_sdb_soufflant_hebdomadaire
+  cycle: weekly
+
+dut_sdb_soufflant_quotidien:
+  source: sensor.dut_sdb_soufflant
+  name: "DUT Quotidien Soufflant SDB"
+  unique_id: dut_sdb_soufflant_quotidien
+  cycle: daily
+
+# --- seche_serviettes_sdb ---
+dut_sdb_seche_serviettes_annuel:
+  source: sensor.dut_sdb_seche_serviettes
+  name: "DUT Annuel Sèche-Serviettes SDB"
+  unique_id: dut_sdb_seche_serviettes_annuel
+  cycle: yearly
+
+dut_sdb_seche_serviettes_mensuel:
+  source: sensor.dut_sdb_seche_serviettes
+  name: "DUT Mensuel Sèche-Serviettes SDB"
+  unique_id: dut_sdb_seche_serviettes_mensuel
+  cycle: monthly
+
+dut_sdb_seche_serviettes_hebdomadaire:
+  source: sensor.dut_sdb_seche_serviettes
+  name: "DUT Hebdomadaire Sèche-Serviettes SDB"
+  unique_id: dut_sdb_seche_serviettes_hebdomadaire
+  cycle: weekly
+
+dut_sdb_seche_serviettes_quotidien:
+  source: sensor.dut_sdb_seche_serviettes
+  name: "DUT Quotidien Sèche-Serviettes SDB"
+  unique_id: dut_sdb_seche_serviettes_quotidien
+  cycle: daily
+
 # ┌────────────────────────────────────┐
 # │ PIÈCE 9. CHAMBRE                   │
 # └────────────────────────────────────┘
 # --- clim_chambre ---
+dut_clim_chambre_annuel:
+  source: sensor.dut_clim_chambre
+  name: "DUT Annuel Clim Chambre"
+  unique_id: dut_clim_chambre_annuel
+  cycle: yearly
+
 dut_clim_chambre_mensuel:
   source: sensor.dut_clim_chambre
   name: "DUT Mensuel Clim Chambre"
   unique_id: dut_clim_chambre_mensuel
   cycle: monthly
 
+dut_clim_chambre_hebdomadaire:
+  source: sensor.dut_clim_chambre
+  name: "DUT Hebdomadaire Clim Chambre"
+  unique_id: dut_clim_chambre_hebdomadaire
+  cycle: weekly
+
+dut_clim_chambre_quotidien:
+  source: sensor.dut_clim_chambre
+  name: "DUT Quotidien Clim Chambre"
+  unique_id: dut_clim_chambre_quotidien
+  cycle: daily
+
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ PÔLE 2. ÉNERGIE: [kWh] PRISES CONNECTÉES -> (Daily + Monthly)            │
+# │ PÔLE 2. ÉNERGIE: [kWh] PRISES CONNECTÉES -> (Yearly/Monthly/Weekly/Daily)│
 # ╰──────────────────────────────────────────────────────────────────────────╯
 # ┌────────────────────────────────────┐
 # │ PIÈCE 1. ENTRÉE                    │
 # └────────────────────────────────────┘
 # --- box_internet ---
-prise_box_internet_ikea_daily:
+prise_box_internet_ikea_yearly:
   source: sensor.prise_box_internet_ikea_kwh
-  cycle: daily
+  cycle: yearly
 prise_box_internet_ikea_monthly:
   source: sensor.prise_box_internet_ikea_kwh
   cycle: monthly
+prise_box_internet_ikea_weekly:
+  source: sensor.prise_box_internet_ikea_kwh
+  cycle: weekly
+prise_box_internet_ikea_daily:
+  source: sensor.prise_box_internet_ikea_kwh
+  cycle: daily
 
 # --- horloge ---
-prise_horloge_ikea_daily:
+prise_horloge_ikea_yearly:
   source: sensor.prise_horloge_ikea_kwh
-  cycle: daily
+  cycle: yearly
 prise_horloge_ikea_monthly:
   source: sensor.prise_horloge_ikea_kwh
   cycle: monthly
+prise_horloge_ikea_weekly:
+  source: sensor.prise_horloge_ikea_kwh
+  cycle: weekly
+prise_horloge_ikea_daily:
+  source: sensor.prise_horloge_ikea_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 4. SALON                     │
 # └────────────────────────────────────┘
 # --- pc_s_gege ---
-prise_pc_s_gege_ikea_daily:
+prise_pc_s_gege_ikea_yearly:
   source: sensor.prise_pc_s_gege_ikea_kwh
-  cycle: daily
+  cycle: yearly
 prise_pc_s_gege_ikea_monthly:
   source: sensor.prise_pc_s_gege_ikea_kwh
   cycle: monthly
+prise_pc_s_gege_ikea_weekly:
+  source: sensor.prise_pc_s_gege_ikea_kwh
+  cycle: weekly
+prise_pc_s_gege_ikea_daily:
+  source: sensor.prise_pc_s_gege_ikea_kwh
+  cycle: daily
 
 # --- salon_chargeur ---
-prise_salon_chargeur_nous_daily:
+prise_salon_chargeur_nous_yearly:
   source: sensor.prise_salon_chargeur_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_salon_chargeur_nous_monthly:
   source: sensor.prise_salon_chargeur_nous_kwh
   cycle: monthly
+prise_salon_chargeur_nous_weekly:
+  source: sensor.prise_salon_chargeur_nous_kwh
+  cycle: weekly
+prise_salon_chargeur_nous_daily:
+  source: sensor.prise_salon_chargeur_nous_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 5. CUISINE                   │
 # └────────────────────────────────────┘
 # --- four_micro_ondes ---
-prise_four_micro_ondes_nous_daily:
+prise_four_micro_ondes_nous_yearly:
   source: sensor.prise_four_micro_ondes_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_four_micro_ondes_nous_monthly:
   source: sensor.prise_four_micro_ondes_nous_kwh
   cycle: monthly
+prise_four_micro_ondes_nous_weekly:
+  source: sensor.prise_four_micro_ondes_nous_kwh
+  cycle: weekly
+prise_four_micro_ondes_nous_daily:
+  source: sensor.prise_four_micro_ondes_nous_kwh
+  cycle: daily
 
 # --- prise_petit_dejeune_nous_power_kwh ---
-prise_petit_dejeune_nous_daily:
+prise_petit_dejeune_nous_yearly:
   source: sensor.prise_petit_dejeune_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_petit_dejeune_nous_monthly:
   source: sensor.prise_petit_dejeune_nous_kwh
   cycle: monthly
+prise_petit_dejeune_nous_weekly:
+  source: sensor.prise_petit_dejeune_nous_kwh
+  cycle: weekly
+prise_petit_dejeune_nous_daily:
+  source: sensor.prise_petit_dejeune_nous_kwh
+  cycle: daily
 
 # --- lave_linge ---
-prise_lave_linge_nous_daily:
+prise_lave_linge_nous_yearly:
   source: sensor.prise_lave_linge_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_lave_linge_nous_monthly:
   source: sensor.prise_lave_linge_nous_kwh
   cycle: monthly
+prise_lave_linge_nous_weekly:
+  source: sensor.prise_lave_linge_nous_kwh
+  cycle: weekly
+prise_lave_linge_nous_daily:
+  source: sensor.prise_lave_linge_nous_kwh
+  cycle: daily
 
 # --- lave_vaisselle ---
-prise_lave_vaisselle_nous_daily:
+prise_lave_vaisselle_nous_yearly:
   source: sensor.prise_lave_vaisselle_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_lave_vaisselle_nous_monthly:
   source: sensor.prise_lave_vaisselle_nous_kwh
   cycle: monthly
+prise_lave_vaisselle_nous_weekly:
+  source: sensor.prise_lave_vaisselle_nous_kwh
+  cycle: weekly
+prise_lave_vaisselle_nous_daily:
+  source: sensor.prise_lave_vaisselle_nous_kwh
+  cycle: daily
 
 # --- airfryer ---
-prise_airfryer_ninja_nous_daily:
+prise_airfryer_ninja_nous_yearly:
   source: sensor.prise_airfryer_ninja_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_airfryer_ninja_nous_monthly:
   source: sensor.prise_airfryer_ninja_nous_kwh
   cycle: monthly
+prise_airfryer_ninja_nous_weekly:
+  source: sensor.prise_airfryer_ninja_nous_kwh
+  cycle: weekly
+prise_airfryer_ninja_nous_daily:
+  source: sensor.prise_airfryer_ninja_nous_kwh
+  cycle: daily
 
 # --- four_et_plaque_de_cuisson ---
-four_et_plaque_de_cuisson_daily:
+four_et_plaque_de_cuisson_yearly:
   source: sensor.four_et_plaque_de_cuisson_kwh
-  cycle: daily
+  cycle: yearly
 four_et_plaque_de_cuisson_monthly:
   source: sensor.four_et_plaque_de_cuisson_kwh
   cycle: monthly
+four_et_plaque_de_cuisson_weekly:
+  source: sensor.four_et_plaque_de_cuisson_kwh
+  cycle: weekly
+four_et_plaque_de_cuisson_daily:
+  source: sensor.four_et_plaque_de_cuisson_kwh
+  cycle: daily
 
 # --- frigo_cuisine ---
-prise_frigo_cuisine_nous_daily:
+prise_frigo_cuisine_nous_yearly:
   source: sensor.prise_frigo_cuisine_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_frigo_cuisine_nous_monthly:
   source: sensor.prise_frigo_cuisine_nous_kwh
   cycle: monthly
+prise_frigo_cuisine_nous_weekly:
+  source: sensor.prise_frigo_cuisine_nous_kwh
+  cycle: weekly
+prise_frigo_cuisine_nous_daily:
+  source: sensor.prise_frigo_cuisine_nous_kwh
+  cycle: daily
 
 # --- congelateur_cuisine ---
-prise_congelateur_cuisine_nous_daily:
+prise_congelateur_cuisine_nous_yearly:
   source: sensor.prise_congelateur_cuisine_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_congelateur_cuisine_nous_monthly:
   source: sensor.prise_congelateur_cuisine_nous_kwh
   cycle: monthly
+prise_congelateur_cuisine_nous_weekly:
+  source: sensor.prise_congelateur_cuisine_nous_kwh
+  cycle: weekly
+prise_congelateur_cuisine_nous_daily:
+  source: sensor.prise_congelateur_cuisine_nous_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 7. BUREAU                    │
 # └────────────────────────────────────┘
 # --- bureau_pc ---
-prise_bureau_pc_ikea_daily:
+prise_bureau_pc_ikea_yearly:
   source: sensor.prise_bureau_pc_ikea_kwh
-  cycle: daily
+  cycle: yearly
 prise_bureau_pc_ikea_monthly:
   source: sensor.prise_bureau_pc_ikea_kwh
   cycle: monthly
+prise_bureau_pc_ikea_weekly:
+  source: sensor.prise_bureau_pc_ikea_kwh
+  cycle: weekly
+prise_bureau_pc_ikea_daily:
+  source: sensor.prise_bureau_pc_ikea_kwh
+  cycle: daily
 
 # --- fer_a_repasser ---
-prise_bureau_fer_a_repasser_nous_daily:
+prise_bureau_fer_a_repasser_nous_yearly:
   source: sensor.prise_bureau_fer_a_repasser_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_bureau_fer_a_repasser_nous_monthly:
   source: sensor.prise_bureau_fer_a_repasser_nous_kwh
   cycle: monthly
+prise_bureau_fer_a_repasser_nous_weekly:
+  source: sensor.prise_bureau_fer_a_repasser_nous_kwh
+  cycle: weekly
+prise_bureau_fer_a_repasser_nous_daily:
+  source: sensor.prise_bureau_fer_a_repasser_nous_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 9. CHAMBRE                   │
 # └────────────────────────────────────┘
 # --- tete_de_lit ---
-prise_tete_de_lit_chambre_daily:
+prise_tete_de_lit_chambre_yearly:
   source: sensor.prise_tete_de_lit_chambre_kwh
-  cycle: daily
+  cycle: yearly
 prise_tete_de_lit_chambre_monthly:
   source: sensor.prise_tete_de_lit_chambre_kwh
   cycle: monthly
+prise_tete_de_lit_chambre_weekly:
+  source: sensor.prise_tete_de_lit_chambre_kwh
+  cycle: weekly
+prise_tete_de_lit_chambre_daily:
+  source: sensor.prise_tete_de_lit_chambre_kwh
+  cycle: daily
 
 # --- tv_chambre ---
-prise_tv_chambre_nous_daily:
+prise_tv_chambre_nous_yearly:
   source: sensor.prise_tv_chambre_nous_kwh
-  cycle: daily
+  cycle: yearly
 prise_tv_chambre_nous_monthly:
   source: sensor.prise_tv_chambre_nous_kwh
   cycle: monthly
+prise_tv_chambre_nous_weekly:
+  source: sensor.prise_tv_chambre_nous_kwh
+  cycle: weekly
+prise_tv_chambre_nous_daily:
+  source: sensor.prise_tv_chambre_nous_kwh
+  cycle: daily
 
 # ┌────────────────────────────────────┐
 # │ PIÈCE 10. STANDBY                  │
 # └────────────────────────────────────┘
 # --- all_standby ---
-all_standby_daily:
+all_standby_yearly:
   source: sensor.all_standby_kwh
-  cycle: daily
+  cycle: yearly
 all_standby_monthly:
   source: sensor.all_standby_kwh
   cycle: monthly
+all_standby_weekly:
+  source: sensor.all_standby_kwh
+  cycle: weekly
+all_standby_daily:
+  source: sensor.all_standby_kwh
+  cycle: daily
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────╮
@@ -924,77 +1188,141 @@ eclairage_hue_color_candle_chambre_eric_quotidien:
 # │ PIÈCE 10. MINI-PC / ECOJOKO / STANDBY                                    │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 # --- ecojoko ---
-ecojoko_energy_daily:
+ecojoko_energy_yearly:
   source: sensor.ecojoko_consommation_reseau
-  cycle: daily
+  cycle: yearly
 
 ecojoko_energy_monthly:
   source: sensor.ecojoko_consommation_reseau
   cycle: monthly
 
-# --- mini_pc ---
-mini_pc_daily:
-  source: sensor.prise_mini_pc_ikea_kwh  
+ecojoko_energy_weekly:
+  source: sensor.ecojoko_consommation_reseau
+  cycle: weekly
+
+ecojoko_energy_daily:
+  source: sensor.ecojoko_consommation_reseau
   cycle: daily
+
+# --- mini_pc ---
+mini_pc_yearly:
+  source: sensor.prise_mini_pc_ikea_kwh
+  cycle: yearly
 mini_pc_monthly:
-  source: sensor.prise_mini_pc_ikea_kwh  
+  source: sensor.prise_mini_pc_ikea_kwh
   cycle: monthly
+mini_pc_weekly:
+  source: sensor.prise_mini_pc_ikea_kwh
+  cycle: weekly
+mini_pc_daily:
+  source: sensor.prise_mini_pc_ikea_kwh
+  cycle: daily
 
 # ╭──────────────────────────────────────────────────────────────────────────────╮
-# │ TOTAUX PAR PIÈCE - JOURNALIER ET MENSUEL                                     │
+# │ TOTAUX PAR PIÈCE - ANNUEL / MENSUEL / HEBDOMADAIRE / JOURNALIER              │
 # ╰──────────────────────────────────────────────────────────────────────────────╯
 
 # --- ENTRÉE ---
-entree_daily:
+entree_yearly:
   source: sensor.entree_total
-  name: "Entrée Journalier"
-  cycle: daily
+  name: "Entrée Annuel"
+  cycle: yearly
 
 entree_monthly:
   source: sensor.entree_total
   name: "Entrée Mensuel"
   cycle: monthly
 
-# --- SALON ---
-salon_daily:
-  source: sensor.salon_total
-  name: "Salon Journalier"
+entree_weekly:
+  source: sensor.entree_total
+  name: "Entrée Hebdomadaire"
+  cycle: weekly
+
+entree_daily:
+  source: sensor.entree_total
+  name: "Entrée Journalier"
   cycle: daily
+
+# --- SALON ---
+salon_yearly:
+  source: sensor.salon_total
+  name: "Salon Annuel"
+  cycle: yearly
 
 salon_monthly:
   source: sensor.salon_total
   name: "Salon Mensuel"
   cycle: monthly
 
-# --- CUISINE ---
-cuisine_daily:
+salon_weekly:
   source: sensor.salon_total
-  name: "Cuisine Journalier"
+  name: "Salon Hebdomadaire"
+  cycle: weekly
+
+salon_daily:
+  source: sensor.salon_total
+  name: "Salon Journalier"
   cycle: daily
+
+# --- CUISINE ---
+cuisine_yearly:
+  source: sensor.cuisine_total
+  name: "Cuisine Annuel"
+  cycle: yearly
 
 cuisine_monthly:
   source: sensor.cuisine_total
   name: "Cuisine Mensuel"
   cycle: monthly
 
-# --- BUREAU ---
-bureau_daily:
-  source: sensor.bureau_total
-  name: "Bureau Journalier"
+cuisine_weekly:
+  source: sensor.cuisine_total
+  name: "Cuisine Hebdomadaire"
+  cycle: weekly
+
+cuisine_daily:
+  source: sensor.cuisine_total
+  name: "Cuisine Journalier"
   cycle: daily
+
+# --- BUREAU ---
+bureau_yearly:
+  source: sensor.bureau_total
+  name: "Bureau Annuel"
+  cycle: yearly
 
 bureau_monthly:
   source: sensor.bureau_total
   name: "Bureau Mensuel"
   cycle: monthly
 
-# --- CHAMBRE ---
-chambre_daily:
-  source: sensor.chambre_total
-  name: "Chambre Journalier"
+bureau_weekly:
+  source: sensor.bureau_total
+  name: "Bureau Hebdomadaire"
+  cycle: weekly
+
+bureau_daily:
+  source: sensor.bureau_total
+  name: "Bureau Journalier"
   cycle: daily
+
+# --- CHAMBRE ---
+chambre_yearly:
+  source: sensor.chambre_total
+  name: "Chambre Annuel"
+  cycle: yearly
 
 chambre_monthly:
   source: sensor.chambre_total
   name: "Chambre Mensuel"
   cycle: monthly
+
+chambre_weekly:
+  source: sensor.chambre_total
+  name: "Chambre Hebdomadaire"
+  cycle: weekly
+
+chambre_daily:
+  source: sensor.chambre_total
+  name: "Chambre Journalier"
+  cycle: daily
