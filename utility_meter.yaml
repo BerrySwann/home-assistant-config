@@ -968,7 +968,7 @@ salon_monthly:
 
 # --- CUISINE ---
 cuisine_daily:
-  source: sensor.cuisine_total
+  source: sensor.salon_total
   name: "Cuisine Journalier"
   cycle: daily
 
