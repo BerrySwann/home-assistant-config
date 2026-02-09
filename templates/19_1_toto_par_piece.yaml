@@ -1,0 +1,61 @@
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │ TOTAUX PAR PIÈCE - INSTANTANÉS                                               │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+
+
+  - sensor:
+      # --- ENTRÉE TOTAL ---
+      - name: "Entrée Total"
+        unique_id: entree_total
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        state: >
+          {{ (states('sensor.prise_box_internet_ikea_kwh')|float(0) +
+              states('sensor.prise_horloge_ikea_kwh')|float(0)) | round(3) }}
+      
+      # --- SALON TOTAL ---
+      - name: "Salon Total"
+        unique_id: salon_total
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        state: >
+          {{ (states('sensor.prise_pc_s_gege_ikea_kwh')|float(0) +
+              states('sensor.prise_salon_chargeur_nous_kwh')|float(0)) | round(3) }}
+      
+      # --- CUISINE TOTAL ---
+      - name: "Cuisine Total"
+        unique_id: cuisine_total
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        state: >
+          {{ (states('sensor.prise_frigo_cuisine_nous_kwh')|float(0) +
+              states('sensor.prise_congelateur_cuisine_nous_kwh')|float(0) +
+              states('sensor.four_et_plaque_de_cuisson_kwh')|float(0) +
+              states('sensor.prise_lave_linge_nous_kwh')|float(0) +
+              states('sensor.prise_lave_vaisselle_nous_kwh')|float(0) +
+              states('sensor.prise_four_micro_ondes_nous_kwh')|float(0) +
+              states('sensor.prise_petit_dejeune_nous_kwh')|float(0) +
+              states('sensor.prise_airfryer_ninja_nous_kwh')|float(0)) | round(3) }}
+      
+      # --- BUREAU TOTAL ---
+      - name: "Bureau Total"
+        unique_id: bureau_total
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        state: >
+          {{ (states('sensor.prise_bureau_pc_ikea_kwh')|float(0) +
+              states('sensor.prise_bureau_fer_a_repasser_nous_kwh')|float(0)) | round(3) }}
+      
+      # --- CHAMBRE TOTAL ---
+      - name: "Chambre Total"
+        unique_id: chambre_total
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        state: >
+          {{ (states('sensor.prise_tete_de_lit_chambre_kwh')|float(0) +
+              states('sensor.prise_tv_chambre_nous_kwh')|float(0)) | round(3) }}

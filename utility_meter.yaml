@@ -939,3 +939,62 @@ mini_pc_daily:
 mini_pc_monthly:
   source: sensor.prise_mini_pc_ikea_kwh  
   cycle: monthly
+
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │ TOTAUX PAR PIÈCE - JOURNALIER ET MENSUEL                                     │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+
+# --- ENTRÉE ---
+entree_daily:
+  source: sensor.entree_total
+  name: "Entrée Journalier"
+  cycle: daily
+
+entree_monthly:
+  source: sensor.entree_total
+  name: "Entrée Mensuel"
+  cycle: monthly
+
+# --- SALON ---
+salon_daily:
+  source: sensor.salon_total
+  name: "Salon Journalier"
+  cycle: daily
+
+salon_monthly:
+  source: sensor.salon_total
+  name: "Salon Mensuel"
+  cycle: monthly
+
+# --- CUISINE ---
+cuisine_daily:
+  source: sensor.cuisine_total
+  name: "Cuisine Journalier"
+  cycle: daily
+
+cuisine_monthly:
+  source: sensor.cuisine_total
+  name: "Cuisine Mensuel"
+  cycle: monthly
+
+# --- BUREAU ---
+bureau_daily:
+  source: sensor.bureau_total
+  name: "Bureau Journalier"
+  cycle: daily
+
+bureau_monthly:
+  source: sensor.bureau_total
+  name: "Bureau Mensuel"
+  cycle: monthly
+
+# --- CHAMBRE ---
+chambre_daily:
+  source: sensor.chambre_total
+  name: "Chambre Journalier"
+  cycle: daily
+
+chambre_monthly:
+  source: sensor.chambre_total
+  name: "Chambre Mensuel"
+  cycle: monthly
