@@ -195,7 +195,7 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 ### 2. Pôle Prises (Pôle 2)
 - **1. ENTRÉE** : box_internet_entree, horloge_entree.
-- **4. SALON** : pc_s_gege_salon, salon_chargeur_salon.
+- **4. SALON** : pc_s_gege_salon, salon_chargeur_salon, prise tv salon.
 - **5. CUISINE** : micro_ondes_cuisine, lave_linge_cuisine, lave_vaisselle_cuisine, airfryer_cuisine, four_plaque_cuisine, frigo_cuisine, congel_cuisine.
 - **7. BUREAU** : bureau_pc, fer_a_repasser_bureau.
 - **9. CHAMBRE** : tete_de_lit_chambre, tv_chambre.
