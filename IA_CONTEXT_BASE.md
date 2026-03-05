@@ -1,5 +1,5 @@
 # 🧠 BASE DE CONTEXTE EXPERT HOME ASSISTANT
-*Dernière mise à jour : 2026-02-02*
+*Dernière mise à jour : 2026-03-05*
 
 ---
 
@@ -30,7 +30,7 @@
   
 ---
 
-## 📏 RÈGLES DE STRUCTURATION GENRALE ET DE TITRAGE (YAML) (sauf eception)
+## 📏 RÈGLES DE STRUCTURATION GÉNÉRALE ET DE TITRAGE (YAML) (sauf exception)
 **Ces règles s'appliquent exclusivement aux fichiers de configuration (.yaml). Jamais pour les automations**
 
 ### 1. HIÉRARCHIE VISUELLE (LES TITRES)
@@ -41,23 +41,32 @@
 - **TITRE SECONDAIRE (Pièce)**
     - **Format** : Boîte ASCII coins carrés (`┌`, `─`, `┐`, `│`, `└`, `┘`).
     - **Largeur** : 37 caractères.
-    - **Style** : MAJUSCULES, respectant la numérotation officielle (1 à 10).
+    - **Style** : MAJUSCULES, respectant la numérotation officielle (1 à 9).
 - **TITRE TERTIAIRE (Équipement)**
-    - **Format** : `# --- slug_de_l_entite ---` (exemple) # --- congelateur_cuisine ---
+    - **Format** : `# --- slug_de_l_entite ---` (exemple: `# --- congelateur_cuisine ---`)
     - **Usage** : Obligatoire juste au-dessus du bloc de configuration de chaque appareil.
 
 ### 2. LOGIQUE DE TRI (SÉPARATION STRICTE)
 - **RÈGLE D'OR :** On ne mélange **JAMAIS** les types d'équipements (Pôles) au sein d'une même pièce.
 - **MÉTHODE :** La structure suit d'abord le **PÔLE**, puis la **PIÈCE**.
-- **ORDRE DES PÔLES (1 à 3) :**
-    1. **CHAUFFAGE/CLIM**
-    2. **PRISES**
+- **ORDRE DES PÔLES (0 à 4) :**
+    0. **ÉNERGIE GLOBALE** (Linky, Ecojoko, bilans généraux).
+    1. **CHAUFFAGE & CLIMATISATION**
+    2. **PRISES CONNECTÉES**
     3. **ÉCLAIRAGE**
+    4. **GROUPE PRÉSENCE** (Wi-Fi, Cellulaire, Localisation, Trackers).
 
-### 3. ORDRE OFFICIEL DES PIÈCES (INDEX 1 À 10)
+### 3. ORDRE OFFICIEL DES PIÈCES (INDEX 1 À 9)
 Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de Pôle :
-1. **ENTRÉE** | 2. **CELLIER** | 3. **TOILETTE** | 4. **SALON** | 5. **CUISINE** | 6. **COULOIR** | 7. **BUREAU** | 8. **SDB** | 9. **CHAMBRE** | 10. **AUTRE**.
-*Note : **10. AUTRE** regroupe (Standby, Ecojoko, Mini-PC, Linky, PM2.5 & Tcov, Ping HTTPS).*
+1. **ENTRÉE** | 2. **CELLIER** | 3. **TOILETTE** | 4. **SALON** | 5. **CUISINE** | 6. **COULOIR** | 7. **BUREAU** | 8. **SDB** | 9. **CHAMBRE**
+
+### 4. NOMENCLATURE HORS-PIÈCES (SYSTÈME & DIVERS)
+Pour tous les éléments qui ne sont pas rattachés à une pièce physique spécifique, l'indexation se fait par catégorie lettrée :
+**[ M ] - MÉTÉO & ENVIRONNEMENT EXTERNE :**
+- `M_01_meteo_alerte`
+- `M_02_meteo_vent`
+- `M_03_meteo_blitzortung`
+- `M_04_tendances_th_ext_card`
 
 ---
 
@@ -88,6 +97,7 @@ Cette numérotation doit être suivie scrupuleusement au sein de chaque bloc de 
 - **MODIFICATIONS** : 
   - Annoter chaque ligne modifiée : `# "[L...] modif"`.
   - Bloc final obligatoire : `# annotations_log:`.
+
 ---
 
 ## 🔔 STANDARDS DE NOTIFICATION (POCO X7 PRO & MONTRE)
@@ -120,7 +130,6 @@ card_mod:
       background: transparent;
     }
 
-
 ---
 
 ## 🎨 CARTES HACS ET NATIVES UTILISÉES
@@ -129,13 +138,12 @@ Cette liste sert de référence pour la création de nouveaux Dashboards afin de
 
 | Type             | Nom de la Carte           | Utilisation Principale                                  |
 | :----------------| :-------------------------| :------------------------------------------------------ |
-| **Graph/Data**   | `apexcharts-card`         | Graphiques énergie, moyennes glissantes, seuils couleur |
+| **Graph/Data** | `apexcharts-card`         | Graphiques énergie, moyennes glissantes, seuils couleur |
 |                  | `mini-graph-card`         | Tendances rapides (températures, humidité)              |
 |                  | `plotly-graph`            | Analyse de données complexe                             |
 |                  | `bar-card`                | Jauges de consommation et niveaux de batteries          |
 |                  | `history-explorer-card`   | Exploration interactive de l'historique                 |
-|                  |                           |                                                         |
-|  **UI/Design**   | `bubble-card`             | Navigation, Pop-ups par pièce, boutons tactiles         |
+|  **UI/Design** | `bubble-card`             | Navigation, Pop-ups par pièce, boutons tactiles         |
 |                  | `mushroom-card`           | Éclairage (Mushroom Light), Titres, Chips d'état        |
 |                  | `mod-card` (card-mod)     | Personnalisation CSS avancée des cartes                 |
 |                  | `layout-card`             | Structure des vues (Grid, Masonry)                      |
@@ -143,7 +151,6 @@ Cette liste sert de référence pour la création de nouveaux Dashboards afin de
 |                  | `vertical-stack-in-card`  |                                                         |
 |                  | `swipe-card`              | Carrousels (Météo, Caméras)                             |
 |                  | `auto-entities`           | Listes dynamiques (Fenêtres ouvertes, Piles faibles)    |
-|                  |                           |                                                         |
 | **Spécialisées** | `enhanced-shutter-card`   | Gestion visuelle des stores (Série 08)                  |
 |                  | `tempometer-gauge-card`   | Jauges de température et humidité pro                   |
 |                  | `ring-tile-card`          | Indicateurs circulaires (Statut MariaDB, CPU)           |
@@ -162,18 +169,22 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 
 | État / Type   | HEX       | RGB             | Utilisation type      |
 | :------------ | :-------- | :-------------- | :-------------------- |
-| **Primary**   | `#03a9f4` | `3, 169, 244`   | Icônes HA, Titres     |
-| **Success**   | `#0f9d58` | `15, 157, 88`   | Actif, Normal, OK     |
-| **Warning**   | `#ff9800` | `255, 152, 0`   | Standby, Attention    |
-| **Error**     | `#f44336` | `244, 67, 54`   | Alerte, Critique, Off |
-| **Info**      | `#2196f3` | `33, 150, 243`  | Infos, Nuages, Réseau |
-| **Inactive**  | `#44739e` | `68, 115, 158`  | Éteint, Absent        |
-| **Active**    | `#fdd835` | `253, 216, 53`  | Éclairage, Chauffage  |
-| **Text**      | `#212121` | `33, 33, 33`    | Polices, Bordures     |
+| **Primary** | `#03a9f4` | `3, 169, 244`   | Icônes HA, Titres     |
+| **Success** | `#0f9d58` | `15, 157, 88`   | Actif, Normal, OK     |
+| **Warning** | `#ff9800` | `255, 152, 0`   | Standby, Attention    |
+| **Error** | `#f44336` | `244, 67, 54`   | Alerte, Critique, Off |
+| **Info** | `#2196f3` | `33, 150, 243`  | Infos, Nuages, Réseau |
+| **Inactive** | `#44739e` | `68, 115, 158`  | Éteint, Absent        |
+| **Active** | `#fdd835` | `253, 216, 53`  | Éclairage, Chauffage  |
+| **Text** | `#212121` | `33, 33, 33`    | Polices, Bordures     |
 
 ---
 
 ## 🔌 DÉTAILS DES ÉQUIPEMENTS PAR PÔLE
+
+### 0. Pôle Énergie Globale (Pôle 0)
+- **Équipements** : Compteur Linky, Ecojoko.
+- **Logique** : Centralisation des coûts globaux, des index totaux et des ratios (ex: HC/HP mensuel, coût journalier global).
 
 ### 1. Pôle Chauffage / Clim (Pôle 1)
 - **4. SALON** : clim_salon_entree.
@@ -188,32 +199,39 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **5. CUISINE** : micro_ondes_cuisine, lave_linge_cuisine, lave_vaisselle_cuisine, airfryer_cuisine, four_plaque_cuisine, frigo_cuisine, congel_cuisine.
 - **7. BUREAU** : bureau_pc, fer_a_repasser_bureau.
 - **9. CHAMBRE** : tete_de_lit_chambre, tv_chambre.
-- **10. AUTRE** : all_standby, Ecojoko, Mini-PC, Linky, pm25_salon, pm25_bureau, pm25_chambre & tcov_salon, tcov_bureau, tcov_chambre.
 
-### 3. Pôle Éclairage (Pôle 2) (le Pôle 3 est la vue physique (matériel))
-- **1. ENTRÉE**  : Hue White.
-- **4. SALON**   : Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
+### 3. Pôle Éclairage (Pôle 3 physique)
+- **1. ENTRÉE** : Hue White.
+- **4. SALON** : Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
 - **5. CUISINE** : Hue White.
 - **6. COULOIR** : Hue White.
-- **7. BUREAU**  : Play 1, 2, 3, Hue White 1, 2.
-- **8. SDB**     : Miroir Sonoff, Hue White.
+- **7. BUREAU** : Play 1, 2, 3, Hue White 1, 2.
+- **8. SDB** : Miroir Sonoff, Hue White.
 - **9. CHAMBRE** : Hue White 1, 2, Hue Color Zone 1, 2.
 
-### 4. Pôle (Pôle 3 spécifique) Éclairage (Pôle 3 spécifique est une vue logique (somme))
-- **ZONE 4. (5x) SALON** : [somme de] Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1.
-    (exemple: eclairage_salon_5_*)
-- **ZONE. ((3x) Entrée, cuisine & couloir) (HOME)** : [somme de] Hue White, Hue White, Hue White.
-    (exemple: eclairage_appart_3_*)
-- **ZONE 5. (1x) CUISINE** : [somme de] Hue White.
-    (exemple: eclairage_cuisine_1_*)
-- **ZONE. ((2x) Entrée & couloir) (HOME)** : [somme de] Hue White, Hue White.
-    (exemple: eclairage_appart_2_*)
-- **ZONE 7. (5x) BUREAU** : [somme de] Play 1, 2, 3, Hue White, Hue White.
-    (exemple: eclairage_bureau_5_*)
-- **ZONE 8. (2x) SDB** : [somme de] Miroir Sonoff, Hue White.
-    (exemple: eclairage_sdb_2_*)
-- **ZONE 9. (4x) CHAMBRE** : [somme de] Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2.
-    (exemple: eclairage_chambre_4_*)
+### 4. Pôle Éclairage Logique (Somme)
+- **ZONE 4. (5x) SALON** : [somme de] Table: Hue White, Hue Ambiance 1, 2, 3, Hue Color 1. (ex: eclairage_salon_5_*)
+- **ZONE. ((3x) Entrée, cuisine & couloir) (HOME)** : [somme de] Hue White, Hue White, Hue White. (ex: eclairage_appart_3_*)
+- **ZONE 5. (1x) CUISINE** : [somme de] Hue White. (ex: eclairage_cuisine_1_*)
+- **ZONE. ((2x) Entrée & couloir) (HOME)** : [somme de] Hue White, Hue White. (ex: eclairage_appart_2_*)
+- **ZONE 7. (5x) BUREAU** : [somme de] Play 1, 2, 3, Hue White, Hue White. (ex: eclairage_bureau_5_*)
+- **ZONE 8. (2x) SDB** : [somme de] Miroir Sonoff, Hue White. (ex: eclairage_sdb_2_*)
+- **ZONE 9. (4x) CHAMBRE** : [somme de] Hue White 1, 2, Hue Color Zone-1, Hue Color Zone-2. (ex: eclairage_chambre_4_*)
+
+### 5. Pôle Groupe Présence (Pôle 4)
+- **Équipements** : Smartphones (Poco X7 Pro, etc.), capteurs Wi-Fi (SSID/BSSID), réseau cellulaire.
+- **Logique** : Centraliser les statuts de connexion pour déterminer la présence (Home/Away).
+
+---
+
+## 🖥️ RÈGLES DE STRUCTURATION DES TEMPLATES D'INTERFACE (`ui_dashboard`)
+Pour séparer la logique de calcul pur de la logique d'affichage, un sous-dossier `ui_dashboard` est utilisé dans les Pôles (ex: `P3_eclairage/ui_dashboard/`).
+
+- **Usage strict** : Ce dossier est **exclusivement** réservé aux "Templates Sensors" dont le seul but est de générer du contenu pour le frontend (cartes HA).
+- **Contenu autorisé** : 
+  - Regroupement textuel (ex: "3 lumières allumées", "Clim en mode Froid").
+  - Formatage de couleurs ou d'icônes dynamiques pour Bubble Card / Mushroom.
+- **Interdiction** : Ne **jamais** y placer de templates calculant de l'énergie (`kWh`), de la puissance (`W`) ou des durées (`DUT`).
 
 ---
 
@@ -228,15 +246,17 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
 - **SOUS-SECTION [DUT]** : Uniquement les capteurs de durée `dut` (Temps de fonctionnement).
   * *Titre* : `PÔLE 1. DURÉE D'UTILISATION TOTALE: [DUT] CHAUFFAGE & CLIMATISATION`
 
-### 2. PÔLE 2 : PRISES CONNECTÉES)
+### 2. PÔLE 2 : PRISES CONNECTÉES
 - **SOUS-SECTION [kWh]** : Uniquement les capteurs de consommation réelle `_kwh`.
   * *Titre* : `│ PÔLE 2. ÉNERGIE: [kWh] PRISES CONNECTÉES -> (Daily + Monthly)`
 
 ### 3. PÔLE 3 : ÉCLAIRAGE (LOGIQUE DE REGROUPEMENT)
-- **SOUS-SECTION ZONES** : Compteurs calculant la somme d'une pièce (exemple: sensor.eclairage_cuisine_1_annuel) ou d'un groupe (exemple: sensor.eclairage_appart_3_energie, sensor.eclairage_bureau_5_energie, etc).
+- **SOUS-SECTION ZONES** : Compteurs calculant la somme d'une pièce ou d'un groupe.
   * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITÉ`
-- **SOUS-SECTION UNITAIRE** : Compteurs individuels pour chaque ampoule Hue/Sonoff.
+- **SOUS-SECTION UNITAIRE** : Compteurs individuels pour chaque ampoule.
   * *Titre* : `PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITÉ`
+
+---
 
 # 🌡️ STRATÉGIE THERMIQUE & MONITORING
 (uniquement pour l'analyse des consommations électrique)
@@ -247,87 +267,62 @@ Indispensable pour la cohérence entre ApexCharts, Bubble-Card et Mushroom.
   
    <img width="4264" height="5602" alt="Confort Cible Calcul Flow-2026-02-01-102732" src="https://github.com/user-attachments/assets/f18e24a2-1441-482b-af70-537a7b208e15" />
 
+---
 
 ## 🔗 INDEX INTÉGRAL DES FICHIERS SOURCES (RAW GITHUB)
-  ### 📂 Configuration & Scripts
-    - Automations : https://raw.githubusercontent.com/BerrySwann/home-assistant-config/main/automations.yaml
-    - camera: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/camera.yaml
-    - command_line: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/command_line.yaml
-    - Configuration : https://raw.githubusercontent.com/BerrySwann/home-assistant-config/main/configuration.yaml
-    - group: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/group.yaml
-    - input_boolean: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/input_boolean.yaml
-    - input_number: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/input_number.yaml 
-    - Scripts : https://raw.githubusercontent.com/BerrySwann/home-assistant-config/main/scripts.yaml
-    - shell_command: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/shell_command.yaml
-    - utility_meter: https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/utility_meter.yaml  
-  ### 📂 Séries Templates (01 à 18)
-    ### 📂 Météo (Série 01)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/01_1_meteo_alertes_card.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/01_2_meteo_foudre_card.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/01_3_meteo_vent_vence_card.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/01_4_tendances_th_ext_card.yaml
-    ### 📂 SpeedTest (Série 02)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/02_1_reseau_speedtest_card.yaml
-    ### 📂 Climat & Chauffage (Série 03)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_01_energie_clim_radiateur_card.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_02_energie_totaux_clim_rad_vignette.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_03_clim_power_status_sup_50w_vignette_card.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_04_clim_etats_vingnette.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_05_clim_logique_system_autom.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_06_clim_logique_wifi_cell.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_07_automation_message_clim_7h30_21h.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/03_08_automation%20message%20clim%2021h%207h30.yaml
-    ### 📂 Eclairages (Série 04)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/04_02_energie_totaux_eclairage_vignette.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/04_1_energie_eclairage_card.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/04_3_lumieres_etats_vignette.yaml
-    ### 📂 Maj HA (Série 05)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/05_1_updates_ha_system_vignette.yaml
-    ### 📂 État Wi-Fi (Série 06)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/06_1_phones_wifi_cellular_card_autom.yaml
-    ### 📂 Fenêtres (Série 07)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/07_1_nb_fenetre_ouvert_ferme_autom.yaml
-    ### 📂 Stores — États (Salon / Bureau) (Série 08)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/08_1_stores_etats_vignette_card.yaml
-    ### 📂 all_standby_current (Série 09)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/09_1_sensor.all_standby_current.yaml
-    ### 📂 Air quality (Série 10)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/10_1_air_quality_ppb.yaml
-    ### 📂 ECOJOKO (Série 11)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/11_1_ecojoko_kwh_jrs_moins_1.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/11_2_energie_linky_25481620821301_card.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/11_3_linky_25481620821301.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/11_4_heures_creuses.yaml
-    ### 📂 Lecture des sondes temperature (Mini PC) (Série 12) 
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/12_1_sonde_temp%C3%A9rature_mini-pc.yaml
-    ### 📂 Capteur temporel (Série 13)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/13_1_Capteur%20temporel.yaml
-    ### 📂 Inter SdB (Série 14)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/14_1_inter_sdb.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/14_2_switch_inter_sdb.yaml
-    ### 📂 Jour / Nuit (Série 15)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/15_1_jour_on_7h30_21h.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/15_2_nuit_on_21h_7h30.yaml
-    ### 📂 Icône été/Hivers (Série 16)
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/16_1_icon%20ete_hivers.yaml
-    ### 📂 Diag Conso (Série 17) 
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/17_1_diag_conso_jour_en_cours.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/17_2_diag_conso_mois_en_cours.yaml
-    ### 📂 Puissance de Croisière en Watts (Série 18) 
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/templates/18_1_Moyenne_daily_monthly.yaml
-### 📂 Séries Sensors (Découpage fonctionnel)
-    ### 📂 Pôle 1 - Chauffage & Clim
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_0_sensors_clim_rad.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_1_sensors%20-%20dut.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_2_sensors%20-%20Perf.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p1_3_sensors_moy_24h.yaml
-    ### 📂 Pôle 2 - Prises & Énergie
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p2_sensors_%20prises.yaml
-    ### 📂 Pôle 3 - Éclairage
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/p3_sensors_lumieres.yaml
-    ### 📂 Qualité d'Air & Météo
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors%20-%20pm25%20et%20tcov.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors_blitzortung.yaml
-    ### 📂 Système & Divers
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors_erodi_ha.yaml
-    - https://raw.githubusercontent.com/BerrySwann/home-assistant-config/refs/heads/main/sensors/sensors_mini_pc.yaml
+*Dépôt Re-build : https://github.com/BerrySwann/home_assistant_re-build*
+
+### 📂 UTILITY METER
+  **Pôle 0 - Énergie Total**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/P0_Energie_total/Ecojoko/01_UM_AMHQ_cost.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/P0_Energie_total/Ecojoko/02_UM_ecojoko_quotidien_live.yaml
+  **Pôle 1 - Chauffage & Clim**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/P1_clim_chauffage/P1_UM_AMHQ.yaml
+  **Pôle 2 - Prises**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/P2_prise/P2_AVG/P2_UM_AMHQ.yaml
+  **Pôle 3 - Éclairage**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/P3_eclairage/P3_UM_AMHQ_1_UNITE.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/P3_eclairage/P3_UM_AMHQ_2_ZONE.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/P3_eclairage/P3_UM_AMHQ_3_TOTAL.yaml
+  **Météo**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/utility_meter/meteo/M_03_meteo_UM_blitzortung.yaml
+
+### 📂 TEMPLATES
+  **Pôle 0 - Diag & Énergie Total**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P0_Energie_total_diag/Diag/diag_conso_jour_en_cours.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P0_Energie_total_diag/Diag/diag_conso_mois_en_cours.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P0_Energie_total_diag/Ecojoko/01_ecojoko_AMHQ_cost.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P0_Energie_total_diag/Ecojoko/02_ratio_hp_hc.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P0_Energie_total_diag/Ecojoko/03_ecojoko_7jrs_historique.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P0_Energie_total_diag/Ecojoko/04_AVG_ecojoko.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P0_Energie_total_diag/Linky/MyElectricalData.yaml
+  **Pôle 1 - Chauffage & Clim**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P1_clim_chauffage/P1_01_MASTER/P1_01_clim_logique_system_autom.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P1_clim_chauffage/P1_AVG/P1_avg.yaml
+  **Pôle 2 - Prises**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P2_prise/P2_AVG/P2_AVG_AMHQ.yaml
+  **Pôle 3 - Éclairage & UI**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P3_eclairage/P3_01_somme_par_piece.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P3_eclairage/P3_AVG/P3_AVG_AMHQ_1_UNITE.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P3_eclairage/P3_AVG/P3_AVG_AMHQ_2_ZONE.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P3_eclairage/ui_dashboard/etats_status.yaml
+  **Pôle 4 - Groupe Présence**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P4_groupe_presence/01_phones_wifi_cellular_card_autom.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/P4_groupe_presence/02_logique_wifi_cellular.yaml
+  **Météo**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/meteo/M_01_meteo_alertes_card.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/meteo/M_02_meteo_vent_vence_card.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/meteo/M_03_meteo_blitzortung.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/templates/meteo/M_04_tendances_th_ext_card.yaml
+
+### 📂 SENSORS
+  **Pôle 0 - Diag & Énergie Total**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/sensors/P0_Energie_total_diag/Ecojoko_mini_maxi/Ecojoko_mini_maxi_avg_1h.yaml
+  **Pôle 2 - Prises**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/sensors/P2_prise/P2_kWh.yaml
+  **Pôle 3 - Éclairage**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/sensors/P3_eclairage/P3_kWh_1_UNITE.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/sensors/P3_eclairage/P3_kWh_2_ZONE.yaml
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/sensors/P3_eclairage/P3_kWh_3_TOTAL.yaml
+  **Météo**
+  - https://raw.githubusercontent.com/BerrySwann/home_assistant_re-build/main/sensors/meteo/M_03_meteo_sensors_blitzortung.yaml
