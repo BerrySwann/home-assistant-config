@@ -216,7 +216,7 @@ Même si le fichier ne contient qu'une seule fonction, la règle de la **Boîte 
 Juste sous la boîte ASCII du titre, chaque fichier YAML doit **obligatoirement** comporter un bloc de commentaires expliquant son rôle, ses sources, les pièges à éviter, et son lien avec l'interface graphique (les 18 vignettes).
 
 **Format standard exigé :**
-```yaml
+
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │ TITRE DU FICHIER EN BOÎTE ASCII ARRONDIE                                 │
 # ╰──────────────────────────────────────────────────────────────────────────╯
@@ -234,6 +234,41 @@ Juste sous la boîte ASCII du titre, chaque fichier YAML doit **obligatoirement*
 #
 # ## 🖥️ TABLEAU DE BORD (VIGNETTES PRINCIPALES) :
 # - Sert à la remontée d'info pour la vignette : [Exemple : L1C2 Température ou NON APPLICABLE]
+
+## 🖥️ CARTOGRAPHIE DU TABLEAU DE BORD PRINCIPAL (MATRICE DES 18 VIGNETTES)
+Cette matrice permet de cibler exactement quelle entité remonte dans quelle carte visuelle du Dashboard. Elle est indispensable pour la documentation interne des fichiers YAML.
+Format : Ligne (L) / Colonne (C).
+
+**LIGNE 1 : ENVIRONNEMENT & THERMIQUE**
+- **L1C1** : Météo
+- **L1C2** : Températures (Extérieure et 6 intérieures) avec humidité
+- **L1C3** : Commandes Clim (incluant radiateur et soufflant)
+
+**LIGNE 2 : CONSOMMATION ÉNERGÉTIQUE**
+- **L2C1** : Conso Énergie Générale
+- **L2C2** : Conso Énergie Clim / Radiateur / Soufflant
+- **L2C3** : Conso Énergie Éclairage (Lampes)
+
+**LIGNE 3 : COMMANDES & ACTIONNEURS**
+- **L3C1** : Commandes Éclairage (Lampes)
+- **L3C2** : Commandes Éco (Prises)
+- **L3C3** : État des fenêtres + Commandes 2 stores
+
+**LIGNE 4 : RÉSEAU & SYSTÈME**
+- **L4C1** : Freebox Pop
+- **L4C2** : Mini-PC
+- **L4C3** : Mises à jour HA
+
+**LIGNE 5 : MAINTENANCE MATÉRIELLE**
+- **L5C1** : Surveillance Batteries / Piles des équipements
+- **L5C2** : Batterie des portables
+- **L5C3** : Taille de la DB MariaDB (Maint. Github au clic)
+
+**LIGNE 6 : QUALITÉ & ALERTES**
+- **L6C1** : Qualité de l'air (Appartement)
+- **L6C2** : Pollution / Pollen (Extérieur)
+- **L6C3** : Vigilance Eau (Restrictions)
+
 🌡️ STRATÉGIE THERMIQUE & SUIVI
 (uniquement pour l'analyse des consommations électriques)
 
