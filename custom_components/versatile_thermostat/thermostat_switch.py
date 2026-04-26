@@ -2,6 +2,7 @@
 
 """ A climate over switch classe """
 import logging
+from .log_collector import get_vtherm_logger
 from datetime import timedelta
 from homeassistant.core import Event, callback
 from homeassistant.helpers.event import (
@@ -18,18 +19,20 @@ from .const import (
     CONF_INVERSE_SWITCH,
     CONF_VSWITCH_ON_CMD_LIST,
     CONF_VSWITCH_OFF_CMD_LIST,
+    PROPORTIONAL_FUNCTION_TPI,
     overrides,
 )
 
 from .commons import write_event_log
 
 from .base_thermostat import BaseThermostat, ConfigData
-from .thermostat_tpi import ThermostatTPI
+from .thermostat_prop import ThermostatProp
 from .underlyings import UnderlyingSwitch
+from .cycle_scheduler import CycleScheduler
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
-class ThermostatOverSwitch(ThermostatTPI[UnderlyingSwitch]):
+class ThermostatOverSwitch(ThermostatProp[UnderlyingSwitch]):
     """Representation of a base class for a Versatile Thermostat over a switch."""
 
     _entity_component_unrecorded_attributes = BaseThermostat._entity_component_unrecorded_attributes.union(  # pylint: disable=protected-access
@@ -70,7 +73,6 @@ class ThermostatOverSwitch(ThermostatTPI[UnderlyingSwitch]):
         self._lst_vswitch_on = config_entry.get(CONF_VSWITCH_ON_CMD_LIST, [])
         self._lst_vswitch_off = config_entry.get(CONF_VSWITCH_OFF_CMD_LIST, [])
 
-        delta_cycle = self._cycle_min * 60 / len(lst_switches)
         for idx, switch in enumerate(lst_switches):
             vswitch_on = self._lst_vswitch_on[idx] if idx < len(self._lst_vswitch_on) else None
             vswitch_off = self._lst_vswitch_off[idx] if idx < len(self._lst_vswitch_off) else None
@@ -79,32 +81,33 @@ class ThermostatOverSwitch(ThermostatTPI[UnderlyingSwitch]):
                     hass=self._hass,
                     thermostat=self,
                     switch_entity_id=switch,
-                    initial_delay_sec=idx * delta_cycle,
                     keep_alive_sec=config_entry.get(CONF_HEATER_KEEP_ALIVE, 0),
                     vswitch_on=vswitch_on,
                     vswitch_off=vswitch_off,
                 )
             )
 
+        self._bind_scheduler(CycleScheduler(
+            hass=self._hass,
+            thermostat=self,
+            underlyings=self._underlyings,
+            cycle_duration_sec=self._cycle_min * 60,
+            min_activation_delay=self.minimal_activation_delay,
+            min_deactivation_delay=self.minimal_deactivation_delay,
+        ))
+
         self._should_relaunch_control_heating = False
 
     @overrides
     async def async_added_to_hass(self):
         """Run when entity about to be added."""
-        _LOGGER.debug("Calling async_added_to_hass")
 
         await super().async_added_to_hass()
 
         # Add listener to all underlying entities
         for switch in self._underlyings:
-            self.async_on_remove(
-                async_track_state_change_event(
-                    self.hass, [switch.entity_id], self._async_switch_changed
-                )
-            )
-            switch.startup()
+            self.async_on_remove(async_track_state_change_event(self.hass, [switch.entity_id], self._async_switch_changed))
 
-        # self.hass.create_task(self.async_control_heating())
         # Start the control_heating
         # starts a cycle
         self.async_on_remove(
@@ -122,36 +125,46 @@ class ThermostatOverSwitch(ThermostatTPI[UnderlyingSwitch]):
 
         under0: UnderlyingSwitch = self._underlyings[0]
 
-        self._attr_extra_state_attributes.update(
-            {
-                "is_over_switch": self.is_over_switch,
-                "on_percent": self.safe_on_percent,
-                "power_percent": self.power_percent,
-                "vtherm_over_switch": {
-                    "is_inversed": self.is_inversed,
-                    "keep_alive_sec": under0.keep_alive_sec,
-                    "underlying_entities": [underlying.entity_id for underlying in self._underlyings],
-                    "on_percent": self.safe_on_percent,
-                    "power_percent": self.power_percent,
-                    "on_time_sec": self._prop_algorithm.on_time_sec,
-                    "off_time_sec": self._prop_algorithm.off_time_sec,
-                    "function": self._proportional_function,
-                    "tpi_coef_int": self._tpi_coef_int,
-                    "tpi_coef_ext": self._tpi_coef_ext,
-                    "tpi_threshold_low": self._tpi_threshold_low,
-                    "tpi_threshold_high": self._tpi_threshold_high,
-                    "minimal_activation_delay": self._minimal_activation_delay,
-                    "minimal_deactivation_delay": self._minimal_deactivation_delay,
-                    "calculated_on_percent": self._prop_algorithm.calculated_on_percent,
-                    "vswitch_on_commands": self._lst_vswitch_on,
-                    "vswitch_off_commands": self._lst_vswitch_off,
-                },
-            }
-        )
+        # Standard attributes
+        attributes = {
+            "is_over_switch": self.is_over_switch,
+            "on_percent": self.safe_on_percent,
+            "power_percent": self.power_percent,
+        }
 
-        _LOGGER.debug("%s - Calling update_custom_attributes: %s", self, self._attr_extra_state_attributes)
+        # Use pre-calculated on/off times from handler's control_heating
+        on_time_sec = self._on_time_sec
+        off_time_sec = self._off_time_sec
 
+        # Underlying specific attributes
+        vtherm_over_switch_attr = {
+            "is_inversed": self.is_inversed,
+            "keep_alive_sec": under0.keep_alive_sec,
+            "underlying_entities": [underlying.entity_id for underlying in self._underlyings],
+            "on_percent": self.safe_on_percent,
+            "power_percent": self.power_percent,
+            "on_time_sec": on_time_sec,
+            "off_time_sec": off_time_sec,
+            "function": self._proportional_function,
+            "vswitch_on_commands": self._lst_vswitch_on,
+            "vswitch_off_commands": self._lst_vswitch_off,
+        }
 
+        # Add TPI attributes if active
+        if self._proportional_function == PROPORTIONAL_FUNCTION_TPI:
+            vtherm_over_switch_attr.update({
+                "tpi_coef_int": self._tpi_coef_int,
+                "tpi_coef_ext": self._tpi_coef_ext,
+                "tpi_threshold_low": self._tpi_threshold_low,
+                "tpi_threshold_high": self._tpi_threshold_high,
+                "minimal_activation_delay": self._minimal_activation_delay,
+                "minimal_deactivation_delay": self._minimal_deactivation_delay,
+            })
+
+        attributes["vtherm_over_switch"] = vtherm_over_switch_attr
+        self._attr_extra_state_attributes.update(attributes)
+
+        # _LOGGER.debug("%s - Calling update_custom_attributes: %s", self, self._attr_extra_state_attributes)
 
     @overrides
     def incremente_energy(self):
@@ -199,8 +212,9 @@ class ThermostatOverSwitch(ThermostatTPI[UnderlyingSwitch]):
         write_event_log(_LOGGER, self, f"Underlying switch state changed from {old_state.state if old_state else None} to {new_state.state if new_state else None}")
         if new_state is None:
             return
-        if old_state is None:
-            self.hass.create_task(self._check_initial_state())
+        # #1654 - nno more needed now
+        # if old_state is None:
+        #     self.hass.create_task(self._check_initial_state())
 
         self.calculate_hvac_action()
         self.update_custom_attributes()

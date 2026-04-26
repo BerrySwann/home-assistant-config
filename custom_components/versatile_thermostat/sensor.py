@@ -1,7 +1,9 @@
 # pylint: disable=unused-argument
 """ Implements the VersatileThermostat sensors component """
 import logging
+from .log_collector import get_vtherm_logger
 import math
+from collections.abc import Callable
 
 from homeassistant.core import HomeAssistant, callback, Event, State
 
@@ -59,7 +61,7 @@ from .const import (
 
 THRESHOLD_WATT_KILO = 100
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
 
 async def async_setup_entry(
@@ -68,12 +70,10 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the VersatileThermostat sensors with config flow."""
-    _LOGGER.debug(
-        "Calling async_setup_entry entry=%s, data=%s", entry.entry_id, entry.data
-    )
-
     unique_id = entry.entry_id
     name = entry.data.get(CONF_NAME)
+    _LOGGER.debug("%s - Calling async_setup_entry entry=%s, data=%s", name, entry.entry_id, entry.data)
+
     vt_type = entry.data.get(CONF_THERMOSTAT_TYPE)
     have_valve_regulation = (
         entry.data.get(CONF_AUTO_REGULATION_MODE) == CONF_AUTO_REGULATION_VALVE
@@ -180,10 +180,14 @@ class EnergySensor(VersatileThermostatBaseEntity, SensorEntity):
 
     @property
     def device_class(self) -> SensorDeviceClass | None:
+        if not self.my_climate:
+            return None
         return SensorDeviceClass.ENERGY
 
     @property
     def state_class(self) -> SensorStateClass | None:
+        if not self.my_climate:
+            return None
         return SensorStateClass.TOTAL_INCREASING
 
     @property
@@ -276,13 +280,14 @@ class OnPercentSensor(VersatileThermostatBaseEntity, SensorEntity):
         """Called when my climate have change"""
         # _LOGGER.debug("%s - climate state change", self._attr_unique_id)
 
-        on_percent = (
-            float(self.my_climate.proportional_algorithm.on_percent)
-            if self.my_climate and self.my_climate.has_tpi and self.my_climate.proportional_algorithm
+        raw_on_percent = (
+            self.my_climate.proportional_algorithm.on_percent
+            if self.my_climate and self.my_climate.has_prop
             else None
         )
-        if on_percent is None:
+        if raw_on_percent is None:
             return
+        on_percent = float(raw_on_percent)
 
         if math.isnan(on_percent) or math.isinf(on_percent):
             raise ValueError(f"Sensor has illegal state {on_percent}")
@@ -331,19 +336,19 @@ class AutoTpiSensor(VersatileThermostatBaseEntity, SensorEntity):
     async def async_my_climate_changed(self, event: Event = None):
         """Called when my climate have change"""
 
-        # Verify has_tpi and proportional_algorithm
-        # proportional_algorithm can be None during initialization even if has_tpi is True
-        if not self.my_climate or not self.my_climate.has_tpi or not self.my_climate.proportional_algorithm:
+        # Verify has_prop and proportional_algorithm
+        # proportional_algorithm can be None during initialization even if has_prop is True
+        if not self.my_climate or not self.my_climate.has_prop:
             self._attr_native_value = "disabled"
             self.async_write_ha_state()
             return
 
-        if not hasattr(self.my_climate, "_auto_tpi_manager") or not self.my_climate._auto_tpi_manager:
-             self._attr_native_value = "disabled"
-             self.async_write_ha_state()
-             return
+        if not hasattr(self.my_climate, "auto_tpi_manager") or not self.my_climate.auto_tpi_manager:
+            self._attr_native_value = "disabled"
+            self.async_write_ha_state()
+            return
 
-        manager = self.my_climate._auto_tpi_manager
+        manager = self.my_climate.auto_tpi_manager
 
         # Determine state
         if manager.learning_active:
@@ -453,8 +458,8 @@ class OnTimeSensor(VersatileThermostatBaseEntity, SensorEntity):
         # _LOGGER.debug("%s - climate state change", self._attr_unique_id)
 
         on_time = (
-            float(self.my_climate.proportional_algorithm.on_time_sec)
-            if self.my_climate and self.my_climate.has_tpi and self.my_climate.proportional_algorithm
+            float(self.my_climate.on_time_sec)
+            if self.my_climate and hasattr(self.my_climate, "on_time_sec")
             else None
         )
 
@@ -502,8 +507,8 @@ class OffTimeSensor(VersatileThermostatBaseEntity, SensorEntity):
         # _LOGGER.debug("%s - climate state change", self._attr_unique_id)
 
         off_time = (
-            float(self.my_climate.proportional_algorithm.off_time_sec)
-            if self.my_climate and self.my_climate.has_tpi and self.my_climate.proportional_algorithm
+            float(self.my_climate.off_time_sec)
+            if self.my_climate and hasattr(self.my_climate, "off_time_sec")
             else None
         )
         if off_time is None:
@@ -758,6 +763,7 @@ class NbActiveDeviceForBoilerSensor(SensorEntity):
     """Representation of the  number of VTherm
     which are active and configured to activate the boiler"""
 
+    # TODO remove all listener mecanisms
     _entity_component_unrecorded_attributes = SensorEntity._entity_component_unrecorded_attributes.union(  # pylint: disable=protected-access
         frozenset({"active_device_ids"})
     )
@@ -772,7 +778,7 @@ class NbActiveDeviceForBoilerSensor(SensorEntity):
         self._attr_value = self._attr_native_value = None  # default value
         self._entities = []
         self._attr_active_device_ids = []  # Holds the entity ids of active devices``
-        self._cancel_listener_nb_active: callable | None = None
+        self._cancel_listener_nb_active: Callable | None = None
 
     @property
     def extra_state_attributes(self) -> dict:
@@ -817,7 +823,7 @@ class NbActiveDeviceForBoilerSensor(SensorEntity):
 
         # Listen to all VTherm underlying state change
         self._entities = []
-        underlying_entities_id = []
+        # underlying_entities_id = []
 
         component: EntityComponent[ClimateEntity] = self.hass.data.get(CLIMATE_DOMAIN)
         if component is None:
@@ -829,24 +835,24 @@ class NbActiveDeviceForBoilerSensor(SensorEntity):
         for entity in list(component.entities):
             if isinstance(entity, BaseThermostat) and entity.is_used_by_central_boiler:
                 self._entities.append(entity)
-                for under in entity.activable_underlying_entities:
-                    underlying_entities_id.append(under.entity_id)
-        if len(underlying_entities_id) > 0:
-            # Arme l'écoute de la première entité
-            self._cancel_listener_nb_active = async_track_state_change_event(
-                self._hass,
-                underlying_entities_id,
-                self.calculate_nb_active_devices,
-            )
-            _LOGGER.info(
-                "%s - the underlyings that could control the central boiler are %s",
-                self,
-                underlying_entities_id,
-            )
-            # Fix 1406
-            # self.async_on_remove(self._cancel_listener_nb_active)
-        else:
-            _LOGGER.debug("%s - no VTherm could control the central boiler", self)
+                # for under in entity.activable_underlying_entities:
+                #    underlying_entities_id.append(under.entity_id)
+        # if len(underlying_entities_id) > 0:
+        # Arme l'écoute de la première entité
+        # self._cancel_listener_nb_active = async_track_state_change_event(
+        #     self._hass,
+        #     underlying_entities_id,
+        #     self.calculate_nb_active_devices,
+        # )
+        #    _LOGGER.info(
+        #        "%s - the underlyings that could control the central boiler are %s",
+        #        self,
+        #        underlying_entities_id,
+        #     )
+        # Fix 1406
+        # self.async_on_remove(self._cancel_listener_nb_active)
+        # else:
+        #    _LOGGER.debug("%s - no VTherm could control the central boiler", self)
 
         await self.calculate_nb_active_devices(None)
 
@@ -899,7 +905,7 @@ class NbActiveDeviceForBoilerSensor(SensorEntity):
         for entity in self._entities:
             device_actives = entity.device_actives
             _LOGGER.debug(
-                "After examining the device_actives of %s, device_actives is %s",
+                "%s - After examining the device_actives, device_actives is %s",
                 entity.name,
                 device_actives,
             )
@@ -919,13 +925,13 @@ class NbActiveDeviceForBoilerSensor(SensorEntity):
         return self._attr_active_device_ids
 
     def __str__(self):
-        return f"VersatileThermostat-{self.name}"
+        return f"{self.name}"
 
     def cancel_listening_nb_active(self):
         """Cancel the listening of underlying VTherm state changes"""
         if self._cancel_listener_nb_active is not None:
             try:
-                self._cancel_listener_nb_active()
+                self._cancel_listener_nb_active()  # pylint: disable=not-callable
             except (ValueError, TypeError):  # the listener could be already cancelled
                 pass
             self._cancel_listener_nb_active = None
@@ -1032,10 +1038,10 @@ class TotalPowerActiveDeviceForBoilerSensor(NbActiveDeviceForBoilerSensor):
                 return
 
             _LOGGER.debug(
-                "%s - calculating the total power of active underlying device for boiler activation. change change from %s to %s",
+                "%s - calculating the total power of active underlying device for boiler activation. mean_power_cycle change from %s to %s",
                 self,
-                old_state,
-                new_state,
+                old_mean_cycle_power,
+                new_mean_cycle_power,
             )
         else:
             _LOGGER.debug(
@@ -1052,7 +1058,7 @@ class TotalPowerActiveDeviceForBoilerSensor(NbActiveDeviceForBoilerSensor):
                 continue
 
             _LOGGER.debug(
-                "After examining the mean_cycle_power of %s, mean_cycle_power is %s",
+                "%s - After examining the mean_cycle_power, mean_cycle_power is %s",
                 entity.name,
                 mean_cycle_power,
             )
@@ -1073,7 +1079,7 @@ class TotalPowerActiveDeviceForBoilerSensor(NbActiveDeviceForBoilerSensor):
         return self._attr_active_device_ids
 
     def __str__(self):
-        return f"VersatileThermostat-{self.name}"
+        return f"{self.name}"
 
     @overrides
     async def async_will_remove_from_hass(self) -> None:

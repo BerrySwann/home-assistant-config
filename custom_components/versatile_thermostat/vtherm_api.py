@@ -1,9 +1,10 @@
 """ The API of Versatile Thermostat"""
 
 import logging
+from .log_collector import get_vtherm_logger
 from datetime import datetime
 from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.components.climate import ClimateEntity, DOMAIN as CLIMATE_DOMAIN
@@ -11,6 +12,7 @@ from homeassistant.components.number import NumberEntity
 
 from .const import (
     DOMAIN,
+    CONF_NAME,
     CONF_AUTO_REGULATION_EXPERT,
     CONF_SHORT_EMA_PARAMS,
     CONF_SAFETY_MODE,
@@ -25,7 +27,7 @@ from .feature_central_boiler_manager import FeatureCentralBoilerManager
 
 VTHERM_API_NAME = "vtherm_api"
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
 
 class VersatileThermostatAPI:
@@ -70,6 +72,11 @@ class VersatileThermostatAPI:
         # the current time (for testing purpose)
         self._now = None
 
+        # Flag to skip reload when a config entry update is triggered by the auto-TPI
+        # learning system (e.g. saving Kext). When True, update_listener will return
+        # immediately without reloading the config entry.
+        self.skip_reload_on_config_update: bool = False
+
     def find_central_configuration(self):
         """Search for a central configuration"""
         if not self._central_configuration:
@@ -77,12 +84,18 @@ class VersatileThermostatAPI:
                 config_entry
             ) in VersatileThermostatAPI._hass.config_entries.async_entries(DOMAIN):
                 if (
-                    config_entry.data.get(CONF_THERMOSTAT_TYPE)
-                    == CONF_THERMOSTAT_CENTRAL_CONFIG
+                    config_entry.data.get(CONF_THERMOSTAT_TYPE) == CONF_THERMOSTAT_CENTRAL_CONFIG
+                    and config_entry.disabled_by is None
+                    and config_entry.state
+                    not in (
+                        ConfigEntryState.FAILED_UNLOAD,
+                        ConfigEntryState.SETUP_ERROR,
+                        ConfigEntryState.MIGRATION_ERROR,
+                        ConfigEntryState.SETUP_RETRY,
+                    )
                 ):
                     self._central_configuration = config_entry
                     break
-                    # return self._central_configuration
         return self._central_configuration
 
     def reset_central_config(self):
@@ -91,13 +104,15 @@ class VersatileThermostatAPI:
 
     def add_entry(self, entry: ConfigEntry):
         """Add a new entry"""
-        _LOGGER.debug("Add the entry %s", entry.entry_id)
+        name = entry.data.get(CONF_NAME)
+        _LOGGER.debug("%s - Add the entry %s - %s", name, entry.entry_id, name)
         # Add the entry in hass.data
         VersatileThermostatAPI._hass.data[DOMAIN][entry.entry_id] = entry
 
     def remove_entry(self, entry: ConfigEntry):
         """Remove an entry"""
-        _LOGGER.debug("Remove the entry %s", entry.entry_id)
+        name = entry.data.get(CONF_NAME)
+        _LOGGER.debug("%s - Remove the entry %s - %s", name, entry.entry_id, name)
         VersatileThermostatAPI._hass.data[DOMAIN].pop(entry.entry_id)
         # If not more entries are preset, remove the API
         if (

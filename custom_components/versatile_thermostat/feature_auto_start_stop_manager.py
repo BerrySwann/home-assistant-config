@@ -3,6 +3,7 @@
 # pylint: disable=line-too-long
 
 import logging
+from .log_collector import get_vtherm_logger
 from typing import Any
 
 from homeassistant.core import (
@@ -21,7 +22,7 @@ from .auto_start_stop_algorithm import (
 )
 
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
 
 class FeatureAutoStartStopManager(BaseFeatureManager):
@@ -245,6 +246,11 @@ class FeatureAutoStartStopManager(BaseFeatureManager):
 
     @property
     def is_auto_stop_detected(self) -> bool:
+        """Return True if the auto-start/stop feature is detected"""
+        return self._is_auto_stop_detected
+
+    @property
+    def is_detected(self) -> bool:
         """Return True if the auto-start/stop feature is detected"""
         return self._is_auto_stop_detected
 

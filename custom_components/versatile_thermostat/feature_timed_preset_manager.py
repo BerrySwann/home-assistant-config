@@ -2,7 +2,6 @@
 
 # pylint: disable=line-too-long
 
-import logging
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -12,6 +11,7 @@ from homeassistant.core import (
 )
 from homeassistant.helpers.event import async_track_point_in_time
 
+from .log_collector import get_vtherm_logger
 from .const import *  # pylint: disable=wildcard-import, unused-wildcard-import
 from .commons_type import ConfigData
 
@@ -21,7 +21,7 @@ from .base_manager import BaseFeatureManager
 from .vtherm_preset import VThermPreset
 
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
 
 class FeatureTimedPresetManager(BaseFeatureManager):
@@ -43,6 +43,7 @@ class FeatureTimedPresetManager(BaseFeatureManager):
 
         self._is_timed_preset_active: bool = False
         self._timed_preset: VThermPreset | None = None
+        self._original_preset: VThermPreset | None = None
         self._timed_preset_end_time: datetime | None = None
         self._cancel_timer: Any | None = None
 
@@ -62,6 +63,52 @@ class FeatureTimedPresetManager(BaseFeatureManager):
         """Stop listening and remove the eventual timer still running"""
         self._cancel_timed_preset_timer()
         super().stop_listening()
+
+    @callback
+    def restore_state(self, old_state: Any):
+        """Implement the restoration hook to re-populate timed presets after restart."""
+
+        # 1. Retrieve the persistence dictionary from attributes
+        # Matches the key used in add_custom_attributes
+        manager_attr = old_state.attributes.get("timed_preset_manager")
+        if not manager_attr or not manager_attr.get("is_active"):
+            return
+
+        end_time_str = manager_attr.get("end_time")
+        preset_str = manager_attr.get("preset")
+        original_preset_str = manager_attr.get("original_preset")
+
+        if not end_time_str or not preset_str:
+            return
+
+        try:
+            # 2. Re-parse the end_time and preset mode
+            end_time = datetime.fromisoformat(end_time_str)
+            now = self._vtherm.now
+
+            # 3. Re-populate internal manager variables
+            self._is_timed_preset_active = True
+            self._timed_preset = VThermPreset(preset_str)
+            self._original_preset = VThermPreset(original_preset_str) if original_preset_str else None
+            self._timed_preset_end_time = end_time
+
+            # 4. Reschedule the expiration task if time remains
+            if end_time > now:
+                # While the timed preset is active, requested_state must carry it so
+                # other managers like auto start/stop recalculate from the forced preset.
+                self._vtherm.requested_state.set_preset(self._timed_preset)
+                _LOGGER.info("%s - Resuming timed preset %s. Reverting at %s", self, preset_str, end_time)
+                self._cancel_timer = async_track_point_in_time(
+                    self._hass,
+                    self._async_timed_preset_expired,
+                    self._timed_preset_end_time,
+                )
+            else:
+                _LOGGER.info("%s - Timed preset expired during downtime. Cleanup will follow.", self)
+                # The existing safety check in refresh_state() will handle the cleanup
+                # and revert to requested_state during the startup cycle.
+        except (ValueError, TypeError) as err:
+            _LOGGER.error("%s - Failed to restore timed preset state: %s", self, err)
 
     @overrides
     async def refresh_state(self) -> bool:
@@ -100,10 +147,17 @@ class FeatureTimedPresetManager(BaseFeatureManager):
         # Cancel any existing timer
         self._cancel_timed_preset_timer()
 
+        # Capture the original preset before overriding it
+        self._original_preset = self._vtherm.requested_state.preset
+
         # Store the timed preset information
         self._timed_preset = preset
         self._timed_preset_end_time = self._vtherm.now + timedelta(minutes=duration_minutes)
         self._is_timed_preset_active = True
+
+        # Keep requested_state aligned with the timed preset while it is active so
+        # state recalculation uses the forced preset even if HVAC is currently off.
+        self._vtherm.requested_state.set_preset(preset)
 
         # Schedule the end of timed preset
         self._cancel_timer = async_track_point_in_time(
@@ -127,7 +181,7 @@ class FeatureTimedPresetManager(BaseFeatureManager):
                 "preset": str(preset),
                 "duration_minutes": duration_minutes,
                 "end_time": self._timed_preset_end_time.isoformat(),
-                "original_preset": str(self._vtherm.requested_state.preset),
+                "original_preset": str(self._original_preset),
             },
         )
 
@@ -167,9 +221,14 @@ class FeatureTimedPresetManager(BaseFeatureManager):
         # Cancel the timer if still active
         self._cancel_timed_preset_timer()
 
+        # Restore the original preset explicitly (handles the post-restart case)
+        if self._original_preset is not None:
+            self._vtherm.requested_state.set_preset(self._original_preset)
+
         # Reset state
         self._is_timed_preset_active = False
         self._timed_preset = None
+        self._original_preset = None
         self._timed_preset_end_time = None
 
         write_event_log(
@@ -209,6 +268,7 @@ class FeatureTimedPresetManager(BaseFeatureManager):
                 "timed_preset_manager": {
                     "is_active": self._is_timed_preset_active,
                     "preset": str(self._timed_preset) if self._timed_preset else None,
+                    "original_preset": str(self._original_preset) if self._original_preset else None,
                     "end_time": self._timed_preset_end_time.isoformat() if self._timed_preset_end_time else None,
                     "remaining_time_min": self.remaining_time_min,
                 }
@@ -245,6 +305,11 @@ class FeatureTimedPresetManager(BaseFeatureManager):
     def is_configured(self) -> bool:
         """Return True - timed preset feature is always available."""
         return True
+
+    @property
+    def is_detected(self) -> bool:
+        """Return the overall state of the feature manager based on timed preset states"""
+        return self.is_timed_preset_active
 
     def __str__(self):
         return f"TimedPresetManager-{self.name}"

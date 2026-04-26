@@ -4,6 +4,7 @@ This class manages both the current and the requested state of a VTherm.
 """
 
 import logging
+from .log_collector import get_vtherm_logger
 from typing import Optional, TYPE_CHECKING, Any
 from .const import (
     HVAC_OFF_REASON_SAFETY,
@@ -35,7 +36,7 @@ from .vtherm_state import VThermState
 from .vtherm_hvac_mode import VThermHvacMode_OFF, VThermHvacMode_FAN_ONLY, VThermHvacMode_COOL, VThermHvacMode_HEAT, VThermHvacMode_SLEEP
 from .vtherm_preset import VThermPreset
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
 if TYPE_CHECKING:
     from .base_thermostat import BaseThermostat
@@ -145,8 +146,9 @@ class StateManager:
                 self._current_state.set_hvac_mode(VThermHvacMode_OFF)
 
         elif vtherm.last_central_mode == CENTRAL_MODE_FROST_PROTECTION and self._requested_state.hvac_mode != VThermHvacMode_OFF:
-            if VThermPreset.FROST not in vtherm.vtherm_preset_modes:
+            if VThermPreset.FROST not in vtherm.vtherm_preset_modes or VThermHvacMode_HEAT not in vtherm.vtherm_hvac_modes:
                 self._current_state.set_hvac_mode(VThermHvacMode_OFF)
+                vtherm.set_hvac_off_reason(HVAC_OFF_REASON_CENTRAL_MODE)
             elif vtherm.vtherm_hvac_mode != VThermHvacMode_HEAT and VThermHvacMode_HEAT in vtherm.vtherm_hvac_modes:
                 self._current_state.set_hvac_mode(VThermHvacMode_HEAT)
 

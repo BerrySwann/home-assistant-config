@@ -2,9 +2,7 @@
 
 """ Implements the Safety as a Feature Manager"""
 
-import logging
 from typing import Any
-
 from homeassistant.const import (
     STATE_ON,
     STATE_OFF,
@@ -24,8 +22,9 @@ from .commons_type import ConfigData
 from .base_manager import BaseFeatureManager
 from .vtherm_api import VersatileThermostatAPI
 from .vtherm_hvac_mode import VThermHvacMode
+from .log_collector import get_vtherm_logger
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
 
 class FeatureSafetyManager(BaseFeatureManager):
@@ -49,6 +48,7 @@ class FeatureSafetyManager(BaseFeatureManager):
         self._safety_min_on_percent = None
         self._safety_default_on_percent = None
         self._safety_state = STATE_UNAVAILABLE
+        self._is_outdoor_checked = True
 
     @overrides
     def post_init(self, entry_infos: ConfigData):
@@ -72,6 +72,11 @@ class FeatureSafetyManager(BaseFeatureManager):
         ):
             self._safety_state = STATE_UNKNOWN
             self._is_configured = True
+
+        api: VersatileThermostatAPI = VersatileThermostatAPI.get_vtherm_api(self.hass)
+        self._is_outdoor_checked = not api.safety_mode or api.safety_mode.get("check_outdoor_sensor") is not False
+
+        _LOGGER.info("%s - is_outdoor_checked is %s", self, self._is_outdoor_checked)
 
     @overrides
     async def start_listening(self):
@@ -109,15 +114,7 @@ class FeatureSafetyManager(BaseFeatureManager):
 
         mode_cond = self._vtherm.hvac_mode != VThermHvacMode_OFF
 
-        api: VersatileThermostatAPI = VersatileThermostatAPI.get_vtherm_api()
-        is_outdoor_checked = (
-            not api.safety_mode
-            or api.safety_mode.get("check_outdoor_sensor") is not False
-        )
-
-        temp_cond: bool = delta_temp > self._safety_delay_min or (
-            is_outdoor_checked and delta_ext_temp > self._safety_delay_min
-        )
+        temp_cond: bool = delta_temp > self._safety_delay_min or (self._is_outdoor_checked and delta_ext_temp > self._safety_delay_min)
         climate_cond: bool = (
             self._vtherm.is_over_climate
             and self._vtherm.hvac_action
@@ -128,7 +125,7 @@ class FeatureSafetyManager(BaseFeatureManager):
         )
         switch_cond: bool = (
             not self._vtherm.is_over_climate
-            and self._vtherm.has_tpi
+            and self._vtherm.has_prop
             and self._vtherm.proportional_algorithm is not None
             and self._vtherm.proportional_algorithm.calculated_on_percent
             >= self._safety_min_on_percent
@@ -163,7 +160,7 @@ class FeatureSafetyManager(BaseFeatureManager):
                     self._safety_delay_min,
                     delta_temp,
                     delta_ext_temp,
-                    self.hvac_action,
+                    self._vtherm.hvac_action,
                 )
             elif should_switch_be_in_safety:
                 _LOGGER.warning(
@@ -173,7 +170,7 @@ class FeatureSafetyManager(BaseFeatureManager):
                     delta_temp,
                     delta_ext_temp,
                     self._vtherm.proportional_algorithm.on_percent * 100,
-                    self._safety_min_on_percent * 100,
+                    self._safety_min_on_percent * 100 if self._safety_min_on_percent is not None else 0,
                 )
 
             self._vtherm.send_event(
@@ -197,8 +194,8 @@ class FeatureSafetyManager(BaseFeatureManager):
             self._safety_state = STATE_ON
             # self._vtherm.save_hvac_mode()
             # self._vtherm.save_preset_mode()
-            if self._vtherm.has_tpi:
-                self._vtherm.proportional_algorithm.set_safety(self._safety_default_on_percent)
+            if self._vtherm.has_prop:
+                self._vtherm.set_safety(self._safety_default_on_percent)
 
             self._vtherm.send_event(
                 EventType.SAFETY_EVENT,
@@ -217,8 +214,8 @@ class FeatureSafetyManager(BaseFeatureManager):
             write_event_log(_LOGGER, self._vtherm, "Ending safety mode")
             _LOGGER.warning("%s - End of safety mode.", self)
             self._safety_state = STATE_OFF
-            if self._vtherm.has_tpi and self._vtherm.proportional_algorithm:
-                self._vtherm.proportional_algorithm.unset_safety()
+            if self._vtherm.has_prop:
+                self._vtherm.unset_safety()
             self._vtherm.send_event(
                 EventType.SAFETY_EVENT,
                 {
@@ -274,7 +271,6 @@ class FeatureSafetyManager(BaseFeatureManager):
                 }
             )
 
-    @overrides
     @property
     def is_configured(self) -> bool:
         """Return True of the safety feature is configured"""
@@ -316,6 +312,11 @@ class FeatureSafetyManager(BaseFeatureManager):
     def safety_default_on_percent(self) -> bool:
         """Returns the safety safety_default_on_percent"""
         return self._safety_default_on_percent
+
+    @property
+    def is_detected(self) -> bool:
+        """Return the overall state of the feature manager based on safety states"""
+        return self.is_safety_detected
 
     def __str__(self):
         return f"SafetyManager-{self.name}"

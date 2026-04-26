@@ -2,12 +2,14 @@
 """Constants for the Versatile Thermostat integration."""
 
 import logging
+from .log_collector import get_vtherm_logger
 import math
 from typing import Literal
 
 from datetime import datetime
 
 from enum import Enum
+from homeassistant.const import STATE_UNKNOWN, STATE_UNAVAILABLE
 from homeassistant.core import HomeAssistant
 from homeassistant.const import CONF_NAME, Platform
 
@@ -15,9 +17,7 @@ from homeassistant.components.climate.const import ClimateEntityFeature  # pylin
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.util import dt as dt_util
 
-from .prop_algorithm import (
-    PROPORTIONAL_FUNCTION_TPI,
-)
+PROPORTIONAL_FUNCTION_TPI = "tpi"
 
 from .vtherm_preset import VThermPreset, VThermPresetWithAC, VThermPresetWithAway, VThermPresetWithACAway, PRESET_TEMP_SUFFIX, PRESET_AWAY_SUFFIX  # pylint: disable=unused-import
 from .vtherm_hvac_mode import (
@@ -35,7 +35,7 @@ from .vtherm_hvac_mode import (
 )  # pylint: disable=unused-import
 from .vtherm_state import VThermState  # pylint: disable=unused-import
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = get_vtherm_logger(__name__)
 
 CONFIG_VERSION = 2
 CONFIG_MINOR_VERSION = 3
@@ -144,6 +144,9 @@ CONF_FAILURE_DETECTION_ENABLE_TEMPLATE = "failure_detection_enable_template"
 CONF_LOCK_CODE = "lock_code"
 CONF_LOCK_USERS = "lock_users"
 CONF_LOCK_AUTOMATIONS = "lock_automations"
+CONF_AUTO_RELOCK_SEC = "auto_relock_sec"
+
+CONF_REPAIR_INCORRECT_STATE = "repair_incorrect_state"
 
 CONF_VSWITCH_ON_CMD_LIST = "vswitch_on_command"
 CONF_VSWITCH_OFF_CMD_LIST = "vswitch_off_command"
@@ -185,12 +188,15 @@ CONF_AUTO_TPI_COOLING_POWER = "auto_tpi_cooling_rate"
 CONF_AUTO_TPI_AGGRESSIVENESS = "auto_tpi_aggressiveness"
 
 CONF_AUTO_TPI_EMA_DECAY_RATE = "auto_tpi_ema_decay_rate"
+CONF_AUTO_TPI_CONTINUOUS_KEXT = "auto_tpi_continuous_kext"
+CONF_AUTO_TPI_CONTINUOUS_KEXT_ALPHA = "auto_tpi_continuous_kext_alpha"
 
 
 # Global params into configuration.yaml
 CONF_SHORT_EMA_PARAMS = "short_ema_params"
 CONF_SAFETY_MODE = "safety_mode"
 CONF_MAX_ON_PERCENT = "max_on_percent"
+CONF_LOG_BUFFER_MAX_AGE_HOURS = "log_buffer_max_age_hours"
 
 CONF_USE_MAIN_CENTRAL_CONFIG = "use_main_central_config"
 CONF_USE_TPI_CENTRAL_CONFIG = "use_tpi_central_config"
@@ -207,6 +213,7 @@ CONF_USE_CENTRAL_MODE = "use_central_mode"
 CONF_CENTRAL_BOILER_ACTIVATION_SRV = "central_boiler_activation_service"
 CONF_CENTRAL_BOILER_DEACTIVATION_SRV = "central_boiler_deactivation_service"
 CONF_CENTRAL_BOILER_ACTIVATION_DELAY_SEC = "central_boiler_activation_delay_sec"
+CONF_KEEP_ALIVE_BOILER_DELAY_SEC = "keep_alive_boiler_delay_sec"
 
 CONF_USED_BY_CENTRAL_BOILER = "used_by_controls_central_boiler"
 CONF_WINDOW_ACTION = "window_action"
@@ -373,6 +380,7 @@ ALL_CONF = (
         CONF_CENTRAL_BOILER_ACTIVATION_SRV,
         CONF_CENTRAL_BOILER_DEACTIVATION_SRV,
         CONF_CENTRAL_BOILER_ACTIVATION_DELAY_SEC,
+        CONF_KEEP_ALIVE_BOILER_DELAY_SEC,
         CONF_WINDOW_ACTION,
         CONF_STEP_TEMPERATURE,
         CONF_MIN_OPENING_DEGREES,
@@ -385,6 +393,8 @@ ALL_CONF = (
         CONF_AUTO_TPI_HEATING_POWER,
         CONF_AUTO_TPI_COOLING_POWER,
         CONF_AUTO_TPI_EMA_DECAY_RATE,
+        CONF_AUTO_TPI_CONTINUOUS_KEXT,
+        CONF_AUTO_TPI_CONTINUOUS_KEXT_ALPHA,
         CONF_AUTO_TPI_LEARNING_TYPE,
         CONF_AUTO_TPI_ENABLE_ADVANCED_SETTINGS,
         CONF_SYNC_DEVICE_INTERNAL_TEMP,
@@ -396,6 +406,7 @@ ALL_CONF = (
         CONF_HEATING_FAILURE_DETECTION_DELAY,
         CONF_TEMPERATURE_CHANGE_TOLERANCE,
         CONF_FAILURE_DETECTION_ENABLE_TEMPLATE,
+        CONF_REPAIR_INCORRECT_STATE,
     ]
     + CONF_PRESETS_VALUES
     + CONF_PRESETS_AWAY_VALUES
@@ -464,9 +475,18 @@ SERVICE_AUTO_TPI_CALIBRATE_CAPACITY = "auto_tpi_calibrate_capacity"
 SERVICE_SET_TIMED_PRESET = "set_timed_preset"
 SERVICE_CANCEL_TIMED_PRESET = "cancel_timed_preset"
 SERVICE_RECALIBRATE_VALVES = "recalibrate_valves"
+SERVICE_DOWNLOAD_LOGS = "download_logs"
 
 DEFAULT_SAFETY_MIN_ON_PERCENT = 0.5
 DEFAULT_SAFETY_DEFAULT_ON_PERCENT = 0.1
+
+# Repair incorrect state defaults
+DEFAULT_REPAIR_INCORRECT_STATE = False
+REPAIR_MAX_ATTEMPTS = 5
+REPAIR_MIN_DELAY_AFTER_INIT_SEC = 30
+
+# Central boiler keep-alive defaults
+DEFAULT_KEEP_ALIVE_BOILER_DELAY_SEC = 0
 
 # Heating failure detection defaults
 DEFAULT_HEATING_FAILURE_THRESHOLD = 0.9  # 90%
@@ -508,6 +528,7 @@ MSG_TARGET_TEMP_ACTIVITY_DETECTED = "target_temp_activity_detected"
 MSG_TARGET_TEMP_ACTIVITY_NOT_DETECTED = "target_temp_activity_not_detected"
 MSG_TARGET_TEMP_ABSENCE_DETECTED = "target_temp_absence_detected"
 MSG_TARGET_TEMP_TIMED_PRESET = "target_temp_timed_preset"
+MSG_NOT_INITIALIZED = "not_initialized"
 
 #  A special regulation parameter suggested by @Maia here: https://github.com/jmcollin78/versatile_thermostat/discussions/154
 class RegulationParamSlow:
@@ -605,17 +626,19 @@ def send_vtherm_event(hass, event_type: EventType, entity, data: dict):
 def get_safe_float(hass, entity_id: str):
     """Get a safe float state value for an entity.
     Return None if entity is not available"""
-    if (
-        entity_id is None
-        or not (state := hass.states.get(entity_id))
-        or state.state is None
-        or state.state == "None"
-        or state.state == "unknown"
-        or state.state == "unavailable"
-    ):
+    if entity_id is None or not (state := hass.states.get(entity_id)) or state.state in [None, "None", STATE_UNAVAILABLE, STATE_UNKNOWN]:
         return None
-    float_val = float(state.state)
-    return None if math.isinf(float_val) or not math.isfinite(float_val) else float_val
+    return get_safe_float_value(state.state)
+
+
+def get_safe_float_value(value):
+    """Get a safe float value.
+    Return None if value is not a valid float"""
+    try:
+        float_val = float(value)
+        return None if math.isinf(float_val) or not math.isfinite(float_val) else float_val
+    except (ValueError, TypeError):
+        return None
 
 
 def get_tz(hass: HomeAssistant):
