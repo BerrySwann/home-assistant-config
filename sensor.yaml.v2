@@ -1,0 +1,1971 @@
+# ╭──────────────────────────────────────────────────────────────────────╮
+# │         PÔLE 1. ÉNERGIE: [_um] CHAUFFAGE & CLIMATISATION             │
+# ╰──────────────────────────────────────────────────────────────────────╯
+
+┌───────────────────────────────────┐
+│         4. SALON                  │
+└───────────────────────────────────┘
+
+# --- clim_salon_annuel_kwh ---
+  - platform: integration
+    source: sensor.clim_salon_annuel_um
+    name: "Clim Salon Annuel kWh"
+    unique_id: clim_salon_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_salon_mensuel_kwh ---
+  - platform: integration
+    source: sensor.clim_salon_mensuel_um
+    name: "Clim Salon Mensuel kWh"
+    unique_id: clim_salon_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_salon_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.clim_salon_hebdomadaire_um
+    name: "Clim Salon Hebdomadaire kWh"
+    unique_id: clim_salon_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_salon_quotidien_kwh ---
+  - platform: integration
+    source: sensor.clim_salon_quotidien_um
+    name: "Clim Salon Quotidien kWh"
+    unique_id: clim_salon_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         5. CUISINE                │
+└───────────────────────────────────┘
+
+# --- radiateur_elec_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.radiateur_elec_cuisine_annuel_um
+    name: "Radiateur Elec Cuisine Annuel kWh"
+    unique_id: radiateur_elec_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- radiateur_elec_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.radiateur_elec_cuisine_mensuel_um
+    name: "Radiateur Elec Cuisine Mensuel kWh"
+    unique_id: radiateur_elec_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- radiateur_elec_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.radiateur_elec_cuisine_hebdomadaire_um
+    name: "Radiateur Elec Cuisine Hebdomadaire kWh"
+    unique_id: radiateur_elec_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- radiateur_elec_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.radiateur_elec_cuisine_quotidien_um
+    name: "Radiateur Elec Cuisine Quotidien kWh"
+    unique_id: radiateur_elec_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         7. BUREAU                 │
+└───────────────────────────────────┘
+
+# --- clim_bureau_annuel_kwh ---
+  - platform: integration
+    source: sensor.clim_bureau_annuel_um
+    name: "Clim Bureau Annuel kWh"
+    unique_id: clim_bureau_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_bureau_mensuel_kwh ---
+  - platform: integration
+    source: sensor.clim_bureau_mensuel_um
+    name: "Clim Bureau Mensuel kWh"
+    unique_id: clim_bureau_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_bureau_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.clim_bureau_hebdomadaire_um
+    name: "Clim Bureau Hebdomadaire kWh"
+    unique_id: clim_bureau_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_bureau_quotidien_kwh ---
+  - platform: integration
+    source: sensor.clim_bureau_quotidien_um
+    name: "Clim Bureau Quotidien kWh"
+    unique_id: clim_bureau_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         8. SDB                    │
+└───────────────────────────────────┘
+
+# --- soufflant_sdb_annuel_kwh ---
+  - platform: integration
+    source: sensor.soufflant_sdb_annuel_um
+    name: "Soufflant Sdb Annuel kWh"
+    unique_id: soufflant_sdb_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- soufflant_sdb_mensuel_kwh ---
+  - platform: integration
+    source: sensor.soufflant_sdb_mensuel_um
+    name: "Soufflant Sdb Mensuel kWh"
+    unique_id: soufflant_sdb_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- soufflant_sdb_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.soufflant_sdb_hebdomadaire_um
+    name: "Soufflant Sdb Hebdomadaire kWh"
+    unique_id: soufflant_sdb_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- soufflant_sdb_quotidien_kwh ---
+  - platform: integration
+    source: sensor.soufflant_sdb_quotidien_um
+    name: "Soufflant Sdb Quotidien kWh"
+    unique_id: soufflant_sdb_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- seche_serviette_sdb_annuel_kwh ---
+  - platform: integration
+    source: sensor.seche_serviette_sdb_annuel_um
+    name: "Seche Serviette Sdb Annuel kWh"
+    unique_id: seche_serviette_sdb_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- seche_serviette_sdb_mensuel_kwh ---
+  - platform: integration
+    source: sensor.seche_serviette_sdb_mensuel_um
+    name: "Seche Serviette Sdb Mensuel kWh"
+    unique_id: seche_serviette_sdb_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- seche_serviette_sdb_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.seche_serviette_sdb_hebdomadaire_um
+    name: "Seche Serviette Sdb Hebdomadaire kWh"
+    unique_id: seche_serviette_sdb_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- seche_serviette_sdb_quotidien_kwh ---
+  - platform: integration
+    source: sensor.seche_serviette_sdb_quotidien_um
+    name: "Seche Serviette Sdb Quotidien kWh"
+    unique_id: seche_serviette_sdb_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         9. CHAMBRE                │
+└───────────────────────────────────┘
+
+# --- clim_chambre_annuel_kwh ---
+  - platform: integration
+    source: sensor.clim_chambre_annuel_um
+    name: "Clim Chambre Annuel kWh"
+    unique_id: clim_chambre_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_chambre_mensuel_kwh ---
+  - platform: integration
+    source: sensor.clim_chambre_mensuel_um
+    name: "Clim Chambre Mensuel kWh"
+    unique_id: clim_chambre_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_chambre_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.clim_chambre_hebdomadaire_um
+    name: "Clim Chambre Hebdomadaire kWh"
+    unique_id: clim_chambre_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- clim_chambre_quotidien_kwh ---
+  - platform: integration
+    source: sensor.clim_chambre_quotidien_um
+    name: "Clim Chambre Quotidien kWh"
+    unique_id: clim_chambre_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ╭──────────────────────────────────────────────────────────────────────╮
+# │     PÔLE 2. ÉNERGIE: [kWh] PRISES CONNECTÉES -> (Daily + Monthly)   │
+# ╰──────────────────────────────────────────────────────────────────────╯
+
+┌───────────────────────────────────┐
+│         1. ENTRÉE                 │
+└───────────────────────────────────┘
+
+# --- box_internet_annuel_kwh ---
+  - platform: integration
+    source: sensor.box_internet_annuel_um
+    name: "Box Internet Annuel kWh"
+    unique_id: box_internet_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- box_internet_mensuel_kwh ---
+  - platform: integration
+    source: sensor.box_internet_mensuel_um
+    name: "Box Internet Mensuel kWh"
+    unique_id: box_internet_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- box_internet_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.box_internet_hebdomadaire_um
+    name: "Box Internet Hebdomadaire kWh"
+    unique_id: box_internet_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- box_internet_quotidien_kwh ---
+  - platform: integration
+    source: sensor.box_internet_quotidien_um
+    name: "Box Internet Quotidien kWh"
+    unique_id: box_internet_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- horloge_annuel_kwh ---
+  - platform: integration
+    source: sensor.horloge_annuel_um
+    name: "Horloge Annuel kWh"
+    unique_id: horloge_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- horloge_mensuel_kwh ---
+  - platform: integration
+    source: sensor.horloge_mensuel_um
+    name: "Horloge Mensuel kWh"
+    unique_id: horloge_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- horloge_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.horloge_hebdomadaire_um
+    name: "Horloge Hebdomadaire kWh"
+    unique_id: horloge_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- horloge_quotidien_kwh ---
+  - platform: integration
+    source: sensor.horloge_quotidien_um
+    name: "Horloge Quotidien kWh"
+    unique_id: horloge_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         4. SALON                  │
+└───────────────────────────────────┘
+
+# --- pc_s_gege_salon_annuel_kwh ---
+  - platform: integration
+    source: sensor.pc_s_gege_salon_annuel_um
+    name: "Pc S Gege Salon Annuel kWh"
+    unique_id: pc_s_gege_salon_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- pc_s_gege_salon_mensuel_kwh ---
+  - platform: integration
+    source: sensor.pc_s_gege_salon_mensuel_um
+    name: "Pc S Gege Salon Mensuel kWh"
+    unique_id: pc_s_gege_salon_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- pc_s_gege_salon_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.pc_s_gege_salon_hebdomadaire_um
+    name: "Pc S Gege Salon Hebdomadaire kWh"
+    unique_id: pc_s_gege_salon_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- pc_s_gege_salon_quotidien_kwh ---
+  - platform: integration
+    source: sensor.pc_s_gege_salon_quotidien_um
+    name: "Pc S Gege Salon Quotidien kWh"
+    unique_id: pc_s_gege_salon_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- salon_chargeur_annuel_kwh ---
+  - platform: integration
+    source: sensor.salon_chargeur_annuel_um
+    name: "Salon Chargeur Annuel kWh"
+    unique_id: salon_chargeur_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- salon_chargeur_mensuel_kwh ---
+  - platform: integration
+    source: sensor.salon_chargeur_mensuel_um
+    name: "Salon Chargeur Mensuel kWh"
+    unique_id: salon_chargeur_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- salon_chargeur_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.salon_chargeur_hebdomadaire_um
+    name: "Salon Chargeur Hebdomadaire kWh"
+    unique_id: salon_chargeur_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- salon_chargeur_quotidien_kwh ---
+  - platform: integration
+    source: sensor.salon_chargeur_quotidien_um
+    name: "Salon Chargeur Quotidien kWh"
+    unique_id: salon_chargeur_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         5. CUISINE                │
+└───────────────────────────────────┘
+
+# --- micro_ondes_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.micro_ondes_cuisine_annuel_um
+    name: "Micro Ondes Cuisine Annuel kWh"
+    unique_id: micro_ondes_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- micro_ondes_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.micro_ondes_cuisine_mensuel_um
+    name: "Micro Ondes Cuisine Mensuel kWh"
+    unique_id: micro_ondes_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- micro_ondes_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.micro_ondes_cuisine_hebdomadaire_um
+    name: "Micro Ondes Cuisine Hebdomadaire kWh"
+    unique_id: micro_ondes_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- micro_ondes_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.micro_ondes_cuisine_quotidien_um
+    name: "Micro Ondes Cuisine Quotidien kWh"
+    unique_id: micro_ondes_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_linge_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.lave_linge_cuisine_annuel_um
+    name: "Lave Linge Cuisine Annuel kWh"
+    unique_id: lave_linge_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_linge_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.lave_linge_cuisine_mensuel_um
+    name: "Lave Linge Cuisine Mensuel kWh"
+    unique_id: lave_linge_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_linge_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.lave_linge_cuisine_hebdomadaire_um
+    name: "Lave Linge Cuisine Hebdomadaire kWh"
+    unique_id: lave_linge_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_linge_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.lave_linge_cuisine_quotidien_um
+    name: "Lave Linge Cuisine Quotidien kWh"
+    unique_id: lave_linge_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_vaisselle_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.lave_vaisselle_cuisine_annuel_um
+    name: "Lave Vaisselle Cuisine Annuel kWh"
+    unique_id: lave_vaisselle_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_vaisselle_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.lave_vaisselle_cuisine_mensuel_um
+    name: "Lave Vaisselle Cuisine Mensuel kWh"
+    unique_id: lave_vaisselle_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_vaisselle_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.lave_vaisselle_cuisine_hebdomadaire_um
+    name: "Lave Vaisselle Cuisine Hebdomadaire kWh"
+    unique_id: lave_vaisselle_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- lave_vaisselle_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.lave_vaisselle_cuisine_quotidien_um
+    name: "Lave Vaisselle Cuisine Quotidien kWh"
+    unique_id: lave_vaisselle_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- airfryer_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.airfryer_cuisine_annuel_um
+    name: "Airfryer Cuisine Annuel kWh"
+    unique_id: airfryer_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- airfryer_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.airfryer_cuisine_mensuel_um
+    name: "Airfryer Cuisine Mensuel kWh"
+    unique_id: airfryer_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- airfryer_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.airfryer_cuisine_hebdomadaire_um
+    name: "Airfryer Cuisine Hebdomadaire kWh"
+    unique_id: airfryer_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- airfryer_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.airfryer_cuisine_quotidien_um
+    name: "Airfryer Cuisine Quotidien kWh"
+    unique_id: airfryer_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- four_plaque_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.four_plaque_cuisine_annuel_um
+    name: "Four Plaque Cuisine Annuel kWh"
+    unique_id: four_plaque_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- four_plaque_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.four_plaque_cuisine_mensuel_um
+    name: "Four Plaque Cuisine Mensuel kWh"
+    unique_id: four_plaque_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- four_plaque_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.four_plaque_cuisine_hebdomadaire_um
+    name: "Four Plaque Cuisine Hebdomadaire kWh"
+    unique_id: four_plaque_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- four_plaque_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.four_plaque_cuisine_quotidien_um
+    name: "Four Plaque Cuisine Quotidien kWh"
+    unique_id: four_plaque_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- frigo_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.frigo_cuisine_annuel_um
+    name: "Frigo Cuisine Annuel kWh"
+    unique_id: frigo_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- frigo_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.frigo_cuisine_mensuel_um
+    name: "Frigo Cuisine Mensuel kWh"
+    unique_id: frigo_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- frigo_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.frigo_cuisine_hebdomadaire_um
+    name: "Frigo Cuisine Hebdomadaire kWh"
+    unique_id: frigo_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- frigo_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.frigo_cuisine_quotidien_um
+    name: "Frigo Cuisine Quotidien kWh"
+    unique_id: frigo_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- congel_cuisine_annuel_kwh ---
+  - platform: integration
+    source: sensor.congel_cuisine_annuel_um
+    name: "Congel Cuisine Annuel kWh"
+    unique_id: congel_cuisine_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- congel_cuisine_mensuel_kwh ---
+  - platform: integration
+    source: sensor.congel_cuisine_mensuel_um
+    name: "Congel Cuisine Mensuel kWh"
+    unique_id: congel_cuisine_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- congel_cuisine_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.congel_cuisine_hebdomadaire_um
+    name: "Congel Cuisine Hebdomadaire kWh"
+    unique_id: congel_cuisine_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- congel_cuisine_quotidien_kwh ---
+  - platform: integration
+    source: sensor.congel_cuisine_quotidien_um
+    name: "Congel Cuisine Quotidien kWh"
+    unique_id: congel_cuisine_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         7. BUREAU                 │
+└───────────────────────────────────┘
+
+# --- bureau_pc_annuel_kwh ---
+  - platform: integration
+    source: sensor.bureau_pc_annuel_um
+    name: "Bureau Pc Annuel kWh"
+    unique_id: bureau_pc_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- bureau_pc_mensuel_kwh ---
+  - platform: integration
+    source: sensor.bureau_pc_mensuel_um
+    name: "Bureau Pc Mensuel kWh"
+    unique_id: bureau_pc_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- bureau_pc_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.bureau_pc_hebdomadaire_um
+    name: "Bureau Pc Hebdomadaire kWh"
+    unique_id: bureau_pc_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- bureau_pc_quotidien_kwh ---
+  - platform: integration
+    source: sensor.bureau_pc_quotidien_um
+    name: "Bureau Pc Quotidien kWh"
+    unique_id: bureau_pc_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- fer_a_repasser_bureau_annuel_kwh ---
+  - platform: integration
+    source: sensor.fer_a_repasser_bureau_annuel_um
+    name: "Fer A Repasser Bureau Annuel kWh"
+    unique_id: fer_a_repasser_bureau_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- fer_a_repasser_bureau_mensuel_kwh ---
+  - platform: integration
+    source: sensor.fer_a_repasser_bureau_mensuel_um
+    name: "Fer A Repasser Bureau Mensuel kWh"
+    unique_id: fer_a_repasser_bureau_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- fer_a_repasser_bureau_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.fer_a_repasser_bureau_hebdomadaire_um
+    name: "Fer A Repasser Bureau Hebdomadaire kWh"
+    unique_id: fer_a_repasser_bureau_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- fer_a_repasser_bureau_quotidien_kwh ---
+  - platform: integration
+    source: sensor.fer_a_repasser_bureau_quotidien_um
+    name: "Fer A Repasser Bureau Quotidien kWh"
+    unique_id: fer_a_repasser_bureau_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         9. CHAMBRE                │
+└───────────────────────────────────┘
+
+# --- tete_de_lit_chambre_annuel_kwh ---
+  - platform: integration
+    source: sensor.tete_de_lit_chambre_annuel_um
+    name: "Tete De Lit Chambre Annuel kWh"
+    unique_id: tete_de_lit_chambre_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- tete_de_lit_chambre_mensuel_kwh ---
+  - platform: integration
+    source: sensor.tete_de_lit_chambre_mensuel_um
+    name: "Tete De Lit Chambre Mensuel kWh"
+    unique_id: tete_de_lit_chambre_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- tete_de_lit_chambre_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.tete_de_lit_chambre_hebdomadaire_um
+    name: "Tete De Lit Chambre Hebdomadaire kWh"
+    unique_id: tete_de_lit_chambre_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- tete_de_lit_chambre_quotidien_kwh ---
+  - platform: integration
+    source: sensor.tete_de_lit_chambre_quotidien_um
+    name: "Tete De Lit Chambre Quotidien kWh"
+    unique_id: tete_de_lit_chambre_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- tv_chambre_annuel_kwh ---
+  - platform: integration
+    source: sensor.tv_chambre_annuel_um
+    name: "Tv Chambre Annuel kWh"
+    unique_id: tv_chambre_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- tv_chambre_mensuel_kwh ---
+  - platform: integration
+    source: sensor.tv_chambre_mensuel_um
+    name: "Tv Chambre Mensuel kWh"
+    unique_id: tv_chambre_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- tv_chambre_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.tv_chambre_hebdomadaire_um
+    name: "Tv Chambre Hebdomadaire kWh"
+    unique_id: tv_chambre_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- tv_chambre_quotidien_kwh ---
+  - platform: integration
+    source: sensor.tv_chambre_quotidien_um
+    name: "Tv Chambre Quotidien kWh"
+    unique_id: tv_chambre_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         10. AUTRE                 │
+└───────────────────────────────────┘
+
+# --- all_standby_annuel_kwh ---
+  - platform: integration
+    source: sensor.all_standby_annuel_um
+    name: "All Standby Annuel kWh"
+    unique_id: all_standby_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- all_standby_mensuel_kwh ---
+  - platform: integration
+    source: sensor.all_standby_mensuel_um
+    name: "All Standby Mensuel kWh"
+    unique_id: all_standby_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- all_standby_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.all_standby_hebdomadaire_um
+    name: "All Standby Hebdomadaire kWh"
+    unique_id: all_standby_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- all_standby_quotidien_kwh ---
+  - platform: integration
+    source: sensor.all_standby_quotidien_um
+    name: "All Standby Quotidien kWh"
+    unique_id: all_standby_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- mini_pc_annuel_kwh ---
+  - platform: integration
+    source: sensor.mini_pc_annuel_um
+    name: "Mini Pc Annuel kWh"
+    unique_id: mini_pc_annuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- mini_pc_mensuel_kwh ---
+  - platform: integration
+    source: sensor.mini_pc_mensuel_um
+    name: "Mini Pc Mensuel kWh"
+    unique_id: mini_pc_mensuel_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- mini_pc_hebdomadaire_kwh ---
+  - platform: integration
+    source: sensor.mini_pc_hebdomadaire_um
+    name: "Mini Pc Hebdomadaire kWh"
+    unique_id: mini_pc_hebdomadaire_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# --- mini_pc_quotidien_kwh ---
+  - platform: integration
+    source: sensor.mini_pc_quotidien_um
+    name: "Mini Pc Quotidien kWh"
+    unique_id: mini_pc_quotidien_kwh
+    method: left
+    unit_prefix: k
+    unit_time: h
+    round: 3
+
+# ╭──────────────────────────────────────────────────────────────────────╮
+# │     PÔLE 3. ÉCLAIRAGE : PAR ZONE PAR PIECE ou A L'UNITÉ              │
+# ╰──────────────────────────────────────────────────────────────────────╯
+
+┌───────────────────────────────────┐
+│     ZONE 4. (5x) SALON            │
+└───────────────────────────────────┘
+
+# --- eclairage_salon_5_annuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_salon_5_annuel_um
+    name: "Eclairage Salon 5 Annuel Wh"
+    unique_id: eclairage_salon_5_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_salon_5_mensuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_salon_5_mensuel_um
+    name: "Eclairage Salon 5 Mensuel Wh"
+    unique_id: eclairage_salon_5_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_salon_5_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.eclairage_salon_5_hebdomadaire_um
+    name: "Eclairage Salon 5 Hebdomadaire Wh"
+    unique_id: eclairage_salon_5_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_salon_5_quotidien_wh ---
+  - platform: integration
+    source: sensor.eclairage_salon_5_quotidien_um
+    name: "Eclairage Salon 5 Quotidien Wh"
+    unique_id: eclairage_salon_5_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+╭───────────────────────────────────────────────────────────────╮
+│ ZONE. ((3x) Entrée, cuisine & couloir) (HOME)                 │
+╰───────────────────────────────────────────────────────────────╯
+
+# --- eclairage_appart_3_annuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_3_annuel_um
+    name: "Eclairage Appart 3 Annuel Wh"
+    unique_id: eclairage_appart_3_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_appart_3_mensuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_3_mensuel_um
+    name: "Eclairage Appart 3 Mensuel Wh"
+    unique_id: eclairage_appart_3_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_appart_3_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_3_hebdomadaire_um
+    name: "Eclairage Appart 3 Hebdomadaire Wh"
+    unique_id: eclairage_appart_3_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_appart_3_quotidien_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_3_quotidien_um
+    name: "Eclairage Appart 3 Quotidien Wh"
+    unique_id: eclairage_appart_3_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│     ZONE 5. (1x) CUISINE          │
+└───────────────────────────────────┘
+
+# --- eclairage_cuisine_1_annuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_cuisine_1_annuel_um
+    name: "Eclairage Cuisine 1 Annuel Wh"
+    unique_id: eclairage_cuisine_1_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_cuisine_1_mensuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_cuisine_1_mensuel_um
+    name: "Eclairage Cuisine 1 Mensuel Wh"
+    unique_id: eclairage_cuisine_1_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_cuisine_1_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.eclairage_cuisine_1_hebdomadaire_um
+    name: "Eclairage Cuisine 1 Hebdomadaire Wh"
+    unique_id: eclairage_cuisine_1_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_cuisine_1_quotidien_wh ---
+  - platform: integration
+    source: sensor.eclairage_cuisine_1_quotidien_um
+    name: "Eclairage Cuisine 1 Quotidien Wh"
+    unique_id: eclairage_cuisine_1_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+╭──────────────────────────────────────────────────────╮
+│ ZONE. ((2x) Entrée & couloir) (HOME)                 │
+╰──────────────────────────────────────────────────────╯
+
+# --- eclairage_appart_2_annuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_2_annuel_um
+    name: "Eclairage Appart 2 Annuel Wh"
+    unique_id: eclairage_appart_2_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_appart_2_mensuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_2_mensuel_um
+    name: "Eclairage Appart 2 Mensuel Wh"
+    unique_id: eclairage_appart_2_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_appart_2_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_2_hebdomadaire_um
+    name: "Eclairage Appart 2 Hebdomadaire Wh"
+    unique_id: eclairage_appart_2_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_appart_2_quotidien_wh ---
+  - platform: integration
+    source: sensor.eclairage_appart_2_quotidien_um
+    name: "Eclairage Appart 2 Quotidien Wh"
+    unique_id: eclairage_appart_2_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│     ZONE 7. (5x) BUREAU           │
+└───────────────────────────────────┘
+
+# --- eclairage_bureau_5_annuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_bureau_5_annuel_um
+    name: "Eclairage Bureau 5 Annuel Wh"
+    unique_id: eclairage_bureau_5_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_bureau_5_mensuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_bureau_5_mensuel_um
+    name: "Eclairage Bureau 5 Mensuel Wh"
+    unique_id: eclairage_bureau_5_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_bureau_5_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.eclairage_bureau_5_hebdomadaire_um
+    name: "Eclairage Bureau 5 Hebdomadaire Wh"
+    unique_id: eclairage_bureau_5_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_bureau_5_quotidien_wh ---
+  - platform: integration
+    source: sensor.eclairage_bureau_5_quotidien_um
+    name: "Eclairage Bureau 5 Quotidien Wh"
+    unique_id: eclairage_bureau_5_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│     ZONE 8. (2x) SDB              │
+└───────────────────────────────────┘
+
+# --- eclairage_sdb_2_annuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_sdb_2_annuel_um
+    name: "Eclairage Sdb 2 Annuel Wh"
+    unique_id: eclairage_sdb_2_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_sdb_2_mensuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_sdb_2_mensuel_um
+    name: "Eclairage Sdb 2 Mensuel Wh"
+    unique_id: eclairage_sdb_2_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_sdb_2_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.eclairage_sdb_2_hebdomadaire_um
+    name: "Eclairage Sdb 2 Hebdomadaire Wh"
+    unique_id: eclairage_sdb_2_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_sdb_2_quotidien_wh ---
+  - platform: integration
+    source: sensor.eclairage_sdb_2_quotidien_um
+    name: "Eclairage Sdb 2 Quotidien Wh"
+    unique_id: eclairage_sdb_2_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│     ZONE 9. (4x) CHAMBRE          │
+└───────────────────────────────────┘
+
+# --- eclairage_chambre_4_annuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_chambre_4_annuel_um
+    name: "Eclairage Chambre 4 Annuel Wh"
+    unique_id: eclairage_chambre_4_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_chambre_4_mensuel_wh ---
+  - platform: integration
+    source: sensor.eclairage_chambre_4_mensuel_um
+    name: "Eclairage Chambre 4 Mensuel Wh"
+    unique_id: eclairage_chambre_4_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_chambre_4_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.eclairage_chambre_4_hebdomadaire_um
+    name: "Eclairage Chambre 4 Hebdomadaire Wh"
+    unique_id: eclairage_chambre_4_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- eclairage_chambre_4_quotidien_wh ---
+  - platform: integration
+    source: sensor.eclairage_chambre_4_quotidien_um
+    name: "Eclairage Chambre 4 Quotidien Wh"
+    unique_id: eclairage_chambre_4_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# ╭──────────────────────────────────────────────────────────────────────╮
+# │          PÔLE 3. ÉCLAIRAGE : PAR PIECE A L'UNITÉ                     │
+# ╰──────────────────────────────────────────────────────────────────────╯
+
+┌───────────────────────────────────┐
+│         1. ENTRÉE                 │
+└───────────────────────────────────┘
+
+# --- hue_white_lamp_entree_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_entree_annuel_um
+    name: "Hue White Lamp Entree Annuel Wh"
+    unique_id: hue_white_lamp_entree_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_entree_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_entree_mensuel_um
+    name: "Hue White Lamp Entree Mensuel Wh"
+    unique_id: hue_white_lamp_entree_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_entree_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_entree_hebdomadaire_um
+    name: "Hue White Lamp Entree Hebdomadaire Wh"
+    unique_id: hue_white_lamp_entree_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_entree_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_entree_quotidien_um
+    name: "Hue White Lamp Entree Quotidien Wh"
+    unique_id: hue_white_lamp_entree_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         4. SALON                  │
+└───────────────────────────────────┘
+
+# --- hue_white_lamp_table_salon_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_table_salon_annuel_um
+    name: "Hue White Lamp Table Salon Annuel Wh"
+    unique_id: hue_white_lamp_table_salon_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_table_salon_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_table_salon_mensuel_um
+    name: "Hue White Lamp Table Salon Mensuel Wh"
+    unique_id: hue_white_lamp_table_salon_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_table_salon_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_table_salon_hebdomadaire_um
+    name: "Hue White Lamp Table Salon Hebdomadaire Wh"
+    unique_id: hue_white_lamp_table_salon_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_table_salon_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_table_salon_quotidien_um
+    name: "Hue White Lamp Table Salon Quotidien Wh"
+    unique_id: hue_white_lamp_table_salon_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_1_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_1_annuel_um
+    name: "Hue Ambiance Lamp Salon 1 Annuel Wh"
+    unique_id: hue_ambiance_lamp_salon_1_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_1_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_1_mensuel_um
+    name: "Hue Ambiance Lamp Salon 1 Mensuel Wh"
+    unique_id: hue_ambiance_lamp_salon_1_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_1_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_1_hebdomadaire_um
+    name: "Hue Ambiance Lamp Salon 1 Hebdomadaire Wh"
+    unique_id: hue_ambiance_lamp_salon_1_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_1_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_1_quotidien_um
+    name: "Hue Ambiance Lamp Salon 1 Quotidien Wh"
+    unique_id: hue_ambiance_lamp_salon_1_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_2_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_2_annuel_um
+    name: "Hue Ambiance Lamp Salon 2 Annuel Wh"
+    unique_id: hue_ambiance_lamp_salon_2_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_2_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_2_mensuel_um
+    name: "Hue Ambiance Lamp Salon 2 Mensuel Wh"
+    unique_id: hue_ambiance_lamp_salon_2_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_2_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_2_hebdomadaire_um
+    name: "Hue Ambiance Lamp Salon 2 Hebdomadaire Wh"
+    unique_id: hue_ambiance_lamp_salon_2_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_2_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_2_quotidien_um
+    name: "Hue Ambiance Lamp Salon 2 Quotidien Wh"
+    unique_id: hue_ambiance_lamp_salon_2_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_3_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_3_annuel_um
+    name: "Hue Ambiance Lamp Salon 3 Annuel Wh"
+    unique_id: hue_ambiance_lamp_salon_3_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_3_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_3_mensuel_um
+    name: "Hue Ambiance Lamp Salon 3 Mensuel Wh"
+    unique_id: hue_ambiance_lamp_salon_3_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_3_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_3_hebdomadaire_um
+    name: "Hue Ambiance Lamp Salon 3 Hebdomadaire Wh"
+    unique_id: hue_ambiance_lamp_salon_3_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_ambiance_lamp_salon_3_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_ambiance_lamp_salon_3_quotidien_um
+    name: "Hue Ambiance Lamp Salon 3 Quotidien Wh"
+    unique_id: hue_ambiance_lamp_salon_3_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_salon_1_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_salon_1_annuel_um
+    name: "Hue Color Candle Salon 1 Annuel Wh"
+    unique_id: hue_color_candle_salon_1_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_salon_1_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_salon_1_mensuel_um
+    name: "Hue Color Candle Salon 1 Mensuel Wh"
+    unique_id: hue_color_candle_salon_1_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_salon_1_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_salon_1_hebdomadaire_um
+    name: "Hue Color Candle Salon 1 Hebdomadaire Wh"
+    unique_id: hue_color_candle_salon_1_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_salon_1_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_salon_1_quotidien_um
+    name: "Hue Color Candle Salon 1 Quotidien Wh"
+    unique_id: hue_color_candle_salon_1_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         5. CUISINE                │
+└───────────────────────────────────┘
+
+# --- hue_white_lamp_cuisine_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_cuisine_annuel_um
+    name: "Hue White Lamp Cuisine Annuel Wh"
+    unique_id: hue_white_lamp_cuisine_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_cuisine_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_cuisine_mensuel_um
+    name: "Hue White Lamp Cuisine Mensuel Wh"
+    unique_id: hue_white_lamp_cuisine_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_cuisine_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_cuisine_hebdomadaire_um
+    name: "Hue White Lamp Cuisine Hebdomadaire Wh"
+    unique_id: hue_white_lamp_cuisine_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_cuisine_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_cuisine_quotidien_um
+    name: "Hue White Lamp Cuisine Quotidien Wh"
+    unique_id: hue_white_lamp_cuisine_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         6. COULOIR                │
+└───────────────────────────────────┘
+
+# --- hue_white_lamp_couloir_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_couloir_annuel_um
+    name: "Hue White Lamp Couloir Annuel Wh"
+    unique_id: hue_white_lamp_couloir_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_couloir_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_couloir_mensuel_um
+    name: "Hue White Lamp Couloir Mensuel Wh"
+    unique_id: hue_white_lamp_couloir_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_couloir_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_couloir_hebdomadaire_um
+    name: "Hue White Lamp Couloir Hebdomadaire Wh"
+    unique_id: hue_white_lamp_couloir_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_couloir_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_couloir_quotidien_um
+    name: "Hue White Lamp Couloir Quotidien Wh"
+    unique_id: hue_white_lamp_couloir_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         7. BUREAU                 │
+└───────────────────────────────────┘
+
+# --- hue_play_1_pc_bureau_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_play_1_pc_bureau_annuel_um
+    name: "Hue Play 1 Pc Bureau Annuel Wh"
+    unique_id: hue_play_1_pc_bureau_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_1_pc_bureau_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_play_1_pc_bureau_mensuel_um
+    name: "Hue Play 1 Pc Bureau Mensuel Wh"
+    unique_id: hue_play_1_pc_bureau_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_1_pc_bureau_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_play_1_pc_bureau_hebdomadaire_um
+    name: "Hue Play 1 Pc Bureau Hebdomadaire Wh"
+    unique_id: hue_play_1_pc_bureau_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_1_pc_bureau_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_play_1_pc_bureau_quotidien_um
+    name: "Hue Play 1 Pc Bureau Quotidien Wh"
+    unique_id: hue_play_1_pc_bureau_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_2_pc_bureau_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_play_2_pc_bureau_annuel_um
+    name: "Hue Play 2 Pc Bureau Annuel Wh"
+    unique_id: hue_play_2_pc_bureau_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_2_pc_bureau_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_play_2_pc_bureau_mensuel_um
+    name: "Hue Play 2 Pc Bureau Mensuel Wh"
+    unique_id: hue_play_2_pc_bureau_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_2_pc_bureau_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_play_2_pc_bureau_hebdomadaire_um
+    name: "Hue Play 2 Pc Bureau Hebdomadaire Wh"
+    unique_id: hue_play_2_pc_bureau_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_2_pc_bureau_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_play_2_pc_bureau_quotidien_um
+    name: "Hue Play 2 Pc Bureau Quotidien Wh"
+    unique_id: hue_play_2_pc_bureau_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_3_pc_bureau_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_play_3_pc_bureau_annuel_um
+    name: "Hue Play 3 Pc Bureau Annuel Wh"
+    unique_id: hue_play_3_pc_bureau_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_3_pc_bureau_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_play_3_pc_bureau_mensuel_um
+    name: "Hue Play 3 Pc Bureau Mensuel Wh"
+    unique_id: hue_play_3_pc_bureau_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_3_pc_bureau_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_play_3_pc_bureau_hebdomadaire_um
+    name: "Hue Play 3 Pc Bureau Hebdomadaire Wh"
+    unique_id: hue_play_3_pc_bureau_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_play_3_pc_bureau_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_play_3_pc_bureau_quotidien_um
+    name: "Hue Play 3 Pc Bureau Quotidien Wh"
+    unique_id: hue_play_3_pc_bureau_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_1_hue_annuel_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_1_hue_annuel_um
+    name: "Lampe Bureau 1 Hue Annuel Wh"
+    unique_id: lampe_bureau_1_hue_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_1_hue_mensuel_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_1_hue_mensuel_um
+    name: "Lampe Bureau 1 Hue Mensuel Wh"
+    unique_id: lampe_bureau_1_hue_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_1_hue_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_1_hue_hebdomadaire_um
+    name: "Lampe Bureau 1 Hue Hebdomadaire Wh"
+    unique_id: lampe_bureau_1_hue_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_1_hue_quotidien_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_1_hue_quotidien_um
+    name: "Lampe Bureau 1 Hue Quotidien Wh"
+    unique_id: lampe_bureau_1_hue_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_2_hue_annuel_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_2_hue_annuel_um
+    name: "Lampe Bureau 2 Hue Annuel Wh"
+    unique_id: lampe_bureau_2_hue_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_2_hue_mensuel_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_2_hue_mensuel_um
+    name: "Lampe Bureau 2 Hue Mensuel Wh"
+    unique_id: lampe_bureau_2_hue_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_2_hue_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_2_hue_hebdomadaire_um
+    name: "Lampe Bureau 2 Hue Hebdomadaire Wh"
+    unique_id: lampe_bureau_2_hue_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_bureau_2_hue_quotidien_wh ---
+  - platform: integration
+    source: sensor.lampe_bureau_2_hue_quotidien_um
+    name: "Lampe Bureau 2 Hue Quotidien Wh"
+    unique_id: lampe_bureau_2_hue_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         8. SDB                    │
+└───────────────────────────────────┘
+
+# --- relais_lumiere_sdb_sonoff_annuel_wh ---
+  - platform: integration
+    source: sensor.relais_lumiere_sdb_sonoff_annuel_um
+    name: "Relais Lumiere Sdb Sonoff Annuel Wh"
+    unique_id: relais_lumiere_sdb_sonoff_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- relais_lumiere_sdb_sonoff_mensuel_wh ---
+  - platform: integration
+    source: sensor.relais_lumiere_sdb_sonoff_mensuel_um
+    name: "Relais Lumiere Sdb Sonoff Mensuel Wh"
+    unique_id: relais_lumiere_sdb_sonoff_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- relais_lumiere_sdb_sonoff_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.relais_lumiere_sdb_sonoff_hebdomadaire_um
+    name: "Relais Lumiere Sdb Sonoff Hebdomadaire Wh"
+    unique_id: relais_lumiere_sdb_sonoff_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- relais_lumiere_sdb_sonoff_quotidien_wh ---
+  - platform: integration
+    source: sensor.relais_lumiere_sdb_sonoff_quotidien_um
+    name: "Relais Lumiere Sdb Sonoff Quotidien Wh"
+    unique_id: relais_lumiere_sdb_sonoff_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_salle_de_bain_hue_annuel_wh ---
+  - platform: integration
+    source: sensor.lampe_salle_de_bain_hue_annuel_um
+    name: "Lampe Salle De Bain Hue Annuel Wh"
+    unique_id: lampe_salle_de_bain_hue_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_salle_de_bain_hue_mensuel_wh ---
+  - platform: integration
+    source: sensor.lampe_salle_de_bain_hue_mensuel_um
+    name: "Lampe Salle De Bain Hue Mensuel Wh"
+    unique_id: lampe_salle_de_bain_hue_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_salle_de_bain_hue_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.lampe_salle_de_bain_hue_hebdomadaire_um
+    name: "Lampe Salle De Bain Hue Hebdomadaire Wh"
+    unique_id: lampe_salle_de_bain_hue_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- lampe_salle_de_bain_hue_quotidien_wh ---
+  - platform: integration
+    source: sensor.lampe_salle_de_bain_hue_quotidien_um
+    name: "Lampe Salle De Bain Hue Quotidien Wh"
+    unique_id: lampe_salle_de_bain_hue_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+┌───────────────────────────────────┐
+│         9. CHAMBRE                │
+└───────────────────────────────────┘
+
+# --- hue_white_lamp_chambre_1_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_1_annuel_um
+    name: "Hue White Lamp Chambre 1 Annuel Wh"
+    unique_id: hue_white_lamp_chambre_1_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_chambre_1_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_1_mensuel_um
+    name: "Hue White Lamp Chambre 1 Mensuel Wh"
+    unique_id: hue_white_lamp_chambre_1_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_chambre_1_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_1_hebdomadaire_um
+    name: "Hue White Lamp Chambre 1 Hebdomadaire Wh"
+    unique_id: hue_white_lamp_chambre_1_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_chambre_1_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_1_quotidien_um
+    name: "Hue White Lamp Chambre 1 Quotidien Wh"
+    unique_id: hue_white_lamp_chambre_1_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_chambre_2_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_2_annuel_um
+    name: "Hue White Lamp Chambre 2 Annuel Wh"
+    unique_id: hue_white_lamp_chambre_2_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_chambre_2_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_2_mensuel_um
+    name: "Hue White Lamp Chambre 2 Mensuel Wh"
+    unique_id: hue_white_lamp_chambre_2_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_chambre_2_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_2_hebdomadaire_um
+    name: "Hue White Lamp Chambre 2 Hebdomadaire Wh"
+    unique_id: hue_white_lamp_chambre_2_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_white_lamp_chambre_2_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_white_lamp_chambre_2_quotidien_um
+    name: "Hue White Lamp Chambre 2 Quotidien Wh"
+    unique_id: hue_white_lamp_chambre_2_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_gege_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_gege_annuel_um
+    name: "Hue Color Candle Chambre Gege Annuel Wh"
+    unique_id: hue_color_candle_chambre_gege_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_gege_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_gege_mensuel_um
+    name: "Hue Color Candle Chambre Gege Mensuel Wh"
+    unique_id: hue_color_candle_chambre_gege_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_gege_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_gege_hebdomadaire_um
+    name: "Hue Color Candle Chambre Gege Hebdomadaire Wh"
+    unique_id: hue_color_candle_chambre_gege_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_gege_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_gege_quotidien_um
+    name: "Hue Color Candle Chambre Gege Quotidien Wh"
+    unique_id: hue_color_candle_chambre_gege_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_eric_annuel_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_eric_annuel_um
+    name: "Hue Color Candle Chambre Eric Annuel Wh"
+    unique_id: hue_color_candle_chambre_eric_annuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_eric_mensuel_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_eric_mensuel_um
+    name: "Hue Color Candle Chambre Eric Mensuel Wh"
+    unique_id: hue_color_candle_chambre_eric_mensuel_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_eric_hebdomadaire_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_eric_hebdomadaire_um
+    name: "Hue Color Candle Chambre Eric Hebdomadaire Wh"
+    unique_id: hue_color_candle_chambre_eric_hebdomadaire_wh
+    method: left
+    unit_time: h
+    round: 3
+
+# --- hue_color_candle_chambre_eric_quotidien_wh ---
+  - platform: integration
+    source: sensor.hue_color_candle_chambre_eric_quotidien_um
+    name: "Hue Color Candle Chambre Eric Quotidien Wh"
+    unique_id: hue_color_candle_chambre_eric_quotidien_wh
+    method: left
+    unit_time: h
+    round: 3
